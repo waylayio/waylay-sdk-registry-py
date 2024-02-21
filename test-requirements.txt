@@ -1,0 +1,13 @@
+pylint
+pycodestyle
+pydocstyle
+mypy
+autopep8
+docformatter
+types-python-jose
+types-appdirs
+types-python-dateutil
+pytest
+pytest-mock
+pytest-httpx
+pytest-asyncio
