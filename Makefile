@@ -9,8 +9,6 @@ help:
 
 
 SERVICE_NAME=registry
-WAYLAY_CORE_VERSION?=0.0.2
-WAYLAY_CORE_GIT_URL?=waylay-sdk@git+https://github.com/waylayio/waylay-py-core@${WAYLAY_CORE_VERSION}
 
 # disables test QA unless set to empty string
 TEST_QA_PREFIX?=echo DISABLED
@@ -61,7 +59,6 @@ ci-install: _install_requirements ### Install the environment with frozen depend
 
 _install_requirements:
 	pip install --upgrade pip
-	pip install ${WAYLAY_CORE_GIT_URL}
 	pip install -r test-requirements.txt
 	pip install -r requirements.txt
 
