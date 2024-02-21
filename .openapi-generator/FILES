@@ -1,4 +1,5 @@
 .openapi-generator-ignore
+Makefile
 README.md
 docs/ActiveEventData.md
 docs/ActiveEventSSE.md
