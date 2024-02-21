@@ -56,8 +56,8 @@ dev-install: _install_requirements ### Install the development environment
 	pip install -e waylay_${SERVICE_NAME}_types[dev]
 
 ci-install: _install_requirements ### Install the environment with frozen dependencies
-	pip install waylay_${SERVICE_NAME}_api[dev]
-	pip install waylay_${SERVICE_NAME}_types[dev]
+	pip install './waylay_${SERVICE_NAME}_api[dev]'
+	pip install './waylay_${SERVICE_NAME}_types[dev]'
 
 _install_requirements:
 	pip install --upgrade pip
