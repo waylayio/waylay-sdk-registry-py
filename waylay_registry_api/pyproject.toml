@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "waylay_registry_api"
+version = "2.12.1-0"
+description = "Waylay Function Registry"
+authors = [
+    { name = "Waylay", email = "dev@waylay.io"}    
+]
+keywords = ["Waylay Function Registry"]
+requires-python = ">= 3.7"
+dependencies = [
+    "waylay-sdk ~= 0.0.2",
+    "pydantic ~= 2.6",
+    "typing-extensions ~= 4.9",
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "pylint",
+    "pycodestyle",
+    "pydocstyle",
+    "mypy",
+    "autopep8",
+    "docformatter",
+    "types-python-jose",
+    "types-appdirs",
+    "types-python-dateutil",
+    "pytest",
+    "pytest-mock",
+    "pytest-httpx",
+    "pytest-asyncio",
+]
+types = ["waylay_registry_types"]
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+namespaces = true
