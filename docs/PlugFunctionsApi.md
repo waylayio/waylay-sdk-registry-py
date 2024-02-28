@@ -8,10 +8,10 @@ Method | HTTP request | Description
 [**delete_asset**](PlugFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Delete Plug Asset
 [**get_archive**](PlugFunctionsApi.md#get_archive) | **GET** /registry/v2/plugs/{name}/versions/{version}/content | Get Plug Archive
 [**get_asset**](PlugFunctionsApi.md#get_asset) | **GET** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Get File From Plug Archive
-[**get_latest_version**](PlugFunctionsApi.md#get_latest_version) | **GET** /registry/v2/plugs/{name} | Get Latest Plug Version
-[**get_version**](PlugFunctionsApi.md#get_version) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Plug Version
+[**get_latest**](PlugFunctionsApi.md#get_latest) | **GET** /registry/v2/plugs/{name} | Get Latest Plug Version
+[**get**](PlugFunctionsApi.md#get) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Plug Version
 [**jobs**](PlugFunctionsApi.md#jobs) | **GET** /registry/v2/plugs/{name}/versions/{version}/jobs | List Plug Jobs
-[**list_all**](PlugFunctionsApi.md#list_all) | **GET** /registry/v2/plugs/ | List Plugs
+[**list**](PlugFunctionsApi.md#list) | **GET** /registry/v2/plugs/ | List Plugs
 [**list_versions**](PlugFunctionsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Plug Versions
 [**patch_interface**](PlugFunctionsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Plug Interface
 [**patch_metadata**](PlugFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Plug Metadata
@@ -276,8 +276,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_latest_version**
-> GetPlugResponseV2 get_latest_version(name: str, query=GetLatestVersionQuery)
+# **get_latest**
+> GetPlugResponseV2 get_latest(name: str, query=GetLatestQuery)
 
 Get Latest Plug Version
 
@@ -303,11 +303,11 @@ name = 'name_example' # str | The name of the function.,
 
 try:
     # Get Latest Plug Version
-    api_response = await waylay_client.registry.plug_functions.get_latest_version(name=name, )
-    print("The response of registry.plug_functions.get_latest_version:\n")
+    api_response = await waylay_client.registry.plug_functions.get_latest(name=name, )
+    print("The response of registry.plug_functions.get_latest:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.get_latest_version: %s\n" % e)
+    print("Exception when calling registry.plug_functions.get_latest: %s\n" % e)
 ```
 
 ### Parameters
@@ -337,8 +337,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_version**
-> GetPlugResponseV2 get_version(name: str, version: str, query=GetVersionQuery)
+# **get**
+> GetPlugResponseV2 get(name: str, version: str, query=GetQuery)
 
 Get Plug Version
 
@@ -364,11 +364,11 @@ version = 'version_example' # str | The version of the function.,
 
 try:
     # Get Plug Version
-    api_response = await waylay_client.registry.plug_functions.get_version(name=name, version=version, )
-    print("The response of registry.plug_functions.get_version:\n")
+    api_response = await waylay_client.registry.plug_functions.get(name=name, version=version, )
+    print("The response of registry.plug_functions.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.get_version: %s\n" % e)
+    print("Exception when calling registry.plug_functions.get: %s\n" % e)
 ```
 
 ### Parameters
@@ -464,8 +464,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list_all**
-> LatestPlugsResponseV2 list_all(query=ListAllQuery)
+# **list**
+> LatestPlugsResponseV2 list(query=ListQuery)
 
 List Plugs
 
@@ -492,11 +492,11 @@ from waylay.services.registry.models.status_filter import StatusFilter
 
 try:
     # List Plugs
-    api_response = await waylay_client.registry.plug_functions.list_all()
-    print("The response of registry.plug_functions.list_all:\n")
+    api_response = await waylay_client.registry.plug_functions.list()
+    print("The response of registry.plug_functions.list:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.list_all: %s\n" % e)
+    print("Exception when calling registry.plug_functions.list: %s\n" % e)
 ```
 
 ### Parameters

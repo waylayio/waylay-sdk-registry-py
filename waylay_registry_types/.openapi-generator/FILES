@@ -30,7 +30,6 @@ src/waylay/services/registry/models/batch_result.py
 src/waylay/services/registry/models/build.py
 src/waylay/services/registry/models/build1.py
 src/waylay/services/registry/models/build_args.py
-src/waylay/services/registry/models/build_job_for_function.py
 src/waylay/services/registry/models/build_job_status.py
 src/waylay/services/registry/models/build_result.py
 src/waylay/services/registry/models/build_spec.py
@@ -51,7 +50,6 @@ src/waylay/services/registry/models/deploy1.py
 src/waylay/services/registry/models/deploy_args.py
 src/waylay/services/registry/models/deploy_args_deploy_spec_overrides.py
 src/waylay/services/registry/models/deploy_attributes_filter.py
-src/waylay/services/registry/models/deploy_job_for_function.py
 src/waylay/services/registry/models/deploy_job_status.py
 src/waylay/services/registry/models/deploy_result.py
 src/waylay/services/registry/models/deploy_spec.py
@@ -317,7 +315,6 @@ src/waylay/services/registry/models/runtime_version_summary.py
 src/waylay/services/registry/models/scale.py
 src/waylay/services/registry/models/scale1.py
 src/waylay/services/registry/models/scale_args.py
-src/waylay/services/registry/models/scale_job_for_function.py
 src/waylay/services/registry/models/scale_job_status.py
 src/waylay/services/registry/models/schema_by_id_params.py
 src/waylay/services/registry/models/schema_params.py
@@ -340,7 +337,6 @@ src/waylay/services/registry/models/timestamp_spec.py
 src/waylay/services/registry/models/undeploy.py
 src/waylay/services/registry/models/undeploy1.py
 src/waylay/services/registry/models/undeploy_args.py
-src/waylay/services/registry/models/undeploy_job_for_function.py
 src/waylay/services/registry/models/undeploy_job_status.py
 src/waylay/services/registry/models/undeploy_result.py
 src/waylay/services/registry/models/undeploy_submitted_response_v2.py
@@ -355,7 +351,6 @@ src/waylay/services/registry/models/user_plug_meta.py
 src/waylay/services/registry/models/verify.py
 src/waylay/services/registry/models/verify1.py
 src/waylay/services/registry/models/verify_args.py
-src/waylay/services/registry/models/verify_job_for_function.py
 src/waylay/services/registry/models/verify_job_status.py
 src/waylay/services/registry/models/verify_model_sync_response_v2.py
 src/waylay/services/registry/models/verify_plug_sync_response_v2.py

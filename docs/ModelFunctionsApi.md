@@ -8,10 +8,10 @@ Method | HTTP request | Description
 [**delete_asset**](ModelFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Delete Model Asset
 [**get_archive**](ModelFunctionsApi.md#get_archive) | **GET** /registry/v2/models/{name}/versions/{version}/content | Get Model Archive
 [**get_asset**](ModelFunctionsApi.md#get_asset) | **GET** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Get File From Model Archive
-[**get_latest_version**](ModelFunctionsApi.md#get_latest_version) | **GET** /registry/v2/models/{name} | Get Latest Model Version
-[**get_version**](ModelFunctionsApi.md#get_version) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
+[**get_latest**](ModelFunctionsApi.md#get_latest) | **GET** /registry/v2/models/{name} | Get Latest Model Version
+[**get**](ModelFunctionsApi.md#get) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
 [**jobs**](ModelFunctionsApi.md#jobs) | **GET** /registry/v2/models/{name}/versions/{version}/jobs | List Model Jobs
-[**list_all**](ModelFunctionsApi.md#list_all) | **GET** /registry/v2/models/ | List Models
+[**list**](ModelFunctionsApi.md#list) | **GET** /registry/v2/models/ | List Models
 [**list_versions**](ModelFunctionsApi.md#list_versions) | **GET** /registry/v2/models/{name}/versions | List Model Versions
 [**patch_metadata**](ModelFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/models/{name}/versions/{version}/metadata | Patch Model Metadata
 [**publish**](ModelFunctionsApi.md#publish) | **POST** /registry/v2/models/{name}/versions/{version}/publish | Publish Draft Model
@@ -275,8 +275,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_latest_version**
-> GetModelResponseV2 get_latest_version(name: str, query=GetLatestVersionQuery)
+# **get_latest**
+> GetModelResponseV2 get_latest(name: str, query=GetLatestQuery)
 
 Get Latest Model Version
 
@@ -301,11 +301,11 @@ name = 'name_example' # str | The name of the function.,
 
 try:
     # Get Latest Model Version
-    api_response = await waylay_client.registry.model_functions.get_latest_version(name=name, )
-    print("The response of registry.model_functions.get_latest_version:\n")
+    api_response = await waylay_client.registry.model_functions.get_latest(name=name, )
+    print("The response of registry.model_functions.get_latest:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.model_functions.get_latest_version: %s\n" % e)
+    print("Exception when calling registry.model_functions.get_latest: %s\n" % e)
 ```
 
 ### Parameters
@@ -334,8 +334,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_version**
-> GetModelResponseV2 get_version(name: str, version: str, query=GetVersionQuery)
+# **get**
+> GetModelResponseV2 get(name: str, version: str, query=GetQuery)
 
 Get Model Version
 
@@ -361,11 +361,11 @@ version = 'version_example' # str | The version of the function.,
 
 try:
     # Get Model Version
-    api_response = await waylay_client.registry.model_functions.get_version(name=name, version=version, )
-    print("The response of registry.model_functions.get_version:\n")
+    api_response = await waylay_client.registry.model_functions.get(name=name, version=version, )
+    print("The response of registry.model_functions.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.model_functions.get_version: %s\n" % e)
+    print("Exception when calling registry.model_functions.get: %s\n" % e)
 ```
 
 ### Parameters
@@ -461,8 +461,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list_all**
-> LatestModelsResponseV2 list_all(query=ListAllQuery)
+# **list**
+> LatestModelsResponseV2 list(query=ListQuery)
 
 List Models
 
@@ -488,11 +488,11 @@ from waylay.services.registry.models.status_filter import StatusFilter
 
 try:
     # List Models
-    api_response = await waylay_client.registry.model_functions.list_all()
-    print("The response of registry.model_functions.list_all:\n")
+    api_response = await waylay_client.registry.model_functions.list()
+    print("The response of registry.model_functions.list:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.model_functions.list_all: %s\n" % e)
+    print("Exception when calling registry.model_functions.list: %s\n" % e)
 ```
 
 ### Parameters

@@ -144,8 +144,8 @@ class GetAssetQuery(TypedDict):
     ]
 
 
-class GetLatestVersionQuery(TypedDict):
-    """get_latest_version query parameters."""
+class GetLatestQuery(TypedDict):
+    """get_latest query parameters."""
 
     include_draft: NotRequired[
         Annotated[
@@ -165,8 +165,61 @@ class GetLatestVersionQuery(TypedDict):
     ]
 
 
-class GetLatestVersionsQuery(TypedDict):
-    """get_latest_versions query parameters."""
+class GetQuery(TypedDict):
+    """get query parameters."""
+
+
+class JobsQuery(TypedDict):
+    """jobs query parameters."""
+
+    limit: NotRequired[
+        Annotated[
+            Optional[
+                Union[
+                    Annotated[float, Field(strict=True, ge=0)],
+                    Annotated[int, Field(strict=True, ge=0)],
+                ]
+            ],
+            Field(
+                description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value."
+            ),
+        ]
+    ]
+    type: NotRequired[
+        Annotated[
+            Optional[List[JobTypeSchema]], Field(description="Filter on job type")
+        ]
+    ]
+    state: NotRequired[
+        Annotated[
+            Optional[List[JobStateResult]], Field(description="Filter on job state")
+        ]
+    ]
+    function_type: NotRequired[
+        Annotated[
+            Optional[List[FunctionType]], Field(description="Filter on function type")
+        ]
+    ]
+    created_before: NotRequired[
+        Annotated[
+            Optional[Any],
+            Field(
+                description="Filter on jobs that created before the given timestamp or age"
+            ),
+        ]
+    ]
+    created_after: NotRequired[
+        Annotated[
+            Optional[Any],
+            Field(
+                description="Filter on jobs that created after the given timestamp or age"
+            ),
+        ]
+    ]
+
+
+class ListVersionsQuery(TypedDict):
+    """list_versions query parameters."""
 
     limit: NotRequired[
         Annotated[
@@ -287,61 +340,8 @@ class GetLatestVersionsQuery(TypedDict):
     ]
 
 
-class GetVersionQuery(TypedDict):
-    """get_version query parameters."""
-
-
-class JobsQuery(TypedDict):
-    """jobs query parameters."""
-
-    limit: NotRequired[
-        Annotated[
-            Optional[
-                Union[
-                    Annotated[float, Field(strict=True, ge=0)],
-                    Annotated[int, Field(strict=True, ge=0)],
-                ]
-            ],
-            Field(
-                description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value."
-            ),
-        ]
-    ]
-    type: NotRequired[
-        Annotated[
-            Optional[List[JobTypeSchema]], Field(description="Filter on job type")
-        ]
-    ]
-    state: NotRequired[
-        Annotated[
-            Optional[List[JobStateResult]], Field(description="Filter on job state")
-        ]
-    ]
-    function_type: NotRequired[
-        Annotated[
-            Optional[List[FunctionType]], Field(description="Filter on function type")
-        ]
-    ]
-    created_before: NotRequired[
-        Annotated[
-            Optional[Any],
-            Field(
-                description="Filter on jobs that created before the given timestamp or age"
-            ),
-        ]
-    ]
-    created_after: NotRequired[
-        Annotated[
-            Optional[Any],
-            Field(
-                description="Filter on jobs that created after the given timestamp or age"
-            ),
-        ]
-    ]
-
-
-class ListAllQuery(TypedDict):
-    """list_all query parameters."""
+class ListQuery(TypedDict):
+    """list query parameters."""
 
     limit: NotRequired[
         Annotated[

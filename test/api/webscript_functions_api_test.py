@@ -33,16 +33,16 @@ from ..types.get_webscript_response_v2_stub import GetWebscriptResponseV2Stub
 from waylay.services.registry.models import GetWebscriptResponseV2
 
 
-from ..types.webscript_versions_response_v2_stub import WebscriptVersionsResponseV2Stub
-from waylay.services.registry.models import WebscriptVersionsResponseV2
-
-
 from ..types.get_webscript_response_v2_stub import GetWebscriptResponseV2Stub
 from waylay.services.registry.models import GetWebscriptResponseV2
 
 
 from ..types.jobs_for_webscript_response_v2_stub import JobsForWebscriptResponseV2Stub
 from waylay.services.registry.models import JobsForWebscriptResponseV2
+
+
+from ..types.webscript_versions_response_v2_stub import WebscriptVersionsResponseV2Stub
+from waylay.services.registry.models import WebscriptVersionsResponseV2
 
 
 from ..types.latest_webscripts_response_v2_stub import LatestWebscriptsResponseV2Stub
@@ -234,10 +234,10 @@ async def test_get_asset(
 
 
 @pytest.mark.asyncio
-async def test_get_latest_version(
+async def test_get_latest(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
-    """Test case for get_latest_version
+    """Test case for get_latest
     Get Latest Webscript Version
     """
     # set path params
@@ -254,40 +254,13 @@ async def test_get_latest_version(
     kwargs = {
         "name": name,
     }
-    resp = await service.webscript_functions.get_latest_version(**kwargs)
+    resp = await service.webscript_functions.get_latest(**kwargs)
     assert isinstance(resp, GetWebscriptResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_get_latest_versions(
-    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
-):
-    """Test case for get_latest_versions
-    List Webscript Versions
-    """
-    # set path params
-    name = "name_example"
-
-    mock_response = WebscriptVersionsResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {
-        "name": name,
-    }
-    resp = await service.webscript_functions.get_latest_versions(**kwargs)
-    assert isinstance(resp, WebscriptVersionsResponseV2)
-
-
-@pytest.mark.asyncio
-async def test_get_version(
-    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
-):
-    """Test case for get_version
+async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for get
     Get Webscript Version
     """
     # set path params
@@ -307,7 +280,7 @@ async def test_get_version(
         "name": name,
         "version": version,
     }
-    resp = await service.webscript_functions.get_version(**kwargs)
+    resp = await service.webscript_functions.get(**kwargs)
     assert isinstance(resp, GetWebscriptResponseV2)
 
 
@@ -338,10 +311,33 @@ async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTP
 
 
 @pytest.mark.asyncio
-async def test_list_all(
+async def test_list_versions(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
-    """Test case for list_all
+    """Test case for list_versions
+    List Webscript Versions
+    """
+    # set path params
+    name = "name_example"
+
+    mock_response = WebscriptVersionsResponseV2Stub.create_instance().to_dict()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions",  # noqa: F541
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+    kwargs = {
+        "name": name,
+    }
+    resp = await service.webscript_functions.list_versions(**kwargs)
+    assert isinstance(resp, WebscriptVersionsResponseV2)
+
+
+@pytest.mark.asyncio
+async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for list
     List Webscripts
     """
     # set path params
@@ -355,7 +351,7 @@ async def test_list_all(
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {}
-    resp = await service.webscript_functions.list_all(**kwargs)
+    resp = await service.webscript_functions.list(**kwargs)
     assert isinstance(resp, LatestWebscriptsResponseV2)
 
 

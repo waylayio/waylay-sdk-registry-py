@@ -3,7 +3,7 @@
 
 This code was generated from the OpenAPI documentation of 'Waylay Function Registry'
 
-version: 2.12.1
+version: 2.12.2
 
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
@@ -43,7 +43,6 @@ from .batch_result import BatchResult
 from .build import Build
 from .build1 import Build1
 from .build_args import BuildArgs
-from .build_job_for_function import BuildJobForFunction
 from .build_job_status import BuildJobStatus
 from .build_result import BuildResult
 from .build_spec import BuildSpec
@@ -64,7 +63,6 @@ from .deploy1 import Deploy1
 from .deploy_args import DeployArgs
 from .deploy_args_deploy_spec_overrides import DeployArgsDeploySpecOverrides
 from .deploy_attributes_filter import DeployAttributesFilter
-from .deploy_job_for_function import DeployJobForFunction
 from .deploy_job_status import DeployJobStatus
 from .deploy_result import DeployResult
 from .deploy_spec import DeploySpec
@@ -353,7 +351,6 @@ from .runtime_version_summary import RuntimeVersionSummary
 from .scale import Scale
 from .scale1 import Scale1
 from .scale_args import ScaleArgs
-from .scale_job_for_function import ScaleJobForFunction
 from .scale_job_status import ScaleJobStatus
 from .schema_by_id_params import SchemaByIdParams
 from .schema_params import SchemaParams
@@ -376,7 +373,6 @@ from .timestamp_spec import TimestampSpec
 from .undeploy import Undeploy
 from .undeploy1 import Undeploy1
 from .undeploy_args import UndeployArgs
-from .undeploy_job_for_function import UndeployJobForFunction
 from .undeploy_job_status import UndeployJobStatus
 from .undeploy_result import UndeployResult
 from .undeploy_submitted_response_v2 import UndeploySubmittedResponseV2
@@ -391,7 +387,6 @@ from .user_plug_meta import UserPlugMeta
 from .verify import Verify
 from .verify1 import Verify1
 from .verify_args import VerifyArgs
-from .verify_job_for_function import VerifyJobForFunction
 from .verify_job_status import VerifyJobStatus
 from .verify_model_sync_response_v2 import VerifyModelSyncResponseV2
 from .verify_plug_sync_response_v2 import VerifyPlugSyncResponseV2

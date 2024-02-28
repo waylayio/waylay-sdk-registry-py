@@ -32,7 +32,6 @@ docs/BatchResult.md
 docs/Build.md
 docs/Build1.md
 docs/BuildArgs.md
-docs/BuildJobForFunction.md
 docs/BuildJobStatus.md
 docs/BuildResult.md
 docs/BuildSpec.md
@@ -54,7 +53,6 @@ docs/Deploy1.md
 docs/DeployArgs.md
 docs/DeployArgsDeploySpecOverrides.md
 docs/DeployAttributesFilter.md
-docs/DeployJobForFunction.md
 docs/DeployJobStatus.md
 docs/DeployResult.md
 docs/DeploySpec.md
@@ -323,7 +321,6 @@ docs/RuntimesApi.md
 docs/Scale.md
 docs/Scale1.md
 docs/ScaleArgs.md
-docs/ScaleJobForFunction.md
 docs/ScaleJobStatus.md
 docs/SchemaByIdParams.md
 docs/SchemaParams.md
@@ -347,7 +344,6 @@ docs/TimestampSpec.md
 docs/Undeploy.md
 docs/Undeploy1.md
 docs/UndeployArgs.md
-docs/UndeployJobForFunction.md
 docs/UndeployJobStatus.md
 docs/UndeployResult.md
 docs/UndeploySubmittedResponseV2.md
@@ -362,7 +358,6 @@ docs/UserPlugMeta.md
 docs/Verify.md
 docs/Verify1.md
 docs/VerifyArgs.md
-docs/VerifyJobForFunction.md
 docs/VerifyJobStatus.md
 docs/VerifyModelSyncResponseV2.md
 docs/VerifyPlugSyncResponseV2.md
@@ -436,7 +431,6 @@ test/types/batch_result_stub.py
 test/types/batch_stub.py
 test/types/build1_stub.py
 test/types/build_args_stub.py
-test/types/build_job_for_function_stub.py
 test/types/build_job_status_stub.py
 test/types/build_result_stub.py
 test/types/build_spec_stub.py
@@ -457,7 +451,6 @@ test/types/deploy1_stub.py
 test/types/deploy_args_deploy_spec_overrides_stub.py
 test/types/deploy_args_stub.py
 test/types/deploy_attributes_filter_stub.py
-test/types/deploy_job_for_function_stub.py
 test/types/deploy_job_status_stub.py
 test/types/deploy_result_stub.py
 test/types/deploy_spec_openfaas_spec_stub.py
@@ -722,7 +715,6 @@ test/types/runtime_version_status_stub.py
 test/types/runtime_version_summary_stub.py
 test/types/scale1_stub.py
 test/types/scale_args_stub.py
-test/types/scale_job_for_function_stub.py
 test/types/scale_job_status_stub.py
 test/types/scale_stub.py
 test/types/schema_by_id_params_stub.py
@@ -745,7 +737,6 @@ test/types/timestamp_age_stub.py
 test/types/timestamp_spec_stub.py
 test/types/undeploy1_stub.py
 test/types/undeploy_args_stub.py
-test/types/undeploy_job_for_function_stub.py
 test/types/undeploy_job_status_stub.py
 test/types/undeploy_result_stub.py
 test/types/undeploy_stub.py
@@ -760,7 +751,6 @@ test/types/update_record_stub.py
 test/types/user_plug_meta_stub.py
 test/types/verify1_stub.py
 test/types/verify_args_stub.py
-test/types/verify_job_for_function_stub.py
 test/types/verify_job_status_stub.py
 test/types/verify_model_sync_response_v2_stub.py
 test/types/verify_plug_sync_response_v2_stub.py

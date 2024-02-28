@@ -32,12 +32,10 @@ if TYPE_CHECKING:
     from waylay.services.registry.queries.model_functions_api import DeleteAssetQuery
     from waylay.services.registry.queries.model_functions_api import GetArchiveQuery
     from waylay.services.registry.queries.model_functions_api import GetAssetQuery
-    from waylay.services.registry.queries.model_functions_api import (
-        GetLatestVersionQuery,
-    )
-    from waylay.services.registry.queries.model_functions_api import GetVersionQuery
+    from waylay.services.registry.queries.model_functions_api import GetLatestQuery
+    from waylay.services.registry.queries.model_functions_api import GetQuery
     from waylay.services.registry.queries.model_functions_api import JobsQuery
-    from waylay.services.registry.queries.model_functions_api import ListAllQuery
+    from waylay.services.registry.queries.model_functions_api import ListQuery
     from waylay.services.registry.queries.model_functions_api import ListVersionsQuery
     from waylay.services.registry.queries.model_functions_api import PatchMetadataQuery
     from waylay.services.registry.queries.model_functions_api import PublishQuery
@@ -89,12 +87,10 @@ try:
     from waylay.services.registry.queries.model_functions_api import DeleteAssetQuery
     from waylay.services.registry.queries.model_functions_api import GetArchiveQuery
     from waylay.services.registry.queries.model_functions_api import GetAssetQuery
-    from waylay.services.registry.queries.model_functions_api import (
-        GetLatestVersionQuery,
-    )
-    from waylay.services.registry.queries.model_functions_api import GetVersionQuery
+    from waylay.services.registry.queries.model_functions_api import GetLatestQuery
+    from waylay.services.registry.queries.model_functions_api import GetQuery
     from waylay.services.registry.queries.model_functions_api import JobsQuery
-    from waylay.services.registry.queries.model_functions_api import ListAllQuery
+    from waylay.services.registry.queries.model_functions_api import ListQuery
     from waylay.services.registry.queries.model_functions_api import ListVersionsQuery
     from waylay.services.registry.queries.model_functions_api import PatchMetadataQuery
     from waylay.services.registry.queries.model_functions_api import PublishQuery
@@ -149,10 +145,10 @@ except ImportError:
         DeleteAssetQuery = Dict
         GetArchiveQuery = Dict
         GetAssetQuery = Dict
-        GetLatestVersionQuery = Dict
-        GetVersionQuery = Dict
+        GetLatestQuery = Dict
+        GetQuery = Dict
         JobsQuery = Dict
-        ListAllQuery = Dict
+        ListQuery = Dict
         ListVersionsQuery = Dict
         PatchMetadataQuery = Dict
         PublishQuery = Dict
@@ -872,11 +868,11 @@ class ModelFunctionsApi:
         )
 
     @overload
-    async def get_latest_version(
+    async def get_latest(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[GetLatestVersionQuery] = None,
+        query: Optional[GetLatestQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
@@ -884,11 +880,11 @@ class ModelFunctionsApi:
         ...
 
     @overload
-    async def get_latest_version(
+    async def get_latest(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[GetLatestVersionQuery] = None,
+        query: Optional[GetLatestQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
@@ -896,11 +892,11 @@ class ModelFunctionsApi:
         ...
 
     @validate_call
-    async def get_latest_version(
+    async def get_latest(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[GetLatestVersionQuery] = None,
+        query: Optional[GetLatestQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
@@ -929,7 +925,7 @@ class ModelFunctionsApi:
         :return: Returns the result object.
         """
 
-        _request_params = self._get_latest_version_serialize(
+        _request_params = self._get_latest_serialize(
             name=name,
             body=None,
             files=None,
@@ -949,7 +945,7 @@ class ModelFunctionsApi:
         )
         return result if with_http_info else result.data
 
-    def _get_latest_version_serialize(
+    def _get_latest_serialize(
         self,
         name,
         body,
@@ -993,14 +989,14 @@ class ModelFunctionsApi:
         )
 
     @overload
-    async def get_version(
+    async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         version: Annotated[
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetVersionQuery] = None,
+        query: Optional[GetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
@@ -1008,14 +1004,14 @@ class ModelFunctionsApi:
         ...
 
     @overload
-    async def get_version(
+    async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         version: Annotated[
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetVersionQuery] = None,
+        query: Optional[GetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
@@ -1023,14 +1019,14 @@ class ModelFunctionsApi:
         ...
 
     @validate_call
-    async def get_version(
+    async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         version: Annotated[
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetVersionQuery] = None,
+        query: Optional[GetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
@@ -1057,7 +1053,7 @@ class ModelFunctionsApi:
         :return: Returns the result object.
         """
 
-        _request_params = self._get_version_serialize(
+        _request_params = self._get_serialize(
             name=name,
             version=version,
             body=None,
@@ -1078,7 +1074,7 @@ class ModelFunctionsApi:
         )
         return result if with_http_info else result.data
 
-    def _get_version_serialize(
+    def _get_serialize(
         self,
         name,
         version,
@@ -1280,10 +1276,10 @@ class ModelFunctionsApi:
         )
 
     @overload
-    async def list_all(
+    async def list(
         self,
         *,
-        query: Optional[ListAllQuery] = None,
+        query: Optional[ListQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
@@ -1291,10 +1287,10 @@ class ModelFunctionsApi:
         ...
 
     @overload
-    async def list_all(
+    async def list(
         self,
         *,
-        query: Optional[ListAllQuery] = None,
+        query: Optional[ListQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
@@ -1302,10 +1298,10 @@ class ModelFunctionsApi:
         ...
 
     @validate_call
-    async def list_all(
+    async def list(
         self,
         *,
-        query: Optional[ListAllQuery] = None,
+        query: Optional[ListQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
@@ -1368,7 +1364,7 @@ class ModelFunctionsApi:
         :return: Returns the result object.
         """
 
-        _request_params = self._list_all_serialize(
+        _request_params = self._list_serialize(
             body=None,
             files=None,
             query=query,
@@ -1387,7 +1383,7 @@ class ModelFunctionsApi:
         )
         return result if with_http_info else result.data
 
-    def _list_all_serialize(
+    def _list_serialize(
         self,
         body,
         files,

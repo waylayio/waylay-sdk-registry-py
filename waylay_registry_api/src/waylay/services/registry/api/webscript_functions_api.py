@@ -34,15 +34,13 @@ if TYPE_CHECKING:
     )
     from waylay.services.registry.queries.webscript_functions_api import GetArchiveQuery
     from waylay.services.registry.queries.webscript_functions_api import GetAssetQuery
-    from waylay.services.registry.queries.webscript_functions_api import (
-        GetLatestVersionQuery,
-    )
-    from waylay.services.registry.queries.webscript_functions_api import (
-        GetLatestVersionsQuery,
-    )
-    from waylay.services.registry.queries.webscript_functions_api import GetVersionQuery
+    from waylay.services.registry.queries.webscript_functions_api import GetLatestQuery
+    from waylay.services.registry.queries.webscript_functions_api import GetQuery
     from waylay.services.registry.queries.webscript_functions_api import JobsQuery
-    from waylay.services.registry.queries.webscript_functions_api import ListAllQuery
+    from waylay.services.registry.queries.webscript_functions_api import (
+        ListVersionsQuery,
+    )
+    from waylay.services.registry.queries.webscript_functions_api import ListQuery
     from waylay.services.registry.queries.webscript_functions_api import (
         PatchMetadataQuery,
     )
@@ -68,11 +66,11 @@ if TYPE_CHECKING:
 
     from waylay.services.registry.models import GetWebscriptResponseV2
 
-    from waylay.services.registry.models import WebscriptVersionsResponseV2
-
     from waylay.services.registry.models import GetWebscriptResponseV2
 
     from waylay.services.registry.models import JobsForWebscriptResponseV2
+
+    from waylay.services.registry.models import WebscriptVersionsResponseV2
 
     from waylay.services.registry.models import LatestWebscriptsResponseV2
 
@@ -105,15 +103,13 @@ try:
     )
     from waylay.services.registry.queries.webscript_functions_api import GetArchiveQuery
     from waylay.services.registry.queries.webscript_functions_api import GetAssetQuery
-    from waylay.services.registry.queries.webscript_functions_api import (
-        GetLatestVersionQuery,
-    )
-    from waylay.services.registry.queries.webscript_functions_api import (
-        GetLatestVersionsQuery,
-    )
-    from waylay.services.registry.queries.webscript_functions_api import GetVersionQuery
+    from waylay.services.registry.queries.webscript_functions_api import GetLatestQuery
+    from waylay.services.registry.queries.webscript_functions_api import GetQuery
     from waylay.services.registry.queries.webscript_functions_api import JobsQuery
-    from waylay.services.registry.queries.webscript_functions_api import ListAllQuery
+    from waylay.services.registry.queries.webscript_functions_api import (
+        ListVersionsQuery,
+    )
+    from waylay.services.registry.queries.webscript_functions_api import ListQuery
     from waylay.services.registry.queries.webscript_functions_api import (
         PatchMetadataQuery,
     )
@@ -139,11 +135,11 @@ try:
 
     from waylay.services.registry.models import GetWebscriptResponseV2
 
-    from waylay.services.registry.models import WebscriptVersionsResponseV2
-
     from waylay.services.registry.models import GetWebscriptResponseV2
 
     from waylay.services.registry.models import JobsForWebscriptResponseV2
+
+    from waylay.services.registry.models import WebscriptVersionsResponseV2
 
     from waylay.services.registry.models import LatestWebscriptsResponseV2
 
@@ -177,11 +173,11 @@ except ImportError:
         DeleteAssetQuery = Dict
         GetArchiveQuery = Dict
         GetAssetQuery = Dict
-        GetLatestVersionQuery = Dict
-        GetLatestVersionsQuery = Dict
-        GetVersionQuery = Dict
+        GetLatestQuery = Dict
+        GetQuery = Dict
         JobsQuery = Dict
-        ListAllQuery = Dict
+        ListVersionsQuery = Dict
+        ListQuery = Dict
         PatchMetadataQuery = Dict
         PublishQuery = Dict
         RebuildQuery = Dict
@@ -197,11 +193,11 @@ except ImportError:
 
         GetWebscriptResponseV2 = Any
 
-        WebscriptVersionsResponseV2 = Any
-
         GetWebscriptResponseV2 = Any
 
         JobsForWebscriptResponseV2 = Any
+
+        WebscriptVersionsResponseV2 = Any
 
         LatestWebscriptsResponseV2 = Any
 
@@ -904,11 +900,11 @@ class WebscriptFunctionsApi:
         )
 
     @overload
-    async def get_latest_version(
+    async def get_latest(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[GetLatestVersionQuery] = None,
+        query: Optional[GetLatestQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
@@ -916,11 +912,11 @@ class WebscriptFunctionsApi:
         ...
 
     @overload
-    async def get_latest_version(
+    async def get_latest(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[GetLatestVersionQuery] = None,
+        query: Optional[GetLatestQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
@@ -928,11 +924,11 @@ class WebscriptFunctionsApi:
         ...
 
     @validate_call
-    async def get_latest_version(
+    async def get_latest(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[GetLatestVersionQuery] = None,
+        query: Optional[GetLatestQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
@@ -961,7 +957,7 @@ class WebscriptFunctionsApi:
         :return: Returns the result object.
         """
 
-        _request_params = self._get_latest_version_serialize(
+        _request_params = self._get_latest_serialize(
             name=name,
             body=None,
             files=None,
@@ -981,7 +977,7 @@ class WebscriptFunctionsApi:
         )
         return result if with_http_info else result.data
 
-    def _get_latest_version_serialize(
+    def _get_latest_serialize(
         self,
         name,
         body,
@@ -1025,215 +1021,14 @@ class WebscriptFunctionsApi:
         )
 
     @overload
-    async def get_latest_versions(
-        self,
-        name: Annotated[StrictStr, Field(description="The name of the function.")],
-        *,
-        query: Optional[GetLatestVersionsQuery] = None,
-        _request_timeout: Optional[RESTTimeout] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        with_http_info: Literal[False] = False,
-    ) -> WebscriptVersionsResponseV2:
-        ...
-
-    @overload
-    async def get_latest_versions(
-        self,
-        name: Annotated[StrictStr, Field(description="The name of the function.")],
-        *,
-        query: Optional[GetLatestVersionsQuery] = None,
-        _request_timeout: Optional[RESTTimeout] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        with_http_info: Literal[True],
-    ) -> ApiResponse[WebscriptVersionsResponseV2]:
-        ...
-
-    @validate_call
-    async def get_latest_versions(
-        self,
-        name: Annotated[StrictStr, Field(description="The name of the function.")],
-        *,
-        query: Optional[GetLatestVersionsQuery] = None,
-        _request_timeout: Optional[RESTTimeout] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        with_http_info: StrictBool = False,
-    ) -> Union[WebscriptVersionsResponseV2, ApiResponse[WebscriptVersionsResponseV2]]:
-        """List Webscript Versions.
-
-        List all deployed versions of a webscript.
-
-        :param name: The name of the function. (required)
-        :type name: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.limit: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
-            :type query.limit: float
-            :param query.page: The number of pages to skip when returning result to this query.
-            :type query.page: float
-            :param query.deprecated: Filter on the deprecation status of the function.
-            :type query.deprecated: bool
-            :param query.draft: Filter on the draft status of the function.
-            :type query.draft: bool
-            :param query.version: Filter on the version of the function (case-sensitive, supports wildcards).
-            :type query.version: str
-            :param query.status: Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.
-            :type query.status: List[StatusFilter]
-            :param query.runtime_version: Filter on the runtime version.
-            :type query.runtime_version: SemanticVersionRange
-            :param query.created_by: Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.
-            :type query.created_by: str
-            :param query.updated_by: Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.
-            :type query.updated_by: str
-            :param query.created_before: Filter on funtions that were created before the given timestamp or age.
-            :type query.created_before: TimestampSpec
-            :param query.created_after: Filter on funtions that were created after the given timestamp or age.
-            :type query.created_after: TimestampSpec
-            :param query.updated_before: Filter on funtions that were updated before the given timestamp or age.
-            :type query.updated_before: TimestampSpec
-            :param query.updated_after: Filter on funtions that were updated after the given timestamp or age.
-            :type query.updated_after: TimestampSpec
-            :param query.archive_format: Filter on the archive format of the function.
-            :type query.archive_format: List[ArchiveFormat]
-            :param query.runtime: Filter on the runtime of the function.
-            :type query.runtime: List[str]
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :return: Returns the result object.
-        """
-
-        _request_params = self._get_latest_versions_serialize(
-            name=name,
-            body=None,
-            files=None,
-            query=query,
-            _headers=_headers,
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.WebscriptVersionsResponseV2",
-        }
-        response_data = await self._api_client.call_api(
-            **_request_params, _request_timeout=_request_timeout
-        )
-        result = self._api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-        return result if with_http_info else result.data
-
-    def _get_latest_versions_serialize(
-        self,
-        name,
-        body,
-        files,
-        query,
-        _headers,
-    ) -> dict[str, Any]:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = (
-            {k.lower(): v for k, v in _headers.items()} if _headers else {}
-        )
-        _form_params: Dict[str, str] = {}
-        _files: Dict[str, str] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("limit", None)
-            if query_param is not None:
-                _query_params["limit"] = query_param
-
-            query_param = query.get("page", None)
-            if query_param is not None:
-                _query_params["page"] = query_param
-
-            query_param = query.get("deprecated", None)
-            if query_param is not None:
-                _query_params["deprecated"] = query_param
-
-            query_param = query.get("draft", None)
-            if query_param is not None:
-                _query_params["draft"] = query_param
-
-            query_param = query.get("version", None)
-            if query_param is not None:
-                _query_params["version"] = query_param
-
-            query_param = query.get("status", None)
-            if query_param is not None:
-                _query_params["status"] = query_param
-
-            query_param = query.get("runtime_version", None)
-            if query_param is not None:
-                _query_params["runtimeVersion"] = query_param
-
-            query_param = query.get("created_by", None)
-            if query_param is not None:
-                _query_params["createdBy"] = query_param
-
-            query_param = query.get("updated_by", None)
-            if query_param is not None:
-                _query_params["updatedBy"] = query_param
-
-            query_param = query.get("created_before", None)
-            if query_param is not None:
-                _query_params["createdBefore"] = query_param
-
-            query_param = query.get("created_after", None)
-            if query_param is not None:
-                _query_params["createdAfter"] = query_param
-
-            query_param = query.get("updated_before", None)
-            if query_param is not None:
-                _query_params["updatedBefore"] = query_param
-
-            query_param = query.get("updated_after", None)
-            if query_param is not None:
-                _query_params["updatedAfter"] = query_param
-
-            query_param = query.get("archive_format", None)
-            if query_param is not None:
-                _query_params["archiveFormat"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-
-            query_param = query.get("runtime", None)
-            if query_param is not None:
-                _query_params["runtime"] = query_param
-
-        # process the form parameters
-        # process the body parameter
-
-        return self._api_client.param_serialize(
-            method="GET",
-            resource_path="/registry/v2/webscripts/{name}/versions",
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            files=_files,
-        )
-
-    @overload
-    async def get_version(
+    async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         version: Annotated[
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetVersionQuery] = None,
+        query: Optional[GetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
@@ -1241,14 +1036,14 @@ class WebscriptFunctionsApi:
         ...
 
     @overload
-    async def get_version(
+    async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         version: Annotated[
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetVersionQuery] = None,
+        query: Optional[GetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
@@ -1256,14 +1051,14 @@ class WebscriptFunctionsApi:
         ...
 
     @validate_call
-    async def get_version(
+    async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         version: Annotated[
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetVersionQuery] = None,
+        query: Optional[GetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
@@ -1290,7 +1085,7 @@ class WebscriptFunctionsApi:
         :return: Returns the result object.
         """
 
-        _request_params = self._get_version_serialize(
+        _request_params = self._get_serialize(
             name=name,
             version=version,
             body=None,
@@ -1311,7 +1106,7 @@ class WebscriptFunctionsApi:
         )
         return result if with_http_info else result.data
 
-    def _get_version_serialize(
+    def _get_serialize(
         self,
         name,
         version,
@@ -1513,10 +1308,211 @@ class WebscriptFunctionsApi:
         )
 
     @overload
-    async def list_all(
+    async def list_versions(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        *,
+        query: Optional[ListVersionsQuery] = None,
+        _request_timeout: Optional[RESTTimeout] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        with_http_info: Literal[False] = False,
+    ) -> WebscriptVersionsResponseV2:
+        ...
+
+    @overload
+    async def list_versions(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        *,
+        query: Optional[ListVersionsQuery] = None,
+        _request_timeout: Optional[RESTTimeout] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        with_http_info: Literal[True],
+    ) -> ApiResponse[WebscriptVersionsResponseV2]:
+        ...
+
+    @validate_call
+    async def list_versions(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        *,
+        query: Optional[ListVersionsQuery] = None,
+        _request_timeout: Optional[RESTTimeout] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        with_http_info: StrictBool = False,
+    ) -> Union[WebscriptVersionsResponseV2, ApiResponse[WebscriptVersionsResponseV2]]:
+        """List Webscript Versions.
+
+        List all deployed versions of a webscript.
+
+        :param name: The name of the function. (required)
+        :type name: str
+        :param query: Supported query params. (optional)
+        :type query: TypedDict, optional:
+            :param query.limit: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
+            :type query.limit: float
+            :param query.page: The number of pages to skip when returning result to this query.
+            :type query.page: float
+            :param query.deprecated: Filter on the deprecation status of the function.
+            :type query.deprecated: bool
+            :param query.draft: Filter on the draft status of the function.
+            :type query.draft: bool
+            :param query.version: Filter on the version of the function (case-sensitive, supports wildcards).
+            :type query.version: str
+            :param query.status: Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.
+            :type query.status: List[StatusFilter]
+            :param query.runtime_version: Filter on the runtime version.
+            :type query.runtime_version: SemanticVersionRange
+            :param query.created_by: Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.
+            :type query.created_by: str
+            :param query.updated_by: Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.
+            :type query.updated_by: str
+            :param query.created_before: Filter on funtions that were created before the given timestamp or age.
+            :type query.created_before: TimestampSpec
+            :param query.created_after: Filter on funtions that were created after the given timestamp or age.
+            :type query.created_after: TimestampSpec
+            :param query.updated_before: Filter on funtions that were updated before the given timestamp or age.
+            :type query.updated_before: TimestampSpec
+            :param query.updated_after: Filter on funtions that were updated after the given timestamp or age.
+            :type query.updated_after: TimestampSpec
+            :param query.archive_format: Filter on the archive format of the function.
+            :type query.archive_format: List[ArchiveFormat]
+            :param query.runtime: Filter on the runtime of the function.
+            :type query.runtime: List[str]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :return: Returns the result object.
+        """
+
+        _request_params = self._list_versions_serialize(
+            name=name,
+            body=None,
+            files=None,
+            query=query,
+            _headers=_headers,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "waylay.services.registry.models.WebscriptVersionsResponseV2",
+        }
+        response_data = await self._api_client.call_api(
+            **_request_params, _request_timeout=_request_timeout
+        )
+        result = self._api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+        return result if with_http_info else result.data
+
+    def _list_versions_serialize(
+        self,
+        name,
+        body,
+        files,
+        query,
+        _headers,
+    ) -> dict[str, Any]:
+        _path_params: Dict[str, str] = {}
+        _query_params: Dict[str, Any] = {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
+        _form_params: Dict[str, str] = {}
+        _files: Dict[str, str] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if name is not None:
+            _path_params["name"] = name
+        # process the query parameters
+        if query is not None:
+            query_param = query.get("limit", None)
+            if query_param is not None:
+                _query_params["limit"] = query_param
+
+            query_param = query.get("page", None)
+            if query_param is not None:
+                _query_params["page"] = query_param
+
+            query_param = query.get("deprecated", None)
+            if query_param is not None:
+                _query_params["deprecated"] = query_param
+
+            query_param = query.get("draft", None)
+            if query_param is not None:
+                _query_params["draft"] = query_param
+
+            query_param = query.get("version", None)
+            if query_param is not None:
+                _query_params["version"] = query_param
+
+            query_param = query.get("status", None)
+            if query_param is not None:
+                _query_params["status"] = query_param
+
+            query_param = query.get("runtime_version", None)
+            if query_param is not None:
+                _query_params["runtimeVersion"] = query_param
+
+            query_param = query.get("created_by", None)
+            if query_param is not None:
+                _query_params["createdBy"] = query_param
+
+            query_param = query.get("updated_by", None)
+            if query_param is not None:
+                _query_params["updatedBy"] = query_param
+
+            query_param = query.get("created_before", None)
+            if query_param is not None:
+                _query_params["createdBefore"] = query_param
+
+            query_param = query.get("created_after", None)
+            if query_param is not None:
+                _query_params["createdAfter"] = query_param
+
+            query_param = query.get("updated_before", None)
+            if query_param is not None:
+                _query_params["updatedBefore"] = query_param
+
+            query_param = query.get("updated_after", None)
+            if query_param is not None:
+                _query_params["updatedAfter"] = query_param
+
+            query_param = query.get("archive_format", None)
+            if query_param is not None:
+                _query_params["archiveFormat"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
+
+            query_param = query.get("runtime", None)
+            if query_param is not None:
+                _query_params["runtime"] = query_param
+
+        # process the form parameters
+        # process the body parameter
+
+        return self._api_client.param_serialize(
+            method="GET",
+            resource_path="/registry/v2/webscripts/{name}/versions",
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            files=_files,
+        )
+
+    @overload
+    async def list(
         self,
         *,
-        query: Optional[ListAllQuery] = None,
+        query: Optional[ListQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
@@ -1524,10 +1520,10 @@ class WebscriptFunctionsApi:
         ...
 
     @overload
-    async def list_all(
+    async def list(
         self,
         *,
-        query: Optional[ListAllQuery] = None,
+        query: Optional[ListQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
@@ -1535,10 +1531,10 @@ class WebscriptFunctionsApi:
         ...
 
     @validate_call
-    async def list_all(
+    async def list(
         self,
         *,
-        query: Optional[ListAllQuery] = None,
+        query: Optional[ListQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
@@ -1601,7 +1597,7 @@ class WebscriptFunctionsApi:
         :return: Returns the result object.
         """
 
-        _request_params = self._list_all_serialize(
+        _request_params = self._list_serialize(
             body=None,
             files=None,
             query=query,
@@ -1620,7 +1616,7 @@ class WebscriptFunctionsApi:
         )
         return result if with_http_info else result.data
 
-    def _list_all_serialize(
+    def _list_serialize(
         self,
         body,
         files,

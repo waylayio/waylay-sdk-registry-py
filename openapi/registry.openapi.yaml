@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Waylay Function Registry
-  version: 2.12.1
+  version: 2.12.2
   x-visibility: stable
   description: V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML
     models).
@@ -2140,9 +2140,7 @@ components:
           description: Tags associated with this function.
           examples:
           - - name: awaiting-review
-              color: '#4153ea'
             - name: demo
-              color: '#e639a4'
         friendlyName:
           type: string
           description: Display title for this function.
@@ -2173,9 +2171,7 @@ components:
           description: Tags associated with this function.
           examples:
           - - name: awaiting-review
-              color: '#4153ea'
             - name: demo
-              color: '#e639a4'
         friendlyName:
           type: string
           description: Display title for this function.
@@ -3589,9 +3585,7 @@ components:
           description: Tags associated with this function.
           examples:
           - - name: awaiting-review
-              color: '#4153ea'
             - name: demo
-              color: '#e639a4'
         friendlyName:
           type: string
           description: Display title for this function.
@@ -4563,9 +4557,7 @@ components:
           description: Tags associated with this function.
           examples:
           - - name: awaiting-review
-              color: '#4153ea'
             - name: demo
-              color: '#e639a4'
         friendlyName:
           type: string
           description: Display title for this function.
@@ -5538,245 +5530,6 @@ components:
         - state
         - type
         title: Scale
-    BuildJobForFunction:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/IJobHALLinks'
-          description: Links to events if the job is still active.
-        type:
-          type: string
-          description: The type of the background task.
-          title: Build
-          enum:
-          - build
-        state:
-          $ref: '#/components/schemas/JobStateResult'
-          description: The current processing state of the job
-        request:
-          $ref: '#/components/schemas/IBuildArgs'
-          description: The request that initiated this job.
-        result:
-          $ref: '#/components/schemas/IBuildResult'
-          description: The result of the job if completed.
-        createdAt:
-          type: string
-          format: date-time
-          description: The timestamp of creation of this job
-        createdBy:
-          type: string
-          description: The user that created this job
-        operation:
-          type: string
-          description: Request operation
-        function:
-          $ref: '#/components/schemas/IFunctionRef'
-          description: The function entity that this job acts on, will be missing
-            for batch jobs.
-        job:
-          $ref: '#/components/schemas/JobStatus'
-          description: Detailed technical status of the job, if available.
-        failureReason:
-          $ref: '#/components/schemas/FailureReason'
-          description: Failure reason if available
-      required:
-      - createdAt
-      - createdBy
-      - operation
-      - state
-      - type
-      title: Build
-    DeployJobForFunction:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/IJobHALLinks'
-          description: Links to events if the job is still active.
-        type:
-          type: string
-          description: The type of the background task.
-          title: Deploy
-          enum:
-          - deploy
-        state:
-          $ref: '#/components/schemas/JobStateResult'
-          description: The current processing state of the job
-        request:
-          $ref: '#/components/schemas/IDeployArgs'
-          description: The request that initiated this job.
-        result:
-          $ref: '#/components/schemas/IDeployResult'
-          description: The result of the job if completed.
-        createdAt:
-          type: string
-          format: date-time
-          description: The timestamp of creation of this job
-        createdBy:
-          type: string
-          description: The user that created this job
-        operation:
-          type: string
-          description: Request operation
-        function:
-          $ref: '#/components/schemas/IFunctionRef'
-          description: The function entity that this job acts on, will be missing
-            for batch jobs.
-        job:
-          $ref: '#/components/schemas/JobStatus'
-          description: Detailed technical status of the job, if available.
-        failureReason:
-          $ref: '#/components/schemas/FailureReason'
-          description: Failure reason if available
-      required:
-      - createdAt
-      - createdBy
-      - operation
-      - state
-      - type
-      title: Deploy
-    VerifyJobForFunction:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/IJobHALLinks'
-          description: Links to events if the job is still active.
-        type:
-          type: string
-          description: The type of the background task.
-          title: Verify
-          enum:
-          - verify
-        state:
-          $ref: '#/components/schemas/JobStateResult'
-          description: The current processing state of the job
-        request:
-          $ref: '#/components/schemas/IVerifyArgs'
-          description: The request that initiated this job.
-        result:
-          $ref: '#/components/schemas/IVerifyResult'
-          description: The result of the job if completed.
-        createdAt:
-          type: string
-          format: date-time
-          description: The timestamp of creation of this job
-        createdBy:
-          type: string
-          description: The user that created this job
-        operation:
-          type: string
-          description: Request operation
-        function:
-          $ref: '#/components/schemas/IFunctionRef'
-          description: The function entity that this job acts on, will be missing
-            for batch jobs.
-        job:
-          $ref: '#/components/schemas/JobStatus'
-          description: Detailed technical status of the job, if available.
-        failureReason:
-          $ref: '#/components/schemas/FailureReason'
-          description: Failure reason if available
-      required:
-      - createdAt
-      - createdBy
-      - operation
-      - state
-      - type
-      title: Verify
-    UndeployJobForFunction:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/IJobHALLinks'
-          description: Links to events if the job is still active.
-        type:
-          type: string
-          description: The type of the background task.
-          title: Undeploy
-          enum:
-          - undeploy
-        state:
-          $ref: '#/components/schemas/JobStateResult'
-          description: The current processing state of the job
-        request:
-          $ref: '#/components/schemas/IUndeployArgs'
-          description: The request that initiated this job.
-        result:
-          $ref: '#/components/schemas/IUndeployResult'
-          description: The result of the job if completed.
-        createdAt:
-          type: string
-          format: date-time
-          description: The timestamp of creation of this job
-        createdBy:
-          type: string
-          description: The user that created this job
-        operation:
-          type: string
-          description: Request operation
-        function:
-          $ref: '#/components/schemas/IFunctionRef'
-          description: The function entity that this job acts on, will be missing
-            for batch jobs.
-        job:
-          $ref: '#/components/schemas/JobStatus'
-          description: Detailed technical status of the job, if available.
-        failureReason:
-          $ref: '#/components/schemas/FailureReason'
-          description: Failure reason if available
-      required:
-      - createdAt
-      - createdBy
-      - operation
-      - state
-      - type
-      title: Undeploy
-    ScaleJobForFunction:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/IJobHALLinks'
-          description: Links to events if the job is still active.
-        type:
-          type: string
-          description: The type of the background task.
-          enum:
-          - scale
-        state:
-          $ref: '#/components/schemas/JobStateResult'
-          description: The current processing state of the job
-        request:
-          $ref: '#/components/schemas/IScaleArgs'
-          description: The request that initiated this job.
-        result:
-          $ref: '#/components/schemas/IScaleResult'
-          description: The result of the job if completed.
-        createdAt:
-          type: string
-          format: date-time
-          description: The timestamp of creation of this job
-        createdBy:
-          type: string
-          description: The user that created this job
-        operation:
-          type: string
-          description: Request operation
-        function:
-          $ref: '#/components/schemas/IFunctionRef'
-          description: The function entity that this job acts on, will be missing
-            for batch jobs.
-        job:
-          $ref: '#/components/schemas/JobStatus'
-          description: Detailed technical status of the job, if available.
-        failureReason:
-          $ref: '#/components/schemas/FailureReason'
-          description: Failure reason if available
-      required:
-      - createdAt
-      - createdBy
-      - operation
-      - state
-      - type
-      title: Scale
     IBuildArgs:
       type: object
       properties:
@@ -9536,7 +9289,7 @@ paths:
                 $ref: '#/components/schemas/IPostWebscriptJobAsyncResponseV2'
       security: *id001
     get:
-      operationId: listAll_webscript_functions
+      operationId: list_webscript_functions
       summary: List Webscripts
       tags:
       - Webscript Functions
@@ -9737,7 +9490,7 @@ paths:
       security: *id001
   /registry/v2/webscripts/{name}/versions:
     get:
-      operationId: getLatestVersions_webscript_functions
+      operationId: listVersions_webscript_functions
       summary: List Webscript Versions
       tags:
       - Webscript Functions
@@ -9870,7 +9623,7 @@ paths:
       security: *id001
   /registry/v2/webscripts/{name}/versions/{version}:
     get:
-      operationId: getVersion_webscript_functions
+      operationId: get_webscript_functions
       summary: Get Webscript Version
       tags:
       - Webscript Functions
@@ -10107,7 +9860,7 @@ paths:
       security: *id001
   /registry/v2/webscripts/{name}:
     get:
-      operationId: getLatestVersion_webscript_functions
+      operationId: getLatest_webscript_functions
       summary: Get Latest Webscript Version
       tags:
       - Webscript Functions
@@ -11342,7 +11095,7 @@ paths:
                 $ref: '#/components/schemas/IPostPlugJobAsyncResponseV2'
       security: *id001
     get:
-      operationId: listAll_plug_functions
+      operationId: list_plug_functions
       summary: List Plugs
       tags:
       - Plug Functions
@@ -11556,7 +11309,7 @@ paths:
       security: *id001
   /registry/v2/plugs/{name}:
     get:
-      operationId: getLatestVersion_plug_functions
+      operationId: getLatest_plug_functions
       summary: Get Latest Plug Version
       tags:
       - Plug Functions
@@ -11850,7 +11603,7 @@ paths:
       security: *id001
   /registry/v2/plugs/{name}/versions/{version}:
     get:
-      operationId: getVersion_plug_functions
+      operationId: get_plug_functions
       summary: Get Plug Version
       tags:
       - Plug Functions
@@ -13154,7 +12907,7 @@ paths:
                 $ref: '#/components/schemas/IPostModelJobAsyncResponseV2'
       security: *id001
     get:
-      operationId: listAll_model_functions
+      operationId: list_model_functions
       summary: List Models
       tags:
       - Model Functions
@@ -13354,7 +13107,7 @@ paths:
       security: *id001
   /registry/v2/models/{name}:
     get:
-      operationId: getLatestVersion_model_functions
+      operationId: getLatest_model_functions
       summary: Get Latest Model Version
       tags:
       - Model Functions
@@ -13633,7 +13386,7 @@ paths:
       security: *id001
   /registry/v2/models/{name}/versions/{version}:
     get:
-      operationId: getVersion_model_functions
+      operationId: get_model_functions
       summary: Get Model Version
       tags:
       - Model Functions

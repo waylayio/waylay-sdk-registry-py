@@ -145,8 +145,8 @@ class GetAssetQuery(TypedDict):
     ]
 
 
-class GetLatestVersionQuery(TypedDict):
-    """get_latest_version query parameters."""
+class GetLatestQuery(TypedDict):
+    """get_latest query parameters."""
 
     type: NotRequired[
         Annotated[
@@ -172,8 +172,8 @@ class GetLatestVersionQuery(TypedDict):
     ]
 
 
-class GetVersionQuery(TypedDict):
-    """get_version query parameters."""
+class GetQuery(TypedDict):
+    """get query parameters."""
 
 
 class JobsQuery(TypedDict):
@@ -225,8 +225,8 @@ class JobsQuery(TypedDict):
     ]
 
 
-class ListAllQuery(TypedDict):
-    """list_all query parameters."""
+class ListQuery(TypedDict):
+    """list query parameters."""
 
     tags: NotRequired[
         Annotated[

@@ -226,10 +226,10 @@ async def test_get_asset(
 
 
 @pytest.mark.asyncio
-async def test_get_latest_version(
+async def test_get_latest(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
-    """Test case for get_latest_version
+    """Test case for get_latest
     Get Latest Plug Version
     """
     # set path params
@@ -246,15 +246,13 @@ async def test_get_latest_version(
     kwargs = {
         "name": name,
     }
-    resp = await service.plug_functions.get_latest_version(**kwargs)
+    resp = await service.plug_functions.get_latest(**kwargs)
     assert isinstance(resp, GetPlugResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_get_version(
-    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
-):
-    """Test case for get_version
+async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for get
     Get Plug Version
     """
     # set path params
@@ -274,7 +272,7 @@ async def test_get_version(
         "name": name,
         "version": version,
     }
-    resp = await service.plug_functions.get_version(**kwargs)
+    resp = await service.plug_functions.get(**kwargs)
     assert isinstance(resp, GetPlugResponseV2)
 
 
@@ -305,10 +303,8 @@ async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTP
 
 
 @pytest.mark.asyncio
-async def test_list_all(
-    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
-):
-    """Test case for list_all
+async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for list
     List Plugs
     """
     # set path params
@@ -322,7 +318,7 @@ async def test_list_all(
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {}
-    resp = await service.plug_functions.list_all(**kwargs)
+    resp = await service.plug_functions.list(**kwargs)
     assert isinstance(resp, LatestPlugsResponseV2)
 
 
