@@ -67,8 +67,7 @@ class ParentKeys(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,7 +81,5 @@ class ParentKeys(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "id": obj.get("id")
-        })
+        _obj = cls.model_validate({"id": obj.get("id")})
         return _obj

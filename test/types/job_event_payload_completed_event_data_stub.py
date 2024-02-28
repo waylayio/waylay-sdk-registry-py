@@ -9,19 +9,13 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
-from waylay.services.registry.models.job_event_payload_completed_event_data import JobEventPayloadCompletedEventData
+from waylay.services.registry.models.job_event_payload_completed_event_data import (
+    JobEventPayloadCompletedEventData,
+)
 from .job_reference_stub import JobReferenceStub
 
 from .completed_event_data_stub import CompletedEventDataStub
-
-
-from typing import Any, ClassVar, Dict, List
-from pydantic import BaseModel
-from pydantic import Field
-from waylay.services.registry.models.completed_event_data import CompletedEventData
-from waylay.services.registry.models.job_reference import JobReference
 
 
 # some mappings that are needed for some <example> interpolations
@@ -36,18 +30,22 @@ class JobEventPayloadCompletedEventDataStub:
         include_optional: bool = False,
     ) -> JobEventPayloadCompletedEventData:
         """Create JobEventPayloadCompletedEventData stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         if include_optional:
             return JobEventPayloadCompletedEventData(
                 job=JobReferenceStub.create_instance(),
                 data=CompletedEventDataStub.create_instance(),
-                timestamp=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
+                timestamp=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
             )
         else:
             return JobEventPayloadCompletedEventData(
                 job=JobReferenceStub.create_instance(),
                 data=CompletedEventDataStub.create_instance(),
-                timestamp=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
+                timestamp=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
             )

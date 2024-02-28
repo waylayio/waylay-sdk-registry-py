@@ -11,25 +11,27 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 from ..models.latest_function_versions_query import LatestFunctionVersionsQuery
 from ..models.latest_functions_query import LatestFunctionsQuery
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import ConfigDict
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-WEBSCRIPTLATESTVERSIONSQUERYV2_ANY_OF_SCHEMAS = ["LatestFunctionVersionsQuery", "LatestFunctionsQuery"]
+WEBSCRIPTLATESTVERSIONSQUERYV2_ANY_OF_SCHEMAS = [
+    "LatestFunctionVersionsQuery",
+    "LatestFunctionsQuery",
+]
 
 
 class WebscriptLatestVersionsQueryV2(BaseModel):
@@ -40,7 +42,9 @@ class WebscriptLatestVersionsQueryV2(BaseModel):
     # data type: LatestFunctionsQuery
     anyof_schema_2_validator: Optional[LatestFunctionsQuery] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[LatestFunctionVersionsQuery, LatestFunctionsQuery]] = None
+        actual_instance: Optional[
+            Union[LatestFunctionVersionsQuery, LatestFunctionsQuery]
+        ] = None
     else:
         actual_instance: Any = None
     any_of_schemas: List[str] = WEBSCRIPTLATESTVERSIONSQUERYV2_ANY_OF_SCHEMAS
@@ -54,34 +58,45 @@ class WebscriptLatestVersionsQueryV2(BaseModel):
         """Create a WebscriptLatestVersionsQueryV2 model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = WebscriptLatestVersionsQueryV2.model_construct()
+        instance = WebscriptLatestVersionsQueryV2.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: LatestFunctionVersionsQuery
         if not isinstance(v, LatestFunctionVersionsQuery):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `LatestFunctionVersionsQuery`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `LatestFunctionVersionsQuery`"
+            )
         else:
             return v
 
         # validate data type: LatestFunctionsQuery
         if not isinstance(v, LatestFunctionsQuery):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `LatestFunctionsQuery`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `LatestFunctionsQuery`"
+            )
         else:
             return v
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in WebscriptLatestVersionsQueryV2 with anyOf schemas: LatestFunctionVersionsQuery, LatestFunctionsQuery. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in WebscriptLatestVersionsQueryV2 with anyOf schemas: LatestFunctionVersionsQuery, LatestFunctionsQuery. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -93,7 +108,7 @@ class WebscriptLatestVersionsQueryV2(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # anyof_schema_1_validator: Optional[LatestFunctionVersionsQuery] = None
         try:
@@ -110,7 +125,10 @@ class WebscriptLatestVersionsQueryV2(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into WebscriptLatestVersionsQueryV2 with anyOf schemas: LatestFunctionVersionsQuery, LatestFunctionsQuery. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into WebscriptLatestVersionsQueryV2 with anyOf schemas: LatestFunctionVersionsQuery, LatestFunctionsQuery. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

@@ -25,6 +25,8 @@ from ..models.job_and_function_hal_link import JobAndFunctionHALLink
 from ..models.job_state_result import JobStateResult
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -35,20 +37,37 @@ class Deploy1(BaseModel):
     """Deploy1."""
 
     type: StrictStr = Field(description="The type of the background task.")
-    operation: StrictStr = Field(description="The operation name for the background task.")
-    id: StrictStr = Field(description="The id of the background job, or the constant `_unknown_`")
+    operation: StrictStr = Field(
+        description="The operation name for the background task."
+    )
+    id: StrictStr = Field(
+        description="The id of the background job, or the constant `_unknown_`"
+    )
     state: JobStateResult
-    created_at: datetime = Field(description="The creation time of this job", alias="createdAt")
-    created_by: StrictStr = Field(description="The user that initiated this job", alias="createdBy")
+    created_at: datetime = Field(
+        description="The creation time of this job", alias="createdAt"
+    )
+    created_by: StrictStr = Field(
+        description="The user that initiated this job", alias="createdBy"
+    )
     function: Optional[FunctionRef] = None
     links: JobAndFunctionHALLink = Field(alias="_links")
-    __properties: ClassVar[List[str]] = ["type", "operation", "id", "state", "createdAt", "createdBy", "function", "_links"]
+    __properties: ClassVar[List[str]] = [
+        "type",
+        "operation",
+        "id",
+        "state",
+        "createdAt",
+        "createdBy",
+        "function",
+        "_links",
+    ]
 
-    @field_validator('type')
+    @field_validator("type")
     @classmethod
     def type_validate_enum(cls, value):
         """Validate the enum."""
-        if value not in ('deploy'):
+        if value not in ("deploy"):
             raise ValueError("must be one of enum values ('deploy')")
         return value
 
@@ -86,19 +105,18 @@ class Deploy1(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of state
         if self.state:
-            _dict['state'] = self.state.to_dict()
+            _dict["state"] = self.state.to_dict()
         # override the default output from pydantic by calling `to_dict()` of function
         if self.function:
-            _dict['function'] = self.function.to_dict()
+            _dict["function"] = self.function.to_dict()
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -110,14 +128,28 @@ class Deploy1(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "operation": obj.get("operation"),
-            "id": obj.get("id"),
-            "state": JobStateResult.from_dict(obj.get("state")) if obj.get("state") is not None else None,    # type: ignore
-            "createdAt": obj.get("createdAt"),
-            "createdBy": obj.get("createdBy"),
-            "function": FunctionRef.from_dict(obj.get("function")) if obj.get("function") is not None else None,    # type: ignore
-            "_links": JobAndFunctionHALLink.from_dict(obj.get("_links")) if obj.get("_links") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "type": obj.get("type"),
+                "operation": obj.get("operation"),
+                "id": obj.get("id"),
+                "state": (
+                    JobStateResult.from_dict(cast(dict, obj.get("state")))
+                    if obj.get("state") is not None
+                    else None
+                ),
+                "createdAt": obj.get("createdAt"),
+                "createdBy": obj.get("createdBy"),
+                "function": (
+                    FunctionRef.from_dict(cast(dict, obj.get("function")))
+                    if obj.get("function") is not None
+                    else None
+                ),
+                "_links": (
+                    JobAndFunctionHALLink.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

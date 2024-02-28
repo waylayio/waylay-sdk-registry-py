@@ -11,13 +11,12 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import Any, Dict, Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, Field, ValidationError, field_validator
 from pydantic import Field
 from ..models.batch_result import BatchResult
 from ..models.build_result import BuildResult
@@ -27,14 +26,22 @@ from ..models.undeploy_result import UndeployResult
 from ..models.verify_result import VerifyResult
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import Field, ConfigDict
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-ANYJOBRESULT_ANY_OF_SCHEMAS = ["BatchResult", "BuildResult", "CleanupResult", "DeployResult", "UndeployResult", "VerifyResult", "object"]
+ANYJOBRESULT_ANY_OF_SCHEMAS = [
+    "BatchResult",
+    "BuildResult",
+    "CleanupResult",
+    "DeployResult",
+    "UndeployResult",
+    "VerifyResult",
+    "object",
+]
 
 
 class AnyJobResult(BaseModel):
@@ -49,13 +56,25 @@ class AnyJobResult(BaseModel):
     # data type: UndeployResult
     anyof_schema_4_validator: Optional[UndeployResult] = None
     # data type: object
-    anyof_schema_5_validator: Optional[Dict[str, Any]] = Field(default=None, description="The result data for a completed scale job.")
+    anyof_schema_5_validator: Optional[Dict[str, Any]] = Field(
+        default=None, description="The result data for a completed scale job."
+    )
     # data type: BatchResult
     anyof_schema_6_validator: Optional[BatchResult] = None
     # data type: CleanupResult
     anyof_schema_7_validator: Optional[CleanupResult] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[BatchResult, BuildResult, CleanupResult, DeployResult, UndeployResult, VerifyResult, object]] = None
+        actual_instance: Optional[
+            Union[
+                BatchResult,
+                BuildResult,
+                CleanupResult,
+                DeployResult,
+                UndeployResult,
+                VerifyResult,
+                object,
+            ]
+        ] = None
     else:
         actual_instance: Any = None
     any_of_schemas: List[str] = ANYJOBRESULT_ANY_OF_SCHEMAS
@@ -69,18 +88,22 @@ class AnyJobResult(BaseModel):
         """Create a AnyJobResult model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = AnyJobResult.model_construct()
+        instance = AnyJobResult.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: BuildResult
         if not isinstance(v, BuildResult):
@@ -90,19 +113,25 @@ class AnyJobResult(BaseModel):
 
         # validate data type: DeployResult
         if not isinstance(v, DeployResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `DeployResult`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `DeployResult`"
+            )
         else:
             return v
 
         # validate data type: VerifyResult
         if not isinstance(v, VerifyResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `VerifyResult`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `VerifyResult`"
+            )
         else:
             return v
 
         # validate data type: UndeployResult
         if not isinstance(v, UndeployResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `UndeployResult`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `UndeployResult`"
+            )
         else:
             return v
 
@@ -120,13 +149,18 @@ class AnyJobResult(BaseModel):
 
         # validate data type: CleanupResult
         if not isinstance(v, CleanupResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `CleanupResult`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `CleanupResult`"
+            )
         else:
             return v
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in AnyJobResult with anyOf schemas: BatchResult, BuildResult, CleanupResult, DeployResult, UndeployResult, VerifyResult, object. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in AnyJobResult with anyOf schemas: BatchResult, BuildResult, CleanupResult, DeployResult, UndeployResult, VerifyResult, object. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -138,7 +172,7 @@ class AnyJobResult(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # anyof_schema_1_validator: Optional[BuildResult] = None
         try:
@@ -188,7 +222,10 @@ class AnyJobResult(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into AnyJobResult with anyOf schemas: BatchResult, BuildResult, CleanupResult, DeployResult, UndeployResult, VerifyResult, object. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into AnyJobResult with anyOf schemas: BatchResult, BuildResult, CleanupResult, DeployResult, UndeployResult, VerifyResult, object. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

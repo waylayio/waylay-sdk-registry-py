@@ -32,18 +32,26 @@ except ImportError:
 class RuntimeAttributes(BaseModel):
     """RuntimeAttributes."""
 
-    deprecated: StrictBool = Field(description="If true, the function uses a deprecated runtime.")
-    upgradable: StrictBool = Field(description="If true, a newer runtime for this function is available using the `rebuild` API.")
+    deprecated: StrictBool = Field(
+        description="If true, the function uses a deprecated runtime."
+    )
+    upgradable: StrictBool = Field(
+        description="If true, a newer runtime for this function is available using the `rebuild` API."
+    )
     name: StrictStr
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
     __properties: ClassVar[List[str]] = ["deprecated", "upgradable", "name", "version"]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -80,8 +88,7 @@ class RuntimeAttributes(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -95,10 +102,12 @@ class RuntimeAttributes(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deprecated": obj.get("deprecated"),
-            "upgradable": obj.get("upgradable"),
-            "name": obj.get("name"),
-            "version": obj.get("version")
-        })
+        _obj = cls.model_validate(
+            {
+                "deprecated": obj.get("deprecated"),
+                "upgradable": obj.get("upgradable"),
+                "name": obj.get("name"),
+                "version": obj.get("version"),
+            }
+        )
         return _obj

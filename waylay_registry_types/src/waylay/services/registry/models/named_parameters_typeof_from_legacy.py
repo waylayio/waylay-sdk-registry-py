@@ -24,6 +24,8 @@ from ..models.legacy_plug_meta_request import LegacyPlugMetaRequest
 from ..models.plug_interface import PlugInterface
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -34,7 +36,9 @@ class NamedParametersTypeofFromLegacy(BaseModel):
     """NamedParametersTypeofFromLegacy."""
 
     metadata: LegacyPlugMetaRequest
-    current_interface: Optional[PlugInterface] = Field(default=None, alias="currentInterface")
+    current_interface: Optional[PlugInterface] = Field(
+        default=None, alias="currentInterface"
+    )
     __properties: ClassVar[List[str]] = ["metadata", "currentInterface"]
 
     model_config = ConfigDict(
@@ -71,16 +75,15 @@ class NamedParametersTypeofFromLegacy(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of metadata
         if self.metadata:
-            _dict['metadata'] = self.metadata.to_dict()
+            _dict["metadata"] = self.metadata.to_dict()
         # override the default output from pydantic by calling `to_dict()` of current_interface
         if self.current_interface:
-            _dict['currentInterface'] = self.current_interface.to_dict()
+            _dict["currentInterface"] = self.current_interface.to_dict()
         return _dict
 
     @classmethod
@@ -92,8 +95,18 @@ class NamedParametersTypeofFromLegacy(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "metadata": LegacyPlugMetaRequest.from_dict(obj.get("metadata")) if obj.get("metadata") is not None else None,    # type: ignore
-            "currentInterface": PlugInterface.from_dict(obj.get("currentInterface")) if obj.get("currentInterface") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "metadata": (
+                    LegacyPlugMetaRequest.from_dict(cast(dict, obj.get("metadata")))
+                    if obj.get("metadata") is not None
+                    else None
+                ),
+                "currentInterface": (
+                    PlugInterface.from_dict(cast(dict, obj.get("currentInterface")))
+                    if obj.get("currentInterface") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

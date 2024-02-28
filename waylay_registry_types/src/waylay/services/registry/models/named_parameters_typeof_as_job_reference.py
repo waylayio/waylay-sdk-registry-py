@@ -20,8 +20,12 @@ from pydantic import ConfigDict
 from typing import Any, ClassVar, Dict, List
 from pydantic import BaseModel
 from pydantic import Field
-from ..models.named_parameters_typeof_as_job_reference_job_status import NamedParametersTypeofAsJobReferenceJobStatus
+from ..models.named_parameters_typeof_as_job_reference_job_status import (
+    NamedParametersTypeofAsJobReferenceJobStatus,
+)
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -69,13 +73,12 @@ class NamedParametersTypeofAsJobReference(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of job_status
         if self.job_status:
-            _dict['jobStatus'] = self.job_status.to_dict()
+            _dict["jobStatus"] = self.job_status.to_dict()
         return _dict
 
     @classmethod
@@ -87,7 +90,15 @@ class NamedParametersTypeofAsJobReference(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "jobStatus": NamedParametersTypeofAsJobReferenceJobStatus.from_dict(obj.get("jobStatus")) if obj.get("jobStatus") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "jobStatus": (
+                    NamedParametersTypeofAsJobReferenceJobStatus.from_dict(
+                        cast(dict, obj.get("jobStatus"))
+                    )
+                    if obj.get("jobStatus") is not None
+                    else None
+                )
+            }
+        )
         return _obj

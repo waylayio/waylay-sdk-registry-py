@@ -10,7 +10,6 @@ Do not edit the class manually.
 
 
 import pytest
-from typing import Dict, List
 from pytest_httpx import HTTPXMock
 import json
 from waylay.sdk import ApiClient, WaylayClient
@@ -39,20 +38,18 @@ def test_registered(waylay_client: WaylayClient):
 @pytest.mark.asyncio
 async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
-        Version
+    Version
     """
     # set path params
 
     mock_response = RootPageResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/",
+        "url": gateway_url + f"/registry/v2/",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {
-
-    }
+    kwargs = {}
     resp = await service.default.get(**kwargs)
     assert isinstance(resp, RootPageResponse)

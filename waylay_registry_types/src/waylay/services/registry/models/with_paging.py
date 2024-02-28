@@ -31,9 +31,15 @@ except ImportError:
 class WithPaging(BaseModel):
     """WithPaging."""
 
-    limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page size used for this query result.")
-    count: Union[StrictFloat, StrictInt] = Field(description="The total count of matching items, from which this result is one page.")
-    page: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page number of a paged query result.")
+    limit: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page size used for this query result."
+    )
+    count: Union[StrictFloat, StrictInt] = Field(
+        description="The total count of matching items, from which this result is one page."
+    )
+    page: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page number of a paged query result."
+    )
     __properties: ClassVar[List[str]] = ["limit", "count", "page"]
 
     model_config = ConfigDict(
@@ -70,8 +76,7 @@ class WithPaging(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,9 +90,11 @@ class WithPaging(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "count": obj.get("count"),
-            "page": obj.get("page")
-        })
+        _obj = cls.model_validate(
+            {
+                "limit": obj.get("limit"),
+                "count": obj.get("count"),
+                "page": obj.get("page"),
+            }
+        )
         return _obj

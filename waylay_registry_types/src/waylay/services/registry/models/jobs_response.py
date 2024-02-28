@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.any_job_status_summary import AnyJobStatusSummary
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -32,8 +34,12 @@ except ImportError:
 class JobsResponse(BaseModel):
     """Jobs Found."""
 
-    limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page size used for this query result.")
-    jobs: List[AnyJobStatusSummary] = Field(description="Listing of jobs that satisfy the query.")
+    limit: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page size used for this query result."
+    )
+    jobs: List[AnyJobStatusSummary] = Field(
+        description="Listing of jobs that satisfy the query."
+    )
     __properties: ClassVar[List[str]] = ["limit", "jobs"]
 
     model_config = ConfigDict(
@@ -70,17 +76,16 @@ class JobsResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in jobs (list)
         _items = []
         if self.jobs:
-            for _item in self.jobs:  # type: ignore
+            for _item in cast(list, self.jobs):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['jobs'] = _items
+            _dict["jobs"] = _items
         return _dict
 
     @classmethod
@@ -92,8 +97,15 @@ class JobsResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "jobs": [AnyJobStatusSummary.from_dict(_item) for _item in obj.get("jobs")] if obj.get("jobs") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "limit": obj.get("limit"),
+                "jobs": [
+                    AnyJobStatusSummary.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("jobs"))
+                ]
+                if obj.get("jobs") is not None
+                else None,
+            }
+        )
         return _obj

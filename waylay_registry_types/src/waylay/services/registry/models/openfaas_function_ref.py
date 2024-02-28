@@ -31,7 +31,9 @@ except ImportError:
 class OpenfaasFunctionRef(BaseModel):
     """OpenfaasFunctionRef."""
 
-    namespace: StrictStr = Field(description="The (openfaas) namespace for the target function.")
+    namespace: StrictStr = Field(
+        description="The (openfaas) namespace for the target function."
+    )
     endpoint: StrictStr = Field(description="The (openfaas) endpoint service name")
     __properties: ClassVar[List[str]] = ["namespace", "endpoint"]
 
@@ -69,8 +71,7 @@ class OpenfaasFunctionRef(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +85,7 @@ class OpenfaasFunctionRef(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "namespace": obj.get("namespace"),
-            "endpoint": obj.get("endpoint")
-        })
+        _obj = cls.model_validate(
+            {"namespace": obj.get("namespace"), "endpoint": obj.get("endpoint")}
+        )
         return _obj

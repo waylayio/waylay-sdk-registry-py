@@ -70,8 +70,7 @@ class GetPlugResponseV2LinksPublished(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,10 +84,12 @@ class GetPlugResponseV2LinksPublished(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "draft": obj.get("draft"),
-            "href": obj.get("href"),
-            "version": obj.get("version"),
-            "deprecated": obj.get("deprecated")
-        })
+        _obj = cls.model_validate(
+            {
+                "draft": obj.get("draft"),
+                "href": obj.get("href"),
+                "version": obj.get("version"),
+                "deprecated": obj.get("deprecated"),
+            }
+        )
         return _obj

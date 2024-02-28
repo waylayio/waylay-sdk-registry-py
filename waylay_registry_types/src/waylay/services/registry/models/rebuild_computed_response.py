@@ -22,6 +22,8 @@ from pydantic import BaseModel, StrictStr
 from ..models.job_causes import JobCauses
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -69,13 +71,12 @@ class RebuildComputedResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of causes
         if self.causes:
-            _dict['causes'] = self.causes.to_dict()
+            _dict["causes"] = self.causes.to_dict()
         return _dict
 
     @classmethod
@@ -87,8 +88,14 @@ class RebuildComputedResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "message": obj.get("message"),
-            "causes": JobCauses.from_dict(obj.get("causes")) if obj.get("causes") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "message": obj.get("message"),
+                "causes": (
+                    JobCauses.from_dict(cast(dict, obj.get("causes")))
+                    if obj.get("causes") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

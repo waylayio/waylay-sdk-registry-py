@@ -22,6 +22,8 @@ from pydantic import BaseModel, StrictStr
 from ..models.semantic_version_range import SemanticVersionRange
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -69,13 +71,12 @@ class RuntimeVersionParams(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of version
         if self.version:
-            _dict['version'] = self.version.to_dict()
+            _dict["version"] = self.version.to_dict()
         return _dict
 
     @classmethod
@@ -87,8 +88,14 @@ class RuntimeVersionParams(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "version": SemanticVersionRange.from_dict(obj.get("version")) if obj.get("version") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "version": (
+                    SemanticVersionRange.from_dict(cast(dict, obj.get("version")))
+                    if obj.get("version") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

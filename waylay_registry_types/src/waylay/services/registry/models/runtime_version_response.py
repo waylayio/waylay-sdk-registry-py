@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.compiled_runtime_version import CompiledRuntimeVersion
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -68,13 +70,12 @@ class RuntimeVersionResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of runtime
         if self.runtime:
-            _dict['runtime'] = self.runtime.to_dict()
+            _dict["runtime"] = self.runtime.to_dict()
         return _dict
 
     @classmethod
@@ -86,7 +87,13 @@ class RuntimeVersionResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "runtime": CompiledRuntimeVersion.from_dict(obj.get("runtime")) if obj.get("runtime") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "runtime": (
+                    CompiledRuntimeVersion.from_dict(cast(dict, obj.get("runtime")))
+                    if obj.get("runtime") is not None
+                    else None
+                )
+            }
+        )
         return _obj

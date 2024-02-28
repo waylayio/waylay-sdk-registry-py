@@ -31,7 +31,11 @@ except ImportError:
 class DryRunQuery(BaseModel):
     """DryRunQuery."""
 
-    dry_run: Optional[StrictBool] = Field(default=None, description="If set to <code>true</code>, validates the deployment conditions, but does not change anything.", alias="dryRun")
+    dry_run: Optional[StrictBool] = Field(
+        default=None,
+        description="If set to <code>true</code>, validates the deployment conditions, but does not change anything.",
+        alias="dryRun",
+    )
     __properties: ClassVar[List[str]] = ["dryRun"]
 
     model_config = ConfigDict(
@@ -68,8 +72,7 @@ class DryRunQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +86,5 @@ class DryRunQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "dryRun": obj.get("dryRun")
-        })
+        _obj = cls.model_validate({"dryRun": obj.get("dryRun")})
         return _obj

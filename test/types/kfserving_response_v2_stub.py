@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
 from waylay.services.registry.models.kfserving_response_v2 import KfservingResponseV2
 
@@ -24,15 +23,6 @@ from .runtime_attributes_stub import RuntimeAttributesStub
 
 from .kf_serving_manifest_stub import KFServingManifestStub
 
-from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictBool, StrictStr
-from pydantic import Field
-from waylay.services.registry.models.failure_reason import FailureReason
-from waylay.services.registry.models.kf_serving_manifest import KFServingManifest
-from waylay.services.registry.models.runtime_attributes import RuntimeAttributes
-from waylay.services.registry.models.status import Status
-from waylay.services.registry.models.update_record import UpdateRecord
-
 
 # some mappings that are needed for some <example> interpolations
 null, true, false = None, True, False
@@ -46,33 +36,41 @@ class KfservingResponseV2Stub:
         include_optional: bool = False,
     ) -> KfservingResponseV2:
         """Create KfservingResponseV2 stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         if include_optional:
             return KfservingResponseV2(
-                created_by='',
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                updated_by='',
-                updated_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                created_by="",
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                updated_by="",
+                updated_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
                 updates=[UpdateRecordStub.create_instance()],
-                status='registered',
+                status="registered",
                 failure_reason=FailureReasonStub.create_instance(),
                 runtime=RuntimeAttributesStub.create_instance(),
                 deprecated=True,
                 draft=True,
-                model=KFServingManifestStub.create_instance()
+                model=KFServingManifestStub.create_instance(),
             )
         else:
             return KfservingResponseV2(
-                created_by='',
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                updated_by='',
-                updated_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                created_by="",
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                updated_by="",
+                updated_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
                 updates=[UpdateRecordStub.create_instance()],
-                status='registered',
+                status="registered",
                 runtime=RuntimeAttributesStub.create_instance(),
                 deprecated=True,
                 draft=True,
-                model=KFServingManifestStub.create_instance()
+                model=KFServingManifestStub.create_instance(),
             )

@@ -68,8 +68,7 @@ class LegacyCreateDebugResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +82,5 @@ class LegacyCreateDebugResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "functionName": obj.get("functionName")
-        })
+        _obj = cls.model_validate({"functionName": obj.get("functionName")})
         return _obj

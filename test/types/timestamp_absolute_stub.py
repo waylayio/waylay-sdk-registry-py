@@ -9,12 +9,8 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
 from waylay.services.registry.models.timestamp_absolute import TimestampAbsolute
-from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
-from pydantic import Field
 
 
 # some mappings that are needed for some <example> interpolations
@@ -29,8 +25,10 @@ class TimestampAbsoluteStub:
         include_optional: bool = False,
     ) -> TimestampAbsolute:
         """Create TimestampAbsolute stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         # return instance of first type from `anyOf`
-        return TimestampAbsolute(datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'))
+        return TimestampAbsolute(
+            datetime.datetime.strptime("2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f")
+        )

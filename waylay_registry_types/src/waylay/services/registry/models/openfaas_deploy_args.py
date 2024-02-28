@@ -31,9 +31,14 @@ except ImportError:
 class OpenfaasDeployArgs(BaseModel):
     """OpenfaasDeployArgs."""
 
-    namespace: StrictStr = Field(description="The (openfaas) namespace for the target function.")
+    namespace: StrictStr = Field(
+        description="The (openfaas) namespace for the target function."
+    )
     endpoint: StrictStr = Field(description="The (openfaas) endpoint service name")
-    image_name: StrictStr = Field(description="The image name to use for deploying this function", alias="imageName")
+    image_name: StrictStr = Field(
+        description="The image name to use for deploying this function",
+        alias="imageName",
+    )
     __properties: ClassVar[List[str]] = ["namespace", "endpoint", "imageName"]
 
     model_config = ConfigDict(
@@ -70,8 +75,7 @@ class OpenfaasDeployArgs(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,9 +89,11 @@ class OpenfaasDeployArgs(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "namespace": obj.get("namespace"),
-            "endpoint": obj.get("endpoint"),
-            "imageName": obj.get("imageName")
-        })
+        _obj = cls.model_validate(
+            {
+                "namespace": obj.get("namespace"),
+                "endpoint": obj.get("endpoint"),
+                "imageName": obj.get("imageName"),
+            }
+        )
         return _obj

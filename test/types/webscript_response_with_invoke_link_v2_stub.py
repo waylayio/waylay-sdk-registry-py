@@ -9,9 +9,10 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
-from waylay.services.registry.models.webscript_response_with_invoke_link_v2 import WebscriptResponseWithInvokeLinkV2
+from waylay.services.registry.models.webscript_response_with_invoke_link_v2 import (
+    WebscriptResponseWithInvokeLinkV2,
+)
 
 
 from .update_record_stub import UpdateRecordStub
@@ -27,16 +28,6 @@ from .webscript_manifest_stub import WebscriptManifestStub
 
 from .invoke_hal_link_stub import InvokeHALLinkStub
 
-from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictBool, StrictStr
-from pydantic import Field
-from waylay.services.registry.models.failure_reason import FailureReason
-from waylay.services.registry.models.invoke_hal_link import InvokeHALLink
-from waylay.services.registry.models.runtime_attributes import RuntimeAttributes
-from waylay.services.registry.models.status import Status
-from waylay.services.registry.models.update_record import UpdateRecord
-from waylay.services.registry.models.webscript_manifest import WebscriptManifest
-
 
 # some mappings that are needed for some <example> interpolations
 null, true, false = None, True, False
@@ -50,33 +41,41 @@ class WebscriptResponseWithInvokeLinkV2Stub:
         include_optional: bool = False,
     ) -> WebscriptResponseWithInvokeLinkV2:
         """Create WebscriptResponseWithInvokeLinkV2 stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         if include_optional:
             return WebscriptResponseWithInvokeLinkV2(
-                created_by='',
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                updated_by='',
-                updated_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                created_by="",
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                updated_by="",
+                updated_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
                 updates=[UpdateRecordStub.create_instance()],
-                status='registered',
+                status="registered",
                 failure_reason=FailureReasonStub.create_instance(),
                 runtime=RuntimeAttributesStub.create_instance(),
                 deprecated=True,
                 draft=True,
                 webscript=WebscriptManifestStub.create_instance(),
-                secret='',
-                links=InvokeHALLinkStub.create_instance()
+                secret="",
+                links=InvokeHALLinkStub.create_instance(),
             )
         else:
             return WebscriptResponseWithInvokeLinkV2(
-                created_by='',
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                updated_by='',
-                updated_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                created_by="",
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                updated_by="",
+                updated_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
                 updates=[UpdateRecordStub.create_instance()],
-                status='registered',
+                status="registered",
                 runtime=RuntimeAttributesStub.create_instance(),
                 deprecated=True,
                 draft=True,

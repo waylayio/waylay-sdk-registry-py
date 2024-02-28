@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.job_reference import JobReference
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -69,13 +71,12 @@ class CleanupResult(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of scheduled_job
         if self.scheduled_job:
-            _dict['scheduledJob'] = self.scheduled_job.to_dict()
+            _dict["scheduledJob"] = self.scheduled_job.to_dict()
         return _dict
 
     @classmethod
@@ -87,7 +88,13 @@ class CleanupResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "scheduledJob": JobReference.from_dict(obj.get("scheduledJob")) if obj.get("scheduledJob") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "scheduledJob": (
+                    JobReference.from_dict(cast(dict, obj.get("scheduledJob")))
+                    if obj.get("scheduledJob") is not None
+                    else None
+                )
+            }
+        )
         return _obj

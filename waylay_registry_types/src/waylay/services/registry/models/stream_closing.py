@@ -33,7 +33,9 @@ class StreamClosing(BaseModel):
     """A message that notifies that the server will not send more events, and that the client should close.."""
 
     event: EventClose
-    data: StrictStr = Field(description="A text message describing the cause for closing the stream.")
+    data: StrictStr = Field(
+        description="A text message describing the cause for closing the stream."
+    )
     __properties: ClassVar[List[str]] = ["event", "data"]
 
     model_config = ConfigDict(
@@ -70,8 +72,7 @@ class StreamClosing(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,8 +86,5 @@ class StreamClosing(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "event": obj.get("event"),
-            "data": obj.get("data")
-        })
+        _obj = cls.model_validate({"event": obj.get("event"), "data": obj.get("data")})
         return _obj

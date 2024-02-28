@@ -20,9 +20,13 @@ from pydantic import ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel
 from pydantic import Field
-from ..models.legacy_plug_request_metadata_documentation import LegacyPlugRequestMetadataDocumentation
+from ..models.legacy_plug_request_metadata_documentation import (
+    LegacyPlugRequestMetadataDocumentation,
+)
 from ..models.plug_interface import PlugInterface
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -33,8 +37,12 @@ except ImportError:
 class NamedParametersTypeofFromLegacyDocumentation(BaseModel):
     """NamedParametersTypeofFromLegacyDocumentation."""
 
-    legacy_documentation: Optional[LegacyPlugRequestMetadataDocumentation] = Field(default=None, alias="legacyDocumentation")
-    current_interface: Optional[PlugInterface] = Field(default=None, alias="currentInterface")
+    legacy_documentation: Optional[LegacyPlugRequestMetadataDocumentation] = Field(
+        default=None, alias="legacyDocumentation"
+    )
+    current_interface: Optional[PlugInterface] = Field(
+        default=None, alias="currentInterface"
+    )
     __properties: ClassVar[List[str]] = ["legacyDocumentation", "currentInterface"]
 
     model_config = ConfigDict(
@@ -71,16 +79,15 @@ class NamedParametersTypeofFromLegacyDocumentation(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of legacy_documentation
         if self.legacy_documentation:
-            _dict['legacyDocumentation'] = self.legacy_documentation.to_dict()
+            _dict["legacyDocumentation"] = self.legacy_documentation.to_dict()
         # override the default output from pydantic by calling `to_dict()` of current_interface
         if self.current_interface:
-            _dict['currentInterface'] = self.current_interface.to_dict()
+            _dict["currentInterface"] = self.current_interface.to_dict()
         return _dict
 
     @classmethod
@@ -92,8 +99,20 @@ class NamedParametersTypeofFromLegacyDocumentation(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "legacyDocumentation": LegacyPlugRequestMetadataDocumentation.from_dict(obj.get("legacyDocumentation")) if obj.get("legacyDocumentation") is not None else None,    # type: ignore
-            "currentInterface": PlugInterface.from_dict(obj.get("currentInterface")) if obj.get("currentInterface") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "legacyDocumentation": (
+                    LegacyPlugRequestMetadataDocumentation.from_dict(
+                        cast(dict, obj.get("legacyDocumentation"))
+                    )
+                    if obj.get("legacyDocumentation") is not None
+                    else None
+                ),
+                "currentInterface": (
+                    PlugInterface.from_dict(cast(dict, obj.get("currentInterface")))
+                    if obj.get("currentInterface") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

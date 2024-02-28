@@ -10,7 +10,6 @@ Do not edit the class manually.
 
 
 import pytest
-from typing import Dict, List
 from pytest_httpx import HTTPXMock
 import json
 from waylay.sdk import ApiClient, WaylayClient
@@ -58,81 +57,85 @@ def test_registered(waylay_client: WaylayClient):
 
 
 @pytest.mark.asyncio
-async def test_example_archive(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_example_archive(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for example_archive
-        Get Runtime Example Archive
+    Get Runtime Example Archive
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     version = SemanticVersionRangeStub.create_instance().actual_instance
 
-    mock_response = bytes(b'blah')
+    mock_response = bytes(b"blah")
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/runtimes/{name}/versions/{version}/example",
+        "url": gateway_url + f"/registry/v2/runtimes/{name}/versions/{version}/example",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.runtimes.example_archive(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_example_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_example_asset(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_example_asset
-        Get File From Runtime Example Archive
+    Get File From Runtime Example Archive
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     version = SemanticVersionRangeStub.create_instance().actual_instance
 
-    wildcard = 'wildcard_example'
+    wildcard = "wildcard_example"
 
-    mock_response = bytes(b'blah')
+    mock_response = bytes(b"blah")
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/runtimes/{name}/versions/{version}/example/{wildcard}",
+        "url": gateway_url
+        + f"/registry/v2/runtimes/{name}/versions/{version}/example/{wildcard}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-        'wildcard': wildcard,
-
+        "name": name,
+        "version": version,
+        "wildcard": wildcard,
     }
     resp = await service.runtimes.get_example_asset(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_latest(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_latest(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_latest
-        Get Latest Runtime Version
+    Get Latest Runtime Version
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     mock_response = RuntimeVersionResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/runtimes/{name}",
+        "url": gateway_url + f"/registry/v2/runtimes/{name}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-
+        "name": name,
     }
     resp = await service.runtimes.get_latest(**kwargs)
     assert isinstance(resp, RuntimeVersionResponse)
@@ -141,25 +144,24 @@ async def test_get_latest(service: RegistryService, gateway_url: str, httpx_mock
 @pytest.mark.asyncio
 async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
-        Get Runtime Version
+    Get Runtime Version
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     version = SemanticVersionRangeStub.create_instance().actual_instance
 
     mock_response = RuntimeVersionResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/runtimes/{name}/versions/{version}",
+        "url": gateway_url + f"/registry/v2/runtimes/{name}/versions/{version}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.runtimes.get(**kwargs)
     assert isinstance(resp, RuntimeVersionResponse)
@@ -168,44 +170,43 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
 @pytest.mark.asyncio
 async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list
-        List Runtimes
+    List Runtimes
     """
     # set path params
 
     mock_response = RuntimeSummaryResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/runtimes/",
+        "url": gateway_url + f"/registry/v2/runtimes/",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {
-
-    }
+    kwargs = {}
     resp = await service.runtimes.list(**kwargs)
     assert isinstance(resp, RuntimeSummaryResponse)
 
 
 @pytest.mark.asyncio
-async def test_list_versions(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_list_versions(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for list_versions
-        List Runtime Versions
+    List Runtime Versions
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     mock_response = RuntimeSummaryResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/runtimes/{name}/versions",
+        "url": gateway_url + f"/registry/v2/runtimes/{name}/versions",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-
+        "name": name,
     }
     resp = await service.runtimes.list_versions(**kwargs)
     assert isinstance(resp, RuntimeSummaryResponse)

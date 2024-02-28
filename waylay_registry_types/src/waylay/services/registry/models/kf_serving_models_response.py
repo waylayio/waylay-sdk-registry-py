@@ -23,6 +23,8 @@ from ..models.kf_serving_response import KFServingResponse
 from ..models.paging_response import PagingResponse
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -70,20 +72,19 @@ class KFServingModelsResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in models (list)
         _items = []
         if self.models:
-            for _item in self.models:  # type: ignore
+            for _item in cast(list, self.models):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['models'] = _items
+            _dict["models"] = _items
         # override the default output from pydantic by calling `to_dict()` of paging
         if self.paging:
-            _dict['paging'] = self.paging.to_dict()
+            _dict["paging"] = self.paging.to_dict()
         return _dict
 
     @classmethod
@@ -95,8 +96,19 @@ class KFServingModelsResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "models": [KFServingResponse.from_dict(_item) for _item in obj.get("models")] if obj.get("models") is not None else None,  # type: ignore
-            "paging": PagingResponse.from_dict(obj.get("paging")) if obj.get("paging") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "models": [
+                    KFServingResponse.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("models"))
+                ]
+                if obj.get("models") is not None
+                else None,
+                "paging": (
+                    PagingResponse.from_dict(cast(dict, obj.get("paging")))
+                    if obj.get("paging") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

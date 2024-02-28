@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.legacy_plug_script_response import LegacyPlugScriptResponse
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -71,13 +73,12 @@ class LegacyPlugCreateResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of entity
         if self.entity:
-            _dict['entity'] = self.entity.to_dict()
+            _dict["entity"] = self.entity.to_dict()
         return _dict
 
     @classmethod
@@ -89,9 +90,15 @@ class LegacyPlugCreateResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "statusCode": obj.get("statusCode"),
-            "uri": obj.get("uri"),
-            "entity": LegacyPlugScriptResponse.from_dict(obj.get("entity")) if obj.get("entity") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "statusCode": obj.get("statusCode"),
+                "uri": obj.get("uri"),
+                "entity": (
+                    LegacyPlugScriptResponse.from_dict(cast(dict, obj.get("entity")))
+                    if obj.get("entity") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

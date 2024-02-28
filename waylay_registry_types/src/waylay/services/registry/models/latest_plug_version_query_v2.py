@@ -33,8 +33,16 @@ class LatestPlugVersionQueryV2(BaseModel):
     """Latest named plug version listing query."""
 
     type: Optional[PlugType] = None
-    include_draft: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.", alias="includeDraft")
-    include_deprecated: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.", alias="includeDeprecated")
+    include_draft: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.",
+        alias="includeDraft",
+    )
+    include_deprecated: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.",
+        alias="includeDeprecated",
+    )
     __properties: ClassVar[List[str]] = ["type", "includeDraft", "includeDeprecated"]
 
     model_config = ConfigDict(
@@ -71,8 +79,7 @@ class LatestPlugVersionQueryV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,9 +93,11 @@ class LatestPlugVersionQueryV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "includeDraft": obj.get("includeDraft"),
-            "includeDeprecated": obj.get("includeDeprecated")
-        })
+        _obj = cls.model_validate(
+            {
+                "type": obj.get("type"),
+                "includeDraft": obj.get("includeDraft"),
+                "includeDeprecated": obj.get("includeDeprecated"),
+            }
+        )
         return _obj

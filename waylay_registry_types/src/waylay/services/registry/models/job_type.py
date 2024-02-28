@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,14 +28,14 @@ class JobType(str, Enum):
     """
     allowed enum values
     """
-    BUILD = 'build'
-    DEPLOY = 'deploy'
-    VERIFY = 'verify'
-    UNDEPLOY = 'undeploy'
-    BATCH = 'batch'
-    SCALE = 'scale'
-    CLEANUP = 'cleanup'
-    OTHER = 'other'
+    BUILD = "build"
+    DEPLOY = "deploy"
+    VERIFY = "verify"
+    UNDEPLOY = "undeploy"
+    BATCH = "batch"
+    SCALE = "scale"
+    CLEANUP = "cleanup"
+    OTHER = "other"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

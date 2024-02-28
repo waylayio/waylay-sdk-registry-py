@@ -24,6 +24,8 @@ from ..models.get_plug_response_v2_links import GetPlugResponseV2Links
 from ..models.plug_response_v2 import PlugResponseV2
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -71,16 +73,15 @@ class GetPlugResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of entity
         if self.entity:
-            _dict['entity'] = self.entity.to_dict()
+            _dict["entity"] = self.entity.to_dict()
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -92,8 +93,18 @@ class GetPlugResponseV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "entity": PlugResponseV2.from_dict(obj.get("entity")) if obj.get("entity") is not None else None,    # type: ignore
-            "_links": GetPlugResponseV2Links.from_dict(obj.get("_links")) if obj.get("_links") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "entity": (
+                    PlugResponseV2.from_dict(cast(dict, obj.get("entity")))
+                    if obj.get("entity") is not None
+                    else None
+                ),
+                "_links": (
+                    GetPlugResponseV2Links.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

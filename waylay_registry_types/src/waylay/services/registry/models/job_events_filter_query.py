@@ -34,7 +34,10 @@ class JobEventsFilterQuery(BaseModel):
 
     type: Optional[JobType] = None
     id: Optional[StrictStr] = Field(default=None, description="The id of the job.")
-    children: Optional[StrictBool] = Field(default=None, description="If set to <code>true</code>, the event stream will include events of the job's dependants. E.g., when subscribing to a verify job with `children=true`, you will also receive the events of the underlying build and deploy jobs. Defaults to <code>false</code>.")
+    children: Optional[StrictBool] = Field(
+        default=None,
+        description="If set to <code>true</code>, the event stream will include events of the job's dependants. E.g., when subscribing to a verify job with `children=true`, you will also receive the events of the underlying build and deploy jobs. Defaults to <code>false</code>.",
+    )
     __properties: ClassVar[List[str]] = ["type", "id", "children"]
 
     model_config = ConfigDict(
@@ -71,8 +74,7 @@ class JobEventsFilterQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,9 +88,11 @@ class JobEventsFilterQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "id": obj.get("id"),
-            "children": obj.get("children")
-        })
+        _obj = cls.model_validate(
+            {
+                "type": obj.get("type"),
+                "id": obj.get("id"),
+                "children": obj.get("children"),
+            }
+        )
         return _obj

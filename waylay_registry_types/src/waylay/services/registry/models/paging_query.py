@@ -32,8 +32,24 @@ except ImportError:
 class PagingQuery(BaseModel):
     """PagingQuery."""
 
-    limit: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.")
-    page: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The number of pages to skip when returning result to this query.")
+    limit: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.",
+    )
+    page: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The number of pages to skip when returning result to this query.",
+    )
     __properties: ClassVar[List[str]] = ["limit", "page"]
 
     model_config = ConfigDict(
@@ -70,8 +86,7 @@ class PagingQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,8 +100,5 @@ class PagingQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "page": obj.get("page")
-        })
+        _obj = cls.model_validate({"limit": obj.get("limit"), "page": obj.get("page")})
         return _obj

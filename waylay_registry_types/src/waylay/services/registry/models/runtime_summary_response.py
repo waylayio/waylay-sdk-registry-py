@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.runtime_summary import RuntimeSummary
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -68,17 +70,16 @@ class RuntimeSummaryResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in runtimes (list)
         _items = []
         if self.runtimes:
-            for _item in self.runtimes:  # type: ignore
+            for _item in cast(list, self.runtimes):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['runtimes'] = _items
+            _dict["runtimes"] = _items
         return _dict
 
     @classmethod
@@ -90,7 +91,14 @@ class RuntimeSummaryResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "runtimes": [RuntimeSummary.from_dict(_item) for _item in obj.get("runtimes")] if obj.get("runtimes") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "runtimes": [
+                    RuntimeSummary.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("runtimes"))
+                ]
+                if obj.get("runtimes") is not None
+                else None
+            }
+        )
         return _obj

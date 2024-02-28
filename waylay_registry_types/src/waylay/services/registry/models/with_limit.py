@@ -31,7 +31,9 @@ except ImportError:
 class WithLimit(BaseModel):
     """WithLimit."""
 
-    limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page size used for this query result.")
+    limit: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page size used for this query result."
+    )
     __properties: ClassVar[List[str]] = ["limit"]
 
     model_config = ConfigDict(
@@ -68,8 +70,7 @@ class WithLimit(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +84,5 @@ class WithLimit(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "limit": obj.get("limit")
-        })
+        _obj = cls.model_validate({"limit": obj.get("limit")})
         return _obj

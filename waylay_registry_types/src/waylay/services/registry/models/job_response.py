@@ -24,6 +24,8 @@ from ..models.any_job_status import AnyJobStatus
 from ..models.job_events_and_function_hal_link import JobEventsAndFunctionHALLink
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -71,16 +73,15 @@ class JobResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of job
         if self.job:
-            _dict['job'] = self.job.to_dict()
+            _dict["job"] = self.job.to_dict()
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -92,8 +93,18 @@ class JobResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "job": AnyJobStatus.from_dict(obj.get("job")) if obj.get("job") is not None else None,    # type: ignore
-            "_links": JobEventsAndFunctionHALLink.from_dict(obj.get("_links")) if obj.get("_links") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "job": (
+                    AnyJobStatus.from_dict(cast(dict, obj.get("job")))
+                    if obj.get("job") is not None
+                    else None
+                ),
+                "_links": (
+                    JobEventsAndFunctionHALLink.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

@@ -9,19 +9,13 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
-from waylay.services.registry.models.job_event_payload_waiting_event_data import JobEventPayloadWaitingEventData
+from waylay.services.registry.models.job_event_payload_waiting_event_data import (
+    JobEventPayloadWaitingEventData,
+)
 from .job_reference_stub import JobReferenceStub
 
 from .waiting_event_data_stub import WaitingEventDataStub
-
-
-from typing import Any, ClassVar, Dict, List
-from pydantic import BaseModel
-from pydantic import Field
-from waylay.services.registry.models.job_reference import JobReference
-from waylay.services.registry.models.waiting_event_data import WaitingEventData
 
 
 # some mappings that are needed for some <example> interpolations
@@ -36,18 +30,22 @@ class JobEventPayloadWaitingEventDataStub:
         include_optional: bool = False,
     ) -> JobEventPayloadWaitingEventData:
         """Create JobEventPayloadWaitingEventData stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         if include_optional:
             return JobEventPayloadWaitingEventData(
                 job=JobReferenceStub.create_instance(),
                 data=WaitingEventDataStub.create_instance(),
-                timestamp=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
+                timestamp=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
             )
         else:
             return JobEventPayloadWaitingEventData(
                 job=JobReferenceStub.create_instance(),
                 data=WaitingEventDataStub.create_instance(),
-                timestamp=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
+                timestamp=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
             )

@@ -11,21 +11,20 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 from ..models.job_hal_links import JobHALLinks
 from ..models.model1 import Model1
 from ..models.plug1 import Plug1
 from ..models.webscript1 import Webscript1
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import ConfigDict
+
 try:
     from typing import Self
 except ImportError:
@@ -60,18 +59,22 @@ class JobAndFunctionHALLink(BaseModel):
         """Create a JobAndFunctionHALLink model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = JobAndFunctionHALLink.model_construct()
+        instance = JobAndFunctionHALLink.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: Plug1
         if not isinstance(v, Plug1):
@@ -99,7 +102,10 @@ class JobAndFunctionHALLink(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in JobAndFunctionHALLink with anyOf schemas: JobHALLinks, Model1, Plug1, Webscript1. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in JobAndFunctionHALLink with anyOf schemas: JobHALLinks, Model1, Plug1, Webscript1. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -111,7 +117,7 @@ class JobAndFunctionHALLink(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # anyof_schema_1_validator: Optional[Plug1] = None
         try:
@@ -140,7 +146,10 @@ class JobAndFunctionHALLink(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into JobAndFunctionHALLink with anyOf schemas: JobHALLinks, Model1, Plug1, Webscript1. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into JobAndFunctionHALLink with anyOf schemas: JobHALLinks, Model1, Plug1, Webscript1. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

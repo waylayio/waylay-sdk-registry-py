@@ -32,9 +32,15 @@ except ImportError:
 class UpdateRecord(BaseModel):
     """An update report corresponding to a modifying operation initiated by a user/administrator on the entity.."""
 
-    comment: Optional[StrictStr] = Field(default=None, description="An optional user-specified comment corresponding to the operation.")
+    comment: Optional[StrictStr] = Field(
+        default=None,
+        description="An optional user-specified comment corresponding to the operation.",
+    )
     operation: RequestOperation
-    jobs: Optional[List[StrictStr]] = Field(default=None, description="The job id's of the corresponding jobs, if applicable.")
+    jobs: Optional[List[StrictStr]] = Field(
+        default=None,
+        description="The job id's of the corresponding jobs, if applicable.",
+    )
     at: datetime
     by: StrictStr = Field(description="The user that initiated this operation.")
     __properties: ClassVar[List[str]] = ["comment", "operation", "jobs", "at", "by"]
@@ -73,8 +79,7 @@ class UpdateRecord(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -88,11 +93,13 @@ class UpdateRecord(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "comment": obj.get("comment"),
-            "operation": obj.get("operation"),
-            "jobs": obj.get("jobs"),
-            "at": obj.get("at"),
-            "by": obj.get("by")
-        })
+        _obj = cls.model_validate(
+            {
+                "comment": obj.get("comment"),
+                "operation": obj.get("operation"),
+                "jobs": obj.get("jobs"),
+                "at": obj.get("at"),
+                "by": obj.get("by"),
+            }
+        )
         return _obj

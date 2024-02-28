@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.user_plug_meta import UserPlugMeta
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -68,13 +70,12 @@ class PatchPlugRequestV1(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of metadata
         if self.metadata:
-            _dict['metadata'] = self.metadata.to_dict()
+            _dict["metadata"] = self.metadata.to_dict()
         return _dict
 
     @classmethod
@@ -86,7 +87,13 @@ class PatchPlugRequestV1(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "metadata": UserPlugMeta.from_dict(obj.get("metadata")) if obj.get("metadata") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "metadata": (
+                    UserPlugMeta.from_dict(cast(dict, obj.get("metadata")))
+                    if obj.get("metadata") is not None
+                    else None
+                )
+            }
+        )
         return _obj

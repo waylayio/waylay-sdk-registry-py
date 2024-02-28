@@ -10,71 +10,207 @@ Do not edit the class manually.
 
 
 from __future__ import annotations  # for Python 3.7–3.9
-import io
-import warnings
 
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
-from typing import Dict, List, Optional, Tuple, Union, Any
+from pydantic import Field, StrictStr
+from typing import List, Optional, Any
 from typing_extensions import NotRequired, TypedDict
 
 from pydantic import Field
 from typing_extensions import Annotated
 from pydantic import StrictBool, StrictStr
 
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 
 from ..models.archive_format import ArchiveFormat
 from ..models.function_type import FunctionType
 from ..models.latest_version_level import LatestVersionLevel
-from ..models.runtime_summary_response import RuntimeSummaryResponse
-from ..models.runtime_version_response import RuntimeVersionResponse
 
 
 class ExampleArchiveQuery(TypedDict):
     """example_archive query parameters."""
 
-    ls: NotRequired[Annotated[Optional[StrictBool], Field(description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.")]]
-    include_deprecated: NotRequired[Annotated[Optional[StrictBool], Field(description="If set to `true`, deprecated runtimes will be included in the query.")]]
+    ls: NotRequired[
+        Annotated[
+            Optional[StrictBool],
+            Field(
+                description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime."
+            ),
+        ]
+    ]
+    include_deprecated: NotRequired[
+        Annotated[
+            Optional[StrictBool],
+            Field(
+                description="If set to `true`, deprecated runtimes will be included in the query."
+            ),
+        ]
+    ]
 
 
 class GetExampleAssetQuery(TypedDict):
     """get_example_asset query parameters."""
 
-    ls: NotRequired[Annotated[Optional[StrictBool], Field(description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.")]]
-    include_deprecated: NotRequired[Annotated[Optional[StrictBool], Field(description="If set to `true`, deprecated runtimes will be included in the query.")]]
+    ls: NotRequired[
+        Annotated[
+            Optional[StrictBool],
+            Field(
+                description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime."
+            ),
+        ]
+    ]
+    include_deprecated: NotRequired[
+        Annotated[
+            Optional[StrictBool],
+            Field(
+                description="If set to `true`, deprecated runtimes will be included in the query."
+            ),
+        ]
+    ]
 
 
 class GetLatestQuery(TypedDict):
     """get_latest query parameters."""
 
-    version: NotRequired[Annotated[Optional[Any], Field(description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).")]]
-    include_deprecated: NotRequired[Annotated[Optional[StrictBool], Field(description="If set to `true`, deprecated runtimes will be included in the query.")]]
-    function_type: NotRequired[Annotated[Optional[List[FunctionType]], Field(description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.")]]
-    archive_format: NotRequired[Annotated[Optional[List[ArchiveFormat]], Field(description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.")]]
+    version: NotRequired[
+        Annotated[
+            Optional[Any],
+            Field(
+                description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver)."
+            ),
+        ]
+    ]
+    include_deprecated: NotRequired[
+        Annotated[
+            Optional[StrictBool],
+            Field(
+                description="If set to `true`, deprecated runtimes will be included in the query."
+            ),
+        ]
+    ]
+    function_type: NotRequired[
+        Annotated[
+            Optional[List[FunctionType]],
+            Field(
+                description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
+            ),
+        ]
+    ]
+    archive_format: NotRequired[
+        Annotated[
+            Optional[List[ArchiveFormat]],
+            Field(
+                description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
+            ),
+        ]
+    ]
 
 
 class GetQuery(TypedDict):
     """get query parameters."""
 
-    include_deprecated: NotRequired[Annotated[Optional[StrictBool], Field(description="If set to `true`, deprecated runtimes will be included in the query.")]]
+    include_deprecated: NotRequired[
+        Annotated[
+            Optional[StrictBool],
+            Field(
+                description="If set to `true`, deprecated runtimes will be included in the query."
+            ),
+        ]
+    ]
 
 
 class ListQuery(TypedDict):
     """list query parameters."""
 
-    version: NotRequired[Annotated[Optional[Any], Field(description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).")]]
-    latest: NotRequired[Annotated[Optional[LatestVersionLevel], Field(description="If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.")]]
-    include_deprecated: NotRequired[Annotated[Optional[StrictBool], Field(description="If set to `true`, deprecated runtimes will be included in the query.")]]
-    name: NotRequired[Annotated[Optional[StrictStr], Field(description="If set, filters on the <code>name</code> of a runtime. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive.")]]
-    function_type: NotRequired[Annotated[Optional[List[FunctionType]], Field(description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.")]]
-    archive_format: NotRequired[Annotated[Optional[List[ArchiveFormat]], Field(description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.")]]
+    version: NotRequired[
+        Annotated[
+            Optional[Any],
+            Field(
+                description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver)."
+            ),
+        ]
+    ]
+    latest: NotRequired[
+        Annotated[
+            Optional[LatestVersionLevel],
+            Field(
+                description="If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria."
+            ),
+        ]
+    ]
+    include_deprecated: NotRequired[
+        Annotated[
+            Optional[StrictBool],
+            Field(
+                description="If set to `true`, deprecated runtimes will be included in the query."
+            ),
+        ]
+    ]
+    name: NotRequired[
+        Annotated[
+            Optional[StrictStr],
+            Field(
+                description="If set, filters on the <code>name</code> of a runtime. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive."
+            ),
+        ]
+    ]
+    function_type: NotRequired[
+        Annotated[
+            Optional[List[FunctionType]],
+            Field(
+                description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
+            ),
+        ]
+    ]
+    archive_format: NotRequired[
+        Annotated[
+            Optional[List[ArchiveFormat]],
+            Field(
+                description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
+            ),
+        ]
+    ]
 
 
 class ListVersionsQuery(TypedDict):
     """list_versions query parameters."""
 
-    version: NotRequired[Annotated[Optional[Any], Field(description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).")]]
-    latest: NotRequired[Annotated[Optional[LatestVersionLevel], Field(description="If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.")]]
-    include_deprecated: NotRequired[Annotated[Optional[StrictBool], Field(description="If set to `true`, deprecated runtimes will be included in the query.")]]
-    function_type: NotRequired[Annotated[Optional[List[FunctionType]], Field(description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.")]]
-    archive_format: NotRequired[Annotated[Optional[List[ArchiveFormat]], Field(description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.")]]
+    version: NotRequired[
+        Annotated[
+            Optional[Any],
+            Field(
+                description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver)."
+            ),
+        ]
+    ]
+    latest: NotRequired[
+        Annotated[
+            Optional[LatestVersionLevel],
+            Field(
+                description="If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria."
+            ),
+        ]
+    ]
+    include_deprecated: NotRequired[
+        Annotated[
+            Optional[StrictBool],
+            Field(
+                description="If set to `true`, deprecated runtimes will be included in the query."
+            ),
+        ]
+    ]
+    function_type: NotRequired[
+        Annotated[
+            Optional[List[FunctionType]],
+            Field(
+                description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
+            ),
+        ]
+    ]
+    archive_format: NotRequired[
+        Annotated[
+            Optional[List[ArchiveFormat]],
+            Field(
+                description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
+            ),
+        ]
+    ]

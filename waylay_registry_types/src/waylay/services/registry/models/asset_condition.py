@@ -25,6 +25,8 @@ from ..models.asset_condition_pattern import AssetConditionPattern
 from ..models.asset_role import AssetRole
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -38,12 +40,38 @@ class AssetCondition(BaseModel):
     description: Optional[StrictStr] = None
     role: AssetRole
     pattern: AssetConditionPattern
-    content_type: Optional[AssetConditionContentType] = Field(default=None, alias="contentType")
-    min: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The minimal number of files that must match this pattern. Use `0` for an optional file.")
-    max: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The maximal number of files that can match this pattern. Use `0` for a disallowed file. This condition only raises an error if there are no other conditions that")
-    max_size: Optional[StrictStr] = Field(default=None, description="The maximum size for each file matching this pattern (in bytes, unless unit is provided)", alias="maxSize")
-    var_schema: Optional[Any] = Field(default=None, description="The json schema validator that applies (in case of `application/json` entries).", alias="schema")
-    __properties: ClassVar[List[str]] = ["title", "description", "role", "pattern", "contentType", "min", "max", "maxSize", "schema"]
+    content_type: Optional[AssetConditionContentType] = Field(
+        default=None, alias="contentType"
+    )
+    min: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None,
+        description="The minimal number of files that must match this pattern. Use `0` for an optional file.",
+    )
+    max: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None,
+        description="The maximal number of files that can match this pattern. Use `0` for a disallowed file. This condition only raises an error if there are no other conditions that",
+    )
+    max_size: Optional[StrictStr] = Field(
+        default=None,
+        description="The maximum size for each file matching this pattern (in bytes, unless unit is provided)",
+        alias="maxSize",
+    )
+    var_schema: Optional[Any] = Field(
+        default=None,
+        description="The json schema validator that applies (in case of `application/json` entries).",
+        alias="schema",
+    )
+    __properties: ClassVar[List[str]] = [
+        "title",
+        "description",
+        "role",
+        "pattern",
+        "contentType",
+        "min",
+        "max",
+        "maxSize",
+        "schema",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,20 +107,19 @@ class AssetCondition(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of pattern
         if self.pattern:
-            _dict['pattern'] = self.pattern.to_dict()
+            _dict["pattern"] = self.pattern.to_dict()
         # override the default output from pydantic by calling `to_dict()` of content_type
         if self.content_type:
-            _dict['contentType'] = self.content_type.to_dict()
+            _dict["contentType"] = self.content_type.to_dict()
         # set to None if var_schema (nullable) is None
         # and model_fields_set contains the field
         if self.var_schema is None and "var_schema" in self.model_fields_set:
-            _dict['schema'] = None
+            _dict["schema"] = None
 
         return _dict
 
@@ -105,15 +132,27 @@ class AssetCondition(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "role": obj.get("role"),
-            "pattern": AssetConditionPattern.from_dict(obj.get("pattern")) if obj.get("pattern") is not None else None,    # type: ignore
-            "contentType": AssetConditionContentType.from_dict(obj.get("contentType")) if obj.get("contentType") is not None else None,    # type: ignore
-            "min": obj.get("min"),
-            "max": obj.get("max"),
-            "maxSize": obj.get("maxSize"),
-            "schema": obj.get("schema")
-        })
+        _obj = cls.model_validate(
+            {
+                "title": obj.get("title"),
+                "description": obj.get("description"),
+                "role": obj.get("role"),
+                "pattern": (
+                    AssetConditionPattern.from_dict(cast(dict, obj.get("pattern")))
+                    if obj.get("pattern") is not None
+                    else None
+                ),
+                "contentType": (
+                    AssetConditionContentType.from_dict(
+                        cast(dict, obj.get("contentType"))
+                    )
+                    if obj.get("contentType") is not None
+                    else None
+                ),
+                "min": obj.get("min"),
+                "max": obj.get("max"),
+                "maxSize": obj.get("maxSize"),
+                "schema": obj.get("schema"),
+            }
+        )
         return _obj

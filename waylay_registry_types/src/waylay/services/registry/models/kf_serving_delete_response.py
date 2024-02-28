@@ -33,15 +33,19 @@ class KFServingDeleteResponse(BaseModel):
     """Model Deleted."""
 
     name: StrictStr = Field(description="The name of the function.")
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
     __properties: ClassVar[List[str]] = ["name", "version"]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -78,8 +82,7 @@ class KFServingDeleteResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -93,8 +96,7 @@ class KFServingDeleteResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "version": obj.get("version")
-        })
+        _obj = cls.model_validate(
+            {"name": obj.get("name"), "version": obj.get("version")}
+        )
         return _obj

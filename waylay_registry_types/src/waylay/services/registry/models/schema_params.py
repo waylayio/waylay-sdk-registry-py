@@ -71,8 +71,7 @@ class SchemaParams(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,8 +85,7 @@ class SchemaParams(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "functionType": obj.get("functionType"),
-            "role": obj.get("role")
-        })
+        _obj = cls.model_validate(
+            {"functionType": obj.get("functionType"), "role": obj.get("role")}
+        )
         return _obj

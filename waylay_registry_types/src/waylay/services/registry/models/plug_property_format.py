@@ -33,7 +33,10 @@ class PlugPropertyFormat(BaseModel):
     """PlugPropertyFormat."""
 
     type: Optional[PlugPropertyFormatType] = None
-    values: Optional[List[Any]] = Field(default=None, description="The enumerated value domain when <code>type=\"enum\"</code>")
+    values: Optional[List[Any]] = Field(
+        default=None,
+        description='The enumerated value domain when <code>type="enum"</code>',
+    )
     __properties: ClassVar[List[str]] = ["type", "values"]
 
     model_config = ConfigDict(
@@ -70,8 +73,7 @@ class PlugPropertyFormat(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,8 +87,7 @@ class PlugPropertyFormat(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "values": obj.get("values")
-        })
+        _obj = cls.model_validate(
+            {"type": obj.get("type"), "values": obj.get("values")}
+        )
         return _obj

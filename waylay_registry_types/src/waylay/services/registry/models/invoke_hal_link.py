@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.hal_link import HALLink
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -68,13 +70,12 @@ class InvokeHALLink(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of invoke
         if self.invoke:
-            _dict['invoke'] = self.invoke.to_dict()
+            _dict["invoke"] = self.invoke.to_dict()
         return _dict
 
     @classmethod
@@ -86,7 +87,13 @@ class InvokeHALLink(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "invoke": HALLink.from_dict(obj.get("invoke")) if obj.get("invoke") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "invoke": (
+                    HALLink.from_dict(cast(dict, obj.get("invoke")))
+                    if obj.get("invoke") is not None
+                    else None
+                )
+            }
+        )
         return _obj

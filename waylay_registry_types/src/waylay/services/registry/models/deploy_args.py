@@ -24,6 +24,8 @@ from typing_extensions import Annotated
 from ..models.deploy_args_deploy_spec_overrides import DeployArgsDeploySpecOverrides
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -33,21 +35,44 @@ except ImportError:
 class DeployArgs(BaseModel):
     """Input argument to an (openfaas) deployment job for a function.."""
 
-    namespace: StrictStr = Field(description="The (openfaas) namespace for the target function.")
+    namespace: StrictStr = Field(
+        description="The (openfaas) namespace for the target function."
+    )
     endpoint: StrictStr = Field(description="The (openfaas) endpoint service name")
-    image_name: StrictStr = Field(description="The image name to use for deploying this function", alias="imageName")
+    image_name: StrictStr = Field(
+        description="The image name to use for deploying this function",
+        alias="imageName",
+    )
     runtime_name: StrictStr = Field(alias="runtimeName")
-    runtime_version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org", alias="runtimeVersion")
-    revision: Optional[StrictStr] = Field(default=None, description="The revision hash of the current (draft) function revision")
-    deploy_spec_overrides: DeployArgsDeploySpecOverrides = Field(alias="deploySpecOverrides")
-    __properties: ClassVar[List[str]] = ["namespace", "endpoint", "imageName", "runtimeName", "runtimeVersion", "revision", "deploySpecOverrides"]
+    runtime_version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org",
+        alias="runtimeVersion",
+    )
+    revision: Optional[StrictStr] = Field(
+        default=None,
+        description="The revision hash of the current (draft) function revision",
+    )
+    deploy_spec_overrides: DeployArgsDeploySpecOverrides = Field(
+        alias="deploySpecOverrides"
+    )
+    __properties: ClassVar[List[str]] = [
+        "namespace",
+        "endpoint",
+        "imageName",
+        "runtimeName",
+        "runtimeVersion",
+        "revision",
+        "deploySpecOverrides",
+    ]
 
-    @field_validator('runtime_version')
+    @field_validator("runtime_version")
     @classmethod
     def runtime_version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -84,13 +109,12 @@ class DeployArgs(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of deploy_spec_overrides
         if self.deploy_spec_overrides:
-            _dict['deploySpecOverrides'] = self.deploy_spec_overrides.to_dict()
+            _dict["deploySpecOverrides"] = self.deploy_spec_overrides.to_dict()
         return _dict
 
     @classmethod
@@ -102,13 +126,21 @@ class DeployArgs(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "namespace": obj.get("namespace"),
-            "endpoint": obj.get("endpoint"),
-            "imageName": obj.get("imageName"),
-            "runtimeName": obj.get("runtimeName"),
-            "runtimeVersion": obj.get("runtimeVersion"),
-            "revision": obj.get("revision"),
-            "deploySpecOverrides": DeployArgsDeploySpecOverrides.from_dict(obj.get("deploySpecOverrides")) if obj.get("deploySpecOverrides") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "namespace": obj.get("namespace"),
+                "endpoint": obj.get("endpoint"),
+                "imageName": obj.get("imageName"),
+                "runtimeName": obj.get("runtimeName"),
+                "runtimeVersion": obj.get("runtimeVersion"),
+                "revision": obj.get("revision"),
+                "deploySpecOverrides": (
+                    DeployArgsDeploySpecOverrides.from_dict(
+                        cast(dict, obj.get("deploySpecOverrides"))
+                    )
+                    if obj.get("deploySpecOverrides") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

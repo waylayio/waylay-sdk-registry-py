@@ -31,9 +31,21 @@ except ImportError:
 class LegacyPlugCreateQuery(BaseModel):
     """LegacyPlugCreateQuery."""
 
-    var_async: Optional[StrictBool] = Field(default=False, description="If this is set to <code>true</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. Otherwise, the request will block until the job actions are completed, or a timeout occurs.", alias="async")
-    dry_run: Optional[StrictBool] = Field(default=None, description="If set to <code>true</true>, only validates the incoming request.", alias="dryRun")
-    scale_to_zero: Optional[StrictBool] = Field(default=None, description="If set to <code>true</true>, scales the function to zero after successful deployment.", alias="scaleToZero")
+    var_async: Optional[StrictBool] = Field(
+        default=False,
+        description="If this is set to <code>true</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. Otherwise, the request will block until the job actions are completed, or a timeout occurs.",
+        alias="async",
+    )
+    dry_run: Optional[StrictBool] = Field(
+        default=None,
+        description="If set to <code>true</true>, only validates the incoming request.",
+        alias="dryRun",
+    )
+    scale_to_zero: Optional[StrictBool] = Field(
+        default=None,
+        description="If set to <code>true</true>, scales the function to zero after successful deployment.",
+        alias="scaleToZero",
+    )
     __properties: ClassVar[List[str]] = ["async", "dryRun", "scaleToZero"]
 
     model_config = ConfigDict(
@@ -70,8 +82,7 @@ class LegacyPlugCreateQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,9 +96,11 @@ class LegacyPlugCreateQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "async": obj.get("async") if obj.get("async") is not None else False,
-            "dryRun": obj.get("dryRun"),
-            "scaleToZero": obj.get("scaleToZero")
-        })
+        _obj = cls.model_validate(
+            {
+                "async": obj.get("async") if obj.get("async") is not None else False,
+                "dryRun": obj.get("dryRun"),
+                "scaleToZero": obj.get("scaleToZero"),
+            }
+        )
         return _obj

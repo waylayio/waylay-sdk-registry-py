@@ -33,17 +33,23 @@ class RootPageResponse(BaseModel):
     """Status Page."""
 
     name: StrictStr = Field(description="Name of the service.")
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
-    enabled: Dict[str, Any] = Field(description="Description of the features enabled on this service deployment.")
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
+    enabled: Dict[str, Any] = Field(
+        description="Description of the features enabled on this service deployment."
+    )
     revision: StrictStr = Field(description="Revision of the service source code.")
     __properties: ClassVar[List[str]] = ["name", "version", "enabled", "revision"]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -80,8 +86,7 @@ class RootPageResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -95,10 +100,12 @@ class RootPageResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "version": obj.get("version"),
-            "enabled": obj.get("enabled"),
-            "revision": obj.get("revision")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "version": obj.get("version"),
+                "enabled": obj.get("enabled"),
+                "revision": obj.get("revision"),
+            }
+        )
         return _obj

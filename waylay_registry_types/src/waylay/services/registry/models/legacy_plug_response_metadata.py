@@ -24,6 +24,8 @@ from ..models.legacy_documentation import LegacyDocumentation
 from ..models.tag import Tag
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -40,7 +42,15 @@ class LegacyPlugResponseMetadata(BaseModel):
     tags: Optional[List[Tag]] = None
     icon_url: Optional[StrictStr] = Field(default=None, alias="iconURL")
     friendly_name: Optional[StrictStr] = Field(default=None, alias="friendlyName")
-    __properties: ClassVar[List[str]] = ["documentation", "author", "description", "category", "tags", "iconURL", "friendlyName"]
+    __properties: ClassVar[List[str]] = [
+        "documentation",
+        "author",
+        "description",
+        "category",
+        "tags",
+        "iconURL",
+        "friendlyName",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,20 +86,19 @@ class LegacyPlugResponseMetadata(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of documentation
         if self.documentation:
-            _dict['documentation'] = self.documentation.to_dict()
+            _dict["documentation"] = self.documentation.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
         _items = []
         if self.tags:
-            for _item in self.tags:  # type: ignore
+            for _item in cast(list, self.tags):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['tags'] = _items
+            _dict["tags"] = _items
         return _dict
 
     @classmethod
@@ -101,13 +110,24 @@ class LegacyPlugResponseMetadata(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "documentation": LegacyDocumentation.from_dict(obj.get("documentation")) if obj.get("documentation") is not None else None,    # type: ignore
-            "author": obj.get("author"),
-            "description": obj.get("description"),
-            "category": obj.get("category"),
-            "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,  # type: ignore
-            "iconURL": obj.get("iconURL"),
-            "friendlyName": obj.get("friendlyName")
-        })
+        _obj = cls.model_validate(
+            {
+                "documentation": (
+                    LegacyDocumentation.from_dict(cast(dict, obj.get("documentation")))
+                    if obj.get("documentation") is not None
+                    else None
+                ),
+                "author": obj.get("author"),
+                "description": obj.get("description"),
+                "category": obj.get("category"),
+                "tags": [
+                    Tag.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("tags"))
+                ]
+                if obj.get("tags") is not None
+                else None,
+                "iconURL": obj.get("iconURL"),
+                "friendlyName": obj.get("friendlyName"),
+            }
+        )
         return _obj

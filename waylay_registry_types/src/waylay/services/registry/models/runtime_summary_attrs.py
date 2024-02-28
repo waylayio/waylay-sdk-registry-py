@@ -38,7 +38,13 @@ class RuntimeSummaryAttrs(BaseModel):
     description: Optional[StrictStr] = None
     function_type: FunctionType = Field(alias="functionType")
     archive_format: ArchiveFormat = Field(alias="archiveFormat")
-    __properties: ClassVar[List[str]] = ["name", "title", "description", "functionType", "archiveFormat"]
+    __properties: ClassVar[List[str]] = [
+        "name",
+        "title",
+        "description",
+        "functionType",
+        "archiveFormat",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,8 +80,7 @@ class RuntimeSummaryAttrs(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -89,11 +94,13 @@ class RuntimeSummaryAttrs(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "functionType": obj.get("functionType"),
-            "archiveFormat": obj.get("archiveFormat")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "title": obj.get("title"),
+                "description": obj.get("description"),
+                "functionType": obj.get("functionType"),
+                "archiveFormat": obj.get("archiveFormat"),
+            }
+        )
         return _obj

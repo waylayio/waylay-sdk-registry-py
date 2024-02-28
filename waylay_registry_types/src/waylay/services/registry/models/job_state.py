@@ -11,13 +11,12 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 from ..models.job_state_active import JobStateActive
 from ..models.job_state_delayed import JobStateDelayed
 from ..models.job_state_finished import JobStateFinished
@@ -25,14 +24,20 @@ from ..models.job_state_waiting import JobStateWaiting
 from ..models.job_state_waiting_children import JobStateWaitingChildren
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import ConfigDict
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-JOBSTATE_ANY_OF_SCHEMAS = ["JobStateActive", "JobStateDelayed", "JobStateFinished", "JobStateWaiting", "JobStateWaitingChildren"]
+JOBSTATE_ANY_OF_SCHEMAS = [
+    "JobStateActive",
+    "JobStateDelayed",
+    "JobStateFinished",
+    "JobStateWaiting",
+    "JobStateWaitingChildren",
+]
 
 
 class JobState(BaseModel):
@@ -49,7 +54,15 @@ class JobState(BaseModel):
     # data type: JobStateWaitingChildren
     anyof_schema_5_validator: Optional[JobStateWaitingChildren] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[JobStateActive, JobStateDelayed, JobStateFinished, JobStateWaiting, JobStateWaitingChildren]] = None
+        actual_instance: Optional[
+            Union[
+                JobStateActive,
+                JobStateDelayed,
+                JobStateFinished,
+                JobStateWaiting,
+                JobStateWaitingChildren,
+            ]
+        ] = None
     else:
         actual_instance: Any = None
     any_of_schemas: List[str] = JOBSTATE_ANY_OF_SCHEMAS
@@ -63,52 +76,69 @@ class JobState(BaseModel):
         """Create a JobState model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = JobState.model_construct()
+        instance = JobState.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: JobStateFinished
         if not isinstance(v, JobStateFinished):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobStateFinished`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobStateFinished`"
+            )
         else:
             return v
 
         # validate data type: JobStateActive
         if not isinstance(v, JobStateActive):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobStateActive`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobStateActive`"
+            )
         else:
             return v
 
         # validate data type: JobStateDelayed
         if not isinstance(v, JobStateDelayed):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobStateDelayed`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobStateDelayed`"
+            )
         else:
             return v
 
         # validate data type: JobStateWaiting
         if not isinstance(v, JobStateWaiting):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobStateWaiting`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobStateWaiting`"
+            )
         else:
             return v
 
         # validate data type: JobStateWaitingChildren
         if not isinstance(v, JobStateWaitingChildren):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobStateWaitingChildren`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobStateWaitingChildren`"
+            )
         else:
             return v
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in JobState with anyOf schemas: JobStateActive, JobStateDelayed, JobStateFinished, JobStateWaiting, JobStateWaitingChildren. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in JobState with anyOf schemas: JobStateActive, JobStateDelayed, JobStateFinished, JobStateWaiting, JobStateWaitingChildren. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -120,7 +150,7 @@ class JobState(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # anyof_schema_1_validator: Optional[JobStateFinished] = None
         try:
@@ -155,7 +185,10 @@ class JobState(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into JobState with anyOf schemas: JobStateActive, JobStateDelayed, JobStateFinished, JobStateWaiting, JobStateWaitingChildren. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into JobState with anyOf schemas: JobStateActive, JobStateDelayed, JobStateFinished, JobStateWaiting, JobStateWaitingChildren. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

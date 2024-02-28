@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.exposed_openfaas_deploy_spec import ExposedOpenfaasDeploySpec
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -69,13 +71,12 @@ class DeployResult(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of deploy_spec
         if self.deploy_spec:
-            _dict['deploySpec'] = self.deploy_spec.to_dict()
+            _dict["deploySpec"] = self.deploy_spec.to_dict()
         return _dict
 
     @classmethod
@@ -87,7 +88,15 @@ class DeployResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deploySpec": ExposedOpenfaasDeploySpec.from_dict(obj.get("deploySpec")) if obj.get("deploySpec") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "deploySpec": (
+                    ExposedOpenfaasDeploySpec.from_dict(
+                        cast(dict, obj.get("deploySpec"))
+                    )
+                    if obj.get("deploySpec") is not None
+                    else None
+                )
+            }
+        )
         return _obj

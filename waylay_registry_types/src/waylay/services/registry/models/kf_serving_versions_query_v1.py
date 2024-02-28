@@ -27,6 +27,8 @@ from ..models.status_filter import StatusFilter
 from ..models.timestamp_spec import TimestampSpec
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -36,21 +38,77 @@ except ImportError:
 class KFServingVersionsQueryV1(BaseModel):
     """Named model versions query."""
 
-    limit: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.")
-    page: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The number of pages to skip when returning result to this query.")
-    version: Optional[StrictStr] = Field(default=None, description="Filter on the version of the function (case-sensitive, supports wildcards).")
-    status: Optional[List[StatusFilter]] = Field(default=None, description="Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.")
-    runtime_version: Optional[SemanticVersionRange] = Field(default=None, alias="runtimeVersion")
-    created_by: Optional[StrictStr] = Field(default=None, description="Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.", alias="createdBy")
-    updated_by: Optional[StrictStr] = Field(default=None, description="Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.", alias="updatedBy")
+    limit: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.",
+    )
+    page: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The number of pages to skip when returning result to this query.",
+    )
+    version: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the version of the function (case-sensitive, supports wildcards).",
+    )
+    status: Optional[List[StatusFilter]] = Field(
+        default=None,
+        description="Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.",
+    )
+    runtime_version: Optional[SemanticVersionRange] = Field(
+        default=None, alias="runtimeVersion"
+    )
+    created_by: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.",
+        alias="createdBy",
+    )
+    updated_by: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.",
+        alias="updatedBy",
+    )
     created_before: Optional[TimestampSpec] = Field(default=None, alias="createdBefore")
     created_after: Optional[TimestampSpec] = Field(default=None, alias="createdAfter")
     updated_before: Optional[TimestampSpec] = Field(default=None, alias="updatedBefore")
     updated_after: Optional[TimestampSpec] = Field(default=None, alias="updatedAfter")
-    name: Optional[StrictStr] = Field(default=None, description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).")
-    archive_format: Optional[List[ArchiveFormat]] = Field(default=None, description="Filter on the archive format of the function.", alias="archiveFormat")
-    runtime: Optional[List[StrictStr]] = Field(default=None, description="Filter on the runtime of the function.")
-    __properties: ClassVar[List[str]] = ["limit", "page", "version", "status", "runtimeVersion", "createdBy", "updatedBy", "createdBefore", "createdAfter", "updatedBefore", "updatedAfter", "name", "archiveFormat", "runtime"]
+    name: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+    )
+    archive_format: Optional[List[ArchiveFormat]] = Field(
+        default=None,
+        description="Filter on the archive format of the function.",
+        alias="archiveFormat",
+    )
+    runtime: Optional[List[StrictStr]] = Field(
+        default=None, description="Filter on the runtime of the function."
+    )
+    __properties: ClassVar[List[str]] = [
+        "limit",
+        "page",
+        "version",
+        "status",
+        "runtimeVersion",
+        "createdBy",
+        "updatedBy",
+        "createdBefore",
+        "createdAfter",
+        "updatedBefore",
+        "updatedAfter",
+        "name",
+        "archiveFormat",
+        "runtime",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,32 +144,31 @@ class KFServingVersionsQueryV1(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in status (list)
         _items = []
         if self.status:
-            for _item in self.status:  # type: ignore
+            for _item in cast(list, self.status):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['status'] = _items
+            _dict["status"] = _items
         # override the default output from pydantic by calling `to_dict()` of runtime_version
         if self.runtime_version:
-            _dict['runtimeVersion'] = self.runtime_version.to_dict()
+            _dict["runtimeVersion"] = self.runtime_version.to_dict()
         # override the default output from pydantic by calling `to_dict()` of created_before
         if self.created_before:
-            _dict['createdBefore'] = self.created_before.to_dict()
+            _dict["createdBefore"] = self.created_before.to_dict()
         # override the default output from pydantic by calling `to_dict()` of created_after
         if self.created_after:
-            _dict['createdAfter'] = self.created_after.to_dict()
+            _dict["createdAfter"] = self.created_after.to_dict()
         # override the default output from pydantic by calling `to_dict()` of updated_before
         if self.updated_before:
-            _dict['updatedBefore'] = self.updated_before.to_dict()
+            _dict["updatedBefore"] = self.updated_before.to_dict()
         # override the default output from pydantic by calling `to_dict()` of updated_after
         if self.updated_after:
-            _dict['updatedAfter'] = self.updated_after.to_dict()
+            _dict["updatedAfter"] = self.updated_after.to_dict()
         return _dict
 
     @classmethod
@@ -123,20 +180,49 @@ class KFServingVersionsQueryV1(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "page": obj.get("page"),
-            "version": obj.get("version"),
-            "status": [StatusFilter.from_dict(_item) for _item in obj.get("status")] if obj.get("status") is not None else None,  # type: ignore
-            "runtimeVersion": SemanticVersionRange.from_dict(obj.get("runtimeVersion")) if obj.get("runtimeVersion") is not None else None,    # type: ignore
-            "createdBy": obj.get("createdBy"),
-            "updatedBy": obj.get("updatedBy"),
-            "createdBefore": TimestampSpec.from_dict(obj.get("createdBefore")) if obj.get("createdBefore") is not None else None,    # type: ignore
-            "createdAfter": TimestampSpec.from_dict(obj.get("createdAfter")) if obj.get("createdAfter") is not None else None,    # type: ignore
-            "updatedBefore": TimestampSpec.from_dict(obj.get("updatedBefore")) if obj.get("updatedBefore") is not None else None,    # type: ignore
-            "updatedAfter": TimestampSpec.from_dict(obj.get("updatedAfter")) if obj.get("updatedAfter") is not None else None,    # type: ignore
-            "name": obj.get("name"),
-            "archiveFormat": obj.get("archiveFormat"),
-            "runtime": obj.get("runtime")
-        })
+        _obj = cls.model_validate(
+            {
+                "limit": obj.get("limit"),
+                "page": obj.get("page"),
+                "version": obj.get("version"),
+                "status": [
+                    StatusFilter.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("status"))
+                ]
+                if obj.get("status") is not None
+                else None,
+                "runtimeVersion": (
+                    SemanticVersionRange.from_dict(
+                        cast(dict, obj.get("runtimeVersion"))
+                    )
+                    if obj.get("runtimeVersion") is not None
+                    else None
+                ),
+                "createdBy": obj.get("createdBy"),
+                "updatedBy": obj.get("updatedBy"),
+                "createdBefore": (
+                    TimestampSpec.from_dict(cast(dict, obj.get("createdBefore")))
+                    if obj.get("createdBefore") is not None
+                    else None
+                ),
+                "createdAfter": (
+                    TimestampSpec.from_dict(cast(dict, obj.get("createdAfter")))
+                    if obj.get("createdAfter") is not None
+                    else None
+                ),
+                "updatedBefore": (
+                    TimestampSpec.from_dict(cast(dict, obj.get("updatedBefore")))
+                    if obj.get("updatedBefore") is not None
+                    else None
+                ),
+                "updatedAfter": (
+                    TimestampSpec.from_dict(cast(dict, obj.get("updatedAfter")))
+                    if obj.get("updatedAfter") is not None
+                    else None
+                ),
+                "name": obj.get("name"),
+                "archiveFormat": obj.get("archiveFormat"),
+                "runtime": obj.get("runtime"),
+            }
+        )
         return _obj

@@ -31,7 +31,11 @@ except ImportError:
 class AsyncQueryDefaultTrue(BaseModel):
     """AsyncQueryDefaultTrue."""
 
-    var_async: Optional[StrictBool] = Field(default=True, description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.", alias="async")
+    var_async: Optional[StrictBool] = Field(
+        default=True,
+        description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+        alias="async",
+    )
     __properties: ClassVar[List[str]] = ["async"]
 
     model_config = ConfigDict(
@@ -68,8 +72,7 @@ class AsyncQueryDefaultTrue(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +86,7 @@ class AsyncQueryDefaultTrue(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "async": obj.get("async") if obj.get("async") is not None else True
-        })
+        _obj = cls.model_validate(
+            {"async": obj.get("async") if obj.get("async") is not None else True}
+        )
         return _obj

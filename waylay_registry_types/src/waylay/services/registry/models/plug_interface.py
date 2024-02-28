@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.plug_property import PlugProperty
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -32,9 +34,16 @@ except ImportError:
 class PlugInterface(BaseModel):
     """PlugInterface."""
 
-    states: Optional[List[StrictStr]] = Field(default=None, description="The states of a plug as implemented in the plug code.")
-    input: Optional[List[PlugProperty]] = Field(default=None, description="The named input parameters of a plug")
-    output: Optional[List[PlugProperty]] = Field(default=None, description="The named output parameters of a plug")
+    states: Optional[List[StrictStr]] = Field(
+        default=None,
+        description="The states of a plug as implemented in the plug code.",
+    )
+    input: Optional[List[PlugProperty]] = Field(
+        default=None, description="The named input parameters of a plug"
+    )
+    output: Optional[List[PlugProperty]] = Field(
+        default=None, description="The named output parameters of a plug"
+    )
     __properties: ClassVar[List[str]] = ["states", "input", "output"]
 
     model_config = ConfigDict(
@@ -71,24 +80,23 @@ class PlugInterface(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in input (list)
         _items = []
         if self.input:
-            for _item in self.input:  # type: ignore
+            for _item in cast(list, self.input):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['input'] = _items
+            _dict["input"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in output (list)
         _items = []
         if self.output:
-            for _item in self.output:  # type: ignore
+            for _item in cast(list, self.output):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['output'] = _items
+            _dict["output"] = _items
         return _dict
 
     @classmethod
@@ -100,9 +108,21 @@ class PlugInterface(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "states": obj.get("states"),
-            "input": [PlugProperty.from_dict(_item) for _item in obj.get("input")] if obj.get("input") is not None else None,  # type: ignore
-            "output": [PlugProperty.from_dict(_item) for _item in obj.get("output")] if obj.get("output") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "states": obj.get("states"),
+                "input": [
+                    PlugProperty.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("input"))
+                ]
+                if obj.get("input") is not None
+                else None,
+                "output": [
+                    PlugProperty.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("output"))
+                ]
+                if obj.get("output") is not None
+                else None,
+            }
+        )
         return _obj

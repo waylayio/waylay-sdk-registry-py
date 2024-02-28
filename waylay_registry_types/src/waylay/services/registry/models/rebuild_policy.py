@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,10 +28,10 @@ class RebuildPolicy(str, Enum):
     """
     allowed enum values
     """
-    PATCH = 'patch'
-    MINOR = 'minor'
-    MAJOR = 'major'
-    SAME = 'same'
+    PATCH = "patch"
+    MINOR = "minor"
+    MAJOR = "major"
+    SAME = "same"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

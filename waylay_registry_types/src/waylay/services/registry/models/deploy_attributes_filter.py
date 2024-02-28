@@ -31,9 +31,20 @@ except ImportError:
 class DeployAttributesFilter(BaseModel):
     """DeployAttributesFilter."""
 
-    endpoint: Optional[StrictStr] = Field(default=None, description="Filter on the openfaas endpoint. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).")
-    image_name: Optional[StrictStr] = Field(default=None, description="Filter on the container image name. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).", alias="imageName")
-    storage_location: Optional[StrictStr] = Field(default=None, description="Filter on the storageLocation. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).", alias="storageLocation")
+    endpoint: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the openfaas endpoint. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+    )
+    image_name: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the container image name. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+        alias="imageName",
+    )
+    storage_location: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the storageLocation. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+        alias="storageLocation",
+    )
     __properties: ClassVar[List[str]] = ["endpoint", "imageName", "storageLocation"]
 
     model_config = ConfigDict(
@@ -70,8 +81,7 @@ class DeployAttributesFilter(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,9 +95,11 @@ class DeployAttributesFilter(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "endpoint": obj.get("endpoint"),
-            "imageName": obj.get("imageName"),
-            "storageLocation": obj.get("storageLocation")
-        })
+        _obj = cls.model_validate(
+            {
+                "endpoint": obj.get("endpoint"),
+                "imageName": obj.get("imageName"),
+                "storageLocation": obj.get("storageLocation"),
+            }
+        )
         return _obj

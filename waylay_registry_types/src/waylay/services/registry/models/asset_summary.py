@@ -72,8 +72,7 @@ class AssetSummary(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -87,10 +86,12 @@ class AssetSummary(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "role": obj.get("role")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "title": obj.get("title"),
+                "description": obj.get("description"),
+                "role": obj.get("role"),
+            }
+        )
         return _obj

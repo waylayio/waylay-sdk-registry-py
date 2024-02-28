@@ -20,9 +20,13 @@ from pydantic import ConfigDict
 from typing import Any, ClassVar, Dict, List
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
-from ..models.invokable_webscript_response_entity import InvokableWebscriptResponseEntity
+from ..models.invokable_webscript_response_entity import (
+    InvokableWebscriptResponseEntity,
+)
 from ..models.invoke_internal_hal_link import InvokeInternalHALLink
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -73,16 +77,15 @@ class UnhealthyInvokableWebscriptError(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of entity
         if self.entity:
-            _dict['entity'] = self.entity.to_dict()
+            _dict["entity"] = self.entity.to_dict()
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -94,10 +97,22 @@ class UnhealthyInvokableWebscriptError(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "entity": InvokableWebscriptResponseEntity.from_dict(obj.get("entity")) if obj.get("entity") is not None else None,    # type: ignore
-            "_links": InvokeInternalHALLink.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "error": obj.get("error"),
-            "code": obj.get("code")
-        })
+        _obj = cls.model_validate(
+            {
+                "entity": (
+                    InvokableWebscriptResponseEntity.from_dict(
+                        cast(dict, obj.get("entity"))
+                    )
+                    if obj.get("entity") is not None
+                    else None
+                ),
+                "_links": (
+                    InvokeInternalHALLink.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+                "error": obj.get("error"),
+                "code": obj.get("code"),
+            }
+        )
         return _obj

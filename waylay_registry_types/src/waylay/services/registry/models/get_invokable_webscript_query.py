@@ -24,6 +24,8 @@ from ..models.semantic_version_range import SemanticVersionRange
 from ..models.status_filter import StatusFilter
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -33,11 +35,26 @@ except ImportError:
 class GetInvokableWebscriptQuery(BaseModel):
     """GetInvokableWebscriptQuery."""
 
-    include_draft: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.", alias="includeDraft")
-    include_deprecated: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.", alias="includeDeprecated")
+    include_draft: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.",
+        alias="includeDraft",
+    )
+    include_deprecated: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.",
+        alias="includeDeprecated",
+    )
     version: Optional[SemanticVersionRange] = None
-    status: Optional[List[StatusFilter]] = Field(default=None, description="If set, filters on the `status` of the webscript.")
-    __properties: ClassVar[List[str]] = ["includeDraft", "includeDeprecated", "version", "status"]
+    status: Optional[List[StatusFilter]] = Field(
+        default=None, description="If set, filters on the `status` of the webscript."
+    )
+    __properties: ClassVar[List[str]] = [
+        "includeDraft",
+        "includeDeprecated",
+        "version",
+        "status",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -73,20 +90,19 @@ class GetInvokableWebscriptQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of version
         if self.version:
-            _dict['version'] = self.version.to_dict()
+            _dict["version"] = self.version.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in status (list)
         _items = []
         if self.status:
-            for _item in self.status:  # type: ignore
+            for _item in cast(list, self.status):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['status'] = _items
+            _dict["status"] = _items
         return _dict
 
     @classmethod
@@ -98,10 +114,21 @@ class GetInvokableWebscriptQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "includeDraft": obj.get("includeDraft"),
-            "includeDeprecated": obj.get("includeDeprecated"),
-            "version": SemanticVersionRange.from_dict(obj.get("version")) if obj.get("version") is not None else None,    # type: ignore
-            "status": [StatusFilter.from_dict(_item) for _item in obj.get("status")] if obj.get("status") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "includeDraft": obj.get("includeDraft"),
+                "includeDeprecated": obj.get("includeDeprecated"),
+                "version": (
+                    SemanticVersionRange.from_dict(cast(dict, obj.get("version")))
+                    if obj.get("version") is not None
+                    else None
+                ),
+                "status": [
+                    StatusFilter.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("status"))
+                ]
+                if obj.get("status") is not None
+                else None,
+            }
+        )
         return _obj

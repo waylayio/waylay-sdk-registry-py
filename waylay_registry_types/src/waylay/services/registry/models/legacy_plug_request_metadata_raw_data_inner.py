@@ -70,8 +70,7 @@ class LegacyPlugRequestMetadataRawDataInner(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,8 +84,7 @@ class LegacyPlugRequestMetadataRawDataInner(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "parameter": obj.get("parameter"),
-            "dataType": obj.get("dataType")
-        })
+        _obj = cls.model_validate(
+            {"parameter": obj.get("parameter"), "dataType": obj.get("dataType")}
+        )
         return _obj

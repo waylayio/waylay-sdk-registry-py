@@ -68,8 +68,7 @@ class BuildSpec(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,8 +82,7 @@ class BuildSpec(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "context": obj.get("context"),
-            "args": obj.get("args")
-        })
+        _obj = cls.model_validate(
+            {"context": obj.get("context"), "args": obj.get("args")}
+        )
         return _obj

@@ -71,8 +71,7 @@ class Operation(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,10 +85,12 @@ class Operation(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "description": obj.get("description"),
-            "name": obj.get("name"),
-            "type": obj.get("type")
-        })
+        _obj = cls.model_validate(
+            {
+                "id": obj.get("id"),
+                "description": obj.get("description"),
+                "name": obj.get("name"),
+                "type": obj.get("type"),
+            }
+        )
         return _obj

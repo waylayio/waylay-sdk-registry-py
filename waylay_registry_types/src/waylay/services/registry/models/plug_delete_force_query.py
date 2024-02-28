@@ -31,7 +31,10 @@ except ImportError:
 class PlugDeleteForceQuery(BaseModel):
     """PlugDeleteForceQuery."""
 
-    force: Optional[StrictBool] = Field(default=None, description="If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.")
+    force: Optional[StrictBool] = Field(
+        default=None,
+        description="If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.",
+    )
     __properties: ClassVar[List[str]] = ["force"]
 
     model_config = ConfigDict(
@@ -68,8 +71,7 @@ class PlugDeleteForceQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +85,5 @@ class PlugDeleteForceQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "force": obj.get("force")
-        })
+        _obj = cls.model_validate({"force": obj.get("force")})
         return _obj

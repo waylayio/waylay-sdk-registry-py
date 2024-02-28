@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,9 +28,9 @@ class FunctionType(str, Enum):
     """
     allowed enum values
     """
-    PLUGS = 'plugs'
-    WEBSCRIPTS = 'webscripts'
-    KFSERVING = 'kfserving'
+    PLUGS = "plugs"
+    WEBSCRIPTS = "webscripts"
+    KFSERVING = "kfserving"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

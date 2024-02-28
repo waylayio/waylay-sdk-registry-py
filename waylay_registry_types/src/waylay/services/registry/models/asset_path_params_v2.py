@@ -31,7 +31,10 @@ except ImportError:
 class AssetPathParamsV2(BaseModel):
     """AssetPathParamsV2."""
 
-    wildcard: StrictStr = Field(description="Full path or path prefix of the asset within the archive", alias="*")
+    wildcard: StrictStr = Field(
+        description="Full path or path prefix of the asset within the archive",
+        alias="*",
+    )
     __properties: ClassVar[List[str]] = ["*"]
 
     model_config = ConfigDict(
@@ -68,8 +71,7 @@ class AssetPathParamsV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +85,5 @@ class AssetPathParamsV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "*": obj.get("*")
-        })
+        _obj = cls.model_validate({"*": obj.get("*")})
         return _obj

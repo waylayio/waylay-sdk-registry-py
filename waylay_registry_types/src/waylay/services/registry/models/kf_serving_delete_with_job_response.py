@@ -24,6 +24,8 @@ from typing_extensions import Annotated
 from ..models.job_hal_links import JobHALLinks
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -36,15 +38,19 @@ class KFServingDeleteWithJobResponse(BaseModel):
     message: StrictStr
     links: JobHALLinks = Field(alias="_links")
     name: StrictStr = Field(description="The name of the function.")
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
     __properties: ClassVar[List[str]] = ["message", "_links", "name", "version"]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -81,13 +87,12 @@ class KFServingDeleteWithJobResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -99,10 +104,16 @@ class KFServingDeleteWithJobResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "message": obj.get("message"),
-            "_links": JobHALLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "name": obj.get("name"),
-            "version": obj.get("version")
-        })
+        _obj = cls.model_validate(
+            {
+                "message": obj.get("message"),
+                "_links": (
+                    JobHALLinks.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+                "name": obj.get("name"),
+                "version": obj.get("version"),
+            }
+        )
         return _obj

@@ -31,7 +31,10 @@ except ImportError:
 class ContentQueryV2(BaseModel):
     """ContentQueryV2."""
 
-    ls: Optional[StrictBool] = Field(default=False, description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.")
+    ls: Optional[StrictBool] = Field(
+        default=False,
+        description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.",
+    )
     __properties: ClassVar[List[str]] = ["ls"]
 
     model_config = ConfigDict(
@@ -68,8 +71,7 @@ class ContentQueryV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +85,7 @@ class ContentQueryV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "ls": obj.get("ls") if obj.get("ls") is not None else False
-        })
+        _obj = cls.model_validate(
+            {"ls": obj.get("ls") if obj.get("ls") is not None else False}
+        )
         return _obj

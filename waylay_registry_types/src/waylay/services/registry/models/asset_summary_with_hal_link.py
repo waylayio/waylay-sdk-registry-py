@@ -24,6 +24,8 @@ from ..models.asset_role import AssetRole
 from ..models.asset_summary_with_hal_link_links import AssetSummaryWithHALLinkLinks
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -38,7 +40,13 @@ class AssetSummaryWithHALLink(BaseModel):
     title: Optional[StrictStr] = None
     description: Optional[StrictStr] = None
     role: Optional[AssetRole] = None
-    __properties: ClassVar[List[str]] = ["_links", "name", "title", "description", "role"]
+    __properties: ClassVar[List[str]] = [
+        "_links",
+        "name",
+        "title",
+        "description",
+        "role",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,13 +82,12 @@ class AssetSummaryWithHALLink(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -92,11 +99,19 @@ class AssetSummaryWithHALLink(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "_links": AssetSummaryWithHALLinkLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "name": obj.get("name"),
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "role": obj.get("role")
-        })
+        _obj = cls.model_validate(
+            {
+                "_links": (
+                    AssetSummaryWithHALLinkLinks.from_dict(
+                        cast(dict, obj.get("_links"))
+                    )
+                    if obj.get("_links") is not None
+                    else None
+                ),
+                "name": obj.get("name"),
+                "title": obj.get("title"),
+                "description": obj.get("description"),
+                "role": obj.get("role"),
+            }
+        )
         return _obj

@@ -18,7 +18,7 @@ from pydantic import ConfigDict
 
 
 from typing import Any, ClassVar, Dict, List
-from pydantic import BaseModel, StrictStr, field_validator
+from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from typing_extensions import Annotated
 
@@ -33,7 +33,9 @@ class UndeployedResponseV2(BaseModel):
     """Undeployed."""
 
     message: StrictStr
-    versions: List[Annotated[str, Field(strict=True)]] = Field(description="The versions that where deprecated, undeployed and/or removed.")
+    versions: List[Annotated[str, Field(strict=True)]] = Field(
+        description="The versions that where deprecated, undeployed and/or removed."
+    )
     __properties: ClassVar[List[str]] = ["message", "versions"]
 
     model_config = ConfigDict(
@@ -70,8 +72,7 @@ class UndeployedResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,8 +86,7 @@ class UndeployedResponseV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "message": obj.get("message"),
-            "versions": obj.get("versions")
-        })
+        _obj = cls.model_validate(
+            {"message": obj.get("message"), "versions": obj.get("versions")}
+        )
         return _obj

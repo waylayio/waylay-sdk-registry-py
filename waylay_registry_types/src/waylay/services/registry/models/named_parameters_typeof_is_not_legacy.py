@@ -19,8 +19,12 @@ from pydantic import ConfigDict
 
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel
-from ..models.legacy_plug_request_metadata_documentation import LegacyPlugRequestMetadataDocumentation
+from ..models.legacy_plug_request_metadata_documentation import (
+    LegacyPlugRequestMetadataDocumentation,
+)
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -68,13 +72,12 @@ class NamedParametersTypeofIsNotLegacy(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of documentation
         if self.documentation:
-            _dict['documentation'] = self.documentation.to_dict()
+            _dict["documentation"] = self.documentation.to_dict()
         return _dict
 
     @classmethod
@@ -86,7 +89,15 @@ class NamedParametersTypeofIsNotLegacy(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "documentation": LegacyPlugRequestMetadataDocumentation.from_dict(obj.get("documentation")) if obj.get("documentation") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "documentation": (
+                    LegacyPlugRequestMetadataDocumentation.from_dict(
+                        cast(dict, obj.get("documentation"))
+                    )
+                    if obj.get("documentation") is not None
+                    else None
+                )
+            }
+        )
         return _obj

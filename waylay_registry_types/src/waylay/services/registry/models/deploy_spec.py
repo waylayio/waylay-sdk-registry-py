@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.deploy_spec_openfaas_spec import DeploySpecOpenfaasSpec
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -32,7 +34,9 @@ except ImportError:
 class DeploySpec(BaseModel):
     """DeploySpec."""
 
-    openfaas_spec: Optional[DeploySpecOpenfaasSpec] = Field(default=None, alias="openfaasSpec")
+    openfaas_spec: Optional[DeploySpecOpenfaasSpec] = Field(
+        default=None, alias="openfaasSpec"
+    )
     __properties: ClassVar[List[str]] = ["openfaasSpec"]
 
     model_config = ConfigDict(
@@ -69,13 +73,12 @@ class DeploySpec(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of openfaas_spec
         if self.openfaas_spec:
-            _dict['openfaasSpec'] = self.openfaas_spec.to_dict()
+            _dict["openfaasSpec"] = self.openfaas_spec.to_dict()
         return _dict
 
     @classmethod
@@ -87,7 +90,15 @@ class DeploySpec(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "openfaasSpec": DeploySpecOpenfaasSpec.from_dict(obj.get("openfaasSpec")) if obj.get("openfaasSpec") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "openfaasSpec": (
+                    DeploySpecOpenfaasSpec.from_dict(
+                        cast(dict, obj.get("openfaasSpec"))
+                    )
+                    if obj.get("openfaasSpec") is not None
+                    else None
+                )
+            }
+        )
         return _obj

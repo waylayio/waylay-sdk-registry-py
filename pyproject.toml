@@ -7,7 +7,7 @@ name = "waylay_registry"
 version = "2.12.1-0"
 description = "Waylay Function Registry"
 authors = [
-    { name = "Waylay", email = "dev@waylay.io"}    
+    { name = "Waylay", email = "dev@waylay.io"}
 ]
 keywords = ["Waylay Function Registry"]
 requires-python = ">= 3.7"
@@ -20,12 +20,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pylint",
-    "pycodestyle",
-    "pydocstyle",
     "mypy",
-    "autopep8",
-    "docformatter",
+    "ruff",
     "types-python-jose",
     "types-appdirs",
     "types-python-dateutil",
@@ -41,3 +37,16 @@ types = ["waylay_registry_types"]
 [tool.setuptools.packages.find]
 where = ["waylay_registry_api/src/", "waylay_registry_types/src/"]
 namespaces = true
+
+[tool.ruff]
+include = ["pyproject.toml", "test/**/*.py"]
+
+[tool.ruff.lint]
+ignore-init-module-imports = true
+# allow duplicate imports
+ignore=["F811"]
+
+[tool.ruff.lint.per-file-ignores]
+# do not touch imports here
+"__init__.py" = ["F401"]
+"conftest.py" = ["F401"]

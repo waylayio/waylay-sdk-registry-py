@@ -20,8 +20,12 @@ from pydantic import ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt
 from pydantic import Field
-from ..models.latest_webscripts_response_v2_entities_inner import LatestWebscriptsResponseV2EntitiesInner
+from ..models.latest_webscripts_response_v2_entities_inner import (
+    LatestWebscriptsResponseV2EntitiesInner,
+)
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -32,10 +36,18 @@ except ImportError:
 class LatestWebscriptsResponseV2(BaseModel):
     """Webscripts Found."""
 
-    limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page size used for this query result.")
-    count: Union[StrictFloat, StrictInt] = Field(description="The total count of matching items, from which this result is one page.")
-    page: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page number of a paged query result.")
-    entities: List[LatestWebscriptsResponseV2EntitiesInner] = Field(description="The specification and deployment status of the queried functions")
+    limit: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page size used for this query result."
+    )
+    count: Union[StrictFloat, StrictInt] = Field(
+        description="The total count of matching items, from which this result is one page."
+    )
+    page: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page number of a paged query result."
+    )
+    entities: List[LatestWebscriptsResponseV2EntitiesInner] = Field(
+        description="The specification and deployment status of the queried functions"
+    )
     __properties: ClassVar[List[str]] = ["limit", "count", "page", "entities"]
 
     model_config = ConfigDict(
@@ -72,17 +84,16 @@ class LatestWebscriptsResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in entities (list)
         _items = []
         if self.entities:
-            for _item in self.entities:  # type: ignore
+            for _item in cast(list, self.entities):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['entities'] = _items
+            _dict["entities"] = _items
         return _dict
 
     @classmethod
@@ -94,10 +105,17 @@ class LatestWebscriptsResponseV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "count": obj.get("count"),
-            "page": obj.get("page"),
-            "entities": [LatestWebscriptsResponseV2EntitiesInner.from_dict(_item) for _item in obj.get("entities")] if obj.get("entities") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "limit": obj.get("limit"),
+                "count": obj.get("count"),
+                "page": obj.get("page"),
+                "entities": [
+                    LatestWebscriptsResponseV2EntitiesInner.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("entities"))
+                ]
+                if obj.get("entities") is not None
+                else None,
+            }
+        )
         return _obj

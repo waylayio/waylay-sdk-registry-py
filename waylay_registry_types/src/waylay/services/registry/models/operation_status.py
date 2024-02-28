@@ -23,6 +23,8 @@ from ..models.job_type import JobType
 from ..models.operation_status_error import OperationStatusError
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -38,7 +40,14 @@ class OperationStatus(BaseModel):
     type: JobType
     done: StrictBool
     error: Optional[OperationStatusError] = None
-    __properties: ClassVar[List[str]] = ["id", "description", "name", "type", "done", "error"]
+    __properties: ClassVar[List[str]] = [
+        "id",
+        "description",
+        "name",
+        "type",
+        "done",
+        "error",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,13 +83,12 @@ class OperationStatus(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of error
         if self.error:
-            _dict['error'] = self.error.to_dict()
+            _dict["error"] = self.error.to_dict()
         return _dict
 
     @classmethod
@@ -92,12 +100,18 @@ class OperationStatus(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "description": obj.get("description"),
-            "name": obj.get("name"),
-            "type": obj.get("type"),
-            "done": obj.get("done"),
-            "error": OperationStatusError.from_dict(obj.get("error")) if obj.get("error") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "id": obj.get("id"),
+                "description": obj.get("description"),
+                "name": obj.get("name"),
+                "type": obj.get("type"),
+                "done": obj.get("done"),
+                "error": (
+                    OperationStatusError.from_dict(cast(dict, obj.get("error")))
+                    if obj.get("error") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

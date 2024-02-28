@@ -11,17 +11,16 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import List, Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, StrictStr, ValidationError, field_validator
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import StrictStr, ConfigDict
+
 try:
     from typing import Self
 except ImportError:
@@ -52,18 +51,22 @@ class AssetConditionPattern(BaseModel):
         """Create a AssetConditionPattern model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = AssetConditionPattern.model_construct()
+        instance = AssetConditionPattern.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: str
         try:
@@ -79,7 +82,10 @@ class AssetConditionPattern(BaseModel):
             error_messages.append(str(e))
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in AssetConditionPattern with anyOf schemas: List[str], str. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in AssetConditionPattern with anyOf schemas: List[str], str. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -91,7 +97,7 @@ class AssetConditionPattern(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # deserialize data into str
         try:
@@ -114,7 +120,10 @@ class AssetConditionPattern(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into AssetConditionPattern with anyOf schemas: List[str], str. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into AssetConditionPattern with anyOf schemas: List[str], str. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

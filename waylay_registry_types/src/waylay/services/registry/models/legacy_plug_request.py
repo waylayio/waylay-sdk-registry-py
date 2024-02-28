@@ -25,6 +25,8 @@ from ..models.legacy_plug_request_metadata import LegacyPlugRequestMetadata
 from ..models.plug_type import PlugType
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -35,19 +37,30 @@ class LegacyPlugRequest(BaseModel):
     """LegacyPlugRequest."""
 
     name: StrictStr
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
     script: StrictStr
     dependencies: Optional[Dict[str, StrictStr]] = None
     metadata: LegacyPlugRequestMetadata
     type: PlugType
-    __properties: ClassVar[List[str]] = ["name", "version", "script", "dependencies", "metadata", "type"]
+    __properties: ClassVar[List[str]] = [
+        "name",
+        "version",
+        "script",
+        "dependencies",
+        "metadata",
+        "type",
+    ]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -84,13 +97,12 @@ class LegacyPlugRequest(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of metadata
         if self.metadata:
-            _dict['metadata'] = self.metadata.to_dict()
+            _dict["metadata"] = self.metadata.to_dict()
         return _dict
 
     @classmethod
@@ -102,12 +114,18 @@ class LegacyPlugRequest(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "version": obj.get("version"),
-            "script": obj.get("script"),
-            "dependencies": obj.get("dependencies"),
-            "metadata": LegacyPlugRequestMetadata.from_dict(obj.get("metadata")) if obj.get("metadata") is not None else None,    # type: ignore
-            "type": obj.get("type")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "version": obj.get("version"),
+                "script": obj.get("script"),
+                "dependencies": obj.get("dependencies"),
+                "metadata": (
+                    LegacyPlugRequestMetadata.from_dict(cast(dict, obj.get("metadata")))
+                    if obj.get("metadata") is not None
+                    else None
+                ),
+                "type": obj.get("type"),
+            }
+        )
         return _obj

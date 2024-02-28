@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,12 +28,12 @@ class AssetRole(str, Enum):
     """
     allowed enum values
     """
-    MANIFEST = 'manifest'
-    PROJECT = 'project'
-    MAIN = 'main'
-    LIB = 'lib'
-    SCRIPT = 'script'
-    OTHER = 'other'
+    MANIFEST = "manifest"
+    PROJECT = "project"
+    MAIN = "main"
+    LIB = "lib"
+    SCRIPT = "script"
+    OTHER = "other"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

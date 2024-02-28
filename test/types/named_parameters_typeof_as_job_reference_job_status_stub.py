@@ -9,9 +9,10 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
-from waylay.services.registry.models.named_parameters_typeof_as_job_reference_job_status import NamedParametersTypeofAsJobReferenceJobStatus
+from waylay.services.registry.models.named_parameters_typeof_as_job_reference_job_status import (
+    NamedParametersTypeofAsJobReferenceJobStatus,
+)
 from .job_hal_links_stub import JobHALLinksStub
 
 
@@ -23,15 +24,6 @@ from .function_ref_stub import FunctionRefStub
 from .job_status_stub import JobStatusStub
 
 from .failure_reason_stub import FailureReasonStub
-
-from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
-from waylay.services.registry.models.failure_reason import FailureReason
-from waylay.services.registry.models.function_ref import FunctionRef
-from waylay.services.registry.models.job_hal_links import JobHALLinks
-from waylay.services.registry.models.job_state_result import JobStateResult
-from waylay.services.registry.models.job_status import JobStatus
 
 
 # some mappings that are needed for some <example> interpolations
@@ -46,7 +38,7 @@ class NamedParametersTypeofAsJobReferenceJobStatusStub:
         include_optional: bool = False,
     ) -> NamedParametersTypeofAsJobReferenceJobStatus:
         """Create NamedParametersTypeofAsJobReferenceJobStatus stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         if include_optional:
@@ -56,18 +48,22 @@ class NamedParametersTypeofAsJobReferenceJobStatusStub:
                 state=JobStateResultStub.create_instance(),
                 request=object(),
                 result=object(),
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                created_by='',
-                operation='',
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                created_by="",
+                operation="",
                 function=FunctionRefStub.create_instance(),
                 job=JobStatusStub.create_instance(),
-                failure_reason=FailureReasonStub.create_instance()
+                failure_reason=FailureReasonStub.create_instance(),
             )
         else:
             return NamedParametersTypeofAsJobReferenceJobStatus(
                 type=object(),
                 state=JobStateResultStub.create_instance(),
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                created_by='',
-                operation='',
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                created_by="",
+                operation="",
             )

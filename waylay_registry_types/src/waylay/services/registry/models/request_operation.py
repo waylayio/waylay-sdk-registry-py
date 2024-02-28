@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,14 +28,14 @@ class RequestOperation(str, Enum):
     """
     allowed enum values
     """
-    CREATE = 'create'
-    METADATA_MINUS_UPDATE = 'metadata-update'
-    ASSETS_MINUS_UPDATE = 'assets-update'
-    REBUILD = 'rebuild'
-    VERIFY = 'verify'
-    PUBLISH = 'publish'
-    DEPRECATE = 'deprecate'
-    UNDEPLOY = 'undeploy'
+    CREATE = "create"
+    METADATA_MINUS_UPDATE = "metadata-update"
+    ASSETS_MINUS_UPDATE = "assets-update"
+    REBUILD = "rebuild"
+    VERIFY = "verify"
+    PUBLISH = "publish"
+    DEPRECATE = "deprecate"
+    UNDEPLOY = "undeploy"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

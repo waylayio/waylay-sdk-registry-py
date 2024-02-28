@@ -18,7 +18,7 @@ from pydantic import ConfigDict
 
 
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 from pydantic import Field
 from typing_extensions import Annotated
 
@@ -32,7 +32,11 @@ except ImportError:
 class NamedVersionsFilter(BaseModel):
     """NamedVersionsFilter."""
 
-    name_version: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered.", alias="nameVersion")
+    name_version: Optional[List[Annotated[str, Field(strict=True)]]] = Field(
+        default=None,
+        description="Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered.",
+        alias="nameVersion",
+    )
     __properties: ClassVar[List[str]] = ["nameVersion"]
 
     model_config = ConfigDict(
@@ -69,8 +73,7 @@ class NamedVersionsFilter(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,7 +87,5 @@ class NamedVersionsFilter(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "nameVersion": obj.get("nameVersion")
-        })
+        _obj = cls.model_validate({"nameVersion": obj.get("nameVersion")})
         return _obj

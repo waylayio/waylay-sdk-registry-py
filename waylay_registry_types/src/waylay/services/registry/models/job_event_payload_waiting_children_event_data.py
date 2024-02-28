@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.job_reference import JobReference
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -71,13 +73,12 @@ class JobEventPayloadWaitingChildrenEventData(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of job
         if self.job:
-            _dict['job'] = self.job.to_dict()
+            _dict["job"] = self.job.to_dict()
         return _dict
 
     @classmethod
@@ -89,9 +90,15 @@ class JobEventPayloadWaitingChildrenEventData(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "job": JobReference.from_dict(obj.get("job")) if obj.get("job") is not None else None,    # type: ignore
-            "data": obj.get("data"),
-            "timestamp": obj.get("timestamp")
-        })
+        _obj = cls.model_validate(
+            {
+                "job": (
+                    JobReference.from_dict(cast(dict, obj.get("job")))
+                    if obj.get("job") is not None
+                    else None
+                ),
+                "data": obj.get("data"),
+                "timestamp": obj.get("timestamp"),
+            }
+        )
         return _obj

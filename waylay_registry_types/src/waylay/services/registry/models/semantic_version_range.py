@@ -11,7 +11,6 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
@@ -22,8 +21,8 @@ from pydantic import Field
 from typing_extensions import Annotated
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
 from pydantic import StrictStr, Field, ConfigDict
+
 try:
     from typing import Self
 except ImportError:
@@ -38,7 +37,10 @@ class SemanticVersionRange(BaseModel):
     # data type: str
     anyof_schema_1_validator: Optional[StrictStr] = None
     # data type: str
-    anyof_schema_2_validator: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
+    anyof_schema_2_validator: Optional[Annotated[str, Field(strict=True)]] = Field(
+        default=None,
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org",
+    )
     if TYPE_CHECKING:
         actual_instance: Optional[Union[str]] = None
     else:
@@ -54,18 +56,22 @@ class SemanticVersionRange(BaseModel):
         """Create a SemanticVersionRange model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = SemanticVersionRange.model_construct()
+        instance = SemanticVersionRange.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: str
         try:
@@ -81,7 +87,10 @@ class SemanticVersionRange(BaseModel):
             error_messages.append(str(e))
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in SemanticVersionRange with anyOf schemas: str. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in SemanticVersionRange with anyOf schemas: str. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -93,7 +102,7 @@ class SemanticVersionRange(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # deserialize data into str
         try:
@@ -116,7 +125,10 @@ class SemanticVersionRange(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into SemanticVersionRange with anyOf schemas: str. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into SemanticVersionRange with anyOf schemas: str. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

@@ -28,6 +28,8 @@ from ..models.plug_type import PlugType
 from ..models.semantic_version_range import SemanticVersionRange
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -39,20 +41,35 @@ class PlugManifest(BaseModel):
 
     deploy: Optional[FunctionDeployOverridesType] = None
     name: StrictStr = Field(description="The logical name for the function.")
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
     runtime: StrictStr
-    runtime_version: Optional[SemanticVersionRange] = Field(default=None, alias="runtimeVersion")
+    runtime_version: Optional[SemanticVersionRange] = Field(
+        default=None, alias="runtimeVersion"
+    )
     metadata: PlugMeta
     type: PlugType
     interface: PlugInterface
-    __properties: ClassVar[List[str]] = ["deploy", "name", "version", "runtime", "runtimeVersion", "metadata", "type", "interface"]
+    __properties: ClassVar[List[str]] = [
+        "deploy",
+        "name",
+        "version",
+        "runtime",
+        "runtimeVersion",
+        "metadata",
+        "type",
+        "interface",
+    ]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -89,22 +106,21 @@ class PlugManifest(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of deploy
         if self.deploy:
-            _dict['deploy'] = self.deploy.to_dict()
+            _dict["deploy"] = self.deploy.to_dict()
         # override the default output from pydantic by calling `to_dict()` of runtime_version
         if self.runtime_version:
-            _dict['runtimeVersion'] = self.runtime_version.to_dict()
+            _dict["runtimeVersion"] = self.runtime_version.to_dict()
         # override the default output from pydantic by calling `to_dict()` of metadata
         if self.metadata:
-            _dict['metadata'] = self.metadata.to_dict()
+            _dict["metadata"] = self.metadata.to_dict()
         # override the default output from pydantic by calling `to_dict()` of interface
         if self.interface:
-            _dict['interface'] = self.interface.to_dict()
+            _dict["interface"] = self.interface.to_dict()
         return _dict
 
     @classmethod
@@ -116,14 +132,34 @@ class PlugManifest(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deploy": FunctionDeployOverridesType.from_dict(obj.get("deploy")) if obj.get("deploy") is not None else None,    # type: ignore
-            "name": obj.get("name"),
-            "version": obj.get("version"),
-            "runtime": obj.get("runtime"),
-            "runtimeVersion": SemanticVersionRange.from_dict(obj.get("runtimeVersion")) if obj.get("runtimeVersion") is not None else None,    # type: ignore
-            "metadata": PlugMeta.from_dict(obj.get("metadata")) if obj.get("metadata") is not None else None,    # type: ignore
-            "type": obj.get("type"),
-            "interface": PlugInterface.from_dict(obj.get("interface")) if obj.get("interface") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "deploy": (
+                    FunctionDeployOverridesType.from_dict(cast(dict, obj.get("deploy")))
+                    if obj.get("deploy") is not None
+                    else None
+                ),
+                "name": obj.get("name"),
+                "version": obj.get("version"),
+                "runtime": obj.get("runtime"),
+                "runtimeVersion": (
+                    SemanticVersionRange.from_dict(
+                        cast(dict, obj.get("runtimeVersion"))
+                    )
+                    if obj.get("runtimeVersion") is not None
+                    else None
+                ),
+                "metadata": (
+                    PlugMeta.from_dict(cast(dict, obj.get("metadata")))
+                    if obj.get("metadata") is not None
+                    else None
+                ),
+                "type": obj.get("type"),
+                "interface": (
+                    PlugInterface.from_dict(cast(dict, obj.get("interface")))
+                    if obj.get("interface") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
 from waylay.services.registry.models.with_entity_attributes import WithEntityAttributes
 
@@ -20,15 +19,6 @@ from .update_record_stub import UpdateRecordStub
 from .failure_reason_stub import FailureReasonStub
 
 from .runtime_attributes_stub import RuntimeAttributesStub
-
-
-from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictBool, StrictStr
-from pydantic import Field
-from waylay.services.registry.models.failure_reason import FailureReason
-from waylay.services.registry.models.runtime_attributes import RuntimeAttributes
-from waylay.services.registry.models.status import Status
-from waylay.services.registry.models.update_record import UpdateRecord
 
 
 # some mappings that are needed for some <example> interpolations
@@ -43,31 +33,39 @@ class WithEntityAttributesStub:
         include_optional: bool = False,
     ) -> WithEntityAttributes:
         """Create WithEntityAttributes stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         if include_optional:
             return WithEntityAttributes(
-                created_by='',
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                updated_by='',
-                updated_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                created_by="",
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                updated_by="",
+                updated_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
                 updates=[UpdateRecordStub.create_instance()],
-                status='registered',
+                status="registered",
                 failure_reason=FailureReasonStub.create_instance(),
                 runtime=RuntimeAttributesStub.create_instance(),
                 deprecated=True,
-                draft=True
+                draft=True,
             )
         else:
             return WithEntityAttributes(
-                created_by='',
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                updated_by='',
-                updated_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                created_by="",
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                updated_by="",
+                updated_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
                 updates=[UpdateRecordStub.create_instance()],
-                status='registered',
+                status="registered",
                 runtime=RuntimeAttributesStub.create_instance(),
                 deprecated=True,
-                draft=True
+                draft=True,
             )

@@ -24,6 +24,8 @@ from ..models.deprecate_previous_policy import DeprecatePreviousPolicy
 from ..models.semantic_version_range import SemanticVersionRange
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -33,14 +35,42 @@ except ImportError:
 class CreateFunctionQueryV2(BaseModel):
     """CreateFunctionQueryV2."""
 
-    deprecate_previous: Optional[DeprecatePreviousPolicy] = Field(default=None, alias="deprecatePrevious")
-    dry_run: Optional[StrictBool] = Field(default=None, description="If set to <code>true</code>, validates the deployment conditions, but does not change anything.", alias="dryRun")
-    var_async: Optional[StrictBool] = Field(default=True, description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.", alias="async")
-    scale_to_zero: Optional[StrictBool] = Field(default=False, description="If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.", alias="scaleToZero")
+    deprecate_previous: Optional[DeprecatePreviousPolicy] = Field(
+        default=None, alias="deprecatePrevious"
+    )
+    dry_run: Optional[StrictBool] = Field(
+        default=None,
+        description="If set to <code>true</code>, validates the deployment conditions, but does not change anything.",
+        alias="dryRun",
+    )
+    var_async: Optional[StrictBool] = Field(
+        default=True,
+        description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+        alias="async",
+    )
+    scale_to_zero: Optional[StrictBool] = Field(
+        default=False,
+        description="If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.",
+        alias="scaleToZero",
+    )
     version: Optional[SemanticVersionRange] = None
-    name: Optional[StrictStr] = Field(default=None, description="If set, the value will be used as the function name instead of the one specified in the manifest.")
-    draft: Optional[StrictBool] = Field(default=False, description="If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.")
-    __properties: ClassVar[List[str]] = ["deprecatePrevious", "dryRun", "async", "scaleToZero", "version", "name", "draft"]
+    name: Optional[StrictStr] = Field(
+        default=None,
+        description="If set, the value will be used as the function name instead of the one specified in the manifest.",
+    )
+    draft: Optional[StrictBool] = Field(
+        default=False,
+        description="If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.",
+    )
+    __properties: ClassVar[List[str]] = [
+        "deprecatePrevious",
+        "dryRun",
+        "async",
+        "scaleToZero",
+        "version",
+        "name",
+        "draft",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,13 +106,12 @@ class CreateFunctionQueryV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of version
         if self.version:
-            _dict['version'] = self.version.to_dict()
+            _dict["version"] = self.version.to_dict()
         return _dict
 
     @classmethod
@@ -94,13 +123,21 @@ class CreateFunctionQueryV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deprecatePrevious": obj.get("deprecatePrevious"),
-            "dryRun": obj.get("dryRun"),
-            "async": obj.get("async") if obj.get("async") is not None else True,
-            "scaleToZero": obj.get("scaleToZero") if obj.get("scaleToZero") is not None else False,
-            "version": SemanticVersionRange.from_dict(obj.get("version")) if obj.get("version") is not None else None,    # type: ignore
-            "name": obj.get("name"),
-            "draft": obj.get("draft") if obj.get("draft") is not None else False
-        })
+        _obj = cls.model_validate(
+            {
+                "deprecatePrevious": obj.get("deprecatePrevious"),
+                "dryRun": obj.get("dryRun"),
+                "async": obj.get("async") if obj.get("async") is not None else True,
+                "scaleToZero": obj.get("scaleToZero")
+                if obj.get("scaleToZero") is not None
+                else False,
+                "version": (
+                    SemanticVersionRange.from_dict(cast(dict, obj.get("version")))
+                    if obj.get("version") is not None
+                    else None
+                ),
+                "name": obj.get("name"),
+                "draft": obj.get("draft") if obj.get("draft") is not None else False,
+            }
+        )
         return _obj

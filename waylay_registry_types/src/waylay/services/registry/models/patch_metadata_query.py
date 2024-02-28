@@ -31,7 +31,10 @@ except ImportError:
 class PatchMetadataQuery(BaseModel):
     """PatchMetadataQuery."""
 
-    comment: Optional[StrictStr] = Field(default=None, description="An optional user-specified comment corresponding to the operation.")
+    comment: Optional[StrictStr] = Field(
+        default=None,
+        description="An optional user-specified comment corresponding to the operation.",
+    )
     __properties: ClassVar[List[str]] = ["comment"]
 
     model_config = ConfigDict(
@@ -68,8 +71,7 @@ class PatchMetadataQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +85,5 @@ class PatchMetadataQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "comment": obj.get("comment")
-        })
+        _obj = cls.model_validate({"comment": obj.get("comment")})
         return _obj

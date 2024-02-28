@@ -10,15 +10,11 @@ Do not edit the class manually.
 
 
 import pytest
-from typing import Dict, List
 from pytest_httpx import HTTPXMock
 import json
 from waylay.sdk import ApiClient, WaylayClient
 from waylay.services.registry.api import ModelFunctionsApi
 from waylay.services.registry.service import RegistryService
-
-
-from ..types.multipart_file_upload_stub import MultipartFileUploadStub
 
 
 from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncResponseV2Stub
@@ -79,9 +75,6 @@ from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncRespons
 from waylay.services.registry.models import PostModelJobSyncResponseV2
 
 
-from ..types.multipart_file_upload_stub import MultipartFileUploadStub
-
-
 from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncResponseV2Stub
 from waylay.services.registry.models import PostModelJobSyncResponseV2
 
@@ -105,166 +98,174 @@ def test_registered(waylay_client: WaylayClient):
 
 
 @pytest.mark.asyncio
-async def test_create(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_create(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for create
-        Create Model
+    Create Model
     """
     # set path params
     # set files param
     files = {
-        'myFile1': b'...first file content...',
-        'myFile2': b'...second file content...',
+        "myFile1": b"...first file content...",
+        "myFile2": b"...second file content...",
     }
 
     mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": gateway_url + f"/registry/v2/models/",
+        "url": gateway_url + f"/registry/v2/models/",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'files': files,
-
+        "files": files,
     }
     resp = await service.model_functions.create(**kwargs)
     assert isinstance(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_delete_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_delete_asset(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for delete_asset
-        Delete Model Asset
+    Delete Model Asset
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
-    wildcard = 'wildcard_example'
+    wildcard = "wildcard_example"
 
     mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "DELETE",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/content/{wildcard}",
+        "url": gateway_url
+        + f"/registry/v2/models/{name}/versions/{version}/content/{wildcard}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-        'wildcard': wildcard,
-
+        "name": name,
+        "version": version,
+        "wildcard": wildcard,
     }
     resp = await service.model_functions.delete_asset(**kwargs)
     assert isinstance(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_get_archive(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_archive(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_archive
-        Get Model Archive
+    Get Model Archive
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
-    mock_response = bytes(b'blah')
+    mock_response = bytes(b"blah")
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/content",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/content",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.model_functions.get_archive(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_asset(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_asset
-        Get File From Model Archive
+    Get File From Model Archive
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
-    wildcard = 'wildcard_example'
+    wildcard = "wildcard_example"
 
-    mock_response = bytes(b'blah')
+    mock_response = bytes(b"blah")
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/content/{wildcard}",
+        "url": gateway_url
+        + f"/registry/v2/models/{name}/versions/{version}/content/{wildcard}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-        'wildcard': wildcard,
-
+        "name": name,
+        "version": version,
+        "wildcard": wildcard,
     }
     resp = await service.model_functions.get_asset(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_latest_version(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_latest_version(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_latest_version
-        Get Latest Model Version
+    Get Latest Model Version
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     mock_response = GetModelResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}",
+        "url": gateway_url + f"/registry/v2/models/{name}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-
+        "name": name,
     }
     resp = await service.model_functions.get_latest_version(**kwargs)
     assert isinstance(resp, GetModelResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_get_version(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_version(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_version
-        Get Model Version
+    Get Model Version
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = GetModelResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.model_functions.get_version(**kwargs)
     assert isinstance(resp, GetModelResponseV2)
@@ -273,85 +274,87 @@ async def test_get_version(service: RegistryService, gateway_url: str, httpx_moc
 @pytest.mark.asyncio
 async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for jobs
-        List Model Jobs
+    List Model Jobs
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = JobsForModelResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/jobs",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/jobs",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.model_functions.jobs(**kwargs)
     assert isinstance(resp, JobsForModelResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_list_all(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_list_all(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for list_all
-        List Models
+    List Models
     """
     # set path params
 
     mock_response = LatestModelsResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/",
+        "url": gateway_url + f"/registry/v2/models/",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {
-
-    }
+    kwargs = {}
     resp = await service.model_functions.list_all(**kwargs)
     assert isinstance(resp, LatestModelsResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_list_versions(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_list_versions(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for list_versions
-        List Model Versions
+    List Model Versions
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     mock_response = ModelVersionsResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-
+        "name": name,
     }
     resp = await service.model_functions.list_versions(**kwargs)
     assert isinstance(resp, ModelVersionsResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_patch_metadata(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_patch_metadata(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for patch_metadata
-        Patch Model Metadata
+    Patch Model Metadata
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     # set body param
     body = FunctionMetaStub.create_instance()
@@ -361,139 +364,143 @@ async def test_patch_metadata(service: RegistryService, gateway_url: str, httpx_
     mock_response = GetModelResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PATCH",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/metadata",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/metadata",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
-        'body': body,
-        '_headers': {'content-type': content_type} if content_type else None,
-
+        "name": name,
+        "version": version,
+        "body": body,
+        "_headers": {"content-type": content_type} if content_type else None,
     }
     resp = await service.model_functions.patch_metadata(**kwargs)
     assert isinstance(resp, GetModelResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_publish(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_publish(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for publish
-        Publish Draft Model
+    Publish Draft Model
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/publish",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/publish",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.model_functions.publish(**kwargs)
     assert isinstance(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_rebuild(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_rebuild(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for rebuild
-        Rebuild Model
+    Rebuild Model
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = RebuildModelSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/rebuild",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/rebuild",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.model_functions.rebuild(**kwargs)
     assert isinstance(resp, RebuildModelSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_remove_version(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_remove_version(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for remove_version
-        Remove Model Version
+    Remove Model Version
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = UndeployedResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "DELETE",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.model_functions.remove_version(**kwargs)
     assert isinstance(resp, UndeployedResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_remove_versions(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_remove_versions(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for remove_versions
-        Remove Model
+    Remove Model
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     mock_response = UndeployedResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "DELETE",
-        "url": gateway_url + f"/registry/v2/models/{name}",
+        "url": gateway_url + f"/registry/v2/models/{name}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-
+        "name": name,
     }
     resp = await service.model_functions.remove_versions(**kwargs)
     assert isinstance(resp, UndeployedResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_update_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_update_asset(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for update_asset
-        Update Model Asset
+    Update Model Asset
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
-    wildcard = 'wildcard_example'
+    wildcard = "wildcard_example"
 
     # set body param
     body = FileUploadStub.create_instance()
@@ -503,80 +510,81 @@ async def test_update_asset(service: RegistryService, gateway_url: str, httpx_mo
     mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PUT",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/content/{wildcard}",
+        "url": gateway_url
+        + f"/registry/v2/models/{name}/versions/{version}/content/{wildcard}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-        'wildcard': wildcard,
-
-        'body': body,
-        '_headers': {'content-type': content_type} if content_type else None,
-
+        "name": name,
+        "version": version,
+        "wildcard": wildcard,
+        "body": body,
+        "_headers": {"content-type": content_type} if content_type else None,
     }
     resp = await service.model_functions.update_asset(**kwargs)
     assert isinstance(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_update_assets(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_update_assets(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for update_assets
-        Update Model Assets
+    Update Model Assets
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     # set files param
     files = {
-        'myFile1': b'...first file content...',
-        'myFile2': b'...second file content...',
+        "myFile1": b"...first file content...",
+        "myFile2": b"...second file content...",
     }
 
     mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PUT",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/content",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/content",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-        'files': files,
-
+        "name": name,
+        "version": version,
+        "files": files,
     }
     resp = await service.model_functions.update_assets(**kwargs)
     assert isinstance(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_verify(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_verify(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for verify
-        Verify Health Of Model
+    Verify Health Of Model
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = VerifyModelSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/verify",
+        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/verify",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.model_functions.verify(**kwargs)
     assert isinstance(resp, VerifyModelSyncResponseV2)

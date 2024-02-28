@@ -32,14 +32,41 @@ class ProvidedDependency(BaseModel):
     """Library dependency that is provided by this runtime.."""
 
     name: StrictStr = Field(description="Name of a provided dependency.")
-    title: Optional[StrictStr] = Field(default=None, description="Optional display title.")
-    description: Optional[StrictStr] = Field(default=None, description="Optional description.")
-    version: Optional[StrictStr] = Field(default=None, description="Versions specification of a provided dependency")
-    deprecated: Optional[StrictBool] = Field(default=False, description="If true, this provided dependency is scheduled for removal (or incompatible upgrade) in a next runtime version.")
-    removed: Optional[StrictBool] = Field(default=False, description="If true, this dependency has been removed from the runtime (version)")
-    globals: Optional[List[StrictStr]] = Field(default=None, description="Global variables that expose this library to the user code. As the usage of these globals is deprecated, any usage of such global will pose issues in an next runtime version.")
-    native: Optional[StrictBool] = Field(default=None, description="If true, the library is provided natively by the runtime: e.g. node for javascript.")
-    __properties: ClassVar[List[str]] = ["name", "title", "description", "version", "deprecated", "removed", "globals", "native"]
+    title: Optional[StrictStr] = Field(
+        default=None, description="Optional display title."
+    )
+    description: Optional[StrictStr] = Field(
+        default=None, description="Optional description."
+    )
+    version: Optional[StrictStr] = Field(
+        default=None, description="Versions specification of a provided dependency"
+    )
+    deprecated: Optional[StrictBool] = Field(
+        default=False,
+        description="If true, this provided dependency is scheduled for removal (or incompatible upgrade) in a next runtime version.",
+    )
+    removed: Optional[StrictBool] = Field(
+        default=False,
+        description="If true, this dependency has been removed from the runtime (version)",
+    )
+    globals: Optional[List[StrictStr]] = Field(
+        default=None,
+        description="Global variables that expose this library to the user code. As the usage of these globals is deprecated, any usage of such global will pose issues in an next runtime version.",
+    )
+    native: Optional[StrictBool] = Field(
+        default=None,
+        description="If true, the library is provided natively by the runtime: e.g. node for javascript.",
+    )
+    __properties: ClassVar[List[str]] = [
+        "name",
+        "title",
+        "description",
+        "version",
+        "deprecated",
+        "removed",
+        "globals",
+        "native",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -75,8 +102,7 @@ class ProvidedDependency(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -90,14 +116,20 @@ class ProvidedDependency(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "version": obj.get("version"),
-            "deprecated": obj.get("deprecated") if obj.get("deprecated") is not None else False,
-            "removed": obj.get("removed") if obj.get("removed") is not None else False,
-            "globals": obj.get("globals"),
-            "native": obj.get("native")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "title": obj.get("title"),
+                "description": obj.get("description"),
+                "version": obj.get("version"),
+                "deprecated": obj.get("deprecated")
+                if obj.get("deprecated") is not None
+                else False,
+                "removed": obj.get("removed")
+                if obj.get("removed") is not None
+                else False,
+                "globals": obj.get("globals"),
+                "native": obj.get("native"),
+            }
+        )
         return _obj

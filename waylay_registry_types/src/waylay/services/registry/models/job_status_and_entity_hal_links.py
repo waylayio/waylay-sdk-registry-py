@@ -11,27 +11,31 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 from ..models.job_status_hal_link import JobStatusHALLink
 from ..models.model2 import Model2
 from ..models.plug2 import Plug2
 from ..models.webscript2 import Webscript2
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import ConfigDict
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-JOBSTATUSANDENTITYHALLINKS_ANY_OF_SCHEMAS = ["JobStatusHALLink", "Model2", "Plug2", "Webscript2"]
+JOBSTATUSANDENTITYHALLINKS_ANY_OF_SCHEMAS = [
+    "JobStatusHALLink",
+    "Model2",
+    "Plug2",
+    "Webscript2",
+]
 
 
 class JobStatusAndEntityHALLinks(BaseModel):
@@ -46,7 +50,9 @@ class JobStatusAndEntityHALLinks(BaseModel):
     # data type: JobStatusHALLink
     anyof_schema_4_validator: Optional[JobStatusHALLink] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[JobStatusHALLink, Model2, Plug2, Webscript2]] = None
+        actual_instance: Optional[
+            Union[JobStatusHALLink, Model2, Plug2, Webscript2]
+        ] = None
     else:
         actual_instance: Any = None
     any_of_schemas: List[str] = JOBSTATUSANDENTITYHALLINKS_ANY_OF_SCHEMAS
@@ -60,18 +66,22 @@ class JobStatusAndEntityHALLinks(BaseModel):
         """Create a JobStatusAndEntityHALLinks model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = JobStatusAndEntityHALLinks.model_construct()
+        instance = JobStatusAndEntityHALLinks.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: Plug2
         if not isinstance(v, Plug2):
@@ -93,13 +103,18 @@ class JobStatusAndEntityHALLinks(BaseModel):
 
         # validate data type: JobStatusHALLink
         if not isinstance(v, JobStatusHALLink):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobStatusHALLink`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobStatusHALLink`"
+            )
         else:
             return v
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in JobStatusAndEntityHALLinks with anyOf schemas: JobStatusHALLink, Model2, Plug2, Webscript2. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in JobStatusAndEntityHALLinks with anyOf schemas: JobStatusHALLink, Model2, Plug2, Webscript2. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -111,7 +126,7 @@ class JobStatusAndEntityHALLinks(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # anyof_schema_1_validator: Optional[Plug2] = None
         try:
@@ -140,7 +155,10 @@ class JobStatusAndEntityHALLinks(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into JobStatusAndEntityHALLinks with anyOf schemas: JobStatusHALLink, Model2, Plug2, Webscript2. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into JobStatusAndEntityHALLinks with anyOf schemas: JobStatusHALLink, Model2, Plug2, Webscript2. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

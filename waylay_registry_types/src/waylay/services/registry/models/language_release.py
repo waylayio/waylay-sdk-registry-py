@@ -31,8 +31,12 @@ except ImportError:
 class LanguageRelease(BaseModel):
     """Description of the language or framework release used by a runtime (version).."""
 
-    name: StrictStr = Field(description="Short technical name of the language or framework used.")
-    version: StrictStr = Field(description="Release version of the language or framework.")
+    name: StrictStr = Field(
+        description="Short technical name of the language or framework used."
+    )
+    version: StrictStr = Field(
+        description="Release version of the language or framework."
+    )
     title: StrictStr = Field(description="Display title.")
     description: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["name", "version", "title", "description"]
@@ -71,8 +75,7 @@ class LanguageRelease(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,10 +89,12 @@ class LanguageRelease(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "version": obj.get("version"),
-            "title": obj.get("title"),
-            "description": obj.get("description")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "version": obj.get("version"),
+                "title": obj.get("title"),
+                "description": obj.get("description"),
+            }
+        )
         return _obj

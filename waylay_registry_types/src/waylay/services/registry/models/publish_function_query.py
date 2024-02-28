@@ -32,9 +32,18 @@ except ImportError:
 class PublishFunctionQuery(BaseModel):
     """PublishFunctionQuery."""
 
-    comment: Optional[StrictStr] = Field(default=None, description="An optional user-specified comment corresponding to the operation.")
-    deprecate_previous: Optional[DeprecatePreviousPolicy] = Field(default=None, alias="deprecatePrevious")
-    var_async: Optional[StrictBool] = Field(default=True, description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.", alias="async")
+    comment: Optional[StrictStr] = Field(
+        default=None,
+        description="An optional user-specified comment corresponding to the operation.",
+    )
+    deprecate_previous: Optional[DeprecatePreviousPolicy] = Field(
+        default=None, alias="deprecatePrevious"
+    )
+    var_async: Optional[StrictBool] = Field(
+        default=True,
+        description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+        alias="async",
+    )
     __properties: ClassVar[List[str]] = ["comment", "deprecatePrevious", "async"]
 
     model_config = ConfigDict(
@@ -71,8 +80,7 @@ class PublishFunctionQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,9 +94,11 @@ class PublishFunctionQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "comment": obj.get("comment"),
-            "deprecatePrevious": obj.get("deprecatePrevious"),
-            "async": obj.get("async") if obj.get("async") is not None else True
-        })
+        _obj = cls.model_validate(
+            {
+                "comment": obj.get("comment"),
+                "deprecatePrevious": obj.get("deprecatePrevious"),
+                "async": obj.get("async") if obj.get("async") is not None else True,
+            }
+        )
         return _obj

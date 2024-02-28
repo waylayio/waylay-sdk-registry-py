@@ -31,8 +31,12 @@ except ImportError:
 class DeprecatedDraftFilter(BaseModel):
     """DeprecatedDraftFilter."""
 
-    deprecated: Optional[StrictBool] = Field(default=None, description="Filter on the deprecation status of the function.")
-    draft: Optional[StrictBool] = Field(default=None, description="Filter on the draft status of the function.")
+    deprecated: Optional[StrictBool] = Field(
+        default=None, description="Filter on the deprecation status of the function."
+    )
+    draft: Optional[StrictBool] = Field(
+        default=None, description="Filter on the draft status of the function."
+    )
     __properties: ClassVar[List[str]] = ["deprecated", "draft"]
 
     model_config = ConfigDict(
@@ -69,8 +73,7 @@ class DeprecatedDraftFilter(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +87,7 @@ class DeprecatedDraftFilter(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deprecated": obj.get("deprecated"),
-            "draft": obj.get("draft")
-        })
+        _obj = cls.model_validate(
+            {"deprecated": obj.get("deprecated"), "draft": obj.get("draft")}
+        )
         return _obj

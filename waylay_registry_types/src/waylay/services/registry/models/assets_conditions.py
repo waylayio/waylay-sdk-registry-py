@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.asset_condition import AssetCondition
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -32,8 +34,15 @@ except ImportError:
 class AssetsConditions(BaseModel):
     """Describes the assets that are required/allowed/supported for a function.."""
 
-    conditions: Optional[List[AssetCondition]] = Field(default=None, description="All files in a function archive are checked against these conditions. A file that is not matched is ignored.")
-    max_size: Optional[StrictStr] = Field(default=None, description="The maximum size of the archive (in bytes, unless unit is provided)", alias="maxSize")
+    conditions: Optional[List[AssetCondition]] = Field(
+        default=None,
+        description="All files in a function archive are checked against these conditions. A file that is not matched is ignored.",
+    )
+    max_size: Optional[StrictStr] = Field(
+        default=None,
+        description="The maximum size of the archive (in bytes, unless unit is provided)",
+        alias="maxSize",
+    )
     __properties: ClassVar[List[str]] = ["conditions", "maxSize"]
 
     model_config = ConfigDict(
@@ -70,17 +79,16 @@ class AssetsConditions(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in conditions (list)
         _items = []
         if self.conditions:
-            for _item in self.conditions:  # type: ignore
+            for _item in cast(list, self.conditions):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['conditions'] = _items
+            _dict["conditions"] = _items
         return _dict
 
     @classmethod
@@ -92,8 +100,15 @@ class AssetsConditions(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "conditions": [AssetCondition.from_dict(_item) for _item in obj.get("conditions")] if obj.get("conditions") is not None else None,  # type: ignore
-            "maxSize": obj.get("maxSize")
-        })
+        _obj = cls.model_validate(
+            {
+                "conditions": [
+                    AssetCondition.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("conditions"))
+                ]
+                if obj.get("conditions") is not None
+                else None,
+                "maxSize": obj.get("maxSize"),
+            }
+        )
         return _obj

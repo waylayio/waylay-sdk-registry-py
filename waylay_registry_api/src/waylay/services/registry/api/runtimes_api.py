@@ -10,23 +10,18 @@ Do not edit the class manually.
 
 
 from __future__ import annotations  # for Python 3.7–3.9
-import io
-import warnings
 
 import enum
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt, StrictBool, StrictBytes
-from typing import Dict, List, Literal, Optional, Tuple, Union, Any, overload, TYPE_CHECKING
-from typing_extensions import NotRequired, TypedDict
+from pydantic import validate_call, Field, StrictStr, StrictBool
+from typing import Dict, Literal, Optional, Union, Any, overload, TYPE_CHECKING
 
-from waylay.sdk.api import ApiValueError
 
 try:
     from typing import Annotated
 except ImportError:
-    from typing_extensions import Annotated  # type: ignore
+    from typing_extensions import Annotated  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
-
     from waylay.services.registry.models import SemanticVersionRange
     from waylay.services.registry.models import SemanticVersionRange
     from waylay.services.registry.models import SemanticVersionRange
@@ -48,7 +43,6 @@ if TYPE_CHECKING:
 
 
 try:
-
     from waylay.services.registry.models import SemanticVersionRange
     from waylay.services.registry.models import SemanticVersionRange
     from waylay.services.registry.models import SemanticVersionRange
@@ -73,7 +67,6 @@ except ImportError:
     types_available = False
 
     if not TYPE_CHECKING:
-
         SemanticVersionRange = str
         SemanticVersionRange = str
         SemanticVersionRange = str
@@ -94,9 +87,7 @@ except ImportError:
         RuntimeSummaryResponse = Any
 
 
-from waylay.sdk.api import (
-    ApiClient, ApiResponse, RESTTimeout
-)
+from waylay.sdk.api import ApiClient, ApiResponse, RESTTimeout
 
 
 class RuntimesApi:
@@ -116,31 +107,39 @@ class RuntimesApi:
     async def example_archive(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
-        version: Annotated[Any, Field(description="A version range for a <em>runtime</em>")],
+        version: Annotated[
+            Any, Field(description="A version range for a <em>runtime</em>")
+        ],
         *,
         query: Optional[ExampleArchiveQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> bytearray: ...
+    ) -> bytearray:
+        ...
 
     @overload
     async def example_archive(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
-        version: Annotated[Any, Field(description="A version range for a <em>runtime</em>")],
+        version: Annotated[
+            Any, Field(description="A version range for a <em>runtime</em>")
+        ],
         *,
         query: Optional[ExampleArchiveQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[bytearray]: ...
+    ) -> ApiResponse[bytearray]:
+        ...
 
     @validate_call
     async def example_archive(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
-        version: Annotated[Any, Field(description="A version range for a <em>runtime</em>")],
+        version: Annotated[
+            Any, Field(description="A version range for a <em>runtime</em>")
+        ],
         *,
         query: Optional[ExampleArchiveQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -183,11 +182,10 @@ class RuntimesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            "200": "bytearray",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -204,35 +202,36 @@ class RuntimesApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('ls', None)
+            query_param = query.get("ls", None)
             if query_param is not None:
-                _query_params['ls'] = query_param
+                _query_params["ls"] = query_param
 
-            query_param = query.get('include_deprecated', None)
+            query_param = query.get("include_deprecated", None)
             if query_param is not None:
-                _query_params['includeDeprecated'] = query_param
+                _query_params["includeDeprecated"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/runtimes/{name}/versions/{version}/example',
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}/versions/{version}/example",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -244,34 +243,57 @@ class RuntimesApi:
     async def get_example_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
-        version: Annotated[Any, Field(description="A version range for a <em>runtime</em>")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            Any, Field(description="A version range for a <em>runtime</em>")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
         query: Optional[GetExampleAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> bytearray: ...
+    ) -> bytearray:
+        ...
 
     @overload
     async def get_example_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
-        version: Annotated[Any, Field(description="A version range for a <em>runtime</em>")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            Any, Field(description="A version range for a <em>runtime</em>")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
         query: Optional[GetExampleAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[bytearray]: ...
+    ) -> ApiResponse[bytearray]:
+        ...
 
     @validate_call
     async def get_example_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
-        version: Annotated[Any, Field(description="A version range for a <em>runtime</em>")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            Any, Field(description="A version range for a <em>runtime</em>")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
         query: Optional[GetExampleAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -317,11 +339,10 @@ class RuntimesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            "200": "bytearray",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -339,37 +360,38 @@ class RuntimesApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         if wildcard is not None:
-            _path_params['wildcard'] = wildcard
+            _path_params["wildcard"] = wildcard
         # process the query parameters
         if query is not None:
-            query_param = query.get('ls', None)
+            query_param = query.get("ls", None)
             if query_param is not None:
-                _query_params['ls'] = query_param
+                _query_params["ls"] = query_param
 
-            query_param = query.get('include_deprecated', None)
+            query_param = query.get("include_deprecated", None)
             if query_param is not None:
-                _query_params['includeDeprecated'] = query_param
+                _query_params["includeDeprecated"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/runtimes/{name}/versions/{version}/example/{wildcard}',
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}/versions/{version}/example/{wildcard}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -386,7 +408,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> RuntimeVersionResponse: ...
+    ) -> RuntimeVersionResponse:
+        ...
 
     @overload
     async def get_latest(
@@ -397,7 +420,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[RuntimeVersionResponse]: ...
+    ) -> ApiResponse[RuntimeVersionResponse]:
+        ...
 
     @validate_call
     async def get_latest(
@@ -446,11 +470,10 @@ class RuntimesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.RuntimeVersionResponse",
+            "200": "waylay.services.registry.models.RuntimeVersionResponse",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -466,43 +489,46 @@ class RuntimesApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         # process the query parameters
         if query is not None:
-            query_param = query.get('version', None)
+            query_param = query.get("version", None)
             if query_param is not None:
-                _query_params['version'] = query_param
+                _query_params["version"] = query_param
 
-            query_param = query.get('include_deprecated', None)
+            query_param = query.get("include_deprecated", None)
             if query_param is not None:
-                _query_params['includeDeprecated'] = query_param
+                _query_params["includeDeprecated"] = query_param
 
-            query_param = query.get('function_type', None)
+            query_param = query.get("function_type", None)
             if query_param is not None:
+                _query_params["functionType"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
-                _query_params['functionType'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
-
-            query_param = query.get('archive_format', None)
+            query_param = query.get("archive_format", None)
             if query_param is not None:
-
-                _query_params['archiveFormat'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
+                _query_params["archiveFormat"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/runtimes/{name}',
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -514,31 +540,39 @@ class RuntimesApi:
     async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
-        version: Annotated[Any, Field(description="A version range for a <em>runtime</em>")],
+        version: Annotated[
+            Any, Field(description="A version range for a <em>runtime</em>")
+        ],
         *,
         query: Optional[GetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> RuntimeVersionResponse: ...
+    ) -> RuntimeVersionResponse:
+        ...
 
     @overload
     async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
-        version: Annotated[Any, Field(description="A version range for a <em>runtime</em>")],
+        version: Annotated[
+            Any, Field(description="A version range for a <em>runtime</em>")
+        ],
         *,
         query: Optional[GetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[RuntimeVersionResponse]: ...
+    ) -> ApiResponse[RuntimeVersionResponse]:
+        ...
 
     @validate_call
     async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
-        version: Annotated[Any, Field(description="A version range for a <em>runtime</em>")],
+        version: Annotated[
+            Any, Field(description="A version range for a <em>runtime</em>")
+        ],
         *,
         query: Optional[GetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -579,11 +613,10 @@ class RuntimesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.RuntimeVersionResponse",
+            "200": "waylay.services.registry.models.RuntimeVersionResponse",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -600,31 +633,32 @@ class RuntimesApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('include_deprecated', None)
+            query_param = query.get("include_deprecated", None)
             if query_param is not None:
-                _query_params['includeDeprecated'] = query_param
+                _query_params["includeDeprecated"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/runtimes/{name}/versions/{version}',
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}/versions/{version}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -640,7 +674,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> RuntimeSummaryResponse: ...
+    ) -> RuntimeSummaryResponse:
+        ...
 
     @overload
     async def list(
@@ -650,7 +685,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[RuntimeSummaryResponse]: ...
+    ) -> ApiResponse[RuntimeSummaryResponse]:
+        ...
 
     @validate_call
     async def list(
@@ -699,11 +735,10 @@ class RuntimesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.RuntimeSummaryResponse",
+            "200": "waylay.services.registry.models.RuntimeSummaryResponse",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -718,10 +753,11 @@ class RuntimesApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
@@ -729,38 +765,40 @@ class RuntimesApi:
         # process the path parameters
         # process the query parameters
         if query is not None:
-            query_param = query.get('version', None)
+            query_param = query.get("version", None)
             if query_param is not None:
-                _query_params['version'] = query_param
+                _query_params["version"] = query_param
 
-            query_param = query.get('latest', None)
+            query_param = query.get("latest", None)
             if query_param is not None:
-                _query_params['latest'] = query_param.value
+                _query_params["latest"] = query_param.value
 
-            query_param = query.get('include_deprecated', None)
+            query_param = query.get("include_deprecated", None)
             if query_param is not None:
-                _query_params['includeDeprecated'] = query_param
+                _query_params["includeDeprecated"] = query_param
 
-            query_param = query.get('name', None)
+            query_param = query.get("name", None)
             if query_param is not None:
-                _query_params['name'] = query_param
+                _query_params["name"] = query_param
 
-            query_param = query.get('function_type', None)
+            query_param = query.get("function_type", None)
             if query_param is not None:
+                _query_params["functionType"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
-                _query_params['functionType'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
-
-            query_param = query.get('archive_format', None)
+            query_param = query.get("archive_format", None)
             if query_param is not None:
-
-                _query_params['archiveFormat'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
+                _query_params["archiveFormat"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/runtimes/',
+            method="GET",
+            resource_path="/registry/v2/runtimes/",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -777,7 +815,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> RuntimeSummaryResponse: ...
+    ) -> RuntimeSummaryResponse:
+        ...
 
     @overload
     async def list_versions(
@@ -788,7 +827,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[RuntimeSummaryResponse]: ...
+    ) -> ApiResponse[RuntimeSummaryResponse]:
+        ...
 
     @validate_call
     async def list_versions(
@@ -839,11 +879,10 @@ class RuntimesApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.RuntimeSummaryResponse",
+            "200": "waylay.services.registry.models.RuntimeSummaryResponse",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -859,47 +898,50 @@ class RuntimesApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         # process the query parameters
         if query is not None:
-            query_param = query.get('version', None)
+            query_param = query.get("version", None)
             if query_param is not None:
-                _query_params['version'] = query_param
+                _query_params["version"] = query_param
 
-            query_param = query.get('latest', None)
+            query_param = query.get("latest", None)
             if query_param is not None:
-                _query_params['latest'] = query_param.value
+                _query_params["latest"] = query_param.value
 
-            query_param = query.get('include_deprecated', None)
+            query_param = query.get("include_deprecated", None)
             if query_param is not None:
-                _query_params['includeDeprecated'] = query_param
+                _query_params["includeDeprecated"] = query_param
 
-            query_param = query.get('function_type', None)
+            query_param = query.get("function_type", None)
             if query_param is not None:
+                _query_params["functionType"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
-                _query_params['functionType'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
-
-            query_param = query.get('archive_format', None)
+            query_param = query.get("archive_format", None)
             if query_param is not None:
-
-                _query_params['archiveFormat'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
+                _query_params["archiveFormat"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/runtimes/{name}/versions',
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}/versions",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

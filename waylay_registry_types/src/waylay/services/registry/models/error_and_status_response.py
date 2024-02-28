@@ -69,8 +69,7 @@ class ErrorAndStatusResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +83,7 @@ class ErrorAndStatusResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "error": obj.get("error"),
-            "statusCode": obj.get("statusCode")
-        })
+        _obj = cls.model_validate(
+            {"error": obj.get("error"), "statusCode": obj.get("statusCode")}
+        )
         return _obj

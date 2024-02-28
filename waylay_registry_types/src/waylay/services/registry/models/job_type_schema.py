@@ -11,13 +11,12 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 from ..models.job_type_batch import JobTypeBatch
 from ..models.job_type_build import JobTypeBuild
 from ..models.job_type_deploy import JobTypeDeploy
@@ -26,14 +25,21 @@ from ..models.job_type_undeploy import JobTypeUndeploy
 from ..models.job_type_verify import JobTypeVerify
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import ConfigDict
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-JOBTYPESCHEMA_ANY_OF_SCHEMAS = ["JobTypeBatch", "JobTypeBuild", "JobTypeDeploy", "JobTypeScale", "JobTypeUndeploy", "JobTypeVerify"]
+JOBTYPESCHEMA_ANY_OF_SCHEMAS = [
+    "JobTypeBatch",
+    "JobTypeBuild",
+    "JobTypeDeploy",
+    "JobTypeScale",
+    "JobTypeUndeploy",
+    "JobTypeVerify",
+]
 
 
 class JobTypeSchema(BaseModel):
@@ -52,7 +58,16 @@ class JobTypeSchema(BaseModel):
     # data type: JobTypeBatch
     anyof_schema_6_validator: Optional[JobTypeBatch] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[JobTypeBatch, JobTypeBuild, JobTypeDeploy, JobTypeScale, JobTypeUndeploy, JobTypeVerify]] = None
+        actual_instance: Optional[
+            Union[
+                JobTypeBatch,
+                JobTypeBuild,
+                JobTypeDeploy,
+                JobTypeScale,
+                JobTypeUndeploy,
+                JobTypeVerify,
+            ]
+        ] = None
     else:
         actual_instance: Any = None
     any_of_schemas: List[str] = JOBTYPESCHEMA_ANY_OF_SCHEMAS
@@ -66,58 +81,77 @@ class JobTypeSchema(BaseModel):
         """Create a JobTypeSchema model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = JobTypeSchema.model_construct()
+        instance = JobTypeSchema.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: JobTypeBuild
         if not isinstance(v, JobTypeBuild):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobTypeBuild`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobTypeBuild`"
+            )
         else:
             return v
 
         # validate data type: JobTypeDeploy
         if not isinstance(v, JobTypeDeploy):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobTypeDeploy`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobTypeDeploy`"
+            )
         else:
             return v
 
         # validate data type: JobTypeVerify
         if not isinstance(v, JobTypeVerify):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobTypeVerify`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobTypeVerify`"
+            )
         else:
             return v
 
         # validate data type: JobTypeUndeploy
         if not isinstance(v, JobTypeUndeploy):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobTypeUndeploy`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobTypeUndeploy`"
+            )
         else:
             return v
 
         # validate data type: JobTypeScale
         if not isinstance(v, JobTypeScale):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobTypeScale`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobTypeScale`"
+            )
         else:
             return v
 
         # validate data type: JobTypeBatch
         if not isinstance(v, JobTypeBatch):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobTypeBatch`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `JobTypeBatch`"
+            )
         else:
             return v
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in JobTypeSchema with anyOf schemas: JobTypeBatch, JobTypeBuild, JobTypeDeploy, JobTypeScale, JobTypeUndeploy, JobTypeVerify. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in JobTypeSchema with anyOf schemas: JobTypeBatch, JobTypeBuild, JobTypeDeploy, JobTypeScale, JobTypeUndeploy, JobTypeVerify. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -129,7 +163,7 @@ class JobTypeSchema(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # anyof_schema_1_validator: Optional[JobTypeBuild] = None
         try:
@@ -170,7 +204,10 @@ class JobTypeSchema(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into JobTypeSchema with anyOf schemas: JobTypeBatch, JobTypeBuild, JobTypeDeploy, JobTypeScale, JobTypeUndeploy, JobTypeVerify. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into JobTypeSchema with anyOf schemas: JobTypeBatch, JobTypeBuild, JobTypeDeploy, JobTypeScale, JobTypeUndeploy, JobTypeVerify. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

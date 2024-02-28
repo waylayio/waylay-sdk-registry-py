@@ -9,6 +9,16 @@ help:
 
 SERVICE_NAME=registry
 
+API_FOLDER=waylay_${SERVICE_NAME}_api
+API_SRC=${API_FOLDER}/src
+TYPES_FOLDER=waylay_${SERVICE_NAME}_types
+TYPES_SRC=${TYPES_FOLDER}/src
+TEST_FOLDER=test
+
+CMD_FORMAT=ruff format
+CMD_FIX=ruff check --fix
+CMD_CHECK=ruff check
+
 # disables test QA unless set to empty string
 TEST_QA_PREFIX?=echo DISABLED
 
@@ -24,18 +34,13 @@ install: ${VENV_ACTIVATE_CMD}
 
 clean:
 	rm -fr ${VENV_DIR}
+	rm -fr .*_cache/*
 
 lint: install ### Run linting checks
 	@${VENV_ACTIVATE} && make exec-lint
 
-codestyle: install ### Run codestyle checks
-	@${VENV_ACTIVATE} && make exec-codestyle
-
 typecheck: install ### Run type checks
 	@${VENV_ACTIVATE} && make exec-typecheck
-
-docstyle: install ### Run docstyle checks
-	@${VENV_ACTIVATE} && make exec-docstyle
 
 code-qa: install ### perform code quality checks
 	@${VENV_ACTIVATE} && make exec-code-qa
@@ -46,64 +51,48 @@ test: install ### Run unit tests
 format: install ### Format code
 	@${VENV_ACTIVATE} && make exec-format
 
-
 exec-lint: ### Run linting checks
-	cd waylay_${SERVICE_NAME}_api && pylint --errors-only src/
-	@${printMsg} 'lint waylay_${SERVICE_NAME}_api' 'OK'
-	cd waylay_${SERVICE_NAME}_types && pylint --errors-only src/
-	@${printMsg} 'lint waylay_${SERVICE_NAME}_types' 'OK'
-	pylint --errors-only test/
+	cd ${API_FOLDER} && ${CMD_CHECK}
+	@${printMsg} 'lint ${API_FOLDER}' 'OK'
+	cd ${TYPES_FOLDER} && ${CMD_CHECK}
+	@${printMsg} 'lint ${TYPES_FOLDER}' 'OK'
+	${CMD_CHECK}
 	@${printMsg} 'lint test' 'OK'
 
-exec-codestyle: ### Run codestyle checks
-	pycodestyle waylay_${SERVICE_NAME}_api/src/
-	@${printMsg} 'codestyle waylay_${SERVICE_NAME}_api' 'OK'
-	pycodestyle waylay_${SERVICE_NAME}_types/src/
-	@${printMsg} 'codestyle waylay_${SERVICE_NAME}_types' 'OK'
-	pycodestyle test/
-	@${printMsg} 'codestyle test' 'OK'
-
 exec-typecheck: ### Run type checks
-	cd waylay_${SERVICE_NAME}_api/src/ && mypy --namespace-packages -p waylay
-	@${printMsg} 'typecheck api package' 'OK'
-	cd waylay_${SERVICE_NAME}_types/src/ && mypy --namespace-packages -p waylay
-	@${printMsg} 'typecheck types package' 'OK'
-	${TEST_QA_PREFIX} mypy test
-	@${printMsg} 'typecheck test package' '${TEST_QA_PREFIX} OK'
-
-exec-docstyle: ### Run docstyle checks
-	pydocstyle waylay_${SERVICE_NAME}_api/src/
-	@${printMsg} 'pydocstyle waylay_${SERVICE_NAME}_types' 'OK'
-	pydocstyle waylay_${SERVICE_NAME}_types/src/
-	@${printMsg} 'pydocstyle waylay_${SERVICE_NAME}_types' 'OK'
-	${TEST_QA_PREFIX} pydocstyle test/
-	@${printMsg} 'pydocstyle test' '${TEST_QA_PREFIX} OK'
+	cd ${API_SRC}/ && mypy --namespace-packages -p waylay
+	@${printMsg} 'typecheck api' 'OK'
+	cd ${TYPES_SRC}/ && mypy --namespace-packages -p waylay
+	@${printMsg} 'typecheck types' 'OK'
+	${TEST_QA_PREFIX} mypy ${TEST_FOLDER}
+	@${printMsg} 'typecheck test' '${TEST_QA_PREFIX} OK'
 
 exec-test: ### Run unit tests
-	pytest test/
+	pytest ${TEST_FOLDER}
 
 exec-format: ### Format code
-	pip install autopep8
-	autopep8 waylay_${SERVICE_NAME}_api/src
-	@${printMsg} 'format waylay_${SERVICE_NAME}_api' 'OK'
-	autopep8 waylay_${SERVICE_NAME}_types/src
-	@${printMsg} 'format waylay_${SERVICE_NAME}_types' 'OK'
-	autopep8 test
-	@${printMsg} 'format test package' 'OK'
+	${CMD_FIX} ${API_FOLDER}
+	${CMD_FORMAT} ${API_FOLDER}
+	@${printMsg} 'format api' 'OK'
+	${CMD_FIX} ${TYPES_FOLDER}
+	${CMD_FORMAT} ${TYPES_FOLDER}
+	@${printMsg} 'format types' 'OK'
+	${CMD_FIX} ${TEST_FOLDER}
+	${CMD_FORMAT} ${TEST_FOLDER}
+	@${printMsg} 'format test' 'OK'
 
-exec-code-qa: exec-codestyle exec-docstyle exec-lint exec-typecheck ### perform code quality checks
+exec-code-qa: exec-lint exec-typecheck ### perform code quality checks
 
 ci-code-qa: exec-code-qa ### perform ci code quality checks
 
 exec-dev-install: _install_requirements ### Install the development environment
-	pip install -e waylay_${SERVICE_NAME}_api[dev]
-	pip install -e waylay_${SERVICE_NAME}_types[dev]
+	pip install -e ${API_FOLDER}[dev]
+	pip install -e ${TYPES_FOLDER}[dev]
 
 ci-install: _install_requirements ### Install the environment with frozen dependencies
-	pip install './waylay_${SERVICE_NAME}_api[dev]'
-	pip install './waylay_${SERVICE_NAME}_types[dev]'
+	pip install './${API_FOLDER}[dev]'
+	pip install './${TYPES_FOLDER}[dev]'
 
 _install_requirements:
 	pip install --upgrade pip
-	pip install -r test-requirements.txt
 	pip install -r requirements.txt

@@ -29,6 +29,8 @@ from ..models.semantic_version_range import SemanticVersionRange
 from ..models.status import Status
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -40,25 +42,56 @@ class KFServingResponse(BaseModel):
 
     deploy: Optional[FunctionDeployOverridesType] = None
     name: StrictStr = Field(description="The logical name for the function.")
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
     runtime: StrictStr
-    runtime_version: Optional[SemanticVersionRange] = Field(default=None, alias="runtimeVersion")
+    runtime_version: Optional[SemanticVersionRange] = Field(
+        default=None, alias="runtimeVersion"
+    )
     metadata: FunctionMeta
-    created_by: StrictStr = Field(description="The user that created this entity.", alias="createdBy")
-    created_at: datetime = Field(description="The timestamp at which this entity was created.", alias="createdAt")
-    updated_by: StrictStr = Field(description="The user that last updated this entity.", alias="updatedBy")
-    updated_at: datetime = Field(description="The timestamp at which this entity was last updated.", alias="updatedAt")
+    created_by: StrictStr = Field(
+        description="The user that created this entity.", alias="createdBy"
+    )
+    created_at: datetime = Field(
+        description="The timestamp at which this entity was created.", alias="createdAt"
+    )
+    updated_by: StrictStr = Field(
+        description="The user that last updated this entity.", alias="updatedBy"
+    )
+    updated_at: datetime = Field(
+        description="The timestamp at which this entity was last updated.",
+        alias="updatedAt",
+    )
     status: Status
     failure_reason: Optional[FailureReason] = Field(default=None, alias="failureReason")
-    links: Optional[List[JobHALLinks]] = Field(default=None, description="Links to related entities.", alias="_links")
-    __properties: ClassVar[List[str]] = ["deploy", "name", "version", "runtime", "runtimeVersion", "metadata", "createdBy", "createdAt", "updatedBy", "updatedAt", "status", "failureReason", "_links"]
+    links: Optional[List[JobHALLinks]] = Field(
+        default=None, description="Links to related entities.", alias="_links"
+    )
+    __properties: ClassVar[List[str]] = [
+        "deploy",
+        "name",
+        "version",
+        "runtime",
+        "runtimeVersion",
+        "metadata",
+        "createdBy",
+        "createdAt",
+        "updatedBy",
+        "updatedAt",
+        "status",
+        "failureReason",
+        "_links",
+    ]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -95,29 +128,28 @@ class KFServingResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of deploy
         if self.deploy:
-            _dict['deploy'] = self.deploy.to_dict()
+            _dict["deploy"] = self.deploy.to_dict()
         # override the default output from pydantic by calling `to_dict()` of runtime_version
         if self.runtime_version:
-            _dict['runtimeVersion'] = self.runtime_version.to_dict()
+            _dict["runtimeVersion"] = self.runtime_version.to_dict()
         # override the default output from pydantic by calling `to_dict()` of metadata
         if self.metadata:
-            _dict['metadata'] = self.metadata.to_dict()
+            _dict["metadata"] = self.metadata.to_dict()
         # override the default output from pydantic by calling `to_dict()` of failure_reason
         if self.failure_reason:
-            _dict['failureReason'] = self.failure_reason.to_dict()
+            _dict["failureReason"] = self.failure_reason.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in links (list)
         _items = []
         if self.links:
-            for _item in self.links:  # type: ignore
+            for _item in cast(list, self.links):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['_links'] = _items
+            _dict["_links"] = _items
         return _dict
 
     @classmethod
@@ -129,19 +161,44 @@ class KFServingResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deploy": FunctionDeployOverridesType.from_dict(obj.get("deploy")) if obj.get("deploy") is not None else None,    # type: ignore
-            "name": obj.get("name"),
-            "version": obj.get("version"),
-            "runtime": obj.get("runtime"),
-            "runtimeVersion": SemanticVersionRange.from_dict(obj.get("runtimeVersion")) if obj.get("runtimeVersion") is not None else None,    # type: ignore
-            "metadata": FunctionMeta.from_dict(obj.get("metadata")) if obj.get("metadata") is not None else None,    # type: ignore
-            "createdBy": obj.get("createdBy"),
-            "createdAt": obj.get("createdAt"),
-            "updatedBy": obj.get("updatedBy"),
-            "updatedAt": obj.get("updatedAt"),
-            "status": obj.get("status"),
-            "failureReason": FailureReason.from_dict(obj.get("failureReason")) if obj.get("failureReason") is not None else None,    # type: ignore
-            "_links": [JobHALLinks.from_dict(_item) for _item in obj.get("_links")] if obj.get("_links") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "deploy": (
+                    FunctionDeployOverridesType.from_dict(cast(dict, obj.get("deploy")))
+                    if obj.get("deploy") is not None
+                    else None
+                ),
+                "name": obj.get("name"),
+                "version": obj.get("version"),
+                "runtime": obj.get("runtime"),
+                "runtimeVersion": (
+                    SemanticVersionRange.from_dict(
+                        cast(dict, obj.get("runtimeVersion"))
+                    )
+                    if obj.get("runtimeVersion") is not None
+                    else None
+                ),
+                "metadata": (
+                    FunctionMeta.from_dict(cast(dict, obj.get("metadata")))
+                    if obj.get("metadata") is not None
+                    else None
+                ),
+                "createdBy": obj.get("createdBy"),
+                "createdAt": obj.get("createdAt"),
+                "updatedBy": obj.get("updatedBy"),
+                "updatedAt": obj.get("updatedAt"),
+                "status": obj.get("status"),
+                "failureReason": (
+                    FailureReason.from_dict(cast(dict, obj.get("failureReason")))
+                    if obj.get("failureReason") is not None
+                    else None
+                ),
+                "_links": [
+                    JobHALLinks.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("_links"))
+                ]
+                if obj.get("_links") is not None
+                else None,
+            }
+        )
         return _obj

@@ -10,23 +10,19 @@ Do not edit the class manually.
 
 
 from __future__ import annotations  # for Python 3.7–3.9
-import io
-import warnings
 
 import enum
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt, StrictBool, StrictBytes
-from typing import Dict, List, Literal, Optional, Tuple, Union, Any, overload, TYPE_CHECKING
-from typing_extensions import NotRequired, TypedDict
+from pydantic import validate_call, Field, StrictStr, StrictBool
+from typing import Dict, Literal, Optional, Union, Any, overload, TYPE_CHECKING
 
 from waylay.sdk.api import ApiValueError
 
 try:
     from typing import Annotated
 except ImportError:
-    from typing_extensions import Annotated  # type: ignore
+    from typing_extensions import Annotated  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
-
     from waylay.services.registry.models import MultipartFileUpload
     from waylay.services.registry.models import Documentation
     from waylay.services.registry.models import UpdateMetadataRequestV2
@@ -37,7 +33,9 @@ if TYPE_CHECKING:
     from waylay.services.registry.queries.plug_functions_api import DeleteAssetQuery
     from waylay.services.registry.queries.plug_functions_api import GetArchiveQuery
     from waylay.services.registry.queries.plug_functions_api import GetAssetQuery
-    from waylay.services.registry.queries.plug_functions_api import GetLatestVersionQuery
+    from waylay.services.registry.queries.plug_functions_api import (
+        GetLatestVersionQuery,
+    )
     from waylay.services.registry.queries.plug_functions_api import GetVersionQuery
     from waylay.services.registry.queries.plug_functions_api import JobsQuery
     from waylay.services.registry.queries.plug_functions_api import ListAllQuery
@@ -86,7 +84,6 @@ if TYPE_CHECKING:
 
 
 try:
-
     from waylay.services.registry.models import MultipartFileUpload
     from waylay.services.registry.models import Documentation
     from waylay.services.registry.models import UpdateMetadataRequestV2
@@ -97,7 +94,9 @@ try:
     from waylay.services.registry.queries.plug_functions_api import DeleteAssetQuery
     from waylay.services.registry.queries.plug_functions_api import GetArchiveQuery
     from waylay.services.registry.queries.plug_functions_api import GetAssetQuery
-    from waylay.services.registry.queries.plug_functions_api import GetLatestVersionQuery
+    from waylay.services.registry.queries.plug_functions_api import (
+        GetLatestVersionQuery,
+    )
     from waylay.services.registry.queries.plug_functions_api import GetVersionQuery
     from waylay.services.registry.queries.plug_functions_api import JobsQuery
     from waylay.services.registry.queries.plug_functions_api import ListAllQuery
@@ -149,7 +148,6 @@ except ImportError:
     types_available = False
 
     if not TYPE_CHECKING:
-
         MultipartFileUpload = Any
         Documentation = Any
         UpdateMetadataRequestV2 = Any
@@ -208,9 +206,7 @@ except ImportError:
         VerifyPlugSyncResponseV2 = Any
 
 
-from waylay.sdk.api import (
-    ApiClient, ApiResponse, RESTTimeout
-)
+from waylay.sdk.api import ApiClient, ApiResponse, RESTTimeout
 
 
 class PlugFunctionsApi:
@@ -230,32 +226,70 @@ class PlugFunctionsApi:
     async def create(
         self,
         *,
-        body: Union[Annotated[Optional[MultipartFileUpload], Field(description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. ")], Annotated[Dict[StrictStr, Any], Field(description="Multipart file upload.")]] = None,
-        files: Annotated[Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")] = None,
+        body: Union[
+            Annotated[
+                Optional[MultipartFileUpload],
+                Field(
+                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
+                ),
+            ],
+            Annotated[
+                Dict[StrictStr, Any], Field(description="Multipart file upload.")
+            ],
+        ] = None,
+        files: Annotated[
+            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+        ] = None,
         query: Optional[CreateQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> PostPlugJobSyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2:
+        ...
 
     @overload
     async def create(
         self,
         *,
-        body: Union[Annotated[Optional[MultipartFileUpload], Field(description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. ")], Annotated[Dict[StrictStr, Any], Field(description="Multipart file upload.")]] = None,
-        files: Annotated[Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")] = None,
+        body: Union[
+            Annotated[
+                Optional[MultipartFileUpload],
+                Field(
+                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
+                ),
+            ],
+            Annotated[
+                Dict[StrictStr, Any], Field(description="Multipart file upload.")
+            ],
+        ] = None,
+        files: Annotated[
+            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+        ] = None,
         query: Optional[CreateQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[PostPlugJobSyncResponseV2]: ...
+    ) -> ApiResponse[PostPlugJobSyncResponseV2]:
+        ...
 
     @validate_call
     async def create(
         self,
         *,
-        body: Union[Annotated[Optional[MultipartFileUpload], Field(description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. ")], Annotated[Dict[StrictStr, Any], Field(description="Multipart file upload.")]] = None,
-        files: Annotated[Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")] = None,
+        body: Union[
+            Annotated[
+                Optional[MultipartFileUpload],
+                Field(
+                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
+                ),
+            ],
+            Annotated[
+                Dict[StrictStr, Any], Field(description="Multipart file upload.")
+            ],
+        ] = None,
+        files: Annotated[
+            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+        ] = None,
         query: Optional[CreateQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
@@ -305,12 +339,11 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            '202': "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -325,10 +358,11 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
@@ -336,56 +370,61 @@ class PlugFunctionsApi:
         # process the path parameters
         # process the query parameters
         if query is not None:
-            query_param = query.get('deprecate_previous', None)
+            query_param = query.get("deprecate_previous", None)
             if query_param is not None:
-                _query_params['deprecatePrevious'] = query_param.value
+                _query_params["deprecatePrevious"] = query_param.value
 
-            query_param = query.get('dry_run', None)
+            query_param = query.get("dry_run", None)
             if query_param is not None:
-                _query_params['dryRun'] = query_param
+                _query_params["dryRun"] = query_param
 
-            query_param = query.get('var_async', None)
+            query_param = query.get("var_async", None)
             if query_param is not None:
-                _query_params['async'] = query_param
+                _query_params["async"] = query_param
 
-            query_param = query.get('scale_to_zero', None)
+            query_param = query.get("scale_to_zero", None)
             if query_param is not None:
-                _query_params['scaleToZero'] = query_param
+                _query_params["scaleToZero"] = query_param
 
-            query_param = query.get('version', None)
+            query_param = query.get("version", None)
             if query_param is not None:
-                _query_params['version'] = query_param
+                _query_params["version"] = query_param
 
-            query_param = query.get('name', None)
+            query_param = query.get("name", None)
             if query_param is not None:
-                _query_params['name'] = query_param
+                _query_params["name"] = query_param
 
-            query_param = query.get('draft', None)
+            query_param = query.get("draft", None)
             if query_param is not None:
-                _query_params['draft'] = query_param
+                _query_params["draft"] = query_param
 
         # process the form parameters
         if files:
             _files.update(files)
         # if `body` and `content-type` multipart/form-data, wrap it in `files` instead of `body`
-        content_type = _header_params.get('content-type')
-        if not files and body and content_type and content_type.startswith('multipart/form-data'):
+        content_type = _header_params.get("content-type")
+        if (
+            not files
+            and body
+            and content_type
+            and content_type.startswith("multipart/form-data")
+        ):
             try:
                 _files.update(body)
                 body = None
                 if "boundary" not in content_type:
                     # Content-Type header does not cotain a boundary, and hence, is not valid.
                     # Remove it to force the http framework to set it instead.
-                    del _header_params['content-type']
+                    del _header_params["content-type"]
             except ValueError as err:
-                raise ApiValueError('Body is not a valid dictionary', 'body') from err
+                raise ApiValueError("Body is not a valid dictionary", "body") from err
         # process the body parameter
         if body is not None:
             _body_params = body
 
         return self._api_client.param_serialize(
-            method='POST',
-            resource_path='/registry/v2/plugs/',
+            method="POST",
+            resource_path="/registry/v2/plugs/",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -397,34 +436,57 @@ class PlugFunctionsApi:
     async def delete_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
         query: Optional[DeleteAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> PostPlugJobSyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2:
+        ...
 
     @overload
     async def delete_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
         query: Optional[DeleteAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[PostPlugJobSyncResponseV2]: ...
+    ) -> ApiResponse[PostPlugJobSyncResponseV2]:
+        ...
 
     @validate_call
     async def delete_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
         query: Optional[DeleteAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -472,12 +534,11 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            '202': "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -495,41 +556,42 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         if wildcard is not None:
-            _path_params['wildcard'] = wildcard
+            _path_params["wildcard"] = wildcard
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
-            query_param = query.get('var_async', None)
+            query_param = query.get("var_async", None)
             if query_param is not None:
-                _query_params['async'] = query_param
+                _query_params["async"] = query_param
 
-            query_param = query.get('chown', None)
+            query_param = query.get("chown", None)
             if query_param is not None:
-                _query_params['chown'] = query_param
+                _query_params["chown"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='DELETE',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}',
+            method="DELETE",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -541,31 +603,39 @@ class PlugFunctionsApi:
     async def get_archive(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[GetArchiveQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> bytearray: ...
+    ) -> bytearray:
+        ...
 
     @overload
     async def get_archive(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[GetArchiveQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[bytearray]: ...
+    ) -> ApiResponse[bytearray]:
+        ...
 
     @validate_call
     async def get_archive(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[GetArchiveQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -606,11 +676,10 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            "200": "bytearray",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -627,31 +696,32 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('ls', None)
+            query_param = query.get("ls", None)
             if query_param is not None:
-                _query_params['ls'] = query_param
+                _query_params["ls"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/content',
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -663,34 +733,57 @@ class PlugFunctionsApi:
     async def get_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
         query: Optional[GetAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> bytearray: ...
+    ) -> bytearray:
+        ...
 
     @overload
     async def get_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
         query: Optional[GetAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[bytearray]: ...
+    ) -> ApiResponse[bytearray]:
+        ...
 
     @validate_call
     async def get_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
         query: Optional[GetAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -734,11 +827,10 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "bytearray",
+            "200": "bytearray",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -756,33 +848,34 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         if wildcard is not None:
-            _path_params['wildcard'] = wildcard
+            _path_params["wildcard"] = wildcard
         # process the query parameters
         if query is not None:
-            query_param = query.get('ls', None)
+            query_param = query.get("ls", None)
             if query_param is not None:
-                _query_params['ls'] = query_param
+                _query_params["ls"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}',
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -799,7 +892,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> GetPlugResponseV2: ...
+    ) -> GetPlugResponseV2:
+        ...
 
     @overload
     async def get_latest_version(
@@ -810,7 +904,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[GetPlugResponseV2]: ...
+    ) -> ApiResponse[GetPlugResponseV2]:
+        ...
 
     @validate_call
     async def get_latest_version(
@@ -857,11 +952,10 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.GetPlugResponseV2",
+            "200": "waylay.services.registry.models.GetPlugResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -877,37 +971,38 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         # process the query parameters
         if query is not None:
-            query_param = query.get('type', None)
+            query_param = query.get("type", None)
             if query_param is not None:
-                _query_params['type'] = query_param.value
+                _query_params["type"] = query_param.value
 
-            query_param = query.get('include_draft', None)
+            query_param = query.get("include_draft", None)
             if query_param is not None:
-                _query_params['includeDraft'] = query_param
+                _query_params["includeDraft"] = query_param
 
-            query_param = query.get('include_deprecated', None)
+            query_param = query.get("include_deprecated", None)
             if query_param is not None:
-                _query_params['includeDeprecated'] = query_param
+                _query_params["includeDeprecated"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/plugs/{name}',
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -919,31 +1014,39 @@ class PlugFunctionsApi:
     async def get_version(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[GetVersionQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> GetPlugResponseV2: ...
+    ) -> GetPlugResponseV2:
+        ...
 
     @overload
     async def get_version(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[GetVersionQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[GetPlugResponseV2]: ...
+    ) -> ApiResponse[GetPlugResponseV2]:
+        ...
 
     @validate_call
     async def get_version(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[GetVersionQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -982,11 +1085,10 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.GetPlugResponseV2",
+            "200": "waylay.services.registry.models.GetPlugResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -1003,19 +1105,20 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
             pass
@@ -1023,8 +1126,8 @@ class PlugFunctionsApi:
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}',
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1036,31 +1139,39 @@ class PlugFunctionsApi:
     async def jobs(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[JobsQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> JobsForPlugResponseV2: ...
+    ) -> JobsForPlugResponseV2:
+        ...
 
     @overload
     async def jobs(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[JobsQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[JobsForPlugResponseV2]: ...
+    ) -> ApiResponse[JobsForPlugResponseV2]:
+        ...
 
     @validate_call
     async def jobs(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[JobsQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -1111,11 +1222,10 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.JobsForPlugResponseV2",
+            "200": "waylay.services.registry.models.JobsForPlugResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -1132,54 +1242,54 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('limit', None)
+            query_param = query.get("limit", None)
             if query_param is not None:
-                _query_params['limit'] = query_param
+                _query_params["limit"] = query_param
 
-            query_param = query.get('type', None)
+            query_param = query.get("type", None)
             if query_param is not None:
+                _query_params["type"] = query_param
 
-                _query_params['type'] = query_param
-
-            query_param = query.get('state', None)
+            query_param = query.get("state", None)
             if query_param is not None:
+                _query_params["state"] = query_param
 
-                _query_params['state'] = query_param
-
-            query_param = query.get('function_type', None)
+            query_param = query.get("function_type", None)
             if query_param is not None:
+                _query_params["functionType"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
-                _query_params['functionType'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
-
-            query_param = query.get('created_before', None)
+            query_param = query.get("created_before", None)
             if query_param is not None:
-                _query_params['createdBefore'] = query_param
+                _query_params["createdBefore"] = query_param
 
-            query_param = query.get('created_after', None)
+            query_param = query.get("created_after", None)
             if query_param is not None:
-                _query_params['createdAfter'] = query_param
+                _query_params["createdAfter"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/jobs',
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/jobs",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1195,7 +1305,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> LatestPlugsResponseV2: ...
+    ) -> LatestPlugsResponseV2:
+        ...
 
     @overload
     async def list_all(
@@ -1205,7 +1316,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[LatestPlugsResponseV2]: ...
+    ) -> ApiResponse[LatestPlugsResponseV2]:
+        ...
 
     @validate_call
     async def list_all(
@@ -1286,11 +1398,10 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.LatestPlugsResponseV2",
+            "200": "waylay.services.registry.models.LatestPlugsResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -1305,10 +1416,11 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
@@ -1316,104 +1428,102 @@ class PlugFunctionsApi:
         # process the path parameters
         # process the query parameters
         if query is not None:
-            query_param = query.get('tags', None)
+            query_param = query.get("tags", None)
             if query_param is not None:
-                _query_params['tags'] = query_param
+                _query_params["tags"] = query_param
 
-            query_param = query.get('type', None)
+            query_param = query.get("type", None)
             if query_param is not None:
-                _query_params['type'] = query_param.value
+                _query_params["type"] = query_param.value
 
-            query_param = query.get('limit', None)
+            query_param = query.get("limit", None)
             if query_param is not None:
-                _query_params['limit'] = query_param
+                _query_params["limit"] = query_param
 
-            query_param = query.get('page', None)
+            query_param = query.get("page", None)
             if query_param is not None:
-                _query_params['page'] = query_param
+                _query_params["page"] = query_param
 
-            query_param = query.get('include_draft', None)
+            query_param = query.get("include_draft", None)
             if query_param is not None:
-                _query_params['includeDraft'] = query_param
+                _query_params["includeDraft"] = query_param
 
-            query_param = query.get('include_deprecated', None)
+            query_param = query.get("include_deprecated", None)
             if query_param is not None:
-                _query_params['includeDeprecated'] = query_param
+                _query_params["includeDeprecated"] = query_param
 
-            query_param = query.get('deprecated', None)
+            query_param = query.get("deprecated", None)
             if query_param is not None:
-                _query_params['deprecated'] = query_param
+                _query_params["deprecated"] = query_param
 
-            query_param = query.get('draft', None)
+            query_param = query.get("draft", None)
             if query_param is not None:
-                _query_params['draft'] = query_param
+                _query_params["draft"] = query_param
 
-            query_param = query.get('name_version', None)
+            query_param = query.get("name_version", None)
             if query_param is not None:
+                _query_params["nameVersion"] = query_param
 
-                _query_params['nameVersion'] = query_param
-
-            query_param = query.get('version', None)
+            query_param = query.get("version", None)
             if query_param is not None:
-                _query_params['version'] = query_param
+                _query_params["version"] = query_param
 
-            query_param = query.get('status', None)
+            query_param = query.get("status", None)
             if query_param is not None:
+                _query_params["status"] = query_param
 
-                _query_params['status'] = query_param
-
-            query_param = query.get('runtime_version', None)
+            query_param = query.get("runtime_version", None)
             if query_param is not None:
-                _query_params['runtimeVersion'] = query_param
+                _query_params["runtimeVersion"] = query_param
 
-            query_param = query.get('created_by', None)
+            query_param = query.get("created_by", None)
             if query_param is not None:
-                _query_params['createdBy'] = query_param
+                _query_params["createdBy"] = query_param
 
-            query_param = query.get('updated_by', None)
+            query_param = query.get("updated_by", None)
             if query_param is not None:
-                _query_params['updatedBy'] = query_param
+                _query_params["updatedBy"] = query_param
 
-            query_param = query.get('created_before', None)
+            query_param = query.get("created_before", None)
             if query_param is not None:
-                _query_params['createdBefore'] = query_param
+                _query_params["createdBefore"] = query_param
 
-            query_param = query.get('created_after', None)
+            query_param = query.get("created_after", None)
             if query_param is not None:
-                _query_params['createdAfter'] = query_param
+                _query_params["createdAfter"] = query_param
 
-            query_param = query.get('updated_before', None)
+            query_param = query.get("updated_before", None)
             if query_param is not None:
-                _query_params['updatedBefore'] = query_param
+                _query_params["updatedBefore"] = query_param
 
-            query_param = query.get('updated_after', None)
+            query_param = query.get("updated_after", None)
             if query_param is not None:
-                _query_params['updatedAfter'] = query_param
+                _query_params["updatedAfter"] = query_param
 
-            query_param = query.get('name', None)
+            query_param = query.get("name", None)
             if query_param is not None:
-                _query_params['name'] = query_param
+                _query_params["name"] = query_param
 
-            query_param = query.get('archive_format', None)
+            query_param = query.get("archive_format", None)
             if query_param is not None:
+                _query_params["archiveFormat"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
-                _query_params['archiveFormat'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
-
-            query_param = query.get('runtime', None)
+            query_param = query.get("runtime", None)
             if query_param is not None:
+                _query_params["runtime"] = query_param
 
-                _query_params['runtime'] = query_param
-
-            query_param = query.get('latest', None)
+            query_param = query.get("latest", None)
             if query_param is not None:
-                _query_params['latest'] = query_param
+                _query_params["latest"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/plugs/',
+            method="GET",
+            resource_path="/registry/v2/plugs/",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1430,7 +1540,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> PlugVersionsResponseV2: ...
+    ) -> PlugVersionsResponseV2:
+        ...
 
     @overload
     async def list_versions(
@@ -1441,7 +1552,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[PlugVersionsResponseV2]: ...
+    ) -> ApiResponse[PlugVersionsResponseV2]:
+        ...
 
     @validate_call
     async def list_versions(
@@ -1514,11 +1626,10 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.PlugVersionsResponseV2",
+            "200": "waylay.services.registry.models.PlugVersionsResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -1534,92 +1645,92 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         # process the query parameters
         if query is not None:
-            query_param = query.get('tags', None)
+            query_param = query.get("tags", None)
             if query_param is not None:
-                _query_params['tags'] = query_param
+                _query_params["tags"] = query_param
 
-            query_param = query.get('limit', None)
+            query_param = query.get("limit", None)
             if query_param is not None:
-                _query_params['limit'] = query_param
+                _query_params["limit"] = query_param
 
-            query_param = query.get('page', None)
+            query_param = query.get("page", None)
             if query_param is not None:
-                _query_params['page'] = query_param
+                _query_params["page"] = query_param
 
-            query_param = query.get('deprecated', None)
+            query_param = query.get("deprecated", None)
             if query_param is not None:
-                _query_params['deprecated'] = query_param
+                _query_params["deprecated"] = query_param
 
-            query_param = query.get('draft', None)
+            query_param = query.get("draft", None)
             if query_param is not None:
-                _query_params['draft'] = query_param
+                _query_params["draft"] = query_param
 
-            query_param = query.get('version', None)
+            query_param = query.get("version", None)
             if query_param is not None:
-                _query_params['version'] = query_param
+                _query_params["version"] = query_param
 
-            query_param = query.get('status', None)
+            query_param = query.get("status", None)
             if query_param is not None:
+                _query_params["status"] = query_param
 
-                _query_params['status'] = query_param
-
-            query_param = query.get('runtime_version', None)
+            query_param = query.get("runtime_version", None)
             if query_param is not None:
-                _query_params['runtimeVersion'] = query_param
+                _query_params["runtimeVersion"] = query_param
 
-            query_param = query.get('created_by', None)
+            query_param = query.get("created_by", None)
             if query_param is not None:
-                _query_params['createdBy'] = query_param
+                _query_params["createdBy"] = query_param
 
-            query_param = query.get('updated_by', None)
+            query_param = query.get("updated_by", None)
             if query_param is not None:
-                _query_params['updatedBy'] = query_param
+                _query_params["updatedBy"] = query_param
 
-            query_param = query.get('created_before', None)
+            query_param = query.get("created_before", None)
             if query_param is not None:
-                _query_params['createdBefore'] = query_param
+                _query_params["createdBefore"] = query_param
 
-            query_param = query.get('created_after', None)
+            query_param = query.get("created_after", None)
             if query_param is not None:
-                _query_params['createdAfter'] = query_param
+                _query_params["createdAfter"] = query_param
 
-            query_param = query.get('updated_before', None)
+            query_param = query.get("updated_before", None)
             if query_param is not None:
-                _query_params['updatedBefore'] = query_param
+                _query_params["updatedBefore"] = query_param
 
-            query_param = query.get('updated_after', None)
+            query_param = query.get("updated_after", None)
             if query_param is not None:
-                _query_params['updatedAfter'] = query_param
+                _query_params["updatedAfter"] = query_param
 
-            query_param = query.get('archive_format', None)
+            query_param = query.get("archive_format", None)
             if query_param is not None:
+                _query_params["archiveFormat"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
-                _query_params['archiveFormat'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
-
-            query_param = query.get('runtime', None)
+            query_param = query.get("runtime", None)
             if query_param is not None:
-
-                _query_params['runtime'] = query_param
+                _query_params["runtime"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/plugs/{name}/versions',
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1631,33 +1742,41 @@ class PlugFunctionsApi:
     async def patch_interface(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         body: Optional[Documentation] = None,
         query: Optional[PatchInterfaceQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> GetPlugResponseV2: ...
+    ) -> GetPlugResponseV2:
+        ...
 
     @overload
     async def patch_interface(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         body: Optional[Documentation] = None,
         query: Optional[PatchInterfaceQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[GetPlugResponseV2]: ...
+    ) -> ApiResponse[GetPlugResponseV2]:
+        ...
 
     @validate_call
     async def patch_interface(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         body: Optional[Documentation] = None,
         query: Optional[PatchInterfaceQuery] = None,
@@ -1701,11 +1820,10 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.GetPlugResponseV2",
+            "200": "waylay.services.registry.models.GetPlugResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -1722,24 +1840,25 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
         # process the form parameters
         # process the body parameter
@@ -1747,8 +1866,8 @@ class PlugFunctionsApi:
             _body_params = body
 
         return self._api_client.param_serialize(
-            method='PATCH',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/interface',
+            method="PATCH",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/interface",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1760,33 +1879,41 @@ class PlugFunctionsApi:
     async def patch_metadata(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         body: Optional[UpdateMetadataRequestV2] = None,
         query: Optional[PatchMetadataQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> GetPlugResponseV2: ...
+    ) -> GetPlugResponseV2:
+        ...
 
     @overload
     async def patch_metadata(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         body: Optional[UpdateMetadataRequestV2] = None,
         query: Optional[PatchMetadataQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[GetPlugResponseV2]: ...
+    ) -> ApiResponse[GetPlugResponseV2]:
+        ...
 
     @validate_call
     async def patch_metadata(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         body: Optional[UpdateMetadataRequestV2] = None,
         query: Optional[PatchMetadataQuery] = None,
@@ -1830,11 +1957,10 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.GetPlugResponseV2",
+            "200": "waylay.services.registry.models.GetPlugResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -1851,24 +1977,25 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
         # process the form parameters
         # process the body parameter
@@ -1876,8 +2003,8 @@ class PlugFunctionsApi:
             _body_params = body
 
         return self._api_client.param_serialize(
-            method='PATCH',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/metadata',
+            method="PATCH",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/metadata",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1889,31 +2016,39 @@ class PlugFunctionsApi:
     async def publish(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[PublishQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> PostPlugJobSyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2:
+        ...
 
     @overload
     async def publish(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[PublishQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[PostPlugJobSyncResponseV2]: ...
+    ) -> ApiResponse[PostPlugJobSyncResponseV2]:
+        ...
 
     @validate_call
     async def publish(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[PublishQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -1958,12 +2093,11 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            '202': "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -1980,39 +2114,40 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
-            query_param = query.get('deprecate_previous', None)
+            query_param = query.get("deprecate_previous", None)
             if query_param is not None:
-                _query_params['deprecatePrevious'] = query_param.value
+                _query_params["deprecatePrevious"] = query_param.value
 
-            query_param = query.get('var_async', None)
+            query_param = query.get("var_async", None)
             if query_param is not None:
-                _query_params['async'] = query_param
+                _query_params["async"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='POST',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/publish',
+            method="POST",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/publish",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2024,31 +2159,39 @@ class PlugFunctionsApi:
     async def rebuild(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[RebuildQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> RebuildPlugSyncResponseV2: ...
+    ) -> RebuildPlugSyncResponseV2:
+        ...
 
     @overload
     async def rebuild(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[RebuildQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[RebuildPlugSyncResponseV2]: ...
+    ) -> ApiResponse[RebuildPlugSyncResponseV2]:
+        ...
 
     @validate_call
     async def rebuild(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[RebuildQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -2103,12 +2246,11 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.RebuildPlugSyncResponseV2",
-            '202': "waylay.services.registry.models.RebuildPlugAsyncResponseV2",
+            "200": "waylay.services.registry.models.RebuildPlugSyncResponseV2",
+            "202": "waylay.services.registry.models.RebuildPlugAsyncResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -2125,59 +2267,60 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
-            query_param = query.get('dry_run', None)
+            query_param = query.get("dry_run", None)
             if query_param is not None:
-                _query_params['dryRun'] = query_param
+                _query_params["dryRun"] = query_param
 
-            query_param = query.get('var_async', None)
+            query_param = query.get("var_async", None)
             if query_param is not None:
-                _query_params['async'] = query_param
+                _query_params["async"] = query_param
 
-            query_param = query.get('upgrade', None)
+            query_param = query.get("upgrade", None)
             if query_param is not None:
-                _query_params['upgrade'] = query_param.value
+                _query_params["upgrade"] = query_param.value
 
-            query_param = query.get('force_version', None)
+            query_param = query.get("force_version", None)
             if query_param is not None:
-                _query_params['forceVersion'] = query_param
+                _query_params["forceVersion"] = query_param
 
-            query_param = query.get('ignore_checks', None)
+            query_param = query.get("ignore_checks", None)
             if query_param is not None:
-                _query_params['ignoreChecks'] = query_param
+                _query_params["ignoreChecks"] = query_param
 
-            query_param = query.get('scale_to_zero', None)
+            query_param = query.get("scale_to_zero", None)
             if query_param is not None:
-                _query_params['scaleToZero'] = query_param
+                _query_params["scaleToZero"] = query_param
 
-            query_param = query.get('skip_rebuild', None)
+            query_param = query.get("skip_rebuild", None)
             if query_param is not None:
-                _query_params['skipRebuild'] = query_param
+                _query_params["skipRebuild"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='POST',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/rebuild',
+            method="POST",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/rebuild",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2189,31 +2332,39 @@ class PlugFunctionsApi:
     async def remove_version(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[RemoveVersionQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> UndeployedResponseV2: ...
+    ) -> UndeployedResponseV2:
+        ...
 
     @overload
     async def remove_version(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[RemoveVersionQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[UndeployedResponseV2]: ...
+    ) -> ApiResponse[UndeployedResponseV2]:
+        ...
 
     @validate_call
     async def remove_version(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[RemoveVersionQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -2260,12 +2411,11 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.UndeployedResponseV2",
-            '202': "waylay.services.registry.models.UndeploySubmittedResponseV2",
+            "200": "waylay.services.registry.models.UndeployedResponseV2",
+            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -2282,43 +2432,44 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
-            query_param = query.get('var_async', None)
+            query_param = query.get("var_async", None)
             if query_param is not None:
-                _query_params['async'] = query_param
+                _query_params["async"] = query_param
 
-            query_param = query.get('force', None)
+            query_param = query.get("force", None)
             if query_param is not None:
-                _query_params['force'] = query_param
+                _query_params["force"] = query_param
 
-            query_param = query.get('undeploy', None)
+            query_param = query.get("undeploy", None)
             if query_param is not None:
-                _query_params['undeploy'] = query_param
+                _query_params["undeploy"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='DELETE',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}',
+            method="DELETE",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2335,7 +2486,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> UndeployedResponseV2: ...
+    ) -> UndeployedResponseV2:
+        ...
 
     @overload
     async def remove_versions(
@@ -2346,7 +2498,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[UndeployedResponseV2]: ...
+    ) -> ApiResponse[UndeployedResponseV2]:
+        ...
 
     @validate_call
     async def remove_versions(
@@ -2395,12 +2548,11 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.UndeployedResponseV2",
-            '202': "waylay.services.registry.models.UndeploySubmittedResponseV2",
+            "200": "waylay.services.registry.models.UndeployedResponseV2",
+            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -2416,41 +2568,42 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
-            query_param = query.get('var_async', None)
+            query_param = query.get("var_async", None)
             if query_param is not None:
-                _query_params['async'] = query_param
+                _query_params["async"] = query_param
 
-            query_param = query.get('force', None)
+            query_param = query.get("force", None)
             if query_param is not None:
-                _query_params['force'] = query_param
+                _query_params["force"] = query_param
 
-            query_param = query.get('undeploy', None)
+            query_param = query.get("undeploy", None)
             if query_param is not None:
-                _query_params['undeploy'] = query_param
+                _query_params["undeploy"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='DELETE',
-            resource_path='/registry/v2/plugs/{name}',
+            method="DELETE",
+            resource_path="/registry/v2/plugs/{name}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2462,38 +2615,67 @@ class PlugFunctionsApi:
     async def update_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
-        body: Annotated[Optional[FileUpload], Field(description="A single asset file.")] = None,
+        body: Annotated[
+            Optional[FileUpload], Field(description="A single asset file.")
+        ] = None,
         query: Optional[UpdateAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> PostPlugJobSyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2:
+        ...
 
     @overload
     async def update_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
-        body: Annotated[Optional[FileUpload], Field(description="A single asset file.")] = None,
+        body: Annotated[
+            Optional[FileUpload], Field(description="A single asset file.")
+        ] = None,
         query: Optional[UpdateAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[PostPlugJobSyncResponseV2]: ...
+    ) -> ApiResponse[PostPlugJobSyncResponseV2]:
+        ...
 
     @validate_call
     async def update_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
-        wildcard: Annotated[StrictStr, Field(description="Full path or path prefix of the asset within the archive")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        wildcard: Annotated[
+            StrictStr,
+            Field(
+                description="Full path or path prefix of the asset within the archive"
+            ),
+        ],
         *,
-        body: Annotated[Optional[FileUpload], Field(description="A single asset file.")] = None,
+        body: Annotated[
+            Optional[FileUpload], Field(description="A single asset file.")
+        ] = None,
         query: Optional[UpdateAssetQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
@@ -2542,12 +2724,11 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            '202': "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -2565,34 +2746,35 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         if wildcard is not None:
-            _path_params['wildcard'] = wildcard
+            _path_params["wildcard"] = wildcard
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
-            query_param = query.get('var_async', None)
+            query_param = query.get("var_async", None)
             if query_param is not None:
-                _query_params['async'] = query_param
+                _query_params["async"] = query_param
 
-            query_param = query.get('chown', None)
+            query_param = query.get("chown", None)
             if query_param is not None:
-                _query_params['chown'] = query_param
+                _query_params["chown"] = query_param
 
         # process the form parameters
         # process the body parameter
@@ -2600,8 +2782,8 @@ class PlugFunctionsApi:
             _body_params = body
 
         return self._api_client.param_serialize(
-            method='PUT',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}',
+            method="PUT",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2613,38 +2795,82 @@ class PlugFunctionsApi:
     async def update_assets(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
-        body: Union[Annotated[Optional[MultipartFileUpload], Field(description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. ")], Annotated[Dict[StrictStr, Any], Field(description="Multipart file upload.")]] = None,
-        files: Annotated[Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")] = None,
+        body: Union[
+            Annotated[
+                Optional[MultipartFileUpload],
+                Field(
+                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                ),
+            ],
+            Annotated[
+                Dict[StrictStr, Any], Field(description="Multipart file upload.")
+            ],
+        ] = None,
+        files: Annotated[
+            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+        ] = None,
         query: Optional[UpdateAssetsQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> PostPlugJobSyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2:
+        ...
 
     @overload
     async def update_assets(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
-        body: Union[Annotated[Optional[MultipartFileUpload], Field(description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. ")], Annotated[Dict[StrictStr, Any], Field(description="Multipart file upload.")]] = None,
-        files: Annotated[Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")] = None,
+        body: Union[
+            Annotated[
+                Optional[MultipartFileUpload],
+                Field(
+                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                ),
+            ],
+            Annotated[
+                Dict[StrictStr, Any], Field(description="Multipart file upload.")
+            ],
+        ] = None,
+        files: Annotated[
+            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+        ] = None,
         query: Optional[UpdateAssetsQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[PostPlugJobSyncResponseV2]: ...
+    ) -> ApiResponse[PostPlugJobSyncResponseV2]:
+        ...
 
     @validate_call
     async def update_assets(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
-        body: Union[Annotated[Optional[MultipartFileUpload], Field(description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. ")], Annotated[Dict[StrictStr, Any], Field(description="Multipart file upload.")]] = None,
-        files: Annotated[Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")] = None,
+        body: Union[
+            Annotated[
+                Optional[MultipartFileUpload],
+                Field(
+                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                ),
+            ],
+            Annotated[
+                Dict[StrictStr, Any], Field(description="Multipart file upload.")
+            ],
+        ] = None,
+        files: Annotated[
+            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+        ] = None,
         query: Optional[UpdateAssetsQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
@@ -2692,12 +2918,11 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '201': "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            '202': "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -2714,55 +2939,61 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
-            query_param = query.get('var_async', None)
+            query_param = query.get("var_async", None)
             if query_param is not None:
-                _query_params['async'] = query_param
+                _query_params["async"] = query_param
 
-            query_param = query.get('chown', None)
+            query_param = query.get("chown", None)
             if query_param is not None:
-                _query_params['chown'] = query_param
+                _query_params["chown"] = query_param
 
         # process the form parameters
         if files:
             _files.update(files)
         # if `body` and `content-type` multipart/form-data, wrap it in `files` instead of `body`
-        content_type = _header_params.get('content-type')
-        if not files and body and content_type and content_type.startswith('multipart/form-data'):
+        content_type = _header_params.get("content-type")
+        if (
+            not files
+            and body
+            and content_type
+            and content_type.startswith("multipart/form-data")
+        ):
             try:
                 _files.update(body)
                 body = None
                 if "boundary" not in content_type:
                     # Content-Type header does not cotain a boundary, and hence, is not valid.
                     # Remove it to force the http framework to set it instead.
-                    del _header_params['content-type']
+                    del _header_params["content-type"]
             except ValueError as err:
-                raise ApiValueError('Body is not a valid dictionary', 'body') from err
+                raise ApiValueError("Body is not a valid dictionary", "body") from err
         # process the body parameter
         if body is not None:
             _body_params = body
 
         return self._api_client.param_serialize(
-            method='PUT',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/content',
+            method="PUT",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2774,31 +3005,39 @@ class PlugFunctionsApi:
     async def verify(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[VerifyQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> VerifyPlugSyncResponseV2: ...
+    ) -> VerifyPlugSyncResponseV2:
+        ...
 
     @overload
     async def verify(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[VerifyQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[VerifyPlugSyncResponseV2]: ...
+    ) -> ApiResponse[VerifyPlugSyncResponseV2]:
+        ...
 
     @validate_call
     async def verify(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
-        version: Annotated[str, Field(strict=True, description="The version of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
         *,
         query: Optional[VerifyQuery] = None,
         _request_timeout: Optional[RESTTimeout] = None,
@@ -2843,12 +3082,11 @@ class PlugFunctionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.VerifyPlugSyncResponseV2",
-            '202': "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+            "200": "waylay.services.registry.models.VerifyPlugSyncResponseV2",
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -2865,39 +3103,40 @@ class PlugFunctionsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if name is not None:
-            _path_params['name'] = name
+            _path_params["name"] = name
         if version is not None:
-            _path_params['version'] = version
+            _path_params["version"] = version
         # process the query parameters
         if query is not None:
-            query_param = query.get('comment', None)
+            query_param = query.get("comment", None)
             if query_param is not None:
-                _query_params['comment'] = query_param
+                _query_params["comment"] = query_param
 
-            query_param = query.get('var_async', None)
+            query_param = query.get("var_async", None)
             if query_param is not None:
-                _query_params['async'] = query_param
+                _query_params["async"] = query_param
 
-            query_param = query.get('scale_to_zero', None)
+            query_param = query.get("scale_to_zero", None)
             if query_param is not None:
-                _query_params['scaleToZero'] = query_param
+                _query_params["scaleToZero"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='POST',
-            resource_path='/registry/v2/plugs/{name}/versions/{version}/verify',
+            method="POST",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/verify",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

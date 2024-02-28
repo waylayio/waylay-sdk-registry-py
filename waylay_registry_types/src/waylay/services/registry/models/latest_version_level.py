@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,11 +28,11 @@ class LatestVersionLevel(str, Enum):
     """
     allowed enum values
     """
-    MAJOR = 'major'
-    MINOR = 'minor'
-    PATCH = 'patch'
-    TRUE = 'true'
-    FALSE = 'false'
+    MAJOR = "major"
+    MINOR = "minor"
+    PATCH = "patch"
+    TRUE = "true"
+    FALSE = "false"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

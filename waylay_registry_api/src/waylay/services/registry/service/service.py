@@ -1,8 +1,6 @@
 """Registry Service."""
 
-from waylay.sdk import (
-    ApiClient, WaylayService
-)
+from waylay.sdk import ApiClient, WaylayService
 
 from ..api.jobs_api import JobsApi
 from ..api.model_functions_api import ModelFunctionsApi
@@ -16,8 +14,8 @@ from ..api.default_api import DefaultApi
 class RegistryService(WaylayService):
     """Registry Service Class."""
 
-    name = 'registry'
-    title = 'Registry Service'
+    name = "registry"
+    title = "Registry Service"
 
     jobs: JobsApi
     model_functions: ModelFunctionsApi

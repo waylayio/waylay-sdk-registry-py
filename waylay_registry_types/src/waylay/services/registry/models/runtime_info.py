@@ -72,8 +72,7 @@ class RuntimeInfo(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -87,9 +86,11 @@ class RuntimeInfo(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "functionType": obj.get("functionType"),
-            "archiveFormat": obj.get("archiveFormat")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "functionType": obj.get("functionType"),
+                "archiveFormat": obj.get("archiveFormat"),
+            }
+        )
         return _obj

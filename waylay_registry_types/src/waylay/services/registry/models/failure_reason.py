@@ -33,7 +33,9 @@ class FailureReason(BaseModel):
 
     log: List[StrictStr] = Field(description="Log lines associated with this failure.")
     events: List[StrictStr] = Field(description="Events associated with this failure.")
-    cause: Optional[StrictStr] = Field(default=None, description="Main cause for the failure.")
+    cause: Optional[StrictStr] = Field(
+        default=None, description="Main cause for the failure."
+    )
     __properties: ClassVar[List[str]] = ["log", "events", "cause"]
 
     model_config = ConfigDict(
@@ -70,8 +72,7 @@ class FailureReason(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,9 +86,11 @@ class FailureReason(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "log": obj.get("log"),
-            "events": obj.get("events"),
-            "cause": obj.get("cause")
-        })
+        _obj = cls.model_validate(
+            {
+                "log": obj.get("log"),
+                "events": obj.get("events"),
+                "cause": obj.get("cause"),
+            }
+        )
         return _obj

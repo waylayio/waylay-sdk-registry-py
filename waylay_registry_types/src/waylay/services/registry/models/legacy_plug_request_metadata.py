@@ -21,11 +21,17 @@ from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from ..models.legacy_configuration_object import LegacyConfigurationObject
-from ..models.legacy_plug_request_metadata_documentation import LegacyPlugRequestMetadataDocumentation
-from ..models.legacy_plug_request_metadata_raw_data_inner import LegacyPlugRequestMetadataRawDataInner
+from ..models.legacy_plug_request_metadata_documentation import (
+    LegacyPlugRequestMetadataDocumentation,
+)
+from ..models.legacy_plug_request_metadata_raw_data_inner import (
+    LegacyPlugRequestMetadataRawDataInner,
+)
 from ..models.legacy_required_properties_inner import LegacyRequiredPropertiesInner
 from ..models.tag import Tag
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -36,9 +42,15 @@ except ImportError:
 class LegacyPlugRequestMetadata(BaseModel):
     """LegacyPlugRequestMetadata."""
 
-    required_properties: Optional[List[LegacyRequiredPropertiesInner]] = Field(default=None, alias="requiredProperties")
-    supported_states: Optional[List[StrictStr]] = Field(default=None, alias="supportedStates")
-    raw_data: Optional[List[LegacyPlugRequestMetadataRawDataInner]] = Field(default=None, alias="rawData")
+    required_properties: Optional[List[LegacyRequiredPropertiesInner]] = Field(
+        default=None, alias="requiredProperties"
+    )
+    supported_states: Optional[List[StrictStr]] = Field(
+        default=None, alias="supportedStates"
+    )
+    raw_data: Optional[List[LegacyPlugRequestMetadataRawDataInner]] = Field(
+        default=None, alias="rawData"
+    )
     configuration: Optional[List[LegacyConfigurationObject]] = None
     author: Optional[StrictStr] = None
     description: Optional[StrictStr] = None
@@ -47,8 +59,23 @@ class LegacyPlugRequestMetadata(BaseModel):
     icon_url: Optional[StrictStr] = Field(default=None, alias="iconURL")
     friendly_name: Optional[StrictStr] = Field(default=None, alias="friendlyName")
     documentation: Optional[LegacyPlugRequestMetadataDocumentation] = None
-    documentation_url: Optional[StrictStr] = Field(default=None, alias="documentationURL")
-    __properties: ClassVar[List[str]] = ["requiredProperties", "supportedStates", "rawData", "configuration", "author", "description", "category", "tags", "iconURL", "friendlyName", "documentation", "documentationURL"]
+    documentation_url: Optional[StrictStr] = Field(
+        default=None, alias="documentationURL"
+    )
+    __properties: ClassVar[List[str]] = [
+        "requiredProperties",
+        "supportedStates",
+        "rawData",
+        "configuration",
+        "author",
+        "description",
+        "category",
+        "tags",
+        "iconURL",
+        "friendlyName",
+        "documentation",
+        "documentationURL",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,41 +111,40 @@ class LegacyPlugRequestMetadata(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in required_properties (list)
         _items = []
         if self.required_properties:
-            for _item in self.required_properties:  # type: ignore
+            for _item in cast(list, self.required_properties):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['requiredProperties'] = _items
+            _dict["requiredProperties"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in raw_data (list)
         _items = []
         if self.raw_data:
-            for _item in self.raw_data:  # type: ignore
+            for _item in cast(list, self.raw_data):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['rawData'] = _items
+            _dict["rawData"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in configuration (list)
         _items = []
         if self.configuration:
-            for _item in self.configuration:  # type: ignore
+            for _item in cast(list, self.configuration):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['configuration'] = _items
+            _dict["configuration"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
         _items = []
         if self.tags:
-            for _item in self.tags:  # type: ignore
+            for _item in cast(list, self.tags):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['tags'] = _items
+            _dict["tags"] = _items
         # override the default output from pydantic by calling `to_dict()` of documentation
         if self.documentation:
-            _dict['documentation'] = self.documentation.to_dict()
+            _dict["documentation"] = self.documentation.to_dict()
         return _dict
 
     @classmethod
@@ -130,18 +156,46 @@ class LegacyPlugRequestMetadata(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "requiredProperties": [LegacyRequiredPropertiesInner.from_dict(_item) for _item in obj.get("requiredProperties")] if obj.get("requiredProperties") is not None else None,  # type: ignore
-            "supportedStates": obj.get("supportedStates"),
-            "rawData": [LegacyPlugRequestMetadataRawDataInner.from_dict(_item) for _item in obj.get("rawData")] if obj.get("rawData") is not None else None,  # type: ignore
-            "configuration": [LegacyConfigurationObject.from_dict(_item) for _item in obj.get("configuration")] if obj.get("configuration") is not None else None,  # type: ignore
-            "author": obj.get("author"),
-            "description": obj.get("description"),
-            "category": obj.get("category"),
-            "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,  # type: ignore
-            "iconURL": obj.get("iconURL"),
-            "friendlyName": obj.get("friendlyName"),
-            "documentation": LegacyPlugRequestMetadataDocumentation.from_dict(obj.get("documentation")) if obj.get("documentation") is not None else None,    # type: ignore
-            "documentationURL": obj.get("documentationURL")
-        })
+        _obj = cls.model_validate(
+            {
+                "requiredProperties": [
+                    LegacyRequiredPropertiesInner.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("requiredProperties"))
+                ]
+                if obj.get("requiredProperties") is not None
+                else None,
+                "supportedStates": obj.get("supportedStates"),
+                "rawData": [
+                    LegacyPlugRequestMetadataRawDataInner.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("rawData"))
+                ]
+                if obj.get("rawData") is not None
+                else None,
+                "configuration": [
+                    LegacyConfigurationObject.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("configuration"))
+                ]
+                if obj.get("configuration") is not None
+                else None,
+                "author": obj.get("author"),
+                "description": obj.get("description"),
+                "category": obj.get("category"),
+                "tags": [
+                    Tag.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("tags"))
+                ]
+                if obj.get("tags") is not None
+                else None,
+                "iconURL": obj.get("iconURL"),
+                "friendlyName": obj.get("friendlyName"),
+                "documentation": (
+                    LegacyPlugRequestMetadataDocumentation.from_dict(
+                        cast(dict, obj.get("documentation"))
+                    )
+                    if obj.get("documentation") is not None
+                    else None
+                ),
+                "documentationURL": obj.get("documentationURL"),
+            }
+        )
         return _obj

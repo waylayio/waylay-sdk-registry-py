@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,7 +28,7 @@ class JobTypeUndeploy(str, Enum):
     """
     allowed enum values
     """
-    UNDEPLOY = 'undeploy'
+    UNDEPLOY = "undeploy"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

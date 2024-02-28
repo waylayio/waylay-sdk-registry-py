@@ -10,23 +10,18 @@ Do not edit the class manually.
 
 
 from __future__ import annotations  # for Python 3.7–3.9
-import io
-import warnings
 
 import enum
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt, StrictBool, StrictBytes
-from typing import Dict, List, Literal, Optional, Tuple, Union, Any, overload, TYPE_CHECKING
-from typing_extensions import NotRequired, TypedDict
+from pydantic import validate_call, StrictStr, StrictBool
+from typing import Dict, Literal, Optional, Union, Any, overload, TYPE_CHECKING
 
-from waylay.sdk.api import ApiValueError
 
 try:
     from typing import Annotated
 except ImportError:
-    from typing_extensions import Annotated  # type: ignore
+    from typing_extensions import Annotated  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
-
     from waylay.services.registry.models import JobType
 
     from waylay.services.registry.queries.jobs_api import EventsQuery
@@ -41,7 +36,6 @@ if TYPE_CHECKING:
 
 
 try:
-
     from waylay.services.registry.models import JobType
 
     from waylay.services.registry.queries.jobs_api import EventsQuery
@@ -59,7 +53,6 @@ except ImportError:
     types_available = False
 
     if not TYPE_CHECKING:
-
         JobType = str
 
         EventsQuery = Dict
@@ -73,9 +66,7 @@ except ImportError:
         JobsResponse = Any
 
 
-from waylay.sdk.api import (
-    ApiClient, ApiResponse, RESTTimeout
-)
+from waylay.sdk.api import ApiClient, ApiResponse, RESTTimeout
 
 
 class JobsApi:
@@ -99,7 +90,8 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> EventWithCloseSSE: ...
+    ) -> EventWithCloseSSE:
+        ...
 
     @overload
     async def events(
@@ -109,7 +101,8 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[EventWithCloseSSE]: ...
+    ) -> ApiResponse[EventWithCloseSSE]:
+        ...
 
     @validate_call
     async def events(
@@ -152,11 +145,10 @@ class JobsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.EventWithCloseSSE",
+            "200": "waylay.services.registry.models.EventWithCloseSSE",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -171,10 +163,11 @@ class JobsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
@@ -182,24 +175,24 @@ class JobsApi:
         # process the path parameters
         # process the query parameters
         if query is not None:
-            query_param = query.get('type', None)
+            query_param = query.get("type", None)
             if query_param is not None:
-                _query_params['type'] = query_param.value
+                _query_params["type"] = query_param.value
 
-            query_param = query.get('id', None)
+            query_param = query.get("id", None)
             if query_param is not None:
-                _query_params['id'] = query_param
+                _query_params["id"] = query_param
 
-            query_param = query.get('children', None)
+            query_param = query.get("children", None)
             if query_param is not None:
-                _query_params['children'] = query_param
+                _query_params["children"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/jobs/events',
+            method="GET",
+            resource_path="/registry/v2/jobs/events",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -217,7 +210,8 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> JobResponse: ...
+    ) -> JobResponse:
+        ...
 
     @overload
     async def get(
@@ -229,7 +223,8 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[JobResponse]: ...
+    ) -> ApiResponse[JobResponse]:
+        ...
 
     @validate_call
     async def get(
@@ -274,11 +269,10 @@ class JobsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.JobResponse",
+            "200": "waylay.services.registry.models.JobResponse",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -295,19 +289,20 @@ class JobsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if type is not None:
-            _path_params['type'] = type.value
+            _path_params["type"] = type.value
         if id is not None:
-            _path_params['id'] = id
+            _path_params["id"] = id
         # process the query parameters
         if query is not None:
             pass
@@ -315,8 +310,8 @@ class JobsApi:
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/jobs/{type}/{id}',
+            method="GET",
+            resource_path="/registry/v2/jobs/{type}/{id}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -332,7 +327,8 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> JobsResponse: ...
+    ) -> JobsResponse:
+        ...
 
     @overload
     async def list(
@@ -342,7 +338,8 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[JobsResponse]: ...
+    ) -> ApiResponse[JobsResponse]:
+        ...
 
     @validate_call
     async def list(
@@ -391,11 +388,10 @@ class JobsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "waylay.services.registry.models.JobsResponse",
+            "200": "waylay.services.registry.models.JobsResponse",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -410,10 +406,11 @@ class JobsApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
@@ -421,39 +418,38 @@ class JobsApi:
         # process the path parameters
         # process the query parameters
         if query is not None:
-            query_param = query.get('limit', None)
+            query_param = query.get("limit", None)
             if query_param is not None:
-                _query_params['limit'] = query_param
+                _query_params["limit"] = query_param
 
-            query_param = query.get('type', None)
+            query_param = query.get("type", None)
             if query_param is not None:
+                _query_params["type"] = query_param
 
-                _query_params['type'] = query_param
-
-            query_param = query.get('state', None)
+            query_param = query.get("state", None)
             if query_param is not None:
+                _query_params["state"] = query_param
 
-                _query_params['state'] = query_param
-
-            query_param = query.get('function_type', None)
+            query_param = query.get("function_type", None)
             if query_param is not None:
+                _query_params["functionType"] = [
+                    v.value if isinstance(v, enum.Enum) else v for v in query_param
+                ]
 
-                _query_params['functionType'] = [v.value if isinstance(v, enum.Enum) else v for v in query_param]
-
-            query_param = query.get('created_before', None)
+            query_param = query.get("created_before", None)
             if query_param is not None:
-                _query_params['createdBefore'] = query_param
+                _query_params["createdBefore"] = query_param
 
-            query_param = query.get('created_after', None)
+            query_param = query.get("created_after", None)
             if query_param is not None:
-                _query_params['createdAfter'] = query_param
+                _query_params["createdAfter"] = query_param
 
         # process the form parameters
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/jobs/',
+            method="GET",
+            resource_path="/registry/v2/jobs/",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

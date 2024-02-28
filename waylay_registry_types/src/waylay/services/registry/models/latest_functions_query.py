@@ -33,14 +33,55 @@ except ImportError:
 class LatestFunctionsQuery(BaseModel):
     """Request to list latest function versions per named function. A request that only uses these query parameters will include links to the _latest_ draft/published versions.."""
 
-    limit: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.")
-    page: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The number of pages to skip when returning result to this query.")
-    include_draft: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.", alias="includeDraft")
-    include_deprecated: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.", alias="includeDeprecated")
-    name: Optional[StrictStr] = Field(default=None, description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).")
-    archive_format: Optional[List[ArchiveFormat]] = Field(default=None, description="Filter on the archive format of the function.", alias="archiveFormat")
-    runtime: Optional[List[StrictStr]] = Field(default=None, description="Filter on the runtime of the function.")
-    __properties: ClassVar[List[str]] = ["limit", "page", "includeDraft", "includeDeprecated", "name", "archiveFormat", "runtime"]
+    limit: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.",
+    )
+    page: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The number of pages to skip when returning result to this query.",
+    )
+    include_draft: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.",
+        alias="includeDraft",
+    )
+    include_deprecated: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.",
+        alias="includeDeprecated",
+    )
+    name: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+    )
+    archive_format: Optional[List[ArchiveFormat]] = Field(
+        default=None,
+        description="Filter on the archive format of the function.",
+        alias="archiveFormat",
+    )
+    runtime: Optional[List[StrictStr]] = Field(
+        default=None, description="Filter on the runtime of the function."
+    )
+    __properties: ClassVar[List[str]] = [
+        "limit",
+        "page",
+        "includeDraft",
+        "includeDeprecated",
+        "name",
+        "archiveFormat",
+        "runtime",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,8 +117,7 @@ class LatestFunctionsQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -91,13 +131,15 @@ class LatestFunctionsQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "page": obj.get("page"),
-            "includeDraft": obj.get("includeDraft"),
-            "includeDeprecated": obj.get("includeDeprecated"),
-            "name": obj.get("name"),
-            "archiveFormat": obj.get("archiveFormat"),
-            "runtime": obj.get("runtime")
-        })
+        _obj = cls.model_validate(
+            {
+                "limit": obj.get("limit"),
+                "page": obj.get("page"),
+                "includeDraft": obj.get("includeDraft"),
+                "includeDeprecated": obj.get("includeDeprecated"),
+                "name": obj.get("name"),
+                "archiveFormat": obj.get("archiveFormat"),
+                "runtime": obj.get("runtime"),
+            }
+        )
         return _obj

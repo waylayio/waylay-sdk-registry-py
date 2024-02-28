@@ -69,8 +69,7 @@ class UndeployResult(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,9 +83,11 @@ class UndeployResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deployment": obj.get("deployment"),
-            "assets": obj.get("assets"),
-            "registration": obj.get("registration")
-        })
+        _obj = cls.model_validate(
+            {
+                "deployment": obj.get("deployment"),
+                "assets": obj.get("assets"),
+                "registration": obj.get("registration"),
+            }
+        )
         return _obj

@@ -11,36 +11,44 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 from ..models.documentation import Documentation
-from ..models.legacy_plug_request_metadata_documentation_any_of import LegacyPlugRequestMetadataDocumentationAnyOf
+from ..models.legacy_plug_request_metadata_documentation_any_of import (
+    LegacyPlugRequestMetadataDocumentationAnyOf,
+)
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import ConfigDict
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-LEGACYPLUGREQUESTMETADATADOCUMENTATION_ANY_OF_SCHEMAS = ["Documentation", "LegacyPlugRequestMetadataDocumentationAnyOf"]
+LEGACYPLUGREQUESTMETADATADOCUMENTATION_ANY_OF_SCHEMAS = [
+    "Documentation",
+    "LegacyPlugRequestMetadataDocumentationAnyOf",
+]
 
 
 class LegacyPlugRequestMetadataDocumentation(BaseModel):
     """LegacyPlugRequestMetadataDocumentation."""
 
     # data type: LegacyPlugRequestMetadataDocumentationAnyOf
-    anyof_schema_1_validator: Optional[LegacyPlugRequestMetadataDocumentationAnyOf] = None
+    anyof_schema_1_validator: Optional[
+        LegacyPlugRequestMetadataDocumentationAnyOf
+    ] = None
     # data type: Documentation
     anyof_schema_2_validator: Optional[Documentation] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[Documentation, LegacyPlugRequestMetadataDocumentationAnyOf]] = None
+        actual_instance: Optional[
+            Union[Documentation, LegacyPlugRequestMetadataDocumentationAnyOf]
+        ] = None
     else:
         actual_instance: Any = None
     any_of_schemas: List[str] = LEGACYPLUGREQUESTMETADATADOCUMENTATION_ANY_OF_SCHEMAS
@@ -54,34 +62,45 @@ class LegacyPlugRequestMetadataDocumentation(BaseModel):
         """Create a LegacyPlugRequestMetadataDocumentation model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = LegacyPlugRequestMetadataDocumentation.model_construct()
+        instance = LegacyPlugRequestMetadataDocumentation.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: LegacyPlugRequestMetadataDocumentationAnyOf
         if not isinstance(v, LegacyPlugRequestMetadataDocumentationAnyOf):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `LegacyPlugRequestMetadataDocumentationAnyOf`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `LegacyPlugRequestMetadataDocumentationAnyOf`"
+            )
         else:
             return v
 
         # validate data type: Documentation
         if not isinstance(v, Documentation):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Documentation`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `Documentation`"
+            )
         else:
             return v
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in LegacyPlugRequestMetadataDocumentation with anyOf schemas: Documentation, LegacyPlugRequestMetadataDocumentationAnyOf. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in LegacyPlugRequestMetadataDocumentation with anyOf schemas: Documentation, LegacyPlugRequestMetadataDocumentationAnyOf. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -93,11 +112,13 @@ class LegacyPlugRequestMetadataDocumentation(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # anyof_schema_1_validator: Optional[LegacyPlugRequestMetadataDocumentationAnyOf] = None
         try:
-            instance.actual_instance = LegacyPlugRequestMetadataDocumentationAnyOf.from_json(json_str)
+            instance.actual_instance = (
+                LegacyPlugRequestMetadataDocumentationAnyOf.from_json(json_str)
+            )
             return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -110,7 +131,10 @@ class LegacyPlugRequestMetadataDocumentation(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into LegacyPlugRequestMetadataDocumentation with anyOf schemas: Documentation, LegacyPlugRequestMetadataDocumentationAnyOf. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into LegacyPlugRequestMetadataDocumentation with anyOf schemas: Documentation, LegacyPlugRequestMetadataDocumentationAnyOf. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

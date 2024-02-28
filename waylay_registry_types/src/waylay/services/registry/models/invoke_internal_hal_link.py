@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.hal_link import HALLink
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -69,13 +71,12 @@ class InvokeInternalHALLink(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of invoke_internal
         if self.invoke_internal:
-            _dict['invoke-internal'] = self.invoke_internal.to_dict()
+            _dict["invoke-internal"] = self.invoke_internal.to_dict()
         return _dict
 
     @classmethod
@@ -87,7 +88,13 @@ class InvokeInternalHALLink(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "invoke-internal": HALLink.from_dict(obj.get("invoke-internal")) if obj.get("invoke-internal") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "invoke-internal": (
+                    HALLink.from_dict(cast(dict, obj.get("invoke-internal")))
+                    if obj.get("invoke-internal") is not None
+                    else None
+                )
+            }
+        )
         return _obj

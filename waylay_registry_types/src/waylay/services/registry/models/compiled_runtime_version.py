@@ -30,6 +30,8 @@ from ..models.language_release import LanguageRelease
 from ..models.provided_dependency import ProvidedDependency
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -39,27 +41,53 @@ except ImportError:
 class CompiledRuntimeVersion(BaseModel):
     """Compiled build and deployment information for a runtime version. Contains all defaults applied on the _global_, _functionType_, _archiveFormat_, _runtime_ and _runtime version_ level.."""
 
-    deprecated: StrictBool = Field(description="If true, this runtime should no longer be used for new functions.")
-    upgradable: StrictBool = Field(description="If true, a newer runtime for this function is available using the `rebuild` API.")
+    deprecated: StrictBool = Field(
+        description="If true, this runtime should no longer be used for new functions."
+    )
+    upgradable: StrictBool = Field(
+        description="If true, a newer runtime for this function is available using the `rebuild` API."
+    )
     name: StrictStr
     function_type: FunctionType = Field(alias="functionType")
     archive_format: ArchiveFormat = Field(alias="archiveFormat")
     build: Optional[BuildSpec] = None
     deploy: Optional[DeploySpec] = None
     language: Optional[LanguageRelease] = None
-    provided_dependencies: Optional[List[ProvidedDependency]] = Field(default=None, description="Description of dependencies provided by this runtime version.", alias="providedDependencies")
+    provided_dependencies: Optional[List[ProvidedDependency]] = Field(
+        default=None,
+        description="Description of dependencies provided by this runtime version.",
+        alias="providedDependencies",
+    )
     assets: Optional[AssetsConditions] = None
     title: StrictStr
     description: Optional[StrictStr] = None
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
-    __properties: ClassVar[List[str]] = ["deprecated", "upgradable", "name", "functionType", "archiveFormat", "build", "deploy", "language", "providedDependencies", "assets", "title", "description", "version"]
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
+    __properties: ClassVar[List[str]] = [
+        "deprecated",
+        "upgradable",
+        "name",
+        "functionType",
+        "archiveFormat",
+        "build",
+        "deploy",
+        "language",
+        "providedDependencies",
+        "assets",
+        "title",
+        "description",
+        "version",
+    ]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -96,29 +124,28 @@ class CompiledRuntimeVersion(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of build
         if self.build:
-            _dict['build'] = self.build.to_dict()
+            _dict["build"] = self.build.to_dict()
         # override the default output from pydantic by calling `to_dict()` of deploy
         if self.deploy:
-            _dict['deploy'] = self.deploy.to_dict()
+            _dict["deploy"] = self.deploy.to_dict()
         # override the default output from pydantic by calling `to_dict()` of language
         if self.language:
-            _dict['language'] = self.language.to_dict()
+            _dict["language"] = self.language.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in provided_dependencies (list)
         _items = []
         if self.provided_dependencies:
-            for _item in self.provided_dependencies:  # type: ignore
+            for _item in cast(list, self.provided_dependencies):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['providedDependencies'] = _items
+            _dict["providedDependencies"] = _items
         # override the default output from pydantic by calling `to_dict()` of assets
         if self.assets:
-            _dict['assets'] = self.assets.to_dict()
+            _dict["assets"] = self.assets.to_dict()
         return _dict
 
     @classmethod
@@ -130,19 +157,42 @@ class CompiledRuntimeVersion(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deprecated": obj.get("deprecated"),
-            "upgradable": obj.get("upgradable"),
-            "name": obj.get("name"),
-            "functionType": obj.get("functionType"),
-            "archiveFormat": obj.get("archiveFormat"),
-            "build": BuildSpec.from_dict(obj.get("build")) if obj.get("build") is not None else None,    # type: ignore
-            "deploy": DeploySpec.from_dict(obj.get("deploy")) if obj.get("deploy") is not None else None,    # type: ignore
-            "language": LanguageRelease.from_dict(obj.get("language")) if obj.get("language") is not None else None,    # type: ignore
-            "providedDependencies": [ProvidedDependency.from_dict(_item) for _item in obj.get("providedDependencies")] if obj.get("providedDependencies") is not None else None,  # type: ignore
-            "assets": AssetsConditions.from_dict(obj.get("assets")) if obj.get("assets") is not None else None,    # type: ignore
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "version": obj.get("version")
-        })
+        _obj = cls.model_validate(
+            {
+                "deprecated": obj.get("deprecated"),
+                "upgradable": obj.get("upgradable"),
+                "name": obj.get("name"),
+                "functionType": obj.get("functionType"),
+                "archiveFormat": obj.get("archiveFormat"),
+                "build": (
+                    BuildSpec.from_dict(cast(dict, obj.get("build")))
+                    if obj.get("build") is not None
+                    else None
+                ),
+                "deploy": (
+                    DeploySpec.from_dict(cast(dict, obj.get("deploy")))
+                    if obj.get("deploy") is not None
+                    else None
+                ),
+                "language": (
+                    LanguageRelease.from_dict(cast(dict, obj.get("language")))
+                    if obj.get("language") is not None
+                    else None
+                ),
+                "providedDependencies": [
+                    ProvidedDependency.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("providedDependencies"))
+                ]
+                if obj.get("providedDependencies") is not None
+                else None,
+                "assets": (
+                    AssetsConditions.from_dict(cast(dict, obj.get("assets")))
+                    if obj.get("assets") is not None
+                    else None
+                ),
+                "title": obj.get("title"),
+                "description": obj.get("description"),
+                "version": obj.get("version"),
+            }
+        )
         return _obj

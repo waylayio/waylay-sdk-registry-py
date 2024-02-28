@@ -10,21 +10,8 @@ Do not edit the class manually.
 
 
 from __future__ import annotations  # for Python 3.7–3.9
-import io
-import warnings
 
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
-from typing import Dict, List, Optional, Tuple, Union, Any
-from typing_extensions import NotRequired, TypedDict
-
-from pydantic import Field
-from typing_extensions import Annotated
-from pydantic import StrictStr
-
-from typing import Any, Dict
-
-from ..models.asset_role import AssetRole
-from ..models.function_type import FunctionType
+from typing_extensions import TypedDict
 
 
 class GetByRoleQuery(TypedDict):

@@ -31,9 +31,21 @@ except ImportError:
 class AsyncDeployQueryV1(BaseModel):
     """AsyncDeployQueryV1."""
 
-    scale_to_zero: Optional[StrictBool] = Field(default=False, description="If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.", alias="scaleToZero")
-    var_async: Optional[StrictBool] = Field(default=True, description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.", alias="async")
-    dry_run: Optional[StrictBool] = Field(default=None, description="If set to <code>true</code>, validates the deployment conditions, but does not change anything.", alias="dryRun")
+    scale_to_zero: Optional[StrictBool] = Field(
+        default=False,
+        description="If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.",
+        alias="scaleToZero",
+    )
+    var_async: Optional[StrictBool] = Field(
+        default=True,
+        description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+        alias="async",
+    )
+    dry_run: Optional[StrictBool] = Field(
+        default=None,
+        description="If set to <code>true</code>, validates the deployment conditions, but does not change anything.",
+        alias="dryRun",
+    )
     __properties: ClassVar[List[str]] = ["scaleToZero", "async", "dryRun"]
 
     model_config = ConfigDict(
@@ -70,8 +82,7 @@ class AsyncDeployQueryV1(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,9 +96,13 @@ class AsyncDeployQueryV1(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "scaleToZero": obj.get("scaleToZero") if obj.get("scaleToZero") is not None else False,
-            "async": obj.get("async") if obj.get("async") is not None else True,
-            "dryRun": obj.get("dryRun")
-        })
+        _obj = cls.model_validate(
+            {
+                "scaleToZero": obj.get("scaleToZero")
+                if obj.get("scaleToZero") is not None
+                else False,
+                "async": obj.get("async") if obj.get("async") is not None else True,
+                "dryRun": obj.get("dryRun"),
+            }
+        )
         return _obj

@@ -35,12 +35,25 @@ class FunctionRef(BaseModel):
 
     function_type: FunctionType = Field(alias="functionType")
     name: StrictStr = Field(description="The logical name for the function.")
-    version: Optional[StrictStr] = Field(default=None, description="The semantic version of the function (all versions if undefined)")
+    version: Optional[StrictStr] = Field(
+        default=None,
+        description="The semantic version of the function (all versions if undefined)",
+    )
     runtime: Optional[StrictStr] = None
-    runtime_version: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org", alias="runtimeVersion")
-    __properties: ClassVar[List[str]] = ["functionType", "name", "version", "runtime", "runtimeVersion"]
+    runtime_version: Optional[Annotated[str, Field(strict=True)]] = Field(
+        default=None,
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org",
+        alias="runtimeVersion",
+    )
+    __properties: ClassVar[List[str]] = [
+        "functionType",
+        "name",
+        "version",
+        "runtime",
+        "runtimeVersion",
+    ]
 
-    @field_validator('runtime_version')
+    @field_validator("runtime_version")
     @classmethod
     def runtime_version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
@@ -48,7 +61,9 @@ class FunctionRef(BaseModel):
             return value
 
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -85,8 +100,7 @@ class FunctionRef(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -100,11 +114,13 @@ class FunctionRef(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "functionType": obj.get("functionType"),
-            "name": obj.get("name"),
-            "version": obj.get("version"),
-            "runtime": obj.get("runtime"),
-            "runtimeVersion": obj.get("runtimeVersion")
-        })
+        _obj = cls.model_validate(
+            {
+                "functionType": obj.get("functionType"),
+                "name": obj.get("name"),
+                "version": obj.get("version"),
+                "runtime": obj.get("runtime"),
+                "runtimeVersion": obj.get("runtimeVersion"),
+            }
+        )
         return _obj

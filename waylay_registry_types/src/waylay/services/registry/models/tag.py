@@ -69,8 +69,7 @@ class Tag(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +83,5 @@ class Tag(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "color": obj.get("color")
-        })
+        _obj = cls.model_validate({"name": obj.get("name"), "color": obj.get("color")})
         return _obj

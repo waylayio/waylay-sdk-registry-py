@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.resource_limits import ResourceLimits
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -45,8 +47,25 @@ class DeploySpecOpenfaasSpec(BaseModel):
     registry_auth: Optional[StrictStr] = Field(default=None, alias="registryAuth")
     limits: Optional[ResourceLimits] = None
     requests: Optional[ResourceLimits] = None
-    read_only_root_filesystem: Optional[StrictBool] = Field(default=None, alias="readOnlyRootFilesystem")
-    __properties: ClassVar[List[str]] = ["service", "image", "namespace", "envProcess", "network", "envVars", "constraints", "labels", "annotations", "secrets", "registryAuth", "limits", "requests", "readOnlyRootFilesystem"]
+    read_only_root_filesystem: Optional[StrictBool] = Field(
+        default=None, alias="readOnlyRootFilesystem"
+    )
+    __properties: ClassVar[List[str]] = [
+        "service",
+        "image",
+        "namespace",
+        "envProcess",
+        "network",
+        "envVars",
+        "constraints",
+        "labels",
+        "annotations",
+        "secrets",
+        "registryAuth",
+        "limits",
+        "requests",
+        "readOnlyRootFilesystem",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,16 +101,15 @@ class DeploySpecOpenfaasSpec(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of limits
         if self.limits:
-            _dict['limits'] = self.limits.to_dict()
+            _dict["limits"] = self.limits.to_dict()
         # override the default output from pydantic by calling `to_dict()` of requests
         if self.requests:
-            _dict['requests'] = self.requests.to_dict()
+            _dict["requests"] = self.requests.to_dict()
         return _dict
 
     @classmethod
@@ -103,20 +121,30 @@ class DeploySpecOpenfaasSpec(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "service": obj.get("service"),
-            "image": obj.get("image"),
-            "namespace": obj.get("namespace"),
-            "envProcess": obj.get("envProcess"),
-            "network": obj.get("network"),
-            "envVars": obj.get("envVars"),
-            "constraints": obj.get("constraints"),
-            "labels": obj.get("labels"),
-            "annotations": obj.get("annotations"),
-            "secrets": obj.get("secrets"),
-            "registryAuth": obj.get("registryAuth"),
-            "limits": ResourceLimits.from_dict(obj.get("limits")) if obj.get("limits") is not None else None,    # type: ignore
-            "requests": ResourceLimits.from_dict(obj.get("requests")) if obj.get("requests") is not None else None,    # type: ignore
-            "readOnlyRootFilesystem": obj.get("readOnlyRootFilesystem")
-        })
+        _obj = cls.model_validate(
+            {
+                "service": obj.get("service"),
+                "image": obj.get("image"),
+                "namespace": obj.get("namespace"),
+                "envProcess": obj.get("envProcess"),
+                "network": obj.get("network"),
+                "envVars": obj.get("envVars"),
+                "constraints": obj.get("constraints"),
+                "labels": obj.get("labels"),
+                "annotations": obj.get("annotations"),
+                "secrets": obj.get("secrets"),
+                "registryAuth": obj.get("registryAuth"),
+                "limits": (
+                    ResourceLimits.from_dict(cast(dict, obj.get("limits")))
+                    if obj.get("limits") is not None
+                    else None
+                ),
+                "requests": (
+                    ResourceLimits.from_dict(cast(dict, obj.get("requests")))
+                    if obj.get("requests") is not None
+                    else None
+                ),
+                "readOnlyRootFilesystem": obj.get("readOnlyRootFilesystem"),
+            }
+        )
         return _obj

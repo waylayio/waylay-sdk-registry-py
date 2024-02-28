@@ -31,10 +31,21 @@ except ImportError:
 class FunctionMeta(BaseModel):
     """FunctionMeta."""
 
-    author: Optional[StrictStr] = Field(default=None, description="The author of the function.")
-    description: Optional[StrictStr] = Field(default=None, description="A description of the function")
-    icon_url: Optional[StrictStr] = Field(default=None, description="An url to an icon that represents this function.", alias="iconURL")
-    category: Optional[StrictStr] = Field(default=None, description="A category for this function (Deprecated: use tags to categorise your functions)")
+    author: Optional[StrictStr] = Field(
+        default=None, description="The author of the function."
+    )
+    description: Optional[StrictStr] = Field(
+        default=None, description="A description of the function"
+    )
+    icon_url: Optional[StrictStr] = Field(
+        default=None,
+        description="An url to an icon that represents this function.",
+        alias="iconURL",
+    )
+    category: Optional[StrictStr] = Field(
+        default=None,
+        description="A category for this function (Deprecated: use tags to categorise your functions)",
+    )
     __properties: ClassVar[List[str]] = ["author", "description", "iconURL", "category"]
 
     model_config = ConfigDict(
@@ -71,8 +82,7 @@ class FunctionMeta(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,10 +96,12 @@ class FunctionMeta(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "author": obj.get("author"),
-            "description": obj.get("description"),
-            "iconURL": obj.get("iconURL"),
-            "category": obj.get("category")
-        })
+        _obj = cls.model_validate(
+            {
+                "author": obj.get("author"),
+                "description": obj.get("description"),
+                "iconURL": obj.get("iconURL"),
+                "category": obj.get("category"),
+            }
+        )
         return _obj

@@ -33,7 +33,10 @@ class KeepAliveEventSSE(BaseModel):
     """A message that acknowledges that the stream is still alive.."""
 
     event: EventKeepAlive
-    data: Optional[StrictStr] = Field(default=None, description="A text message acknowledging that events will be forwarded.")
+    data: Optional[StrictStr] = Field(
+        default=None,
+        description="A text message acknowledging that events will be forwarded.",
+    )
     __properties: ClassVar[List[str]] = ["event", "data"]
 
     model_config = ConfigDict(
@@ -70,8 +73,7 @@ class KeepAliveEventSSE(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,8 +87,5 @@ class KeepAliveEventSSE(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "event": obj.get("event"),
-            "data": obj.get("data")
-        })
+        _obj = cls.model_validate({"event": obj.get("event"), "data": obj.get("data")})
         return _obj

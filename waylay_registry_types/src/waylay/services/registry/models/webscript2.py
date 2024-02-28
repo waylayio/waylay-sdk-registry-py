@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.hal_link import HALLink
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -69,16 +71,15 @@ class Webscript2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of job
         if self.job:
-            _dict['job'] = self.job.to_dict()
+            _dict["job"] = self.job.to_dict()
         # override the default output from pydantic by calling `to_dict()` of webscript
         if self.webscript:
-            _dict['webscript'] = self.webscript.to_dict()
+            _dict["webscript"] = self.webscript.to_dict()
         return _dict
 
     @classmethod
@@ -90,8 +91,18 @@ class Webscript2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "job": HALLink.from_dict(obj.get("job")) if obj.get("job") is not None else None,    # type: ignore
-            "webscript": HALLink.from_dict(obj.get("webscript")) if obj.get("webscript") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "job": (
+                    HALLink.from_dict(cast(dict, obj.get("job")))
+                    if obj.get("job") is not None
+                    else None
+                ),
+                "webscript": (
+                    HALLink.from_dict(cast(dict, obj.get("webscript")))
+                    if obj.get("webscript") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

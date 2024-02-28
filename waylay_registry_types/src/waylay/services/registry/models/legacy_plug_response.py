@@ -22,11 +22,15 @@ from pydantic import BaseModel, StrictBool, StrictStr, field_validator
 from pydantic import Field
 from typing_extensions import Annotated
 from ..models.failure_reason import FailureReason
-from ..models.legacy_configuration_response_object import LegacyConfigurationResponseObject
+from ..models.legacy_configuration_response_object import (
+    LegacyConfigurationResponseObject,
+)
 from ..models.legacy_plug_response_metadata import LegacyPlugResponseMetadata
 from ..models.media_type import MediaType
 from ..models.status import Status
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -38,11 +42,15 @@ class LegacyPlugResponse(BaseModel):
     """LegacyPlugResponse."""
 
     name: StrictStr
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
     author: Optional[StrictStr] = None
     category: Optional[StrictStr] = None
     icon_url: Optional[StrictStr] = Field(default=None, alias="iconURL")
-    documentation_url: Optional[StrictStr] = Field(default=None, alias="documentationURL")
+    documentation_url: Optional[StrictStr] = Field(
+        default=None, alias="documentationURL"
+    )
     is_deprecated: StrictBool = Field(alias="isDeprecated")
     description: Optional[StrictStr] = None
     states: Optional[List[StrictStr]] = None
@@ -53,14 +61,33 @@ class LegacyPlugResponse(BaseModel):
     status: Status
     failure_reason: Optional[FailureReason] = Field(default=None, alias="failureReason")
     metadata: LegacyPlugResponseMetadata
-    __properties: ClassVar[List[str]] = ["name", "version", "author", "category", "iconURL", "documentationURL", "isDeprecated", "description", "states", "rawData", "mediaType", "configuration", "commands", "status", "failureReason", "metadata"]
+    __properties: ClassVar[List[str]] = [
+        "name",
+        "version",
+        "author",
+        "category",
+        "iconURL",
+        "documentationURL",
+        "isDeprecated",
+        "description",
+        "states",
+        "rawData",
+        "mediaType",
+        "configuration",
+        "commands",
+        "status",
+        "failureReason",
+        "metadata",
+    ]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -97,23 +124,22 @@ class LegacyPlugResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in configuration (list)
         _items = []
         if self.configuration:
-            for _item in self.configuration:  # type: ignore
+            for _item in cast(list, self.configuration):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['configuration'] = _items
+            _dict["configuration"] = _items
         # override the default output from pydantic by calling `to_dict()` of failure_reason
         if self.failure_reason:
-            _dict['failureReason'] = self.failure_reason.to_dict()
+            _dict["failureReason"] = self.failure_reason.to_dict()
         # override the default output from pydantic by calling `to_dict()` of metadata
         if self.metadata:
-            _dict['metadata'] = self.metadata.to_dict()
+            _dict["metadata"] = self.metadata.to_dict()
         return _dict
 
     @classmethod
@@ -125,22 +151,39 @@ class LegacyPlugResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "version": obj.get("version"),
-            "author": obj.get("author"),
-            "category": obj.get("category"),
-            "iconURL": obj.get("iconURL"),
-            "documentationURL": obj.get("documentationURL"),
-            "isDeprecated": obj.get("isDeprecated"),
-            "description": obj.get("description"),
-            "states": obj.get("states"),
-            "rawData": obj.get("rawData"),
-            "mediaType": obj.get("mediaType"),
-            "configuration": [LegacyConfigurationResponseObject.from_dict(_item) for _item in obj.get("configuration")] if obj.get("configuration") is not None else None,  # type: ignore
-            "commands": obj.get("commands"),
-            "status": obj.get("status"),
-            "failureReason": FailureReason.from_dict(obj.get("failureReason")) if obj.get("failureReason") is not None else None,    # type: ignore
-            "metadata": LegacyPlugResponseMetadata.from_dict(obj.get("metadata")) if obj.get("metadata") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "version": obj.get("version"),
+                "author": obj.get("author"),
+                "category": obj.get("category"),
+                "iconURL": obj.get("iconURL"),
+                "documentationURL": obj.get("documentationURL"),
+                "isDeprecated": obj.get("isDeprecated"),
+                "description": obj.get("description"),
+                "states": obj.get("states"),
+                "rawData": obj.get("rawData"),
+                "mediaType": obj.get("mediaType"),
+                "configuration": [
+                    LegacyConfigurationResponseObject.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("configuration"))
+                ]
+                if obj.get("configuration") is not None
+                else None,
+                "commands": obj.get("commands"),
+                "status": obj.get("status"),
+                "failureReason": (
+                    FailureReason.from_dict(cast(dict, obj.get("failureReason")))
+                    if obj.get("failureReason") is not None
+                    else None
+                ),
+                "metadata": (
+                    LegacyPlugResponseMetadata.from_dict(
+                        cast(dict, obj.get("metadata"))
+                    )
+                    if obj.get("metadata") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

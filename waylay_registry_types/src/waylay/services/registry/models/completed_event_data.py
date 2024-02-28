@@ -24,6 +24,8 @@ from ..models.any_job_result import AnyJobResult
 from ..models.queue_events import QueueEvents
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -71,13 +73,12 @@ class CompletedEventData(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of return_value
         if self.return_value:
-            _dict['returnValue'] = self.return_value.to_dict()
+            _dict["returnValue"] = self.return_value.to_dict()
         return _dict
 
     @classmethod
@@ -89,8 +90,14 @@ class CompletedEventData(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "prev": obj.get("prev"),
-            "returnValue": AnyJobResult.from_dict(obj.get("returnValue")) if obj.get("returnValue") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "prev": obj.get("prev"),
+                "returnValue": (
+                    AnyJobResult.from_dict(cast(dict, obj.get("returnValue")))
+                    if obj.get("returnValue") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

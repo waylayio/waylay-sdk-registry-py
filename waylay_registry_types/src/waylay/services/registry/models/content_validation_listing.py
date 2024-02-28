@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.asset_summary_with_hal_link import AssetSummaryWithHALLink
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -68,17 +70,16 @@ class ContentValidationListing(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in assets (list)
         _items = []
         if self.assets:
-            for _item in self.assets:  # type: ignore
+            for _item in cast(list, self.assets):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['assets'] = _items
+            _dict["assets"] = _items
         return _dict
 
     @classmethod
@@ -90,7 +91,14 @@ class ContentValidationListing(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "assets": [AssetSummaryWithHALLink.from_dict(_item) for _item in obj.get("assets")] if obj.get("assets") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "assets": [
+                    AssetSummaryWithHALLink.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("assets"))
+                ]
+                if obj.get("assets") is not None
+                else None
+            }
+        )
         return _obj

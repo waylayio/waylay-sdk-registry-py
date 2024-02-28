@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,9 +28,9 @@ class PlugType(str, Enum):
     """
     allowed enum values
     """
-    SENSOR = 'sensor'
-    ACTUATOR = 'actuator'
-    TRANSFORMER = 'transformer'
+    SENSOR = "sensor"
+    ACTUATOR = "actuator"
+    TRANSFORMER = "transformer"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

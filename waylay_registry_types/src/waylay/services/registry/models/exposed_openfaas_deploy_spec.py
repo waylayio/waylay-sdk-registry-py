@@ -22,6 +22,8 @@ from pydantic import BaseModel, StrictStr
 from ..models.resource_limits import ResourceLimits
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -38,7 +40,15 @@ class ExposedOpenfaasDeploySpec(BaseModel):
     annotations: Optional[Dict[str, StrictStr]] = None
     limits: Optional[ResourceLimits] = None
     requests: Optional[ResourceLimits] = None
-    __properties: ClassVar[List[str]] = ["service", "image", "namespace", "labels", "annotations", "limits", "requests"]
+    __properties: ClassVar[List[str]] = [
+        "service",
+        "image",
+        "namespace",
+        "labels",
+        "annotations",
+        "limits",
+        "requests",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,16 +84,15 @@ class ExposedOpenfaasDeploySpec(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of limits
         if self.limits:
-            _dict['limits'] = self.limits.to_dict()
+            _dict["limits"] = self.limits.to_dict()
         # override the default output from pydantic by calling `to_dict()` of requests
         if self.requests:
-            _dict['requests'] = self.requests.to_dict()
+            _dict["requests"] = self.requests.to_dict()
         return _dict
 
     @classmethod
@@ -95,13 +104,23 @@ class ExposedOpenfaasDeploySpec(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "service": obj.get("service"),
-            "image": obj.get("image"),
-            "namespace": obj.get("namespace"),
-            "labels": obj.get("labels"),
-            "annotations": obj.get("annotations"),
-            "limits": ResourceLimits.from_dict(obj.get("limits")) if obj.get("limits") is not None else None,    # type: ignore
-            "requests": ResourceLimits.from_dict(obj.get("requests")) if obj.get("requests") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "service": obj.get("service"),
+                "image": obj.get("image"),
+                "namespace": obj.get("namespace"),
+                "labels": obj.get("labels"),
+                "annotations": obj.get("annotations"),
+                "limits": (
+                    ResourceLimits.from_dict(cast(dict, obj.get("limits")))
+                    if obj.get("limits") is not None
+                    else None
+                ),
+                "requests": (
+                    ResourceLimits.from_dict(cast(dict, obj.get("requests")))
+                    if obj.get("requests") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

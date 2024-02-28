@@ -10,7 +10,6 @@ Do not edit the class manually.
 
 
 import pytest
-from typing import Dict, List
 from pytest_httpx import HTTPXMock
 import json
 from waylay.sdk import ApiClient, WaylayClient
@@ -18,14 +17,15 @@ from waylay.services.registry.api import WebscriptFunctionsApi
 from waylay.services.registry.service import RegistryService
 
 
-from ..types.multipart_file_upload_stub import MultipartFileUploadStub
-
-
-from ..types.post_webscript_job_sync_response_v2_stub import PostWebscriptJobSyncResponseV2Stub
+from ..types.post_webscript_job_sync_response_v2_stub import (
+    PostWebscriptJobSyncResponseV2Stub,
+)
 from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
 
 
-from ..types.post_webscript_job_sync_response_v2_stub import PostWebscriptJobSyncResponseV2Stub
+from ..types.post_webscript_job_sync_response_v2_stub import (
+    PostWebscriptJobSyncResponseV2Stub,
+)
 from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
 
 
@@ -56,11 +56,15 @@ from ..types.get_webscript_response_v2_stub import GetWebscriptResponseV2Stub
 from waylay.services.registry.models import GetWebscriptResponseV2
 
 
-from ..types.post_webscript_job_sync_response_v2_stub import PostWebscriptJobSyncResponseV2Stub
+from ..types.post_webscript_job_sync_response_v2_stub import (
+    PostWebscriptJobSyncResponseV2Stub,
+)
 from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
 
 
-from ..types.rebuild_webscript_sync_response_v2_stub import RebuildWebscriptSyncResponseV2Stub
+from ..types.rebuild_webscript_sync_response_v2_stub import (
+    RebuildWebscriptSyncResponseV2Stub,
+)
 from waylay.services.registry.models import RebuildWebscriptSyncResponseV2
 
 
@@ -75,18 +79,21 @@ from waylay.services.registry.models import UndeployedResponseV2
 from ..types.file_upload_stub import FileUploadStub
 
 
-from ..types.post_webscript_job_sync_response_v2_stub import PostWebscriptJobSyncResponseV2Stub
+from ..types.post_webscript_job_sync_response_v2_stub import (
+    PostWebscriptJobSyncResponseV2Stub,
+)
 from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
 
 
-from ..types.multipart_file_upload_stub import MultipartFileUploadStub
-
-
-from ..types.post_webscript_job_sync_response_v2_stub import PostWebscriptJobSyncResponseV2Stub
+from ..types.post_webscript_job_sync_response_v2_stub import (
+    PostWebscriptJobSyncResponseV2Stub,
+)
 from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
 
 
-from ..types.verify_webscript_sync_response_v2_stub import VerifyWebscriptSyncResponseV2Stub
+from ..types.verify_webscript_sync_response_v2_stub import (
+    VerifyWebscriptSyncResponseV2Stub,
+)
 from waylay.services.registry.models import VerifyWebscriptSyncResponseV2
 
 
@@ -105,190 +112,200 @@ def test_registered(waylay_client: WaylayClient):
 
 
 @pytest.mark.asyncio
-async def test_create(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_create(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for create
-        Create Webscript Version
+    Create Webscript Version
     """
     # set path params
     # set files param
     files = {
-        'myFile1': b'...first file content...',
-        'myFile2': b'...second file content...',
+        "myFile1": b"...first file content...",
+        "myFile2": b"...second file content...",
     }
 
     mock_response = PostWebscriptJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": gateway_url + f"/registry/v2/webscripts/",
+        "url": gateway_url + f"/registry/v2/webscripts/",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'files': files,
-
+        "files": files,
     }
     resp = await service.webscript_functions.create(**kwargs)
     assert isinstance(resp, PostWebscriptJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_delete_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_delete_asset(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for delete_asset
-        Delete Webscript Asset
+    Delete Webscript Asset
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
-    wildcard = 'wildcard_example'
+    wildcard = "wildcard_example"
 
     mock_response = PostWebscriptJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "DELETE",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}",
+        "url": gateway_url
+        + f"/registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-        'wildcard': wildcard,
-
+        "name": name,
+        "version": version,
+        "wildcard": wildcard,
     }
     resp = await service.webscript_functions.delete_asset(**kwargs)
     assert isinstance(resp, PostWebscriptJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_get_archive(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_archive(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_archive
-        Get Webscript Archive
+    Get Webscript Archive
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
-    mock_response = bytes(b'blah')
+    mock_response = bytes(b"blah")
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/content",
+        "url": gateway_url
+        + f"/registry/v2/webscripts/{name}/versions/{version}/content",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.webscript_functions.get_archive(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_asset(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_asset
-        Get File From Webscript Archive
+    Get File From Webscript Archive
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
-    wildcard = 'wildcard_example'
+    wildcard = "wildcard_example"
 
-    mock_response = bytes(b'blah')
+    mock_response = bytes(b"blah")
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}",
+        "url": gateway_url
+        + f"/registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-        'wildcard': wildcard,
-
+        "name": name,
+        "version": version,
+        "wildcard": wildcard,
     }
     resp = await service.webscript_functions.get_asset(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_latest_version(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_latest_version(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_latest_version
-        Get Latest Webscript Version
+    Get Latest Webscript Version
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     mock_response = GetWebscriptResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}",
+        "url": gateway_url + f"/registry/v2/webscripts/{name}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-
+        "name": name,
     }
     resp = await service.webscript_functions.get_latest_version(**kwargs)
     assert isinstance(resp, GetWebscriptResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_get_latest_versions(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_latest_versions(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_latest_versions
-        List Webscript Versions
+    List Webscript Versions
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     mock_response = WebscriptVersionsResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions",
+        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-
+        "name": name,
     }
     resp = await service.webscript_functions.get_latest_versions(**kwargs)
     assert isinstance(resp, WebscriptVersionsResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_get_version(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_version(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_version
-        Get Webscript Version
+    Get Webscript Version
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = GetWebscriptResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}",
+        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.webscript_functions.get_version(**kwargs)
     assert isinstance(resp, GetWebscriptResponseV2)
@@ -297,61 +314,62 @@ async def test_get_version(service: RegistryService, gateway_url: str, httpx_moc
 @pytest.mark.asyncio
 async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for jobs
-        List Webscript Jobs
+    List Webscript Jobs
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = JobsForWebscriptResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/jobs",
+        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/jobs",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.webscript_functions.jobs(**kwargs)
     assert isinstance(resp, JobsForWebscriptResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_list_all(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_list_all(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for list_all
-        List Webscripts
+    List Webscripts
     """
     # set path params
 
     mock_response = LatestWebscriptsResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/webscripts/",
+        "url": gateway_url + f"/registry/v2/webscripts/",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {
-
-    }
+    kwargs = {}
     resp = await service.webscript_functions.list_all(**kwargs)
     assert isinstance(resp, LatestWebscriptsResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_patch_metadata(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_patch_metadata(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for patch_metadata
-        Patch Webscript Metadata
+    Patch Webscript Metadata
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     # set body param
     body = FunctionMetaStub.create_instance()
@@ -361,139 +379,146 @@ async def test_patch_metadata(service: RegistryService, gateway_url: str, httpx_
     mock_response = GetWebscriptResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PATCH",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/metadata",
+        "url": gateway_url
+        + f"/registry/v2/webscripts/{name}/versions/{version}/metadata",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
-        'body': body,
-        '_headers': {'content-type': content_type} if content_type else None,
-
+        "name": name,
+        "version": version,
+        "body": body,
+        "_headers": {"content-type": content_type} if content_type else None,
     }
     resp = await service.webscript_functions.patch_metadata(**kwargs)
     assert isinstance(resp, GetWebscriptResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_publish(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_publish(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for publish
-        Publish Draft Webscript
+    Publish Draft Webscript
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = PostWebscriptJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/publish",
+        "url": gateway_url
+        + f"/registry/v2/webscripts/{name}/versions/{version}/publish",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.webscript_functions.publish(**kwargs)
     assert isinstance(resp, PostWebscriptJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_rebuild(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_rebuild(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for rebuild
-        Rebuild Webscript
+    Rebuild Webscript
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = RebuildWebscriptSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/rebuild",
+        "url": gateway_url
+        + f"/registry/v2/webscripts/{name}/versions/{version}/rebuild",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.webscript_functions.rebuild(**kwargs)
     assert isinstance(resp, RebuildWebscriptSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_remove_version(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_remove_version(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for remove_version
-        Remove Webscript Version
+    Remove Webscript Version
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = UndeployedResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "DELETE",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}",
+        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.webscript_functions.remove_version(**kwargs)
     assert isinstance(resp, UndeployedResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_remove_versions(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_remove_versions(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for remove_versions
-        Remove Webscript
+    Remove Webscript
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
     mock_response = UndeployedResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "DELETE",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}",
+        "url": gateway_url + f"/registry/v2/webscripts/{name}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-
+        "name": name,
     }
     resp = await service.webscript_functions.remove_versions(**kwargs)
     assert isinstance(resp, UndeployedResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_update_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_update_asset(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for update_asset
-        Update Webscript Asset
+    Update Webscript Asset
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
-    wildcard = 'wildcard_example'
+    wildcard = "wildcard_example"
 
     # set body param
     body = FileUploadStub.create_instance()
@@ -503,80 +528,83 @@ async def test_update_asset(service: RegistryService, gateway_url: str, httpx_mo
     mock_response = PostWebscriptJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PUT",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}",
+        "url": gateway_url
+        + f"/registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-        'wildcard': wildcard,
-
-        'body': body,
-        '_headers': {'content-type': content_type} if content_type else None,
-
+        "name": name,
+        "version": version,
+        "wildcard": wildcard,
+        "body": body,
+        "_headers": {"content-type": content_type} if content_type else None,
     }
     resp = await service.webscript_functions.update_asset(**kwargs)
     assert isinstance(resp, PostWebscriptJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_update_assets(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_update_assets(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for update_assets
-        Update Webscript Assets
+    Update Webscript Assets
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     # set files param
     files = {
-        'myFile1': b'...first file content...',
-        'myFile2': b'...second file content...',
+        "myFile1": b"...first file content...",
+        "myFile2": b"...second file content...",
     }
 
     mock_response = PostWebscriptJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PUT",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/content",
+        "url": gateway_url
+        + f"/registry/v2/webscripts/{name}/versions/{version}/content",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 201,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-        'files': files,
-
+        "name": name,
+        "version": version,
+        "files": files,
     }
     resp = await service.webscript_functions.update_assets(**kwargs)
     assert isinstance(resp, PostWebscriptJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_verify(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_verify(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for verify
-        Verify Health Of Webscript
+    Verify Health Of Webscript
     """
     # set path params
-    name = 'name_example'
+    name = "name_example"
 
-    version = 'version_example'
+    version = "version_example"
 
     mock_response = VerifyWebscriptSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": gateway_url + f"/registry/v2/webscripts/{name}/versions/{version}/verify",
+        "url": gateway_url
+        + f"/registry/v2/webscripts/{name}/versions/{version}/verify",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'name': name,
-        'version': version,
-
+        "name": name,
+        "version": version,
     }
     resp = await service.webscript_functions.verify(**kwargs)
     assert isinstance(resp, VerifyWebscriptSyncResponseV2)

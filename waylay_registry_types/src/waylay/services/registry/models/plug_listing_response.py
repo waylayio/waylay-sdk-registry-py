@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.plug_response import PlugResponse
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -68,17 +70,16 @@ class PlugListingResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in plugs (list)
         _items = []
         if self.plugs:
-            for _item in self.plugs:  # type: ignore
+            for _item in cast(list, self.plugs):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['plugs'] = _items
+            _dict["plugs"] = _items
         return _dict
 
     @classmethod
@@ -90,7 +91,14 @@ class PlugListingResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "plugs": [PlugResponse.from_dict(_item) for _item in obj.get("plugs")] if obj.get("plugs") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "plugs": [
+                    PlugResponse.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("plugs"))
+                ]
+                if obj.get("plugs") is not None
+                else None
+            }
+        )
         return _obj

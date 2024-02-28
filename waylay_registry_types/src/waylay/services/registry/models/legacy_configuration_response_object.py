@@ -24,6 +24,8 @@ from ..models.legacy_configuration_object_format import LegacyConfigurationObjec
 from ..models.plug_property_data_type import PlugPropertyDataType
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -39,7 +41,14 @@ class LegacyConfigurationResponseObject(BaseModel):
     format: Optional[LegacyConfigurationObjectFormat] = None
     default_value: Optional[Any] = Field(default=None, alias="defaultValue")
     sensitive: Optional[StrictBool] = None
-    __properties: ClassVar[List[str]] = ["name", "type", "mandatory", "format", "defaultValue", "sensitive"]
+    __properties: ClassVar[List[str]] = [
+        "name",
+        "type",
+        "mandatory",
+        "format",
+        "defaultValue",
+        "sensitive",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -75,17 +84,16 @@ class LegacyConfigurationResponseObject(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of format
         if self.format:
-            _dict['format'] = self.format.to_dict()
+            _dict["format"] = self.format.to_dict()
         # set to None if default_value (nullable) is None
         # and model_fields_set contains the field
         if self.default_value is None and "default_value" in self.model_fields_set:
-            _dict['defaultValue'] = None
+            _dict["defaultValue"] = None
 
         return _dict
 
@@ -98,12 +106,20 @@ class LegacyConfigurationResponseObject(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "type": obj.get("type"),
-            "mandatory": obj.get("mandatory"),
-            "format": LegacyConfigurationObjectFormat.from_dict(obj.get("format")) if obj.get("format") is not None else None,    # type: ignore
-            "defaultValue": obj.get("defaultValue"),
-            "sensitive": obj.get("sensitive")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "type": obj.get("type"),
+                "mandatory": obj.get("mandatory"),
+                "format": (
+                    LegacyConfigurationObjectFormat.from_dict(
+                        cast(dict, obj.get("format"))
+                    )
+                    if obj.get("format") is not None
+                    else None
+                ),
+                "defaultValue": obj.get("defaultValue"),
+                "sensitive": obj.get("sensitive"),
+            }
+        )
         return _obj

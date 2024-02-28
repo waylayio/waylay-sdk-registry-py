@@ -25,6 +25,8 @@ from ..models.job_hal_links import JobHALLinks
 from ..models.webscript_response_v2 import WebscriptResponseV2
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -74,19 +76,18 @@ class RebuildWebscriptAsyncResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         # override the default output from pydantic by calling `to_dict()` of causes
         if self.causes:
-            _dict['causes'] = self.causes.to_dict()
+            _dict["causes"] = self.causes.to_dict()
         # override the default output from pydantic by calling `to_dict()` of entity
         if self.entity:
-            _dict['entity'] = self.entity.to_dict()
+            _dict["entity"] = self.entity.to_dict()
         return _dict
 
     @classmethod
@@ -98,10 +99,24 @@ class RebuildWebscriptAsyncResponseV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "message": obj.get("message"),
-            "_links": JobHALLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "causes": JobCauses.from_dict(obj.get("causes")) if obj.get("causes") is not None else None,    # type: ignore
-            "entity": WebscriptResponseV2.from_dict(obj.get("entity")) if obj.get("entity") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "message": obj.get("message"),
+                "_links": (
+                    JobHALLinks.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+                "causes": (
+                    JobCauses.from_dict(cast(dict, obj.get("causes")))
+                    if obj.get("causes") is not None
+                    else None
+                ),
+                "entity": (
+                    WebscriptResponseV2.from_dict(cast(dict, obj.get("entity")))
+                    if obj.get("entity") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

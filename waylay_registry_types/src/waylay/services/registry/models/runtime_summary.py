@@ -25,6 +25,8 @@ from ..models.function_type import FunctionType
 from ..models.runtime_version_info import RuntimeVersionInfo
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -40,7 +42,14 @@ class RuntimeSummary(BaseModel):
     function_type: FunctionType = Field(alias="functionType")
     archive_format: ArchiveFormat = Field(alias="archiveFormat")
     versions: List[RuntimeVersionInfo]
-    __properties: ClassVar[List[str]] = ["name", "title", "description", "functionType", "archiveFormat", "versions"]
+    __properties: ClassVar[List[str]] = [
+        "name",
+        "title",
+        "description",
+        "functionType",
+        "archiveFormat",
+        "versions",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,17 +85,16 @@ class RuntimeSummary(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in versions (list)
         _items = []
         if self.versions:
-            for _item in self.versions:  # type: ignore
+            for _item in cast(list, self.versions):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['versions'] = _items
+            _dict["versions"] = _items
         return _dict
 
     @classmethod
@@ -98,12 +106,19 @@ class RuntimeSummary(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "functionType": obj.get("functionType"),
-            "archiveFormat": obj.get("archiveFormat"),
-            "versions": [RuntimeVersionInfo.from_dict(_item) for _item in obj.get("versions")] if obj.get("versions") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "title": obj.get("title"),
+                "description": obj.get("description"),
+                "functionType": obj.get("functionType"),
+                "archiveFormat": obj.get("archiveFormat"),
+                "versions": [
+                    RuntimeVersionInfo.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("versions"))
+                ]
+                if obj.get("versions") is not None
+                else None,
+            }
+        )
         return _obj

@@ -31,7 +31,11 @@ except ImportError:
 class VerifyQueryV1(BaseModel):
     """VerifyQueryV1."""
 
-    scale_to_zero: Optional[StrictBool] = Field(default=None, description="Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.", alias="scaleToZero")
+    scale_to_zero: Optional[StrictBool] = Field(
+        default=None,
+        description="Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.",
+        alias="scaleToZero",
+    )
     __properties: ClassVar[List[str]] = ["scaleToZero"]
 
     model_config = ConfigDict(
@@ -68,8 +72,7 @@ class VerifyQueryV1(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +86,5 @@ class VerifyQueryV1(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "scaleToZero": obj.get("scaleToZero")
-        })
+        _obj = cls.model_validate({"scaleToZero": obj.get("scaleToZero")})
         return _obj

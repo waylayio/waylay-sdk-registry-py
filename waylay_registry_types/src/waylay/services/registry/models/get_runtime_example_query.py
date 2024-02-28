@@ -31,8 +31,15 @@ except ImportError:
 class GetRuntimeExampleQuery(BaseModel):
     """GetRuntimeExampleQuery."""
 
-    ls: Optional[StrictBool] = Field(default=False, description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.")
-    include_deprecated: Optional[StrictBool] = Field(default=True, description="If set to `true`, deprecated runtimes will be included in the query.", alias="includeDeprecated")
+    ls: Optional[StrictBool] = Field(
+        default=False,
+        description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.",
+    )
+    include_deprecated: Optional[StrictBool] = Field(
+        default=True,
+        description="If set to `true`, deprecated runtimes will be included in the query.",
+        alias="includeDeprecated",
+    )
     __properties: ClassVar[List[str]] = ["ls", "includeDeprecated"]
 
     model_config = ConfigDict(
@@ -69,8 +76,7 @@ class GetRuntimeExampleQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +90,12 @@ class GetRuntimeExampleQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "ls": obj.get("ls") if obj.get("ls") is not None else False,
-            "includeDeprecated": obj.get("includeDeprecated") if obj.get("includeDeprecated") is not None else True
-        })
+        _obj = cls.model_validate(
+            {
+                "ls": obj.get("ls") if obj.get("ls") is not None else False,
+                "includeDeprecated": obj.get("includeDeprecated")
+                if obj.get("includeDeprecated") is not None
+                else True,
+            }
+        )
         return _obj

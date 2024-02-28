@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.function_deploy_overrides_type import FunctionDeployOverridesType
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -68,13 +70,12 @@ class FunctionDeployOverrides(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of deploy
         if self.deploy:
-            _dict['deploy'] = self.deploy.to_dict()
+            _dict["deploy"] = self.deploy.to_dict()
         return _dict
 
     @classmethod
@@ -86,7 +87,13 @@ class FunctionDeployOverrides(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deploy": FunctionDeployOverridesType.from_dict(obj.get("deploy")) if obj.get("deploy") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "deploy": (
+                    FunctionDeployOverridesType.from_dict(cast(dict, obj.get("deploy")))
+                    if obj.get("deploy") is not None
+                    else None
+                )
+            }
+        )
         return _obj

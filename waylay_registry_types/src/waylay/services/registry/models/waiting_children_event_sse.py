@@ -20,8 +20,12 @@ from pydantic import ConfigDict
 from typing import Any, ClassVar, Dict, List
 from pydantic import BaseModel, StrictStr, field_validator
 from pydantic import Field
-from ..models.job_event_response_waiting_children_event_data import JobEventResponseWaitingChildrenEventData
+from ..models.job_event_response_waiting_children_event_data import (
+    JobEventResponseWaitingChildrenEventData,
+)
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -32,15 +36,17 @@ except ImportError:
 class WaitingChildrenEventSSE(BaseModel):
     """A message that notifies a state change in a background job.."""
 
-    event: StrictStr = Field(description="The job queue event that trigged this message")
+    event: StrictStr = Field(
+        description="The job queue event that trigged this message"
+    )
     data: JobEventResponseWaitingChildrenEventData
     __properties: ClassVar[List[str]] = ["event", "data"]
 
-    @field_validator('event')
+    @field_validator("event")
     @classmethod
     def event_validate_enum(cls, value):
         """Validate the enum."""
-        if value not in ('waiting-children'):
+        if value not in ("waiting-children"):
             raise ValueError("must be one of enum values ('waiting-children')")
         return value
 
@@ -78,13 +84,12 @@ class WaitingChildrenEventSSE(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of data
         if self.data:
-            _dict['data'] = self.data.to_dict()
+            _dict["data"] = self.data.to_dict()
         return _dict
 
     @classmethod
@@ -96,8 +101,16 @@ class WaitingChildrenEventSSE(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "event": obj.get("event"),
-            "data": JobEventResponseWaitingChildrenEventData.from_dict(obj.get("data")) if obj.get("data") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "event": obj.get("event"),
+                "data": (
+                    JobEventResponseWaitingChildrenEventData.from_dict(
+                        cast(dict, obj.get("data"))
+                    )
+                    if obj.get("data") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

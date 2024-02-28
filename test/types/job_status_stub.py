@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
 from waylay.services.registry.models.job_status import JobStatus
 
@@ -18,13 +17,6 @@ from .job_status_progress_stub import JobStatusProgressStub
 
 
 from .parent_keys_stub import ParentKeysStub
-
-
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
-from pydantic import Field
-from waylay.services.registry.models.job_status_progress import JobStatusProgress
-from waylay.services.registry.models.parent_keys import ParentKeys
 
 
 # some mappings that are needed for some <example> interpolations
@@ -39,25 +31,29 @@ class JobStatusStub:
         include_optional: bool = False,
     ) -> JobStatus:
         """Create JobStatus stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         if include_optional:
             return JobStatus(
-                id='',
-                name='',
+                id="",
+                name="",
                 progress=JobStatusProgressStub.create_instance(),
                 attempts_made=1.337,
-                finished_on=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                processed_on=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                failed_reason='',
+                finished_on=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                processed_on=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                failed_reason="",
                 parent=ParentKeysStub.create_instance(),
-                delay=1.337
+                delay=1.337,
             )
         else:
             return JobStatus(
-                id='',
-                name='',
+                id="",
+                name="",
                 progress=JobStatusProgressStub.create_instance(),
                 attempts_made=1.337,
             )

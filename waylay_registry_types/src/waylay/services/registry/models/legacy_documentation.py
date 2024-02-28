@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.documentation_property import DocumentationProperty
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -71,31 +73,30 @@ class LegacyDocumentation(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in supported_states (list)
         _items = []
         if self.supported_states:
-            for _item in self.supported_states:  # type: ignore
+            for _item in cast(list, self.supported_states):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['supportedStates'] = _items
+            _dict["supportedStates"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in configuration (list)
         _items = []
         if self.configuration:
-            for _item in self.configuration:  # type: ignore
+            for _item in cast(list, self.configuration):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['configuration'] = _items
+            _dict["configuration"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in raw_data (list)
         _items = []
         if self.raw_data:
-            for _item in self.raw_data:  # type: ignore
+            for _item in cast(list, self.raw_data):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['rawData'] = _items
+            _dict["rawData"] = _items
         return _dict
 
     @classmethod
@@ -107,9 +108,26 @@ class LegacyDocumentation(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "supportedStates": [DocumentationProperty.from_dict(_item) for _item in obj.get("supportedStates")] if obj.get("supportedStates") is not None else None,  # type: ignore
-            "configuration": [DocumentationProperty.from_dict(_item) for _item in obj.get("configuration")] if obj.get("configuration") is not None else None,  # type: ignore
-            "rawData": [DocumentationProperty.from_dict(_item) for _item in obj.get("rawData")] if obj.get("rawData") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "supportedStates": [
+                    DocumentationProperty.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("supportedStates"))
+                ]
+                if obj.get("supportedStates") is not None
+                else None,
+                "configuration": [
+                    DocumentationProperty.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("configuration"))
+                ]
+                if obj.get("configuration") is not None
+                else None,
+                "rawData": [
+                    DocumentationProperty.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("rawData"))
+                ]
+                if obj.get("rawData") is not None
+                else None,
+            }
+        )
         return _obj

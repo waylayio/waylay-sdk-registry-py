@@ -31,8 +31,12 @@ except ImportError:
 class RuntimeVersionStatus(BaseModel):
     """RuntimeVersionStatus."""
 
-    deprecated: StrictBool = Field(description="If true, the function uses a deprecated runtime.")
-    upgradable: StrictBool = Field(description="If true, a newer runtime for this function is available using the `rebuild` API.")
+    deprecated: StrictBool = Field(
+        description="If true, the function uses a deprecated runtime."
+    )
+    upgradable: StrictBool = Field(
+        description="If true, a newer runtime for this function is available using the `rebuild` API."
+    )
     __properties: ClassVar[List[str]] = ["deprecated", "upgradable"]
 
     model_config = ConfigDict(
@@ -69,8 +73,7 @@ class RuntimeVersionStatus(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +87,7 @@ class RuntimeVersionStatus(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deprecated": obj.get("deprecated"),
-            "upgradable": obj.get("upgradable")
-        })
+        _obj = cls.model_validate(
+            {"deprecated": obj.get("deprecated"), "upgradable": obj.get("upgradable")}
+        )
         return _obj

@@ -31,9 +31,16 @@ except ImportError:
 class PagingResponse(BaseModel):
     """PagingResponse."""
 
-    count: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The total count of matching items, from which this result is one page.")
-    limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page size used for this query result.")
-    page: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page number of a paged query result.")
+    count: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None,
+        description="The total count of matching items, from which this result is one page.",
+    )
+    limit: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page size used for this query result."
+    )
+    page: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page number of a paged query result."
+    )
     __properties: ClassVar[List[str]] = ["count", "limit", "page"]
 
     model_config = ConfigDict(
@@ -70,8 +77,7 @@ class PagingResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,9 +91,11 @@ class PagingResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "count": obj.get("count"),
-            "limit": obj.get("limit"),
-            "page": obj.get("page")
-        })
+        _obj = cls.model_validate(
+            {
+                "count": obj.get("count"),
+                "limit": obj.get("limit"),
+                "page": obj.get("page"),
+            }
+        )
         return _obj

@@ -32,7 +32,10 @@ class VerifyResult(BaseModel):
     """The result data for a completed verification job.."""
 
     healthy: StrictBool = Field(description="If true, the deployment check succeeded.")
-    replicas: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The number of replicas this function was running at the time of the check.")
+    replicas: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None,
+        description="The number of replicas this function was running at the time of the check.",
+    )
     __properties: ClassVar[List[str]] = ["healthy", "replicas"]
 
     model_config = ConfigDict(
@@ -69,8 +72,7 @@ class VerifyResult(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +86,7 @@ class VerifyResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "healthy": obj.get("healthy"),
-            "replicas": obj.get("replicas")
-        })
+        _obj = cls.model_validate(
+            {"healthy": obj.get("healthy"), "replicas": obj.get("replicas")}
+        )
         return _obj

@@ -24,6 +24,8 @@ from ..models.failed_event_data import FailedEventData
 from ..models.job_reference import JobReference
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -72,16 +74,15 @@ class JobEventPayloadFailedEventData(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of job
         if self.job:
-            _dict['job'] = self.job.to_dict()
+            _dict["job"] = self.job.to_dict()
         # override the default output from pydantic by calling `to_dict()` of data
         if self.data:
-            _dict['data'] = self.data.to_dict()
+            _dict["data"] = self.data.to_dict()
         return _dict
 
     @classmethod
@@ -93,9 +94,19 @@ class JobEventPayloadFailedEventData(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "job": JobReference.from_dict(obj.get("job")) if obj.get("job") is not None else None,    # type: ignore
-            "data": FailedEventData.from_dict(obj.get("data")) if obj.get("data") is not None else None,    # type: ignore
-            "timestamp": obj.get("timestamp")
-        })
+        _obj = cls.model_validate(
+            {
+                "job": (
+                    JobReference.from_dict(cast(dict, obj.get("job")))
+                    if obj.get("job") is not None
+                    else None
+                ),
+                "data": (
+                    FailedEventData.from_dict(cast(dict, obj.get("data")))
+                    if obj.get("data") is not None
+                    else None
+                ),
+                "timestamp": obj.get("timestamp"),
+            }
+        )
         return _obj

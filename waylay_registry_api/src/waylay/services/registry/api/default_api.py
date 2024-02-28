@@ -10,30 +10,23 @@ Do not edit the class manually.
 
 
 from __future__ import annotations  # for Python 3.7–3.9
-import io
-import warnings
 
-import enum
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt, StrictBool, StrictBytes
-from typing import Dict, List, Literal, Optional, Tuple, Union, Any, overload, TYPE_CHECKING
-from typing_extensions import NotRequired, TypedDict
+from pydantic import validate_call, StrictStr, StrictBool
+from typing import Dict, Literal, Optional, Union, Any, overload, TYPE_CHECKING
 
-from waylay.sdk.api import ApiValueError
 
 try:
     from typing import Annotated
 except ImportError:
-    from typing_extensions import Annotated  # type: ignore
+    from typing_extensions import Annotated  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
-
     from waylay.services.registry.queries.default_api import GetQuery
 
     from waylay.services.registry.models import RootPageResponse
 
 
 try:
-
     from waylay.services.registry.queries.default_api import GetQuery
 
     from waylay.services.registry.models import RootPageResponse
@@ -43,15 +36,12 @@ except ImportError:
     types_available = False
 
     if not TYPE_CHECKING:
-
         GetQuery = Dict
 
         RootPageResponse = Any
 
 
-from waylay.sdk.api import (
-    ApiClient, ApiResponse, RESTTimeout
-)
+from waylay.sdk.api import ApiClient, ApiResponse, RESTTimeout
 
 
 class DefaultApi:
@@ -75,7 +65,8 @@ class DefaultApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> RootPageResponse: ...
+    ) -> RootPageResponse:
+        ...
 
     @overload
     async def get(
@@ -85,7 +76,8 @@ class DefaultApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[RootPageResponse]: ...
+    ) -> ApiResponse[RootPageResponse]:
+        ...
 
     @validate_call
     async def get(
@@ -122,11 +114,10 @@ class DefaultApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '*': "waylay.services.registry.models.RootPageResponse",
+            "*": "waylay.services.registry.models.RootPageResponse",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -141,10 +132,11 @@ class DefaultApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
@@ -157,8 +149,8 @@ class DefaultApi:
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/',
+            method="GET",
+            resource_path="/registry/v2/",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -9,9 +9,10 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
-from waylay.services.registry.models.job_event_response_delayed_event_data import JobEventResponseDelayedEventData
+from waylay.services.registry.models.job_event_response_delayed_event_data import (
+    JobEventResponseDelayedEventData,
+)
 from .job_status_and_entity_hal_links_stub import JobStatusAndEntityHALLinksStub
 
 from .job_reference_stub import JobReferenceStub
@@ -20,14 +21,6 @@ from .delayed_event_data_stub import DelayedEventDataStub
 
 
 from .function_ref_stub import FunctionRefStub
-
-from typing import Any, ClassVar, Dict, List
-from pydantic import BaseModel
-from pydantic import Field
-from waylay.services.registry.models.delayed_event_data import DelayedEventData
-from waylay.services.registry.models.function_ref import FunctionRef
-from waylay.services.registry.models.job_reference import JobReference
-from waylay.services.registry.models.job_status_and_entity_hal_links import JobStatusAndEntityHALLinks
 
 
 # some mappings that are needed for some <example> interpolations
@@ -42,7 +35,7 @@ class JobEventResponseDelayedEventDataStub:
         include_optional: bool = False,
     ) -> JobEventResponseDelayedEventData:
         """Create JobEventResponseDelayedEventData stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         if include_optional:
@@ -50,14 +43,18 @@ class JobEventResponseDelayedEventDataStub:
                 links=JobStatusAndEntityHALLinksStub.create_instance(),
                 job=JobReferenceStub.create_instance(),
                 data=DelayedEventDataStub.create_instance(),
-                timestamp=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                function=FunctionRefStub.create_instance()
+                timestamp=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                function=FunctionRefStub.create_instance(),
             )
         else:
             return JobEventResponseDelayedEventData(
                 links=JobStatusAndEntityHALLinksStub.create_instance(),
                 job=JobReferenceStub.create_instance(),
                 data=DelayedEventDataStub.create_instance(),
-                timestamp=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                function=FunctionRefStub.create_instance()
+                timestamp=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                function=FunctionRefStub.create_instance(),
             )

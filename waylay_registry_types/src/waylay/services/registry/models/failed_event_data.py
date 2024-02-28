@@ -33,7 +33,9 @@ class FailedEventData(BaseModel):
     """FailedEventData."""
 
     prev: Optional[QueueEvents] = None
-    failed_reason: StrictStr = Field(description="The failure reason of the job", alias="failedReason")
+    failed_reason: StrictStr = Field(
+        description="The failure reason of the job", alias="failedReason"
+    )
     __properties: ClassVar[List[str]] = ["prev", "failedReason"]
 
     model_config = ConfigDict(
@@ -70,8 +72,7 @@ class FailedEventData(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,8 +86,7 @@ class FailedEventData(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "prev": obj.get("prev"),
-            "failedReason": obj.get("failedReason")
-        })
+        _obj = cls.model_validate(
+            {"prev": obj.get("prev"), "failedReason": obj.get("failedReason")}
+        )
         return _obj

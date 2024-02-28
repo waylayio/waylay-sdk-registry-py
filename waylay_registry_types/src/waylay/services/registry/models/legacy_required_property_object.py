@@ -71,8 +71,7 @@ class LegacyRequiredPropertyObject(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,10 +85,12 @@ class LegacyRequiredPropertyObject(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "type": obj.get("type"),
-            "mandatory": obj.get("mandatory"),
-            "sensitive": obj.get("sensitive")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "type": obj.get("type"),
+                "mandatory": obj.get("mandatory"),
+                "sensitive": obj.get("sensitive"),
+            }
+        )
         return _obj

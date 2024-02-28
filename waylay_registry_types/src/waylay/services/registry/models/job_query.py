@@ -27,6 +27,8 @@ from ..models.job_type_schema import JobTypeSchema
 from ..models.timestamp_spec import TimestampSpec
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -36,13 +38,34 @@ except ImportError:
 class JobQuery(BaseModel):
     """JobQuery."""
 
-    limit: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.")
-    type: Optional[List[JobTypeSchema]] = Field(default=None, description="Filter on job type")
-    state: Optional[List[JobStateResult]] = Field(default=None, description="Filter on job state")
-    function_type: Optional[List[FunctionType]] = Field(default=None, description="Filter on function type", alias="functionType")
+    limit: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.",
+    )
+    type: Optional[List[JobTypeSchema]] = Field(
+        default=None, description="Filter on job type"
+    )
+    state: Optional[List[JobStateResult]] = Field(
+        default=None, description="Filter on job state"
+    )
+    function_type: Optional[List[FunctionType]] = Field(
+        default=None, description="Filter on function type", alias="functionType"
+    )
     created_before: Optional[TimestampSpec] = Field(default=None, alias="createdBefore")
     created_after: Optional[TimestampSpec] = Field(default=None, alias="createdAfter")
-    __properties: ClassVar[List[str]] = ["limit", "type", "state", "functionType", "createdBefore", "createdAfter"]
+    __properties: ClassVar[List[str]] = [
+        "limit",
+        "type",
+        "state",
+        "functionType",
+        "createdBefore",
+        "createdAfter",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -78,30 +101,29 @@ class JobQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in type (list)
         _items = []
         if self.type:
-            for _item in self.type:  # type: ignore
+            for _item in cast(list, self.type):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['type'] = _items
+            _dict["type"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in state (list)
         _items = []
         if self.state:
-            for _item in self.state:  # type: ignore
+            for _item in cast(list, self.state):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['state'] = _items
+            _dict["state"] = _items
         # override the default output from pydantic by calling `to_dict()` of created_before
         if self.created_before:
-            _dict['createdBefore'] = self.created_before.to_dict()
+            _dict["createdBefore"] = self.created_before.to_dict()
         # override the default output from pydantic by calling `to_dict()` of created_after
         if self.created_after:
-            _dict['createdAfter'] = self.created_after.to_dict()
+            _dict["createdAfter"] = self.created_after.to_dict()
         return _dict
 
     @classmethod
@@ -113,12 +135,32 @@ class JobQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "type": [JobTypeSchema.from_dict(_item) for _item in obj.get("type")] if obj.get("type") is not None else None,  # type: ignore
-            "state": [JobStateResult.from_dict(_item) for _item in obj.get("state")] if obj.get("state") is not None else None,  # type: ignore
-            "functionType": obj.get("functionType"),
-            "createdBefore": TimestampSpec.from_dict(obj.get("createdBefore")) if obj.get("createdBefore") is not None else None,    # type: ignore
-            "createdAfter": TimestampSpec.from_dict(obj.get("createdAfter")) if obj.get("createdAfter") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "limit": obj.get("limit"),
+                "type": [
+                    JobTypeSchema.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("type"))
+                ]
+                if obj.get("type") is not None
+                else None,
+                "state": [
+                    JobStateResult.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("state"))
+                ]
+                if obj.get("state") is not None
+                else None,
+                "functionType": obj.get("functionType"),
+                "createdBefore": (
+                    TimestampSpec.from_dict(cast(dict, obj.get("createdBefore")))
+                    if obj.get("createdBefore") is not None
+                    else None
+                ),
+                "createdAfter": (
+                    TimestampSpec.from_dict(cast(dict, obj.get("createdAfter")))
+                    if obj.get("createdAfter") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

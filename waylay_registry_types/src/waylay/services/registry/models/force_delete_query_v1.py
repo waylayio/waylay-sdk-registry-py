@@ -31,8 +31,15 @@ except ImportError:
 class ForceDeleteQueryV1(BaseModel):
     """ForceDeleteQueryV1."""
 
-    var_async: Optional[StrictBool] = Field(default=False, description="If this is set to <code>true</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. Otherwise, the request will block until the job actions are completed, or a timeout occurs.", alias="async")
-    force: Optional[StrictBool] = Field(default=None, description="If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.")
+    var_async: Optional[StrictBool] = Field(
+        default=False,
+        description="If this is set to <code>true</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. Otherwise, the request will block until the job actions are completed, or a timeout occurs.",
+        alias="async",
+    )
+    force: Optional[StrictBool] = Field(
+        default=None,
+        description="If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.",
+    )
     __properties: ClassVar[List[str]] = ["async", "force"]
 
     model_config = ConfigDict(
@@ -69,8 +76,7 @@ class ForceDeleteQueryV1(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +90,10 @@ class ForceDeleteQueryV1(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "async": obj.get("async") if obj.get("async") is not None else False,
-            "force": obj.get("force")
-        })
+        _obj = cls.model_validate(
+            {
+                "async": obj.get("async") if obj.get("async") is not None else False,
+                "force": obj.get("force"),
+            }
+        )
         return _obj

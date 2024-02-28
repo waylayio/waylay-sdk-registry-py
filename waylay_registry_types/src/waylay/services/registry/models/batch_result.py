@@ -31,7 +31,9 @@ except ImportError:
 class BatchResult(BaseModel):
     """BatchResult."""
 
-    job_count: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="jobCount")
+    job_count: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, alias="jobCount"
+    )
     __properties: ClassVar[List[str]] = ["jobCount"]
 
     model_config = ConfigDict(
@@ -68,8 +70,7 @@ class BatchResult(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +84,5 @@ class BatchResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "jobCount": obj.get("jobCount")
-        })
+        _obj = cls.model_validate({"jobCount": obj.get("jobCount")})
         return _obj

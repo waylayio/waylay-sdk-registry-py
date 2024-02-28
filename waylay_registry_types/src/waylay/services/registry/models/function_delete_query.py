@@ -31,8 +31,14 @@ except ImportError:
 class FunctionDeleteQuery(BaseModel):
     """FunctionDeleteQuery."""
 
-    force: Optional[StrictBool] = Field(default=None, description="If <code>true</code>, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_.")
-    undeploy: Optional[StrictBool] = Field(default=None, description="If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.")
+    force: Optional[StrictBool] = Field(
+        default=None,
+        description="If <code>true</code>, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_.",
+    )
+    undeploy: Optional[StrictBool] = Field(
+        default=None,
+        description="If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.",
+    )
     __properties: ClassVar[List[str]] = ["force", "undeploy"]
 
     model_config = ConfigDict(
@@ -69,8 +75,7 @@ class FunctionDeleteQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +89,7 @@ class FunctionDeleteQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "force": obj.get("force"),
-            "undeploy": obj.get("undeploy")
-        })
+        _obj = cls.model_validate(
+            {"force": obj.get("force"), "undeploy": obj.get("undeploy")}
+        )
         return _obj

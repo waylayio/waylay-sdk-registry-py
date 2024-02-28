@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.job_hal_links import JobHALLinks
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -72,13 +74,12 @@ class KFServingDeleteMultipleWithJobResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -90,10 +91,16 @@ class KFServingDeleteMultipleWithJobResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "versions": obj.get("versions"),
-            "message": obj.get("message"),
-            "_links": JobHALLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "versions": obj.get("versions"),
+                "message": obj.get("message"),
+                "_links": (
+                    JobHALLinks.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

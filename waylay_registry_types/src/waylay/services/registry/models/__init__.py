@@ -118,7 +118,9 @@ from .get_webscript_response_v2_links import GetWebscriptResponseV2Links
 from .hal_link import HALLink
 from .invokable_webscript_response import InvokableWebscriptResponse
 from .invokable_webscript_response_entity import InvokableWebscriptResponseEntity
-from .invokable_webscript_response_entity_webscript import InvokableWebscriptResponseEntityWebscript
+from .invokable_webscript_response_entity_webscript import (
+    InvokableWebscriptResponseEntityWebscript,
+)
 from .invoke_hal_link import InvokeHALLink
 from .invoke_internal_hal_link import InvokeInternalHALLink
 from .job_and_function_hal_link import JobAndFunctionHALLink
@@ -128,13 +130,17 @@ from .job_event_payload_active_event_data import JobEventPayloadActiveEventData
 from .job_event_payload_completed_event_data import JobEventPayloadCompletedEventData
 from .job_event_payload_delayed_event_data import JobEventPayloadDelayedEventData
 from .job_event_payload_failed_event_data import JobEventPayloadFailedEventData
-from .job_event_payload_waiting_children_event_data import JobEventPayloadWaitingChildrenEventData
+from .job_event_payload_waiting_children_event_data import (
+    JobEventPayloadWaitingChildrenEventData,
+)
 from .job_event_payload_waiting_event_data import JobEventPayloadWaitingEventData
 from .job_event_response_active_event_data import JobEventResponseActiveEventData
 from .job_event_response_completed_event_data import JobEventResponseCompletedEventData
 from .job_event_response_delayed_event_data import JobEventResponseDelayedEventData
 from .job_event_response_failed_event_data import JobEventResponseFailedEventData
-from .job_event_response_waiting_children_event_data import JobEventResponseWaitingChildrenEventData
+from .job_event_response_waiting_children_event_data import (
+    JobEventResponseWaitingChildrenEventData,
+)
 from .job_event_response_waiting_event_data import JobEventResponseWaitingEventData
 from .job_event_sse import JobEventSSE
 from .job_events_and_function_hal_link import JobEventsAndFunctionHALLink
@@ -177,7 +183,9 @@ from .jobs_for_webscript_response_v2_links import JobsForWebscriptResponseV2Link
 from .jobs_hal_link import JobsHALLink
 from .jobs_response import JobsResponse
 from .kf_serving_delete_multiple_response import KFServingDeleteMultipleResponse
-from .kf_serving_delete_multiple_with_job_response import KFServingDeleteMultipleWithJobResponse
+from .kf_serving_delete_multiple_with_job_response import (
+    KFServingDeleteMultipleWithJobResponse,
+)
 from .kf_serving_delete_query_v1 import KFServingDeleteQueryV1
 from .kf_serving_delete_query_v2 import KFServingDeleteQueryV2
 from .kf_serving_delete_response import KFServingDeleteResponse
@@ -195,7 +203,9 @@ from .language_release import LanguageRelease
 from .latest_function_versions_query import LatestFunctionVersionsQuery
 from .latest_functions_query import LatestFunctionsQuery
 from .latest_models_response_v2 import LatestModelsResponseV2
-from .latest_models_response_v2_entities_inner import LatestModelsResponseV2EntitiesInner
+from .latest_models_response_v2_entities_inner import (
+    LatestModelsResponseV2EntitiesInner,
+)
 from .latest_plug_query import LatestPlugQuery
 from .latest_plug_version_query_v2 import LatestPlugVersionQueryV2
 from .latest_plug_versions_query import LatestPlugVersionsQuery
@@ -205,7 +215,9 @@ from .latest_plugs_response_v2 import LatestPlugsResponseV2
 from .latest_plugs_response_v2_entities_inner import LatestPlugsResponseV2EntitiesInner
 from .latest_version_level import LatestVersionLevel
 from .latest_webscripts_response_v2 import LatestWebscriptsResponseV2
-from .latest_webscripts_response_v2_entities_inner import LatestWebscriptsResponseV2EntitiesInner
+from .latest_webscripts_response_v2_entities_inner import (
+    LatestWebscriptsResponseV2EntitiesInner,
+)
 from .legacy_configuration_object import LegacyConfigurationObject
 from .legacy_configuration_object_format import LegacyConfigurationObjectFormat
 from .legacy_configuration_response_object import LegacyConfigurationResponseObject
@@ -222,9 +234,15 @@ from .legacy_plug_meta_request import LegacyPlugMetaRequest
 from .legacy_plug_query import LegacyPlugQuery
 from .legacy_plug_request import LegacyPlugRequest
 from .legacy_plug_request_metadata import LegacyPlugRequestMetadata
-from .legacy_plug_request_metadata_documentation import LegacyPlugRequestMetadataDocumentation
-from .legacy_plug_request_metadata_documentation_any_of import LegacyPlugRequestMetadataDocumentationAnyOf
-from .legacy_plug_request_metadata_raw_data_inner import LegacyPlugRequestMetadataRawDataInner
+from .legacy_plug_request_metadata_documentation import (
+    LegacyPlugRequestMetadataDocumentation,
+)
+from .legacy_plug_request_metadata_documentation_any_of import (
+    LegacyPlugRequestMetadataDocumentationAnyOf,
+)
+from .legacy_plug_request_metadata_raw_data_inner import (
+    LegacyPlugRequestMetadataRawDataInner,
+)
 from .legacy_plug_response import LegacyPlugResponse
 from .legacy_plug_response_metadata import LegacyPlugResponseMetadata
 from .legacy_plug_script_meta import LegacyPlugScriptMeta
@@ -245,10 +263,16 @@ from .name import Name
 from .name_and_version import NameAndVersion
 from .named_function_versions_query import NamedFunctionVersionsQuery
 from .named_kf_serving_versions_query_v2 import NamedKFServingVersionsQueryV2
-from .named_parameters_typeof_as_job_reference import NamedParametersTypeofAsJobReference
-from .named_parameters_typeof_as_job_reference_job_status import NamedParametersTypeofAsJobReferenceJobStatus
+from .named_parameters_typeof_as_job_reference import (
+    NamedParametersTypeofAsJobReference,
+)
+from .named_parameters_typeof_as_job_reference_job_status import (
+    NamedParametersTypeofAsJobReferenceJobStatus,
+)
 from .named_parameters_typeof_from_legacy import NamedParametersTypeofFromLegacy
-from .named_parameters_typeof_from_legacy_documentation import NamedParametersTypeofFromLegacyDocumentation
+from .named_parameters_typeof_from_legacy_documentation import (
+    NamedParametersTypeofFromLegacyDocumentation,
+)
 from .named_parameters_typeof_is_not_legacy import NamedParametersTypeofIsNotLegacy
 from .named_plug_versions_query_v2 import NamedPlugVersionsQueryV2
 from .named_versions_filter import NamedVersionsFilter

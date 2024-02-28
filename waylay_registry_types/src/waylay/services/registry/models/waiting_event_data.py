@@ -68,8 +68,7 @@ class WaitingEventData(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +82,5 @@ class WaitingEventData(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "prev": obj.get("prev")
-        })
+        _obj = cls.model_validate({"prev": obj.get("prev")})
         return _obj

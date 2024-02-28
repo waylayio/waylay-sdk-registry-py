@@ -31,7 +31,11 @@ except ImportError:
 class GetRuntimeByNameAndVersionQuery(BaseModel):
     """GetRuntimeByNameAndVersionQuery."""
 
-    include_deprecated: Optional[StrictBool] = Field(default=True, description="If set to `true`, deprecated runtimes will be included in the query.", alias="includeDeprecated")
+    include_deprecated: Optional[StrictBool] = Field(
+        default=True,
+        description="If set to `true`, deprecated runtimes will be included in the query.",
+        alias="includeDeprecated",
+    )
     __properties: ClassVar[List[str]] = ["includeDeprecated"]
 
     model_config = ConfigDict(
@@ -68,8 +72,7 @@ class GetRuntimeByNameAndVersionQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +86,11 @@ class GetRuntimeByNameAndVersionQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "includeDeprecated": obj.get("includeDeprecated") if obj.get("includeDeprecated") is not None else True
-        })
+        _obj = cls.model_validate(
+            {
+                "includeDeprecated": obj.get("includeDeprecated")
+                if obj.get("includeDeprecated") is not None
+                else True
+            }
+        )
         return _obj

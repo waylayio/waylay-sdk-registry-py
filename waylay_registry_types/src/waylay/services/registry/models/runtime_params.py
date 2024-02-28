@@ -67,8 +67,7 @@ class RuntimeParams(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,7 +81,5 @@ class RuntimeParams(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name")
-        })
+        _obj = cls.model_validate({"name": obj.get("name")})
         return _obj

@@ -33,7 +33,9 @@ class StreamReady(BaseModel):
     """A message that acknowledges that the server will sent job state changes.."""
 
     event: EventAck
-    data: StrictStr = Field(description="A text message acknowledging what events will be forwarded.")
+    data: StrictStr = Field(
+        description="A text message acknowledging what events will be forwarded."
+    )
     __properties: ClassVar[List[str]] = ["event", "data"]
 
     model_config = ConfigDict(
@@ -70,8 +72,7 @@ class StreamReady(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,8 +86,5 @@ class StreamReady(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "event": obj.get("event"),
-            "data": obj.get("data")
-        })
+        _obj = cls.model_validate({"event": obj.get("event"), "data": obj.get("data")})
         return _obj

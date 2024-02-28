@@ -32,9 +32,18 @@ except ImportError:
 class FunctionEntityQuery(BaseModel):
     """Filter on function attributes that do not change across function versions.."""
 
-    name: Optional[StrictStr] = Field(default=None, description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).")
-    archive_format: Optional[List[ArchiveFormat]] = Field(default=None, description="Filter on the archive format of the function.", alias="archiveFormat")
-    runtime: Optional[List[StrictStr]] = Field(default=None, description="Filter on the runtime of the function.")
+    name: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+    )
+    archive_format: Optional[List[ArchiveFormat]] = Field(
+        default=None,
+        description="Filter on the archive format of the function.",
+        alias="archiveFormat",
+    )
+    runtime: Optional[List[StrictStr]] = Field(
+        default=None, description="Filter on the runtime of the function."
+    )
     __properties: ClassVar[List[str]] = ["name", "archiveFormat", "runtime"]
 
     model_config = ConfigDict(
@@ -71,8 +80,7 @@ class FunctionEntityQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,9 +94,11 @@ class FunctionEntityQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "archiveFormat": obj.get("archiveFormat"),
-            "runtime": obj.get("runtime")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "archiveFormat": obj.get("archiveFormat"),
+                "runtime": obj.get("runtime"),
+            }
+        )
         return _obj

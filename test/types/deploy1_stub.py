@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import datetime
-from typing import Union, Literal, List, Dict
 
 from waylay.services.registry.models.deploy1 import Deploy1
 
@@ -20,13 +19,6 @@ from .job_state_result_stub import JobStateResultStub
 from .function_ref_stub import FunctionRefStub
 
 from .job_and_function_hal_link_stub import JobAndFunctionHALLinkStub
-
-from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr, field_validator
-from pydantic import Field
-from waylay.services.registry.models.function_ref import FunctionRef
-from waylay.services.registry.models.job_and_function_hal_link import JobAndFunctionHALLink
-from waylay.services.registry.models.job_state_result import JobStateResult
 
 
 # some mappings that are needed for some <example> interpolations
@@ -41,27 +33,31 @@ class Deploy1Stub:
         include_optional: bool = False,
     ) -> Deploy1:
         """Create Deploy1 stub instance.
-            include_optional -- if `True`, optional properties are included.
+        include_optional -- if `True`, optional properties are included.
         """
 
         if include_optional:
             return Deploy1(
-                type='deploy',
-                operation='',
-                id='',
+                type="deploy",
+                operation="",
+                id="",
                 state=JobStateResultStub.create_instance(),
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                created_by='',
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                created_by="",
                 function=FunctionRefStub.create_instance(),
-                links=JobAndFunctionHALLinkStub.create_instance()
+                links=JobAndFunctionHALLinkStub.create_instance(),
             )
         else:
             return Deploy1(
-                type='deploy',
-                operation='',
-                id='',
+                type="deploy",
+                operation="",
+                id="",
                 state=JobStateResultStub.create_instance(),
-                created_at=datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
-                created_by='',
-                links=JobAndFunctionHALLinkStub.create_instance()
+                created_at=datetime.datetime.strptime(
+                    "2013-10-20 19:20:30.00", "%Y-%m-%d %H:%M:%S.%f"
+                ),
+                created_by="",
+                links=JobAndFunctionHALLinkStub.create_instance(),
             )

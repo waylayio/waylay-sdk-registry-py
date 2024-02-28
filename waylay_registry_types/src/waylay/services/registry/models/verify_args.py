@@ -32,19 +32,35 @@ except ImportError:
 class VerifyArgs(BaseModel):
     """Input arguments for an (openfaas) deployment verification job.."""
 
-    namespace: StrictStr = Field(description="The (openfaas) namespace for the target function.")
+    namespace: StrictStr = Field(
+        description="The (openfaas) namespace for the target function."
+    )
     endpoint: StrictStr = Field(description="The (openfaas) endpoint service name")
     runtime_name: StrictStr = Field(alias="runtimeName")
-    runtime_version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org", alias="runtimeVersion")
-    revision: Optional[StrictStr] = Field(default=None, description="The revision hash of the current (draft) function revision")
-    __properties: ClassVar[List[str]] = ["namespace", "endpoint", "runtimeName", "runtimeVersion", "revision"]
+    runtime_version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org",
+        alias="runtimeVersion",
+    )
+    revision: Optional[StrictStr] = Field(
+        default=None,
+        description="The revision hash of the current (draft) function revision",
+    )
+    __properties: ClassVar[List[str]] = [
+        "namespace",
+        "endpoint",
+        "runtimeName",
+        "runtimeVersion",
+        "revision",
+    ]
 
-    @field_validator('runtime_version')
+    @field_validator("runtime_version")
     @classmethod
     def runtime_version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
@@ -81,8 +97,7 @@ class VerifyArgs(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -96,11 +111,13 @@ class VerifyArgs(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "namespace": obj.get("namespace"),
-            "endpoint": obj.get("endpoint"),
-            "runtimeName": obj.get("runtimeName"),
-            "runtimeVersion": obj.get("runtimeVersion"),
-            "revision": obj.get("revision")
-        })
+        _obj = cls.model_validate(
+            {
+                "namespace": obj.get("namespace"),
+                "endpoint": obj.get("endpoint"),
+                "runtimeName": obj.get("runtimeName"),
+                "runtimeVersion": obj.get("runtimeVersion"),
+                "revision": obj.get("revision"),
+            }
+        )
         return _obj

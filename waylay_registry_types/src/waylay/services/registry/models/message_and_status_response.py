@@ -69,8 +69,7 @@ class MessageAndStatusResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +83,7 @@ class MessageAndStatusResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "message": obj.get("message"),
-            "statusCode": obj.get("statusCode")
-        })
+        _obj = cls.model_validate(
+            {"message": obj.get("message"), "statusCode": obj.get("statusCode")}
+        )
         return _obj

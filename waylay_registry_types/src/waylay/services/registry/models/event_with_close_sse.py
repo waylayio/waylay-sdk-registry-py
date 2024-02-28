@@ -11,27 +11,31 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 from ..models.job_event_sse import JobEventSSE
 from ..models.keep_alive_event_sse import KeepAliveEventSSE
 from ..models.stream_closing import StreamClosing
 from ..models.stream_ready import StreamReady
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import ConfigDict
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-EVENTWITHCLOSESSE_ANY_OF_SCHEMAS = ["JobEventSSE", "KeepAliveEventSSE", "StreamClosing", "StreamReady"]
+EVENTWITHCLOSESSE_ANY_OF_SCHEMAS = [
+    "JobEventSSE",
+    "KeepAliveEventSSE",
+    "StreamClosing",
+    "StreamReady",
+]
 
 
 class EventWithCloseSSE(BaseModel):
@@ -46,7 +50,9 @@ class EventWithCloseSSE(BaseModel):
     # data type: StreamClosing
     anyof_schema_4_validator: Optional[StreamClosing] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[JobEventSSE, KeepAliveEventSSE, StreamClosing, StreamReady]] = None
+        actual_instance: Optional[
+            Union[JobEventSSE, KeepAliveEventSSE, StreamClosing, StreamReady]
+        ] = None
     else:
         actual_instance: Any = None
     any_of_schemas: List[str] = EVENTWITHCLOSESSE_ANY_OF_SCHEMAS
@@ -60,18 +66,22 @@ class EventWithCloseSSE(BaseModel):
         """Create a EventWithCloseSSE model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = EventWithCloseSSE.model_construct()
+        instance = EventWithCloseSSE.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: StreamReady
         if not isinstance(v, StreamReady):
@@ -87,19 +97,26 @@ class EventWithCloseSSE(BaseModel):
 
         # validate data type: KeepAliveEventSSE
         if not isinstance(v, KeepAliveEventSSE):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `KeepAliveEventSSE`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `KeepAliveEventSSE`"
+            )
         else:
             return v
 
         # validate data type: StreamClosing
         if not isinstance(v, StreamClosing):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `StreamClosing`")
+            error_messages.append(
+                f"Error! Input type `{type(v)}` is not `StreamClosing`"
+            )
         else:
             return v
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in EventWithCloseSSE with anyOf schemas: JobEventSSE, KeepAliveEventSSE, StreamClosing, StreamReady. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in EventWithCloseSSE with anyOf schemas: JobEventSSE, KeepAliveEventSSE, StreamClosing, StreamReady. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -111,7 +128,7 @@ class EventWithCloseSSE(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # anyof_schema_1_validator: Optional[StreamReady] = None
         try:
@@ -140,7 +157,10 @@ class EventWithCloseSSE(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into EventWithCloseSSE with anyOf schemas: JobEventSSE, KeepAliveEventSSE, StreamClosing, StreamReady. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into EventWithCloseSSE with anyOf schemas: JobEventSSE, KeepAliveEventSSE, StreamClosing, StreamReady. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

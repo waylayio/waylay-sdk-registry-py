@@ -11,13 +11,12 @@ Do not edit the class manually.
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
 
 from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 from ..models.build import Build
 from ..models.deploy import Deploy
 from ..models.scale import Scale
@@ -25,8 +24,8 @@ from ..models.undeploy import Undeploy
 from ..models.verify import Verify
 
 from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
+from pydantic import ConfigDict
+
 try:
     from typing import Self
 except ImportError:
@@ -63,18 +62,22 @@ class AnyJobForFunction(BaseModel):
         """Create a AnyJobForFunction model instance."""
         if args:
             if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
+                raise ValueError(
+                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
+                )
             if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
+                raise ValueError(
+                    "If a position argument is used, keyword arguments cannot be used."
+                )
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
-    @field_validator('actual_instance')
+    @field_validator("actual_instance")
     @classmethod
     def actual_instance_must_validate_anyof(cls, v):
         """Validate the actual instance on deserialisation."""
-        instance = AnyJobForFunction.model_construct()
+        instance = AnyJobForFunction.model_construct()  # noqa: F841
         error_messages = []
         # validate data type: Build
         if not isinstance(v, Build):
@@ -108,7 +111,10 @@ class AnyJobForFunction(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in AnyJobForFunction with anyOf schemas: Build, Deploy, Scale, Undeploy, Verify. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when setting the actual_instance in AnyJobForFunction with anyOf schemas: Build, Deploy, Scale, Undeploy, Verify. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return v
 
@@ -120,7 +126,7 @@ class AnyJobForFunction(BaseModel):
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
+        instance = cls.model_construct()  # noqa: F841
         error_messages = []
         # anyof_schema_1_validator: Optional[Build] = None
         try:
@@ -155,7 +161,10 @@ class AnyJobForFunction(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into AnyJobForFunction with anyOf schemas: Build, Deploy, Scale, Undeploy, Verify. Details: " + ", ".join(error_messages))
+            raise ValueError(
+                "No match found when deserializing the JSON string into AnyJobForFunction with anyOf schemas: Build, Deploy, Scale, Undeploy, Verify. Details: "
+                + ", ".join(error_messages)
+            )
         else:
             return instance
 

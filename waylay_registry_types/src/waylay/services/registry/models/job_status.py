@@ -24,6 +24,8 @@ from ..models.job_status_progress import JobStatusProgress
 from ..models.parent_keys import ParentKeys
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -42,7 +44,17 @@ class JobStatus(BaseModel):
     failed_reason: Optional[StrictStr] = Field(default=None, alias="failedReason")
     parent: Optional[ParentKeys] = None
     delay: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties: ClassVar[List[str]] = ["id", "name", "progress", "attemptsMade", "finishedOn", "processedOn", "failedReason", "parent", "delay"]
+    __properties: ClassVar[List[str]] = [
+        "id",
+        "name",
+        "progress",
+        "attemptsMade",
+        "finishedOn",
+        "processedOn",
+        "failedReason",
+        "parent",
+        "delay",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -78,16 +90,15 @@ class JobStatus(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of progress
         if self.progress:
-            _dict['progress'] = self.progress.to_dict()
+            _dict["progress"] = self.progress.to_dict()
         # override the default output from pydantic by calling `to_dict()` of parent
         if self.parent:
-            _dict['parent'] = self.parent.to_dict()
+            _dict["parent"] = self.parent.to_dict()
         return _dict
 
     @classmethod
@@ -99,15 +110,25 @@ class JobStatus(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "progress": JobStatusProgress.from_dict(obj.get("progress")) if obj.get("progress") is not None else None,    # type: ignore
-            "attemptsMade": obj.get("attemptsMade"),
-            "finishedOn": obj.get("finishedOn"),
-            "processedOn": obj.get("processedOn"),
-            "failedReason": obj.get("failedReason"),
-            "parent": ParentKeys.from_dict(obj.get("parent")) if obj.get("parent") is not None else None,    # type: ignore
-            "delay": obj.get("delay")
-        })
+        _obj = cls.model_validate(
+            {
+                "id": obj.get("id"),
+                "name": obj.get("name"),
+                "progress": (
+                    JobStatusProgress.from_dict(cast(dict, obj.get("progress")))
+                    if obj.get("progress") is not None
+                    else None
+                ),
+                "attemptsMade": obj.get("attemptsMade"),
+                "finishedOn": obj.get("finishedOn"),
+                "processedOn": obj.get("processedOn"),
+                "failedReason": obj.get("failedReason"),
+                "parent": (
+                    ParentKeys.from_dict(cast(dict, obj.get("parent")))
+                    if obj.get("parent") is not None
+                    else None
+                ),
+                "delay": obj.get("delay"),
+            }
+        )
         return _obj

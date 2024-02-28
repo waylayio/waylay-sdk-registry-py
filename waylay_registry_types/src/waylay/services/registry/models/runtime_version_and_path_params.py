@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.semantic_version_range import SemanticVersionRange
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -32,7 +34,10 @@ except ImportError:
 class RuntimeVersionAndPathParams(BaseModel):
     """RuntimeVersionAndPathParams."""
 
-    wildcard: StrictStr = Field(description="Full path or path prefix of the asset within the archive", alias="*")
+    wildcard: StrictStr = Field(
+        description="Full path or path prefix of the asset within the archive",
+        alias="*",
+    )
     name: StrictStr
     version: SemanticVersionRange
     __properties: ClassVar[List[str]] = ["*", "name", "version"]
@@ -71,13 +76,12 @@ class RuntimeVersionAndPathParams(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of version
         if self.version:
-            _dict['version'] = self.version.to_dict()
+            _dict["version"] = self.version.to_dict()
         return _dict
 
     @classmethod
@@ -89,9 +93,15 @@ class RuntimeVersionAndPathParams(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "*": obj.get("*"),
-            "name": obj.get("name"),
-            "version": SemanticVersionRange.from_dict(obj.get("version")) if obj.get("version") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "*": obj.get("*"),
+                "name": obj.get("name"),
+                "version": (
+                    SemanticVersionRange.from_dict(cast(dict, obj.get("version")))
+                    if obj.get("version") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

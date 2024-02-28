@@ -19,9 +19,13 @@ from pydantic import ConfigDict
 
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel, StrictBool, StrictStr
-from ..models.invokable_webscript_response_entity_webscript import InvokableWebscriptResponseEntityWebscript
+from ..models.invokable_webscript_response_entity_webscript import (
+    InvokableWebscriptResponseEntityWebscript,
+)
 from ..models.status import Status
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -72,13 +76,12 @@ class InvokableWebscriptResponseEntity(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of webscript
         if self.webscript:
-            _dict['webscript'] = self.webscript.to_dict()
+            _dict["webscript"] = self.webscript.to_dict()
         return _dict
 
     @classmethod
@@ -90,10 +93,18 @@ class InvokableWebscriptResponseEntity(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "status": obj.get("status"),
-            "draft": obj.get("draft"),
-            "webscript": InvokableWebscriptResponseEntityWebscript.from_dict(obj.get("webscript")) if obj.get("webscript") is not None else None,    # type: ignore
-            "secret": obj.get("secret")
-        })
+        _obj = cls.model_validate(
+            {
+                "status": obj.get("status"),
+                "draft": obj.get("draft"),
+                "webscript": (
+                    InvokableWebscriptResponseEntityWebscript.from_dict(
+                        cast(dict, obj.get("webscript"))
+                    )
+                    if obj.get("webscript") is not None
+                    else None
+                ),
+                "secret": obj.get("secret"),
+            }
+        )
         return _obj

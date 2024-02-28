@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.job_cause import JobCause
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -36,7 +38,13 @@ class JobCauses(BaseModel):
     verify: Optional[JobCause] = None
     undeploy: Optional[JobCause] = None
     scale: Optional[JobCause] = None
-    __properties: ClassVar[List[str]] = ["build", "deploy", "verify", "undeploy", "scale"]
+    __properties: ClassVar[List[str]] = [
+        "build",
+        "deploy",
+        "verify",
+        "undeploy",
+        "scale",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -72,25 +80,24 @@ class JobCauses(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of build
         if self.build:
-            _dict['build'] = self.build.to_dict()
+            _dict["build"] = self.build.to_dict()
         # override the default output from pydantic by calling `to_dict()` of deploy
         if self.deploy:
-            _dict['deploy'] = self.deploy.to_dict()
+            _dict["deploy"] = self.deploy.to_dict()
         # override the default output from pydantic by calling `to_dict()` of verify
         if self.verify:
-            _dict['verify'] = self.verify.to_dict()
+            _dict["verify"] = self.verify.to_dict()
         # override the default output from pydantic by calling `to_dict()` of undeploy
         if self.undeploy:
-            _dict['undeploy'] = self.undeploy.to_dict()
+            _dict["undeploy"] = self.undeploy.to_dict()
         # override the default output from pydantic by calling `to_dict()` of scale
         if self.scale:
-            _dict['scale'] = self.scale.to_dict()
+            _dict["scale"] = self.scale.to_dict()
         return _dict
 
     @classmethod
@@ -102,11 +109,33 @@ class JobCauses(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "build": JobCause.from_dict(obj.get("build")) if obj.get("build") is not None else None,    # type: ignore
-            "deploy": JobCause.from_dict(obj.get("deploy")) if obj.get("deploy") is not None else None,    # type: ignore
-            "verify": JobCause.from_dict(obj.get("verify")) if obj.get("verify") is not None else None,    # type: ignore
-            "undeploy": JobCause.from_dict(obj.get("undeploy")) if obj.get("undeploy") is not None else None,    # type: ignore
-            "scale": JobCause.from_dict(obj.get("scale")) if obj.get("scale") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "build": (
+                    JobCause.from_dict(cast(dict, obj.get("build")))
+                    if obj.get("build") is not None
+                    else None
+                ),
+                "deploy": (
+                    JobCause.from_dict(cast(dict, obj.get("deploy")))
+                    if obj.get("deploy") is not None
+                    else None
+                ),
+                "verify": (
+                    JobCause.from_dict(cast(dict, obj.get("verify")))
+                    if obj.get("verify") is not None
+                    else None
+                ),
+                "undeploy": (
+                    JobCause.from_dict(cast(dict, obj.get("undeploy")))
+                    if obj.get("undeploy") is not None
+                    else None
+                ),
+                "scale": (
+                    JobCause.from_dict(cast(dict, obj.get("scale")))
+                    if obj.get("scale") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

@@ -68,8 +68,7 @@ class PlugTypeQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,7 +82,5 @@ class PlugTypeQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "type": obj.get("type")
-        })
+        _obj = cls.model_validate({"type": obj.get("type")})
         return _obj

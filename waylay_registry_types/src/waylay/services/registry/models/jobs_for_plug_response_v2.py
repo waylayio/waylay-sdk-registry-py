@@ -25,6 +25,8 @@ from ..models.function_ref import FunctionRef
 from ..models.jobs_for_plug_response_v2_links import JobsForPlugResponseV2Links
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -34,7 +36,9 @@ except ImportError:
 class JobsForPlugResponseV2(BaseModel):
     """Plug Jobs Found."""
 
-    jobs: List[AnyJobForFunction] = Field(description="Listing of jobs related to the function deployment. This includes active jobs, and the most recently failed job (per type) that was archived on the entity.")
+    jobs: List[AnyJobForFunction] = Field(
+        description="Listing of jobs related to the function deployment. This includes active jobs, and the most recently failed job (per type) that was archived on the entity."
+    )
     function: FunctionRef
     links: Optional[JobsForPlugResponseV2Links] = Field(default=None, alias="_links")
     __properties: ClassVar[List[str]] = ["jobs", "function", "_links"]
@@ -73,23 +77,22 @@ class JobsForPlugResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in jobs (list)
         _items = []
         if self.jobs:
-            for _item in self.jobs:  # type: ignore
+            for _item in cast(list, self.jobs):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['jobs'] = _items
+            _dict["jobs"] = _items
         # override the default output from pydantic by calling `to_dict()` of function
         if self.function:
-            _dict['function'] = self.function.to_dict()
+            _dict["function"] = self.function.to_dict()
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -101,9 +104,24 @@ class JobsForPlugResponseV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "jobs": [AnyJobForFunction.from_dict(_item) for _item in obj.get("jobs")] if obj.get("jobs") is not None else None,  # type: ignore
-            "function": FunctionRef.from_dict(obj.get("function")) if obj.get("function") is not None else None,    # type: ignore
-            "_links": JobsForPlugResponseV2Links.from_dict(obj.get("_links")) if obj.get("_links") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "jobs": [
+                    AnyJobForFunction.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("jobs"))
+                ]
+                if obj.get("jobs") is not None
+                else None,
+                "function": (
+                    FunctionRef.from_dict(cast(dict, obj.get("function")))
+                    if obj.get("function") is not None
+                    else None
+                ),
+                "_links": (
+                    JobsForPlugResponseV2Links.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

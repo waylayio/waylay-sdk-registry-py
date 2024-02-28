@@ -32,8 +32,12 @@ class BuildResult(BaseModel):
     """BuildResult."""
 
     digest: StrictStr = Field(description="SHA digest of the built image.")
-    log: Optional[List[StrictStr]] = Field(default=None, description="Detailed logs of the build steps.")
-    status: Optional[StrictStr] = Field(default=None, description="Outcome of the build.")
+    log: Optional[List[StrictStr]] = Field(
+        default=None, description="Detailed logs of the build steps."
+    )
+    status: Optional[StrictStr] = Field(
+        default=None, description="Outcome of the build."
+    )
     __properties: ClassVar[List[str]] = ["digest", "log", "status"]
 
     model_config = ConfigDict(
@@ -70,8 +74,7 @@ class BuildResult(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,9 +88,11 @@ class BuildResult(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "digest": obj.get("digest"),
-            "log": obj.get("log"),
-            "status": obj.get("status")
-        })
+        _obj = cls.model_validate(
+            {
+                "digest": obj.get("digest"),
+                "log": obj.get("log"),
+                "status": obj.get("status"),
+            }
+        )
         return _obj

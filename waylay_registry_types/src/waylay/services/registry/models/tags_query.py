@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.tags_filter import TagsFilter
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -68,13 +70,12 @@ class TagsQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of tags
         if self.tags:
-            _dict['tags'] = self.tags.to_dict()
+            _dict["tags"] = self.tags.to_dict()
         return _dict
 
     @classmethod
@@ -86,7 +87,13 @@ class TagsQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "tags": TagsFilter.from_dict(obj.get("tags")) if obj.get("tags") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "tags": (
+                    TagsFilter.from_dict(cast(dict, obj.get("tags")))
+                    if obj.get("tags") is not None
+                    else None
+                )
+            }
+        )
         return _obj

@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,10 +28,10 @@ class DeprecatePreviousPolicy(str, Enum):
     """
     allowed enum values
     """
-    NONE = 'none'
-    ALL = 'all'
-    PATCH = 'patch'
-    MINOR = 'minor'
+    NONE = "none"
+    ALL = "all"
+    PATCH = "patch"
+    MINOR = "minor"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

@@ -23,6 +23,8 @@ from pydantic import Field
 from ..models.documentation_property import DocumentationProperty
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -33,9 +35,15 @@ class Documentation(BaseModel):
     """Documentation."""
 
     description: Optional[StrictStr] = None
-    states: Optional[List[DocumentationProperty]] = Field(default=None, description="Documentation of the plug states.")
-    input: Optional[List[DocumentationProperty]] = Field(default=None, description="Documentation of the plug input parameters.")
-    output: Optional[List[DocumentationProperty]] = Field(default=None, description="Documentation of the plug response parameters.")
+    states: Optional[List[DocumentationProperty]] = Field(
+        default=None, description="Documentation of the plug states."
+    )
+    input: Optional[List[DocumentationProperty]] = Field(
+        default=None, description="Documentation of the plug input parameters."
+    )
+    output: Optional[List[DocumentationProperty]] = Field(
+        default=None, description="Documentation of the plug response parameters."
+    )
     __properties: ClassVar[List[str]] = ["description", "states", "input", "output"]
 
     model_config = ConfigDict(
@@ -72,31 +80,30 @@ class Documentation(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in states (list)
         _items = []
         if self.states:
-            for _item in self.states:  # type: ignore
+            for _item in cast(list, self.states):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['states'] = _items
+            _dict["states"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in input (list)
         _items = []
         if self.input:
-            for _item in self.input:  # type: ignore
+            for _item in cast(list, self.input):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['input'] = _items
+            _dict["input"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in output (list)
         _items = []
         if self.output:
-            for _item in self.output:  # type: ignore
+            for _item in cast(list, self.output):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['output'] = _items
+            _dict["output"] = _items
         return _dict
 
     @classmethod
@@ -108,10 +115,27 @@ class Documentation(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "description": obj.get("description"),
-            "states": [DocumentationProperty.from_dict(_item) for _item in obj.get("states")] if obj.get("states") is not None else None,  # type: ignore
-            "input": [DocumentationProperty.from_dict(_item) for _item in obj.get("input")] if obj.get("input") is not None else None,  # type: ignore
-            "output": [DocumentationProperty.from_dict(_item) for _item in obj.get("output")] if obj.get("output") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "description": obj.get("description"),
+                "states": [
+                    DocumentationProperty.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("states"))
+                ]
+                if obj.get("states") is not None
+                else None,
+                "input": [
+                    DocumentationProperty.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("input"))
+                ]
+                if obj.get("input") is not None
+                else None,
+                "output": [
+                    DocumentationProperty.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("output"))
+                ]
+                if obj.get("output") is not None
+                else None,
+            }
+        )
         return _obj

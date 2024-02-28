@@ -20,10 +20,14 @@ from pydantic import ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
-from ..models.legacy_plug_script_meta_raw_data_inner import LegacyPlugScriptMetaRawDataInner
+from ..models.legacy_plug_script_meta_raw_data_inner import (
+    LegacyPlugScriptMetaRawDataInner,
+)
 from ..models.legacy_required_properties_inner import LegacyRequiredPropertiesInner
 from ..models.tag import Tag
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -42,8 +46,20 @@ class LegacyPlugScriptMeta(BaseModel):
     friendly_name: Optional[StrictStr] = Field(default=None, alias="friendlyName")
     supported_states: List[StrictStr] = Field(alias="supportedStates")
     raw_data: List[LegacyPlugScriptMetaRawDataInner] = Field(alias="rawData")
-    required_properties: Optional[List[LegacyRequiredPropertiesInner]] = Field(default=None, alias="requiredProperties")
-    __properties: ClassVar[List[str]] = ["author", "description", "category", "tags", "iconURL", "friendlyName", "supportedStates", "rawData", "requiredProperties"]
+    required_properties: Optional[List[LegacyRequiredPropertiesInner]] = Field(
+        default=None, alias="requiredProperties"
+    )
+    __properties: ClassVar[List[str]] = [
+        "author",
+        "description",
+        "category",
+        "tags",
+        "iconURL",
+        "friendlyName",
+        "supportedStates",
+        "rawData",
+        "requiredProperties",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,31 +95,30 @@ class LegacyPlugScriptMeta(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
         _items = []
         if self.tags:
-            for _item in self.tags:  # type: ignore
+            for _item in cast(list, self.tags):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['tags'] = _items
+            _dict["tags"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in raw_data (list)
         _items = []
         if self.raw_data:
-            for _item in self.raw_data:  # type: ignore
+            for _item in cast(list, self.raw_data):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['rawData'] = _items
+            _dict["rawData"] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in required_properties (list)
         _items = []
         if self.required_properties:
-            for _item in self.required_properties:  # type: ignore
+            for _item in cast(list, self.required_properties):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['requiredProperties'] = _items
+            _dict["requiredProperties"] = _items
         return _dict
 
     @classmethod
@@ -115,15 +130,32 @@ class LegacyPlugScriptMeta(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "author": obj.get("author"),
-            "description": obj.get("description"),
-            "category": obj.get("category"),
-            "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,  # type: ignore
-            "iconURL": obj.get("iconURL"),
-            "friendlyName": obj.get("friendlyName"),
-            "supportedStates": obj.get("supportedStates"),
-            "rawData": [LegacyPlugScriptMetaRawDataInner.from_dict(_item) for _item in obj.get("rawData")] if obj.get("rawData") is not None else None,  # type: ignore
-            "requiredProperties": [LegacyRequiredPropertiesInner.from_dict(_item) for _item in obj.get("requiredProperties")] if obj.get("requiredProperties") is not None else None  # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "author": obj.get("author"),
+                "description": obj.get("description"),
+                "category": obj.get("category"),
+                "tags": [
+                    Tag.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("tags"))
+                ]
+                if obj.get("tags") is not None
+                else None,
+                "iconURL": obj.get("iconURL"),
+                "friendlyName": obj.get("friendlyName"),
+                "supportedStates": obj.get("supportedStates"),
+                "rawData": [
+                    LegacyPlugScriptMetaRawDataInner.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("rawData"))
+                ]
+                if obj.get("rawData") is not None
+                else None,
+                "requiredProperties": [
+                    LegacyRequiredPropertiesInner.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("requiredProperties"))
+                ]
+                if obj.get("requiredProperties") is not None
+                else None,
+            }
+        )
         return _obj

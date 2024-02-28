@@ -32,7 +32,9 @@ except ImportError:
 class DeprecatePreviousQuery(BaseModel):
     """DeprecatePreviousQuery."""
 
-    deprecate_previous: Optional[DeprecatePreviousPolicy] = Field(default=None, alias="deprecatePrevious")
+    deprecate_previous: Optional[DeprecatePreviousPolicy] = Field(
+        default=None, alias="deprecatePrevious"
+    )
     __properties: ClassVar[List[str]] = ["deprecatePrevious"]
 
     model_config = ConfigDict(
@@ -69,8 +71,7 @@ class DeprecatePreviousQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,7 +85,5 @@ class DeprecatePreviousQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "deprecatePrevious": obj.get("deprecatePrevious")
-        })
+        _obj = cls.model_validate({"deprecatePrevious": obj.get("deprecatePrevious")})
         return _obj

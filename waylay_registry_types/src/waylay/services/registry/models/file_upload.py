@@ -67,8 +67,7 @@ class FileUpload(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,7 +81,5 @@ class FileUpload(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "file": obj.get("file")
-        })
+        _obj = cls.model_validate({"file": obj.get("file")})
         return _obj

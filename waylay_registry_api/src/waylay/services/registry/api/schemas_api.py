@@ -10,23 +10,18 @@ Do not edit the class manually.
 
 
 from __future__ import annotations  # for Python 3.7–3.9
-import io
 import warnings
 
-import enum
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt, StrictBool, StrictBytes
-from typing import Dict, List, Literal, Optional, Tuple, Union, Any, overload, TYPE_CHECKING
-from typing_extensions import NotRequired, TypedDict
+from pydantic import validate_call, Field, StrictStr, StrictBool
+from typing import Dict, Literal, Optional, Union, Any, overload, TYPE_CHECKING
 
-from waylay.sdk.api import ApiValueError
 
 try:
     from typing import Annotated
 except ImportError:
-    from typing_extensions import Annotated  # type: ignore
+    from typing_extensions import Annotated  # type: ignore # noqa: F401
 
 if TYPE_CHECKING:
-
     from waylay.services.registry.models import FunctionType
     from waylay.services.registry.models import AssetRole
 
@@ -35,7 +30,6 @@ if TYPE_CHECKING:
 
 
 try:
-
     from waylay.services.registry.models import FunctionType
     from waylay.services.registry.models import AssetRole
 
@@ -47,7 +41,6 @@ except ImportError:
     types_available = False
 
     if not TYPE_CHECKING:
-
         FunctionType = str
         AssetRole = str
 
@@ -55,9 +48,7 @@ except ImportError:
         GetQuery = Dict
 
 
-from waylay.sdk.api import (
-    ApiClient, ApiResponse, RESTTimeout
-)
+from waylay.sdk.api import ApiClient, ApiResponse, RESTTimeout
 
 
 class SchemasApi:
@@ -83,7 +74,8 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> Dict[str, object]: ...
+    ) -> Dict[str, object]:
+        ...
 
     @overload
     async def get_by_role(
@@ -95,7 +87,8 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[Dict[str, object]]: ...
+    ) -> ApiResponse[Dict[str, object]]:
+        ...
 
     @validate_call
     async def get_by_role(
@@ -129,7 +122,10 @@ class SchemasApi:
         :type _headers: dict, optional
         :return: Returns the result object.
         """
-        warnings.warn("GET /registry/v2/schemas/{functionType}/{role}/schema is deprecated.", DeprecationWarning)
+        warnings.warn(
+            "GET /registry/v2/schemas/{functionType}/{role}/schema is deprecated.",
+            DeprecationWarning,
+        )
 
         _request_params = self._get_by_role_serialize(
             function_type=function_type,
@@ -141,11 +137,10 @@ class SchemasApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Dict[str, object]",
+            "200": "Dict[str, object]",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -162,19 +157,20 @@ class SchemasApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if function_type is not None:
-            _path_params['functionType'] = function_type.value
+            _path_params["functionType"] = function_type.value
         if role is not None:
-            _path_params['role'] = role.value
+            _path_params["role"] = role.value
         # process the query parameters
         if query is not None:
             pass
@@ -182,8 +178,8 @@ class SchemasApi:
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/schemas/{functionType}/{role}/schema',
+            method="GET",
+            resource_path="/registry/v2/schemas/{functionType}/{role}/schema",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -200,7 +196,8 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
-    ) -> Dict[str, object]: ...
+    ) -> Dict[str, object]:
+        ...
 
     @overload
     async def get(
@@ -211,7 +208,8 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
-    ) -> ApiResponse[Dict[str, object]]: ...
+    ) -> ApiResponse[Dict[str, object]]:
+        ...
 
     @validate_call
     async def get(
@@ -252,11 +250,10 @@ class SchemasApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Dict[str, object]",
+            "200": "Dict[str, object]",
         }
         response_data = await self._api_client.call_api(
-            **_request_params,
-            _request_timeout=_request_timeout
+            **_request_params, _request_timeout=_request_timeout
         )
         result = self._api_client.response_deserialize(
             response_data=response_data,
@@ -272,17 +269,18 @@ class SchemasApi:
         query,
         _headers,
     ) -> dict[str, Any]:
-
         _path_params: Dict[str, str] = {}
         _query_params: Dict[str, Any] = {}
-        _header_params: Dict[str, Optional[str]] = {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        _header_params: Dict[str, Optional[str]] = (
+            {k.lower(): v for k, v in _headers.items()} if _headers else {}
+        )
         _form_params: Dict[str, str] = {}
         _files: Dict[str, str] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
         if schema_id is not None:
-            _path_params['schemaId'] = schema_id
+            _path_params["schemaId"] = schema_id
         # process the query parameters
         if query is not None:
             pass
@@ -290,8 +288,8 @@ class SchemasApi:
         # process the body parameter
 
         return self._api_client.param_serialize(
-            method='GET',
-            resource_path='/registry/v2/schemas/{schemaId}',
+            method="GET",
+            resource_path="/registry/v2/schemas/{schemaId}",
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

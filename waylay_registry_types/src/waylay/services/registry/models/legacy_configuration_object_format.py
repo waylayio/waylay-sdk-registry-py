@@ -69,8 +69,7 @@ class LegacyConfigurationObjectFormat(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +83,7 @@ class LegacyConfigurationObjectFormat(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "values": obj.get("values")
-        })
+        _obj = cls.model_validate(
+            {"type": obj.get("type"), "values": obj.get("values")}
+        )
         return _obj

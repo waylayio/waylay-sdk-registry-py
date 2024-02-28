@@ -18,11 +18,13 @@ from pydantic import ConfigDict
 
 
 from typing import Any, ClassVar, Dict, List
-from pydantic import BaseModel, StrictStr, field_validator
+from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from typing_extensions import Annotated
 from ..models.job_hal_links import JobHALLinks
 
+
+from typing import cast
 
 try:
     from typing import Self
@@ -35,7 +37,9 @@ class UndeploySubmittedResponseV2(BaseModel):
 
     message: StrictStr
     links: JobHALLinks = Field(alias="_links")
-    versions: List[Annotated[str, Field(strict=True)]] = Field(description="The versions for which undeployment and/or removal is initiated.")
+    versions: List[Annotated[str, Field(strict=True)]] = Field(
+        description="The versions for which undeployment and/or removal is initiated."
+    )
     __properties: ClassVar[List[str]] = ["message", "_links", "versions"]
 
     model_config = ConfigDict(
@@ -72,13 +76,12 @@ class UndeploySubmittedResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -90,9 +93,15 @@ class UndeploySubmittedResponseV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "message": obj.get("message"),
-            "_links": JobHALLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "versions": obj.get("versions")
-        })
+        _obj = cls.model_validate(
+            {
+                "message": obj.get("message"),
+                "_links": (
+                    JobHALLinks.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+                "versions": obj.get("versions"),
+            }
+        )
         return _obj

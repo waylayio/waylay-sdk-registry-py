@@ -71,8 +71,7 @@ class BatchArgs(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -86,9 +85,11 @@ class BatchArgs(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "plugName": obj.get("plugName"),
-            "functionType": obj.get("functionType"),
-            "childType": obj.get("childType")
-        })
+        _obj = cls.model_validate(
+            {
+                "plugName": obj.get("plugName"),
+                "functionType": obj.get("functionType"),
+                "childType": obj.get("childType"),
+            }
+        )
         return _obj

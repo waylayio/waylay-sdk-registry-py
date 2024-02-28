@@ -25,6 +25,8 @@ from ..models.job_reference import JobReference
 from ..models.job_status_and_entity_hal_links import JobStatusAndEntityHALLinks
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -39,7 +41,13 @@ class JobEventResponseWaitingChildrenEventData(BaseModel):
     data: Dict[str, Any]
     timestamp: datetime = Field(description="Timestamp of the event")
     function: FunctionRef
-    __properties: ClassVar[List[str]] = ["_links", "job", "data", "timestamp", "function"]
+    __properties: ClassVar[List[str]] = [
+        "_links",
+        "job",
+        "data",
+        "timestamp",
+        "function",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -75,19 +83,18 @@ class JobEventResponseWaitingChildrenEventData(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         # override the default output from pydantic by calling `to_dict()` of job
         if self.job:
-            _dict['job'] = self.job.to_dict()
+            _dict["job"] = self.job.to_dict()
         # override the default output from pydantic by calling `to_dict()` of function
         if self.function:
-            _dict['function'] = self.function.to_dict()
+            _dict["function"] = self.function.to_dict()
         return _dict
 
     @classmethod
@@ -99,11 +106,25 @@ class JobEventResponseWaitingChildrenEventData(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "_links": JobStatusAndEntityHALLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "job": JobReference.from_dict(obj.get("job")) if obj.get("job") is not None else None,    # type: ignore
-            "data": obj.get("data"),
-            "timestamp": obj.get("timestamp"),
-            "function": FunctionRef.from_dict(obj.get("function")) if obj.get("function") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "_links": (
+                    JobStatusAndEntityHALLinks.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+                "job": (
+                    JobReference.from_dict(cast(dict, obj.get("job")))
+                    if obj.get("job") is not None
+                    else None
+                ),
+                "data": obj.get("data"),
+                "timestamp": obj.get("timestamp"),
+                "function": (
+                    FunctionRef.from_dict(cast(dict, obj.get("function")))
+                    if obj.get("function") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

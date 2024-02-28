@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,15 +28,15 @@ class Status(str, Enum):
     """
     allowed enum values
     """
-    REGISTERED = 'registered'
-    RUNNING = 'running'
-    PENDING = 'pending'
-    DEPLOYED = 'deployed'
-    UNHEALTHY = 'unhealthy'
-    KILLED = 'killed'
-    FAILED = 'failed'
-    UNDEPLOYING = 'undeploying'
-    UNDEPLOYED = 'undeployed'
+    REGISTERED = "registered"
+    RUNNING = "running"
+    PENDING = "pending"
+    DEPLOYED = "deployed"
+    UNHEALTHY = "unhealthy"
+    KILLED = "killed"
+    FAILED = "failed"
+    UNDEPLOYING = "undeploying"
+    UNDEPLOYED = "undeployed"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

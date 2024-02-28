@@ -10,7 +10,7 @@ Do not edit the class manually.
 
 
 import pytest
-from typing import Dict, List
+from typing import Dict
 from pytest_httpx import HTTPXMock
 import json
 from waylay.sdk import ApiClient, WaylayClient
@@ -37,9 +37,11 @@ def test_registered(waylay_client: WaylayClient):
 
 
 @pytest.mark.asyncio
-async def test_get_by_role(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_get_by_role(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for get_by_role
-        Get Asset Schema
+    Get Asset Schema
     """
     # set path params
     functionType = FunctionTypeStub.create_instance().value
@@ -49,15 +51,14 @@ async def test_get_by_role(service: RegistryService, gateway_url: str, httpx_moc
     mock_response = {}
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/schemas/{functionType}/{role}/schema",
+        "url": gateway_url + f"/registry/v2/schemas/{functionType}/{role}/schema",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'function_type': functionType,
-        'role': role,
-
+        "function_type": functionType,
+        "role": role,
     }
     resp = await service.schemas.get_by_role(**kwargs)
     assert isinstance(resp, Dict)
@@ -66,22 +67,21 @@ async def test_get_by_role(service: RegistryService, gateway_url: str, httpx_moc
 @pytest.mark.asyncio
 async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
-        Get Asset Schema
+    Get Asset Schema
     """
     # set path params
-    schemaId = 'schema_id_example'
+    schemaId = "schema_id_example"
 
     mock_response = {}
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/schemas/{schemaId}",
+        "url": gateway_url + f"/registry/v2/schemas/{schemaId}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'schema_id': schemaId,
-
+        "schema_id": schemaId,
     }
     resp = await service.schemas.get(**kwargs)
     assert isinstance(resp, Dict)

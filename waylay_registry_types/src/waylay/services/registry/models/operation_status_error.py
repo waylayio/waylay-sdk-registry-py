@@ -70,8 +70,7 @@ class OperationStatusError(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,10 +84,12 @@ class OperationStatusError(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "message": obj.get("message"),
-            "stack": obj.get("stack"),
-            "code": obj.get("code")
-        })
+        _obj = cls.model_validate(
+            {
+                "name": obj.get("name"),
+                "message": obj.get("message"),
+                "stack": obj.get("stack"),
+                "code": obj.get("code"),
+            }
+        )
         return _obj

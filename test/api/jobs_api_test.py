@@ -10,7 +10,6 @@ Do not edit the class manually.
 
 
 import pytest
-from typing import Dict, List
 from pytest_httpx import HTTPXMock
 import json
 from waylay.sdk import ApiClient, WaylayClient
@@ -48,23 +47,23 @@ def test_registered(waylay_client: WaylayClient):
 
 
 @pytest.mark.asyncio
-async def test_events(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+async def test_events(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
     """Test case for events
-        Stream Events
+    Stream Events
     """
     # set path params
 
     mock_response = EventWithCloseSSEStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/jobs/events",
+        "url": gateway_url + f"/registry/v2/jobs/events",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {
-
-    }
+    kwargs = {}
     resp = await service.jobs.events(**kwargs)
     assert isinstance(resp, EventWithCloseSSE)
 
@@ -72,25 +71,24 @@ async def test_events(service: RegistryService, gateway_url: str, httpx_mock: HT
 @pytest.mark.asyncio
 async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
-        Get Job
+    Get Job
     """
     # set path params
     type = JobTypeStub.create_instance().value
 
-    id = 'id_example'
+    id = "id_example"
 
     mock_response = JobResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/jobs/{type}/{id}",
+        "url": gateway_url + f"/registry/v2/jobs/{type}/{id}",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        'type': type,
-        'id': id,
-
+        "type": type,
+        "id": id,
     }
     resp = await service.jobs.get(**kwargs)
     assert isinstance(resp, JobResponse)
@@ -99,20 +97,18 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
 @pytest.mark.asyncio
 async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list
-        List Jobs
+    List Jobs
     """
     # set path params
 
     mock_response = JobsResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": gateway_url + f"/registry/v2/jobs/",
+        "url": gateway_url + f"/registry/v2/jobs/",  # noqa: F541
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {
-
-    }
+    kwargs = {}
     resp = await service.jobs.list(**kwargs)
     assert isinstance(resp, JobsResponse)

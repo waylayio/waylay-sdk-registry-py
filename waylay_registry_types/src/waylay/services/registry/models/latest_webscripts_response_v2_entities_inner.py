@@ -28,6 +28,8 @@ from ..models.update_record import UpdateRecord
 from ..models.webscript_manifest import WebscriptManifest
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -38,19 +40,51 @@ class LatestWebscriptsResponseV2EntitiesInner(BaseModel):
     """LatestWebscriptsResponseV2EntitiesInner."""
 
     links: InvokeHALLink = Field(alias="_links")
-    created_by: StrictStr = Field(description="The user that created this entity.", alias="createdBy")
-    created_at: datetime = Field(description="The timestamp at which this entity was created.", alias="createdAt")
-    updated_by: StrictStr = Field(description="The user that last updated this entity.", alias="updatedBy")
-    updated_at: datetime = Field(description="The timestamp at which this entity was last updated.", alias="updatedAt")
-    updates: List[UpdateRecord] = Field(description="The audit logs corresponding to the latest modifying operations on this entity.")
+    created_by: StrictStr = Field(
+        description="The user that created this entity.", alias="createdBy"
+    )
+    created_at: datetime = Field(
+        description="The timestamp at which this entity was created.", alias="createdAt"
+    )
+    updated_by: StrictStr = Field(
+        description="The user that last updated this entity.", alias="updatedBy"
+    )
+    updated_at: datetime = Field(
+        description="The timestamp at which this entity was last updated.",
+        alias="updatedAt",
+    )
+    updates: List[UpdateRecord] = Field(
+        description="The audit logs corresponding to the latest modifying operations on this entity."
+    )
     status: Status
     failure_reason: Optional[FailureReason] = Field(default=None, alias="failureReason")
     runtime: RuntimeAttributes
-    deprecated: StrictBool = Field(description="If <code>true</code> this function is deprecated and removed from regular listings.")
-    draft: StrictBool = Field(description="If <code>true</code> this function is a draft function and it's assets are still mutable.")
+    deprecated: StrictBool = Field(
+        description="If <code>true</code> this function is deprecated and removed from regular listings."
+    )
+    draft: StrictBool = Field(
+        description="If <code>true</code> this function is a draft function and it's assets are still mutable."
+    )
     webscript: WebscriptManifest
-    secret: Optional[StrictStr] = Field(default=None, description="The secret for this webscript deployment. This is <code>null</code> when <code>allowHmac=false</code> in the webscript specificaton.")
-    __properties: ClassVar[List[str]] = ["_links", "createdBy", "createdAt", "updatedBy", "updatedAt", "updates", "status", "failureReason", "runtime", "deprecated", "draft", "webscript", "secret"]
+    secret: Optional[StrictStr] = Field(
+        default=None,
+        description="The secret for this webscript deployment. This is <code>null</code> when <code>allowHmac=false</code> in the webscript specificaton.",
+    )
+    __properties: ClassVar[List[str]] = [
+        "_links",
+        "createdBy",
+        "createdAt",
+        "updatedBy",
+        "updatedAt",
+        "updates",
+        "status",
+        "failureReason",
+        "runtime",
+        "deprecated",
+        "draft",
+        "webscript",
+        "secret",
+    ]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,29 +120,28 @@ class LatestWebscriptsResponseV2EntitiesInner(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in updates (list)
         _items = []
         if self.updates:
-            for _item in self.updates:  # type: ignore
+            for _item in cast(list, self.updates):
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['updates'] = _items
+            _dict["updates"] = _items
         # override the default output from pydantic by calling `to_dict()` of failure_reason
         if self.failure_reason:
-            _dict['failureReason'] = self.failure_reason.to_dict()
+            _dict["failureReason"] = self.failure_reason.to_dict()
         # override the default output from pydantic by calling `to_dict()` of runtime
         if self.runtime:
-            _dict['runtime'] = self.runtime.to_dict()
+            _dict["runtime"] = self.runtime.to_dict()
         # override the default output from pydantic by calling `to_dict()` of webscript
         if self.webscript:
-            _dict['webscript'] = self.webscript.to_dict()
+            _dict["webscript"] = self.webscript.to_dict()
         return _dict
 
     @classmethod
@@ -120,19 +153,42 @@ class LatestWebscriptsResponseV2EntitiesInner(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "_links": InvokeHALLink.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "createdBy": obj.get("createdBy"),
-            "createdAt": obj.get("createdAt"),
-            "updatedBy": obj.get("updatedBy"),
-            "updatedAt": obj.get("updatedAt"),
-            "updates": [UpdateRecord.from_dict(_item) for _item in obj.get("updates")] if obj.get("updates") is not None else None,  # type: ignore
-            "status": obj.get("status"),
-            "failureReason": FailureReason.from_dict(obj.get("failureReason")) if obj.get("failureReason") is not None else None,    # type: ignore
-            "runtime": RuntimeAttributes.from_dict(obj.get("runtime")) if obj.get("runtime") is not None else None,    # type: ignore
-            "deprecated": obj.get("deprecated"),
-            "draft": obj.get("draft"),
-            "webscript": WebscriptManifest.from_dict(obj.get("webscript")) if obj.get("webscript") is not None else None,    # type: ignore
-            "secret": obj.get("secret")
-        })
+        _obj = cls.model_validate(
+            {
+                "_links": (
+                    InvokeHALLink.from_dict(cast(dict, obj.get("_links")))
+                    if obj.get("_links") is not None
+                    else None
+                ),
+                "createdBy": obj.get("createdBy"),
+                "createdAt": obj.get("createdAt"),
+                "updatedBy": obj.get("updatedBy"),
+                "updatedAt": obj.get("updatedAt"),
+                "updates": [
+                    UpdateRecord.from_dict(cast(dict, _item))
+                    for _item in cast(list, obj.get("updates"))
+                ]
+                if obj.get("updates") is not None
+                else None,
+                "status": obj.get("status"),
+                "failureReason": (
+                    FailureReason.from_dict(cast(dict, obj.get("failureReason")))
+                    if obj.get("failureReason") is not None
+                    else None
+                ),
+                "runtime": (
+                    RuntimeAttributes.from_dict(cast(dict, obj.get("runtime")))
+                    if obj.get("runtime") is not None
+                    else None
+                ),
+                "deprecated": obj.get("deprecated"),
+                "draft": obj.get("draft"),
+                "webscript": (
+                    WebscriptManifest.from_dict(cast(dict, obj.get("webscript")))
+                    if obj.get("webscript") is not None
+                    else None
+                ),
+                "secret": obj.get("secret"),
+            }
+        )
         return _obj

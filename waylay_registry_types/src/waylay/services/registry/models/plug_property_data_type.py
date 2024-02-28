@@ -12,7 +12,6 @@ Do not edit the class manually.
 
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
@@ -29,13 +28,13 @@ class PlugPropertyDataType(str, Enum):
     """
     allowed enum values
     """
-    STRING = 'string'
-    INTEGER = 'integer'
-    LONG = 'long'
-    FLOAT = 'float'
-    DOUBLE = 'double'
-    BOOLEAN = 'boolean'
-    OBJECT = 'object'
+    STRING = "string"
+    INTEGER = "integer"
+    LONG = "long"
+    FLOAT = "float"
+    DOUBLE = "double"
+    BOOLEAN = "boolean"
+    OBJECT = "object"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

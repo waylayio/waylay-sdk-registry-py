@@ -23,6 +23,8 @@ from ..models.function_meta import FunctionMeta
 from ..models.plug_type import PlugType
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -72,13 +74,12 @@ class LegacyDebugPlugRequest(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of metadata
         if self.metadata:
-            _dict['metadata'] = self.metadata.to_dict()
+            _dict["metadata"] = self.metadata.to_dict()
         return _dict
 
     @classmethod
@@ -90,10 +91,16 @@ class LegacyDebugPlugRequest(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "script": obj.get("script"),
-            "dependencies": obj.get("dependencies"),
-            "metadata": FunctionMeta.from_dict(obj.get("metadata")) if obj.get("metadata") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "type": obj.get("type"),
+                "script": obj.get("script"),
+                "dependencies": obj.get("dependencies"),
+                "metadata": (
+                    FunctionMeta.from_dict(cast(dict, obj.get("metadata")))
+                    if obj.get("metadata") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

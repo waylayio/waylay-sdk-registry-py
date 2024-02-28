@@ -31,8 +31,14 @@ except ImportError:
 class TagQuery(BaseModel):
     """TagQuery."""
 
-    name: Optional[StrictStr] = Field(default=None, description="If set, filters on the <code>name</code> of a tag. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive.")
-    color: Optional[StrictStr] = Field(default=None, description="If set, filters on the <code>color</code> of a tag. Uses an exact match.")
+    name: Optional[StrictStr] = Field(
+        default=None,
+        description="If set, filters on the <code>name</code> of a tag. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive.",
+    )
+    color: Optional[StrictStr] = Field(
+        default=None,
+        description="If set, filters on the <code>color</code> of a tag. Uses an exact match.",
+    )
     __properties: ClassVar[List[str]] = ["name", "color"]
 
     model_config = ConfigDict(
@@ -69,8 +75,7 @@ class TagQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,8 +89,5 @@ class TagQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "color": obj.get("color")
-        })
+        _obj = cls.model_validate({"name": obj.get("name"), "color": obj.get("color")})
         return _obj

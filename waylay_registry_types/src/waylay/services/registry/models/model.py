@@ -22,6 +22,8 @@ from pydantic import BaseModel
 from ..models.hal_link import HALLink
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -69,16 +71,15 @@ class Model(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of event
         if self.event:
-            _dict['event'] = self.event.to_dict()
+            _dict["event"] = self.event.to_dict()
         # override the default output from pydantic by calling `to_dict()` of model
         if self.model:
-            _dict['model'] = self.model.to_dict()
+            _dict["model"] = self.model.to_dict()
         return _dict
 
     @classmethod
@@ -90,8 +91,18 @@ class Model(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "event": HALLink.from_dict(obj.get("event")) if obj.get("event") is not None else None,    # type: ignore
-            "model": HALLink.from_dict(obj.get("model")) if obj.get("model") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "event": (
+                    HALLink.from_dict(cast(dict, obj.get("event")))
+                    if obj.get("event") is not None
+                    else None
+                ),
+                "model": (
+                    HALLink.from_dict(cast(dict, obj.get("model")))
+                    if obj.get("model") is not None
+                    else None
+                ),
+            }
+        )
         return _obj

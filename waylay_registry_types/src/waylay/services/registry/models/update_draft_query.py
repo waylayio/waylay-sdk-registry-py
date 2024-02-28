@@ -31,9 +31,18 @@ except ImportError:
 class UpdateDraftQuery(BaseModel):
     """UpdateDraftQuery."""
 
-    comment: Optional[StrictStr] = Field(default=None, description="An optional user-specified comment corresponding to the operation.")
-    var_async: Optional[StrictBool] = Field(default=True, description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.", alias="async")
-    chown: StrictBool = Field(description="If set, ownership of the draft function is transferred to the current user.")
+    comment: Optional[StrictStr] = Field(
+        default=None,
+        description="An optional user-specified comment corresponding to the operation.",
+    )
+    var_async: Optional[StrictBool] = Field(
+        default=True,
+        description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+        alias="async",
+    )
+    chown: StrictBool = Field(
+        description="If set, ownership of the draft function is transferred to the current user."
+    )
     __properties: ClassVar[List[str]] = ["comment", "async", "chown"]
 
     model_config = ConfigDict(
@@ -70,8 +79,7 @@ class UpdateDraftQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,9 +93,11 @@ class UpdateDraftQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "comment": obj.get("comment"),
-            "async": obj.get("async") if obj.get("async") is not None else True,
-            "chown": obj.get("chown") if obj.get("chown") is not None else False
-        })
+        _obj = cls.model_validate(
+            {
+                "comment": obj.get("comment"),
+                "async": obj.get("async") if obj.get("async") is not None else True,
+                "chown": obj.get("chown") if obj.get("chown") is not None else False,
+            }
+        )
         return _obj

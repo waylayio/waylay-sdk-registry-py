@@ -23,6 +23,8 @@ from ..models.job_causes import JobCauses
 from ..models.kfserving_response_v2 import KfservingResponseV2
 
 
+from typing import cast
+
 try:
     from typing import Self
 except ImportError:
@@ -71,16 +73,15 @@ class RebuildModelSyncResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of causes
         if self.causes:
-            _dict['causes'] = self.causes.to_dict()
+            _dict["causes"] = self.causes.to_dict()
         # override the default output from pydantic by calling `to_dict()` of entity
         if self.entity:
-            _dict['entity'] = self.entity.to_dict()
+            _dict["entity"] = self.entity.to_dict()
         return _dict
 
     @classmethod
@@ -92,9 +93,19 @@ class RebuildModelSyncResponseV2(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "message": obj.get("message"),
-            "causes": JobCauses.from_dict(obj.get("causes")) if obj.get("causes") is not None else None,    # type: ignore
-            "entity": KfservingResponseV2.from_dict(obj.get("entity")) if obj.get("entity") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "message": obj.get("message"),
+                "causes": (
+                    JobCauses.from_dict(cast(dict, obj.get("causes")))
+                    if obj.get("causes") is not None
+                    else None
+                ),
+                "entity": (
+                    KfservingResponseV2.from_dict(cast(dict, obj.get("entity")))
+                    if obj.get("entity") is not None
+                    else None
+                ),
+            }
+        )
         return _obj
