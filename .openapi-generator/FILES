@@ -405,7 +405,7 @@ test/api/plug_functions_api_test.py
 test/api/runtimes_api_test.py
 test/api/schemas_api_test.py
 test/api/webscript_functions_api_test.py
-test/fixtures.py
+test/conftest.py
 test/types/__init__.py
 test/types/active_event_data_stub.py
 test/types/active_event_sse_stub.py

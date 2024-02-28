@@ -13,10 +13,9 @@ import pytest
 from typing import Dict, List
 from pytest_httpx import HTTPXMock
 import json
-from waylay.sdk import ApiClient
+from waylay.sdk import ApiClient, WaylayClient
 from waylay.services.registry.api import RuntimesApi
 from waylay.services.registry.service import RegistryService
-from ..fixtures import WaylayTokenStub, waylay_api_client, waylay_config, waylay_token_credentials, gateway_url, registry_service
 
 
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
@@ -53,8 +52,13 @@ def runtimes_api(waylay_api_client: ApiClient) -> RuntimesApi:
     return RuntimesApi(waylay_api_client)
 
 
+def test_registered(waylay_client: WaylayClient):
+    """Test that RuntimesApi api is registered in the sdk client."""
+    assert isinstance(waylay_client.registry.runtimes, RuntimesApi)
+
+
 @pytest.mark.asyncio
-async def test_example_archive(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_example_archive(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for example_archive
         Get Runtime Example Archive
     """
@@ -63,7 +67,6 @@ async def test_example_archive(registry_service: RegistryService, gateway_url: s
 
     version = SemanticVersionRangeStub.create_instance().actual_instance
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = bytes(b'blah')
     httpx_mock_kwargs = {
         "method": "GET",
@@ -77,12 +80,12 @@ async def test_example_archive(registry_service: RegistryService, gateway_url: s
         'version': version,
 
     }
-    resp = await registry_service.runtimes.example_archive(**kwargs)
+    resp = await service.runtimes.example_archive(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_example_asset(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get_example_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get_example_asset
         Get File From Runtime Example Archive
     """
@@ -93,7 +96,6 @@ async def test_get_example_asset(registry_service: RegistryService, gateway_url:
 
     wildcard = 'wildcard_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = bytes(b'blah')
     httpx_mock_kwargs = {
         "method": "GET",
@@ -108,19 +110,18 @@ async def test_get_example_asset(registry_service: RegistryService, gateway_url:
         'wildcard': wildcard,
 
     }
-    resp = await registry_service.runtimes.get_example_asset(**kwargs)
+    resp = await service.runtimes.get_example_asset(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_latest(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get_latest(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get_latest
         Get Latest Runtime Version
     """
     # set path params
     name = 'name_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = RuntimeVersionResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -133,12 +134,12 @@ async def test_get_latest(registry_service: RegistryService, gateway_url: str, m
         'name': name,
 
     }
-    resp = await registry_service.runtimes.get_latest(**kwargs)
+    resp = await service.runtimes.get_latest(**kwargs)
     assert isinstance(resp, RuntimeVersionResponse)
 
 
 @pytest.mark.asyncio
-async def test_get(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
         Get Runtime Version
     """
@@ -147,7 +148,6 @@ async def test_get(registry_service: RegistryService, gateway_url: str, mocker, 
 
     version = SemanticVersionRangeStub.create_instance().actual_instance
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = RuntimeVersionResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -161,18 +161,17 @@ async def test_get(registry_service: RegistryService, gateway_url: str, mocker, 
         'version': version,
 
     }
-    resp = await registry_service.runtimes.get(**kwargs)
+    resp = await service.runtimes.get(**kwargs)
     assert isinstance(resp, RuntimeVersionResponse)
 
 
 @pytest.mark.asyncio
-async def test_list(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list
         List Runtimes
     """
     # set path params
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = RuntimeSummaryResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -184,19 +183,18 @@ async def test_list(registry_service: RegistryService, gateway_url: str, mocker,
     kwargs = {
 
     }
-    resp = await registry_service.runtimes.list(**kwargs)
+    resp = await service.runtimes.list(**kwargs)
     assert isinstance(resp, RuntimeSummaryResponse)
 
 
 @pytest.mark.asyncio
-async def test_list_versions(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_list_versions(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list_versions
         List Runtime Versions
     """
     # set path params
     name = 'name_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = RuntimeSummaryResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -209,5 +207,5 @@ async def test_list_versions(registry_service: RegistryService, gateway_url: str
         'name': name,
 
     }
-    resp = await registry_service.runtimes.list_versions(**kwargs)
+    resp = await service.runtimes.list_versions(**kwargs)
     assert isinstance(resp, RuntimeSummaryResponse)

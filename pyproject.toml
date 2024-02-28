@@ -12,7 +12,7 @@ authors = [
 keywords = ["Waylay Function Registry"]
 requires-python = ">= 3.7"
 dependencies = [
-    "waylay-sdk ~= 0.0.2",
+    "waylay-sdk ~= 0.0.3",
     "pydantic ~= 2.6",
     "typing-extensions ~= 4.9",
 ]
@@ -34,7 +34,9 @@ dev = [
     "pytest-httpx",
     "pytest-asyncio",
 ]
+
 types = ["waylay_registry_types"]
+
 
 [tool.setuptools.packages.find]
 where = ["waylay_registry_api/src/", "waylay_registry_types/src/"]

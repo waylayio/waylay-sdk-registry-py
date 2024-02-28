@@ -13,10 +13,9 @@ import pytest
 from typing import Dict, List
 from pytest_httpx import HTTPXMock
 import json
-from waylay.sdk import ApiClient
+from waylay.sdk import ApiClient, WaylayClient
 from waylay.services.registry.api import PlugFunctionsApi
 from waylay.services.registry.service import RegistryService
-from ..fixtures import WaylayTokenStub, waylay_api_client, waylay_config, waylay_token_credentials, gateway_url, registry_service
 
 
 from ..types.multipart_file_upload_stub import MultipartFileUploadStub
@@ -107,8 +106,13 @@ def plug_functions_api(waylay_api_client: ApiClient) -> PlugFunctionsApi:
     return PlugFunctionsApi(waylay_api_client)
 
 
+def test_registered(waylay_client: WaylayClient):
+    """Test that PlugFunctionsApi api is registered in the sdk client."""
+    assert isinstance(waylay_client.registry.plug_functions, PlugFunctionsApi)
+
+
 @pytest.mark.asyncio
-async def test_create(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_create(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for create
         Create Plug
     """
@@ -119,7 +123,6 @@ async def test_create(registry_service: RegistryService, gateway_url: str, mocke
         'myFile2': b'...second file content...',
     }
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = PostPlugJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
@@ -132,12 +135,12 @@ async def test_create(registry_service: RegistryService, gateway_url: str, mocke
         'files': files,
 
     }
-    resp = await registry_service.plug_functions.create(**kwargs)
+    resp = await service.plug_functions.create(**kwargs)
     assert isinstance(resp, PostPlugJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_delete_asset(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_delete_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for delete_asset
         Delete Plug Asset
     """
@@ -148,7 +151,6 @@ async def test_delete_asset(registry_service: RegistryService, gateway_url: str,
 
     wildcard = 'wildcard_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = PostPlugJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "DELETE",
@@ -163,12 +165,12 @@ async def test_delete_asset(registry_service: RegistryService, gateway_url: str,
         'wildcard': wildcard,
 
     }
-    resp = await registry_service.plug_functions.delete_asset(**kwargs)
+    resp = await service.plug_functions.delete_asset(**kwargs)
     assert isinstance(resp, PostPlugJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_get_archive(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get_archive(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get_archive
         Get Plug Archive
     """
@@ -177,7 +179,6 @@ async def test_get_archive(registry_service: RegistryService, gateway_url: str, 
 
     version = 'version_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = bytes(b'blah')
     httpx_mock_kwargs = {
         "method": "GET",
@@ -191,12 +192,12 @@ async def test_get_archive(registry_service: RegistryService, gateway_url: str, 
         'version': version,
 
     }
-    resp = await registry_service.plug_functions.get_archive(**kwargs)
+    resp = await service.plug_functions.get_archive(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_asset(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get_asset
         Get File From Plug Archive
     """
@@ -207,7 +208,6 @@ async def test_get_asset(registry_service: RegistryService, gateway_url: str, mo
 
     wildcard = 'wildcard_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = bytes(b'blah')
     httpx_mock_kwargs = {
         "method": "GET",
@@ -222,19 +222,18 @@ async def test_get_asset(registry_service: RegistryService, gateway_url: str, mo
         'wildcard': wildcard,
 
     }
-    resp = await registry_service.plug_functions.get_asset(**kwargs)
+    resp = await service.plug_functions.get_asset(**kwargs)
     assert isinstance(resp, bytes)
 
 
 @pytest.mark.asyncio
-async def test_get_latest_version(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get_latest_version(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get_latest_version
         Get Latest Plug Version
     """
     # set path params
     name = 'name_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = GetPlugResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -247,12 +246,12 @@ async def test_get_latest_version(registry_service: RegistryService, gateway_url
         'name': name,
 
     }
-    resp = await registry_service.plug_functions.get_latest_version(**kwargs)
+    resp = await service.plug_functions.get_latest_version(**kwargs)
     assert isinstance(resp, GetPlugResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_get_version(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get_version(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get_version
         Get Plug Version
     """
@@ -261,7 +260,6 @@ async def test_get_version(registry_service: RegistryService, gateway_url: str, 
 
     version = 'version_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = GetPlugResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -275,12 +273,12 @@ async def test_get_version(registry_service: RegistryService, gateway_url: str, 
         'version': version,
 
     }
-    resp = await registry_service.plug_functions.get_version(**kwargs)
+    resp = await service.plug_functions.get_version(**kwargs)
     assert isinstance(resp, GetPlugResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_jobs(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for jobs
         List Plug Jobs
     """
@@ -289,7 +287,6 @@ async def test_jobs(registry_service: RegistryService, gateway_url: str, mocker,
 
     version = 'version_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = JobsForPlugResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -303,18 +300,17 @@ async def test_jobs(registry_service: RegistryService, gateway_url: str, mocker,
         'version': version,
 
     }
-    resp = await registry_service.plug_functions.jobs(**kwargs)
+    resp = await service.plug_functions.jobs(**kwargs)
     assert isinstance(resp, JobsForPlugResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_list_all(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_list_all(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list_all
         List Plugs
     """
     # set path params
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = LatestPlugsResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -326,19 +322,18 @@ async def test_list_all(registry_service: RegistryService, gateway_url: str, moc
     kwargs = {
 
     }
-    resp = await registry_service.plug_functions.list_all(**kwargs)
+    resp = await service.plug_functions.list_all(**kwargs)
     assert isinstance(resp, LatestPlugsResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_list_versions(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_list_versions(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list_versions
         List Plug Versions
     """
     # set path params
     name = 'name_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = PlugVersionsResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -351,12 +346,12 @@ async def test_list_versions(registry_service: RegistryService, gateway_url: str
         'name': name,
 
     }
-    resp = await registry_service.plug_functions.list_versions(**kwargs)
+    resp = await service.plug_functions.list_versions(**kwargs)
     assert isinstance(resp, PlugVersionsResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_patch_interface(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_patch_interface(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for patch_interface
         Patch Plug Interface
     """
@@ -367,9 +362,9 @@ async def test_patch_interface(registry_service: RegistryService, gateway_url: s
 
     # set body param
     body = DocumentationStub.create_instance()
-    content_type = 'application/json'
+    content_type = None
+    # content_type = 'application/json'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = GetPlugResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PATCH",
@@ -386,12 +381,12 @@ async def test_patch_interface(registry_service: RegistryService, gateway_url: s
         '_headers': {'content-type': content_type} if content_type else None,
 
     }
-    resp = await registry_service.plug_functions.patch_interface(**kwargs)
+    resp = await service.plug_functions.patch_interface(**kwargs)
     assert isinstance(resp, GetPlugResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_patch_metadata(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_patch_metadata(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for patch_metadata
         Patch Plug Metadata
     """
@@ -402,9 +397,9 @@ async def test_patch_metadata(registry_service: RegistryService, gateway_url: st
 
     # set body param
     body = UpdateMetadataRequestV2Stub.create_instance()
-    content_type = 'application/json'
+    content_type = None
+    # content_type = 'application/json'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = GetPlugResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PATCH",
@@ -421,12 +416,12 @@ async def test_patch_metadata(registry_service: RegistryService, gateway_url: st
         '_headers': {'content-type': content_type} if content_type else None,
 
     }
-    resp = await registry_service.plug_functions.patch_metadata(**kwargs)
+    resp = await service.plug_functions.patch_metadata(**kwargs)
     assert isinstance(resp, GetPlugResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_publish(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_publish(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for publish
         Publish Draft Plug
     """
@@ -435,7 +430,6 @@ async def test_publish(registry_service: RegistryService, gateway_url: str, mock
 
     version = 'version_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = PostPlugJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
@@ -449,12 +443,12 @@ async def test_publish(registry_service: RegistryService, gateway_url: str, mock
         'version': version,
 
     }
-    resp = await registry_service.plug_functions.publish(**kwargs)
+    resp = await service.plug_functions.publish(**kwargs)
     assert isinstance(resp, PostPlugJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_rebuild(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_rebuild(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for rebuild
         Rebuild Plug
     """
@@ -463,7 +457,6 @@ async def test_rebuild(registry_service: RegistryService, gateway_url: str, mock
 
     version = 'version_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = RebuildPlugSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
@@ -477,12 +470,12 @@ async def test_rebuild(registry_service: RegistryService, gateway_url: str, mock
         'version': version,
 
     }
-    resp = await registry_service.plug_functions.rebuild(**kwargs)
+    resp = await service.plug_functions.rebuild(**kwargs)
     assert isinstance(resp, RebuildPlugSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_remove_version(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_remove_version(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for remove_version
         Remove Plug Version
     """
@@ -491,7 +484,6 @@ async def test_remove_version(registry_service: RegistryService, gateway_url: st
 
     version = 'version_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = UndeployedResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "DELETE",
@@ -505,19 +497,18 @@ async def test_remove_version(registry_service: RegistryService, gateway_url: st
         'version': version,
 
     }
-    resp = await registry_service.plug_functions.remove_version(**kwargs)
+    resp = await service.plug_functions.remove_version(**kwargs)
     assert isinstance(resp, UndeployedResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_remove_versions(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_remove_versions(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for remove_versions
         Remove Plug
     """
     # set path params
     name = 'name_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = UndeployedResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "DELETE",
@@ -530,12 +521,12 @@ async def test_remove_versions(registry_service: RegistryService, gateway_url: s
         'name': name,
 
     }
-    resp = await registry_service.plug_functions.remove_versions(**kwargs)
+    resp = await service.plug_functions.remove_versions(**kwargs)
     assert isinstance(resp, UndeployedResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_update_asset(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_update_asset(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for update_asset
         Update Plug Asset
     """
@@ -548,9 +539,9 @@ async def test_update_asset(registry_service: RegistryService, gateway_url: str,
 
     # set body param
     body = FileUploadStub.create_instance()
-    content_type = 'application/octet-stream'
+    content_type = None
+    # content_type = 'application/octet-stream'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = PostPlugJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PUT",
@@ -568,12 +559,12 @@ async def test_update_asset(registry_service: RegistryService, gateway_url: str,
         '_headers': {'content-type': content_type} if content_type else None,
 
     }
-    resp = await registry_service.plug_functions.update_asset(**kwargs)
+    resp = await service.plug_functions.update_asset(**kwargs)
     assert isinstance(resp, PostPlugJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_update_assets(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_update_assets(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for update_assets
         Update Plug Assets
     """
@@ -588,7 +579,6 @@ async def test_update_assets(registry_service: RegistryService, gateway_url: str
         'myFile2': b'...second file content...',
     }
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = PostPlugJobSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "PUT",
@@ -603,12 +593,12 @@ async def test_update_assets(registry_service: RegistryService, gateway_url: str
         'files': files,
 
     }
-    resp = await registry_service.plug_functions.update_assets(**kwargs)
+    resp = await service.plug_functions.update_assets(**kwargs)
     assert isinstance(resp, PostPlugJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
-async def test_verify(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_verify(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for verify
         Verify Health Of Plug
     """
@@ -617,7 +607,6 @@ async def test_verify(registry_service: RegistryService, gateway_url: str, mocke
 
     version = 'version_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = VerifyPlugSyncResponseV2Stub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "POST",
@@ -631,5 +620,5 @@ async def test_verify(registry_service: RegistryService, gateway_url: str, mocke
         'version': version,
 
     }
-    resp = await registry_service.plug_functions.verify(**kwargs)
+    resp = await service.plug_functions.verify(**kwargs)
     assert isinstance(resp, VerifyPlugSyncResponseV2)

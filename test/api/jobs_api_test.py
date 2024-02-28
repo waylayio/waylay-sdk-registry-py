@@ -13,10 +13,9 @@ import pytest
 from typing import Dict, List
 from pytest_httpx import HTTPXMock
 import json
-from waylay.sdk import ApiClient
+from waylay.sdk import ApiClient, WaylayClient
 from waylay.services.registry.api import JobsApi
 from waylay.services.registry.service import RegistryService
-from ..fixtures import WaylayTokenStub, waylay_api_client, waylay_config, waylay_token_credentials, gateway_url, registry_service
 
 
 from ..types.event_with_close_sse_stub import EventWithCloseSSEStub
@@ -43,14 +42,18 @@ def jobs_api(waylay_api_client: ApiClient) -> JobsApi:
     return JobsApi(waylay_api_client)
 
 
+def test_registered(waylay_client: WaylayClient):
+    """Test that JobsApi api is registered in the sdk client."""
+    assert isinstance(waylay_client.registry.jobs, JobsApi)
+
+
 @pytest.mark.asyncio
-async def test_events(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_events(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for events
         Stream Events
     """
     # set path params
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = EventWithCloseSSEStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -62,12 +65,12 @@ async def test_events(registry_service: RegistryService, gateway_url: str, mocke
     kwargs = {
 
     }
-    resp = await registry_service.jobs.events(**kwargs)
+    resp = await service.jobs.events(**kwargs)
     assert isinstance(resp, EventWithCloseSSE)
 
 
 @pytest.mark.asyncio
-async def test_get(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
         Get Job
     """
@@ -76,7 +79,6 @@ async def test_get(registry_service: RegistryService, gateway_url: str, mocker, 
 
     id = 'id_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = JobResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -90,18 +92,17 @@ async def test_get(registry_service: RegistryService, gateway_url: str, mocker, 
         'id': id,
 
     }
-    resp = await registry_service.jobs.get(**kwargs)
+    resp = await service.jobs.get(**kwargs)
     assert isinstance(resp, JobResponse)
 
 
 @pytest.mark.asyncio
-async def test_list(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list
         List Jobs
     """
     # set path params
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = JobsResponseStub.create_instance().to_dict()
     httpx_mock_kwargs = {
         "method": "GET",
@@ -113,5 +114,5 @@ async def test_list(registry_service: RegistryService, gateway_url: str, mocker,
     kwargs = {
 
     }
-    resp = await registry_service.jobs.list(**kwargs)
+    resp = await service.jobs.list(**kwargs)
     assert isinstance(resp, JobsResponse)

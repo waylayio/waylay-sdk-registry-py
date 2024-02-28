@@ -15,3 +15,5 @@ Do not edit the class manually.
 __version__ = "2.12.1-0"
 
 from .service import RegistryService
+
+PLUGINS = [RegistryService]

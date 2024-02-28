@@ -13,10 +13,9 @@ import pytest
 from typing import Dict, List
 from pytest_httpx import HTTPXMock
 import json
-from waylay.sdk import ApiClient
+from waylay.sdk import ApiClient, WaylayClient
 from waylay.services.registry.api import SchemasApi
 from waylay.services.registry.service import RegistryService
-from ..fixtures import WaylayTokenStub, waylay_api_client, waylay_config, waylay_token_credentials, gateway_url, registry_service
 
 
 from ..types.function_type_stub import FunctionTypeStub
@@ -32,8 +31,13 @@ def schemas_api(waylay_api_client: ApiClient) -> SchemasApi:
     return SchemasApi(waylay_api_client)
 
 
+def test_registered(waylay_client: WaylayClient):
+    """Test that SchemasApi api is registered in the sdk client."""
+    assert isinstance(waylay_client.registry.schemas, SchemasApi)
+
+
 @pytest.mark.asyncio
-async def test_get_by_role(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get_by_role(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get_by_role
         Get Asset Schema
     """
@@ -42,7 +46,6 @@ async def test_get_by_role(registry_service: RegistryService, gateway_url: str, 
 
     role = AssetRoleStub.create_instance().value
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = {}
     httpx_mock_kwargs = {
         "method": "GET",
@@ -56,19 +59,18 @@ async def test_get_by_role(registry_service: RegistryService, gateway_url: str, 
         'role': role,
 
     }
-    resp = await registry_service.schemas.get_by_role(**kwargs)
+    resp = await service.schemas.get_by_role(**kwargs)
     assert isinstance(resp, Dict)
 
 
 @pytest.mark.asyncio
-async def test_get(registry_service: RegistryService, gateway_url: str, mocker, httpx_mock: HTTPXMock):
+async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
         Get Asset Schema
     """
     # set path params
     schemaId = 'schema_id_example'
 
-    mocker.patch('waylay.sdk.WaylayTokenAuth.assure_valid_token', lambda *args: WaylayTokenStub())
     mock_response = {}
     httpx_mock_kwargs = {
         "method": "GET",
@@ -81,5 +83,5 @@ async def test_get(registry_service: RegistryService, gateway_url: str, mocker, 
         'schema_id': schemaId,
 
     }
-    resp = await registry_service.schemas.get(**kwargs)
+    resp = await service.schemas.get(**kwargs)
     assert isinstance(resp, Dict)
