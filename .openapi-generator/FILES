@@ -389,8 +389,6 @@ docs/WithLimit.md
 docs/WithPaging.md
 pyproject.toml
 requirements.txt
-setup.cfg
-test-requirements.txt
 test/__init__.py
 test/api/__init__.py
 test/api/default_api_test.py

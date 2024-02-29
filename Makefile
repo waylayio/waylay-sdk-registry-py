@@ -34,7 +34,9 @@ install: ${VENV_ACTIVATE_CMD}
 
 clean:
 	rm -fr ${VENV_DIR}
-	rm -fr .*_cache/*
+	rm -fr .*_cache
+	rm -fr */.*_cache
+	rm -fr */src/*.egg-info
 
 lint: install ### Run linting checks
 	@${VENV_ACTIVATE} && make exec-lint
@@ -96,3 +98,20 @@ ci-install: _install_requirements ### Install the environment with frozen depend
 _install_requirements:
 	pip install --upgrade pip
 	pip install -r requirements.txt
+
+_GENERATED_FOLDER?=.
+_GENERATED_FILES=.openapi-generator/FILES
+
+_clean_gen:  ### Removes all code-generated files
+	@test -s ${_GENERATED_FOLDER}/${_GENERATED_FILES} || ( \
+		${printMsg} 'clean-generated ${_GENERATED_FOLDER}' 'FAILED (no ${_GENERATED_FILES}).' \
+		&& exit -1 \
+	)
+	cd ${_GENERATED_FOLDER} && xargs rm -f < ${_GENERATED_FILES} && find . -empty -type d -delete
+	@${printMsg} 'clean-generated ${_GENERATED_FOLDER}' 'OK'
+	
+clean-generated:  ### Removes all code-generated files
+	@make clean
+	@_GENERATED_FOLDER=${TYPES_FOLDER} make _clean_gen
+	@_GENERATED_FOLDER=${API_FOLDER} make _clean_gen
+	@_GENERATED_FOLDER='.' make _clean_gen
