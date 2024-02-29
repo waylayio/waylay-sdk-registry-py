@@ -90,6 +90,7 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> EventWithCloseSSE:
         ...
 
@@ -101,6 +102,7 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[EventWithCloseSSE]:
         ...
 
@@ -112,7 +114,8 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[EventWithCloseSSE, ApiResponse[EventWithCloseSSE]]:
+        select_path: str = "",
+    ) -> Union[EventWithCloseSSE, ApiResponse[EventWithCloseSSE], Any]:
         """Stream Events.
 
         Get an SSE stream of all job events for the users tenant.  The stream can be filtered on job type or on a specific job id.   When filtering on job id, the server will send a <code>close</code> event  upon completion of the job. The client should handle this event by closing the stream.
@@ -144,8 +147,10 @@ class JobsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.EventWithCloseSSE",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.EventWithCloseSSE"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -153,6 +158,7 @@ class JobsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -210,6 +216,7 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> JobResponse:
         ...
 
@@ -223,6 +230,7 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[JobResponse]:
         ...
 
@@ -236,7 +244,8 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[JobResponse, ApiResponse[JobResponse]]:
+        select_path: str = "",
+    ) -> Union[JobResponse, ApiResponse[JobResponse], Any]:
         """Get Job.
 
         Get a background job by type and id.
@@ -268,8 +277,10 @@ class JobsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.JobResponse",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.JobResponse"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -277,6 +288,7 @@ class JobsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -327,6 +339,7 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> JobsResponse:
         ...
 
@@ -338,6 +351,7 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[JobsResponse]:
         ...
 
@@ -349,7 +363,8 @@ class JobsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[JobsResponse, ApiResponse[JobsResponse]]:
+        select_path: str = "",
+    ) -> Union[JobsResponse, ApiResponse[JobsResponse], Any]:
         """List Jobs.
 
         List all background jobs for the users tenant.
@@ -387,8 +402,10 @@ class JobsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.JobsResponse",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.JobsResponse"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -396,6 +413,7 @@ class JobsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 

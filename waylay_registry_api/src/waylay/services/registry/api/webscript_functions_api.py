@@ -256,6 +256,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostWebscriptJobSyncResponseV2:
         ...
 
@@ -281,6 +282,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostWebscriptJobSyncResponseV2]:
         ...
 
@@ -306,8 +308,9 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
+        select_path: str = "",
     ) -> Union[
-        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2]
+        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2], Any
     ]:
         """Create Webscript Version.
 
@@ -352,9 +355,13 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -362,6 +369,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -464,6 +472,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostWebscriptJobSyncResponseV2:
         ...
 
@@ -485,6 +494,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostWebscriptJobSyncResponseV2]:
         ...
 
@@ -506,8 +516,9 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
+        select_path: str = "",
     ) -> Union[
-        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2]
+        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2], Any
     ]:
         """Delete Webscript Asset.
 
@@ -549,9 +560,13 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -559,6 +574,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -627,6 +643,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> bytearray:
         ...
 
@@ -642,6 +659,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[bytearray]:
         ...
 
@@ -657,7 +675,8 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[bytearray, ApiResponse[bytearray]]:
+        select_path: str = "",
+    ) -> Union[bytearray, ApiResponse[bytearray], Any]:
         """Get Webscript Archive.
 
         Get the specification archive of a webscript.
@@ -691,8 +710,8 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "bytearray",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "bytearray" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -700,6 +719,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -763,6 +783,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> bytearray:
         ...
 
@@ -784,6 +805,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[bytearray]:
         ...
 
@@ -805,7 +827,8 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[bytearray, ApiResponse[bytearray]]:
+        select_path: str = "",
+    ) -> Union[bytearray, ApiResponse[bytearray], Any]:
         """Get File From Webscript Archive.
 
         Get a file from the specification archive of a webscript.
@@ -842,8 +865,8 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "bytearray",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "bytearray" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -851,6 +874,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -908,6 +932,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetWebscriptResponseV2:
         ...
 
@@ -920,6 +945,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetWebscriptResponseV2]:
         ...
 
@@ -932,7 +958,8 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetWebscriptResponseV2, ApiResponse[GetWebscriptResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetWebscriptResponseV2, ApiResponse[GetWebscriptResponseV2], Any]:
         """Get Latest Webscript Version.
 
         Fetch the latest version of a <em>webscript</em>.    By default, the result shows the latest non-deprecated, non-draft version.   If there is no such version, the latest deprecated or the latest draft version is returned, with the former taking precedence.       Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>     The returned <em>webscript version</em> will contain a link to its   latest _draft_ or latest _published_ version (if existing and different).
@@ -965,8 +992,10 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetWebscriptResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetWebscriptResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -974,6 +1003,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1032,6 +1062,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetWebscriptResponseV2:
         ...
 
@@ -1047,6 +1078,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetWebscriptResponseV2]:
         ...
 
@@ -1062,7 +1094,8 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetWebscriptResponseV2, ApiResponse[GetWebscriptResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetWebscriptResponseV2, ApiResponse[GetWebscriptResponseV2], Any]:
         """Get Webscript Version.
 
         Get the webscript version.
@@ -1094,8 +1127,10 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetWebscriptResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetWebscriptResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1103,6 +1138,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1157,6 +1193,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> JobsForWebscriptResponseV2:
         ...
 
@@ -1172,6 +1209,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[JobsForWebscriptResponseV2]:
         ...
 
@@ -1187,7 +1225,10 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[JobsForWebscriptResponseV2, ApiResponse[JobsForWebscriptResponseV2]]:
+        select_path: str = "",
+    ) -> Union[
+        JobsForWebscriptResponseV2, ApiResponse[JobsForWebscriptResponseV2], Any
+    ]:
         """List Webscript Jobs.
 
         List the ongoing and completed operations on a specific webscript.
@@ -1231,8 +1272,10 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.JobsForWebscriptResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.JobsForWebscriptResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1240,6 +1283,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1316,6 +1360,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> WebscriptVersionsResponseV2:
         ...
 
@@ -1328,6 +1373,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[WebscriptVersionsResponseV2]:
         ...
 
@@ -1340,7 +1386,10 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[WebscriptVersionsResponseV2, ApiResponse[WebscriptVersionsResponseV2]]:
+        select_path: str = "",
+    ) -> Union[
+        WebscriptVersionsResponseV2, ApiResponse[WebscriptVersionsResponseV2], Any
+    ]:
         """List Webscript Versions.
 
         List all deployed versions of a webscript.
@@ -1399,8 +1448,10 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.WebscriptVersionsResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.WebscriptVersionsResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1408,6 +1459,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1516,6 +1568,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> LatestWebscriptsResponseV2:
         ...
 
@@ -1527,6 +1580,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[LatestWebscriptsResponseV2]:
         ...
 
@@ -1538,7 +1592,10 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[LatestWebscriptsResponseV2, ApiResponse[LatestWebscriptsResponseV2]]:
+        select_path: str = "",
+    ) -> Union[
+        LatestWebscriptsResponseV2, ApiResponse[LatestWebscriptsResponseV2], Any
+    ]:
         """List Webscripts.
 
         List the (latest) versions of available <em>webscripts</em>.  ### List Latest Webscript Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>webscript</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no _version filters_ are used, each listed <em>webscript version</em> item will contain a HAL **link to the  latest** _draft_ (`entities[]._links.draft`) or latest _published_ (`entities[]._links.publisned`) version (if existing and different).  ### List Latest Webscript Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>webscript</em> that satisfy the filters, but **without links**.  ### List All Webscript Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>webscripts</em> versions that satisfy the query, possibly multiple versions per named <em>webscripts</em>. No HAL links are provided.  #### Filter on _status_ By default <em>webscript versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>webscript</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`
@@ -1604,8 +1661,10 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.LatestWebscriptsResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.LatestWebscriptsResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1613,6 +1672,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1743,6 +1803,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetWebscriptResponseV2:
         ...
 
@@ -1759,6 +1820,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetWebscriptResponseV2]:
         ...
 
@@ -1775,7 +1837,8 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetWebscriptResponseV2, ApiResponse[GetWebscriptResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetWebscriptResponseV2, ApiResponse[GetWebscriptResponseV2], Any]:
         """Patch Webscript Metadata.
 
         Patch the metadata of a webscript version.
@@ -1811,8 +1874,10 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetWebscriptResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetWebscriptResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1820,6 +1885,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1879,6 +1945,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostWebscriptJobSyncResponseV2:
         ...
 
@@ -1894,6 +1961,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostWebscriptJobSyncResponseV2]:
         ...
 
@@ -1909,8 +1977,9 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
+        select_path: str = "",
     ) -> Union[
-        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2]
+        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2], Any
     ]:
         """Publish Draft Webscript.
 
@@ -1949,9 +2018,13 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1959,6 +2032,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2024,6 +2098,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> RebuildWebscriptSyncResponseV2:
         ...
 
@@ -2039,6 +2114,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[RebuildWebscriptSyncResponseV2]:
         ...
 
@@ -2054,8 +2130,9 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
+        select_path: str = "",
     ) -> Union[
-        RebuildWebscriptSyncResponseV2, ApiResponse[RebuildWebscriptSyncResponseV2]
+        RebuildWebscriptSyncResponseV2, ApiResponse[RebuildWebscriptSyncResponseV2], Any
     ]:
         """Rebuild Webscript.
 
@@ -2104,9 +2181,13 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.RebuildWebscriptSyncResponseV2",
-            "202": "waylay.services.registry.models.RebuildWebscriptAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.RebuildWebscriptSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.RebuildWebscriptAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2114,6 +2195,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2199,6 +2281,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> UndeployedResponseV2:
         ...
 
@@ -2214,6 +2297,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[UndeployedResponseV2]:
         ...
 
@@ -2229,7 +2313,8 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2]]:
+        select_path: str = "",
+    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2], Any]:
         """Remove Webscript Version.
 
         Deprecate, undeploy and/or remove a <em>webscript</em> version.    By default, a `DELETE`    * _deprecates_ the webscript version(s): they are no longer included in listings by default.   * _undeploys_ the webscript version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the webscript version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action.
@@ -2269,9 +2354,13 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.UndeployedResponseV2",
-            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.UndeployedResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2279,6 +2368,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2345,6 +2435,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> UndeployedResponseV2:
         ...
 
@@ -2357,6 +2448,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[UndeployedResponseV2]:
         ...
 
@@ -2369,7 +2461,8 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2]]:
+        select_path: str = "",
+    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2], Any]:
         """Remove Webscript.
 
         Deprecate, undeploy and/or remove all versions of this named <em>webscript</em>.    By default, a `DELETE`    * _deprecates_ the webscript version(s): they are no longer included in listings by default.   * _undeploys_ the webscript version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the webscript version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action.
@@ -2406,9 +2499,13 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.UndeployedResponseV2",
-            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.UndeployedResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2416,6 +2513,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2491,6 +2589,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostWebscriptJobSyncResponseV2:
         ...
 
@@ -2515,6 +2614,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostWebscriptJobSyncResponseV2]:
         ...
 
@@ -2539,8 +2639,9 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
+        select_path: str = "",
     ) -> Union[
-        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2]
+        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2], Any
     ]:
         """Update Webscript Asset.
 
@@ -2584,9 +2685,13 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2594,6 +2699,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2678,6 +2784,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostWebscriptJobSyncResponseV2:
         ...
 
@@ -2707,6 +2814,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostWebscriptJobSyncResponseV2]:
         ...
 
@@ -2736,8 +2844,9 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
+        select_path: str = "",
     ) -> Union[
-        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2]
+        PostWebscriptJobSyncResponseV2, ApiResponse[PostWebscriptJobSyncResponseV2], Any
     ]:
         """Update Webscript Assets.
 
@@ -2780,9 +2889,13 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostWebscriptJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2790,6 +2903,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2876,6 +2990,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> VerifyWebscriptSyncResponseV2:
         ...
 
@@ -2891,6 +3006,7 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[VerifyWebscriptSyncResponseV2]:
         ...
 
@@ -2906,8 +3022,9 @@ class WebscriptFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
+        select_path: str = "",
     ) -> Union[
-        VerifyWebscriptSyncResponseV2, ApiResponse[VerifyWebscriptSyncResponseV2]
+        VerifyWebscriptSyncResponseV2, ApiResponse[VerifyWebscriptSyncResponseV2], Any
     ]:
         """Verify Health Of Webscript.
 
@@ -2946,9 +3063,13 @@ class WebscriptFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.VerifyWebscriptSyncResponseV2",
-            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.VerifyWebscriptSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostWebscriptJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2956,6 +3077,7 @@ class WebscriptFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 

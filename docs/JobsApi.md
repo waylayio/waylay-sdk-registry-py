@@ -53,6 +53,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**EventWithCloseSSE**](EventWithCloseSSE.md)
 
 ### HTTP request headers
@@ -112,6 +113,7 @@ Name | Type | Description  | Notes
  **id** | **str**|  | 
 
 ### Return type
+
 
 [**JobResponse**](JobResponse.md)
 
@@ -176,6 +178,7 @@ Name | Type | Description  | Notes
  **created_after** | [**TimestampSpec**](.md)| Filter on jobs that created after the given timestamp or age | [optional] 
 
 ### Return type
+
 
 [**JobsResponse**](JobsResponse.md)
 

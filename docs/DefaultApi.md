@@ -45,6 +45,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
+
 [**RootPageResponse**](RootPageResponse.md)
 
 ### HTTP request headers

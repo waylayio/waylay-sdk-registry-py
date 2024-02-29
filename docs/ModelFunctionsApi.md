@@ -74,6 +74,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -139,6 +140,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -198,6 +200,7 @@ Name | Type | Description  | Notes
  **ls** | **bool**| If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default to False]
 
 ### Return type
+
 
 **bytearray**
 
@@ -260,6 +263,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 **bytearray**
 
 ### HTTP request headers
@@ -319,6 +323,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**GetModelResponseV2**](GetModelResponseV2.md)
 
 ### HTTP request headers
@@ -377,6 +382,7 @@ Name | Type | Description  | Notes
  **version** | **str**| The version of the function. | 
 
 ### Return type
+
 
 [**GetModelResponseV2**](GetModelResponseV2.md)
 
@@ -445,6 +451,7 @@ Name | Type | Description  | Notes
  **created_after** | [**TimestampSpec**](.md)| Filter on jobs that created after the given timestamp or age | [optional] 
 
 ### Return type
+
 
 [**JobsForModelResponseV2**](JobsForModelResponseV2.md)
 
@@ -523,6 +530,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**LatestModelsResponseV2**](LatestModelsResponseV2.md)
 
 ### HTTP request headers
@@ -597,6 +605,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**ModelVersionsResponseV2**](ModelVersionsResponseV2.md)
 
 ### HTTP request headers
@@ -660,6 +669,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**GetModelResponseV2**](GetModelResponseV2.md)
 
 ### HTTP request headers
@@ -722,6 +732,7 @@ Name | Type | Description  | Notes
  **var_async** | **bool**| Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default to True]
 
 ### Return type
+
 
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
@@ -792,6 +803,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**RebuildModelSyncResponseV2**](RebuildModelSyncResponseV2.md)
 
 ### HTTP request headers
@@ -856,6 +868,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
 ### HTTP request headers
@@ -917,6 +930,7 @@ Name | Type | Description  | Notes
  **var_async** | **bool**| Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default to True]
 
 ### Return type
+
 
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
@@ -986,6 +1000,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1052,6 +1067,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1114,6 +1130,7 @@ Name | Type | Description  | Notes
  **scale_to_zero** | **bool**| Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
 
 ### Return type
+
 
 [**VerifyModelSyncResponseV2**](VerifyModelSyncResponseV2.md)
 

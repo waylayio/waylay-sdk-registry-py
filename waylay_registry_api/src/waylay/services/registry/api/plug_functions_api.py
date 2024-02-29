@@ -240,6 +240,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostPlugJobSyncResponseV2:
         ...
 
@@ -265,6 +266,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostPlugJobSyncResponseV2]:
         ...
 
@@ -290,7 +292,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2], Any]:
         """Create Plug.
 
         Creates a new <em>plug</em> function by uploading its assets.      The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.
@@ -334,9 +337,13 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -344,6 +351,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -446,6 +454,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostPlugJobSyncResponseV2:
         ...
 
@@ -467,6 +476,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostPlugJobSyncResponseV2]:
         ...
 
@@ -488,7 +498,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2], Any]:
         """Delete Plug Asset.
 
         Delete an asset from the plug's collection of existing assets.
@@ -529,9 +540,13 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -539,6 +554,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -607,6 +623,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> bytearray:
         ...
 
@@ -622,6 +639,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[bytearray]:
         ...
 
@@ -637,7 +655,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[bytearray, ApiResponse[bytearray]]:
+        select_path: str = "",
+    ) -> Union[bytearray, ApiResponse[bytearray], Any]:
         """Get Plug Archive.
 
         Get the specification archive of a plug.
@@ -671,8 +690,8 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "bytearray",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "bytearray" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -680,6 +699,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -743,6 +763,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> bytearray:
         ...
 
@@ -764,6 +785,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[bytearray]:
         ...
 
@@ -785,7 +807,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[bytearray, ApiResponse[bytearray]]:
+        select_path: str = "",
+    ) -> Union[bytearray, ApiResponse[bytearray], Any]:
         """Get File From Plug Archive.
 
         Get a file from the specification archive of a plug.
@@ -822,8 +845,8 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "bytearray",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "bytearray" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -831,6 +854,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -888,6 +912,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetPlugResponseV2:
         ...
 
@@ -900,6 +925,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetPlugResponseV2]:
         ...
 
@@ -912,7 +938,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetPlugResponseV2, ApiResponse[GetPlugResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetPlugResponseV2, ApiResponse[GetPlugResponseV2], Any]:
         """Get Latest Plug Version.
 
         Fetch the latest version of a <em>plug</em>.    By default, the result shows the latest non-deprecated, non-draft version.   If there is no such version, the latest deprecated or the latest draft version is returned, with the former taking precedence.       Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>     The returned <em>plug version</em> will contain a link to its   latest _draft_ or latest _published_ version (if existing and different).
@@ -947,8 +974,10 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetPlugResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetPlugResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -956,6 +985,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1018,6 +1048,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetPlugResponseV2:
         ...
 
@@ -1033,6 +1064,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetPlugResponseV2]:
         ...
 
@@ -1048,7 +1080,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetPlugResponseV2, ApiResponse[GetPlugResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetPlugResponseV2, ApiResponse[GetPlugResponseV2], Any]:
         """Get Plug Version.
 
         Get a specific version of a plug.
@@ -1080,8 +1113,10 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetPlugResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetPlugResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1089,6 +1124,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1143,6 +1179,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> JobsForPlugResponseV2:
         ...
 
@@ -1158,6 +1195,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[JobsForPlugResponseV2]:
         ...
 
@@ -1173,7 +1211,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[JobsForPlugResponseV2, ApiResponse[JobsForPlugResponseV2]]:
+        select_path: str = "",
+    ) -> Union[JobsForPlugResponseV2, ApiResponse[JobsForPlugResponseV2], Any]:
         """List Plug Jobs.
 
         List the ongoing and completed operations on a specific plug.
@@ -1217,8 +1256,10 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.JobsForPlugResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.JobsForPlugResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1226,6 +1267,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1301,6 +1343,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> LatestPlugsResponseV2:
         ...
 
@@ -1312,6 +1355,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[LatestPlugsResponseV2]:
         ...
 
@@ -1323,7 +1367,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[LatestPlugsResponseV2, ApiResponse[LatestPlugsResponseV2]]:
+        select_path: str = "",
+    ) -> Union[LatestPlugsResponseV2, ApiResponse[LatestPlugsResponseV2], Any]:
         """List Plugs.
 
         List the (latest) versions of available <em>plugs</em>.  ### List Latest Plug Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>plug</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no _version filters_ are used, each listed <em>plug version</em> item will contain a HAL **link to the  latest** _draft_ (`entities[]._links.draft`) or latest _published_ (`entities[]._links.publisned`) version (if existing and different).  ### List Latest Plug Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>plug</em> that satisfy the filters, but **without links**.  ### List All Plug Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>plugs</em> versions that satisfy the query, possibly multiple versions per named <em>plugs</em>. No HAL links are provided.  #### Filter on _status_ By default <em>plug versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>plug</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags`
@@ -1393,8 +1438,10 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.LatestPlugsResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.LatestPlugsResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1402,6 +1449,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1536,6 +1584,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PlugVersionsResponseV2:
         ...
 
@@ -1548,6 +1597,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PlugVersionsResponseV2]:
         ...
 
@@ -1560,7 +1610,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PlugVersionsResponseV2, ApiResponse[PlugVersionsResponseV2]]:
+        select_path: str = "",
+    ) -> Union[PlugVersionsResponseV2, ApiResponse[PlugVersionsResponseV2], Any]:
         """List Plug Versions.
 
         List all versions of a plug, including deprecated versions or not.
@@ -1621,8 +1672,10 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.PlugVersionsResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.PlugVersionsResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1630,6 +1683,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1747,6 +1801,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetPlugResponseV2:
         ...
 
@@ -1763,6 +1818,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetPlugResponseV2]:
         ...
 
@@ -1779,7 +1835,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetPlugResponseV2, ApiResponse[GetPlugResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetPlugResponseV2, ApiResponse[GetPlugResponseV2], Any]:
         """Patch Plug Interface.
 
         Patch the interface documentation of a plug version.
@@ -1815,8 +1872,10 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetPlugResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetPlugResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1824,6 +1883,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1884,6 +1944,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetPlugResponseV2:
         ...
 
@@ -1900,6 +1961,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetPlugResponseV2]:
         ...
 
@@ -1916,7 +1978,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetPlugResponseV2, ApiResponse[GetPlugResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetPlugResponseV2, ApiResponse[GetPlugResponseV2], Any]:
         """Patch Plug Metadata.
 
         Patch the metadata of a plug version.
@@ -1952,8 +2015,10 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetPlugResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetPlugResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1961,6 +2026,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2020,6 +2086,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostPlugJobSyncResponseV2:
         ...
 
@@ -2035,6 +2102,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostPlugJobSyncResponseV2]:
         ...
 
@@ -2050,7 +2118,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2], Any]:
         """Publish Draft Plug.
 
         Mark the <em>plug</em> to be ready and stable, taking it out of draft mode.,    Typically, the <em>plug</em> should be in the <code>running</code> status,    such that publishing becomes a simple operation where the existing deployment can be re-used.   In other statuses, plug-registry may need to initiate a new build and deployment procedure.
@@ -2088,9 +2157,13 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2098,6 +2171,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2163,6 +2237,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> RebuildPlugSyncResponseV2:
         ...
 
@@ -2178,6 +2253,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[RebuildPlugSyncResponseV2]:
         ...
 
@@ -2193,7 +2269,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[RebuildPlugSyncResponseV2, ApiResponse[RebuildPlugSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[RebuildPlugSyncResponseV2, ApiResponse[RebuildPlugSyncResponseV2], Any]:
         """Rebuild Plug.
 
         Rebuild and deploy a plug with the original or updated base image.
@@ -2241,9 +2318,13 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.RebuildPlugSyncResponseV2",
-            "202": "waylay.services.registry.models.RebuildPlugAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.RebuildPlugSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.RebuildPlugAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2251,6 +2332,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2336,6 +2418,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> UndeployedResponseV2:
         ...
 
@@ -2351,6 +2434,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[UndeployedResponseV2]:
         ...
 
@@ -2366,7 +2450,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2]]:
+        select_path: str = "",
+    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2], Any]:
         """Remove Plug Version.
 
         Deprecate, undeploy and/or remove a <em>plug</em> version.  By default, a `DELETE`  * marks _published_ version(s) _deprecated_: they remain active, but are no longer included in listings by default. * completely removes any _draft_ version(s) (_deprecate_, _undeploy_ and _remove_)  A _deprecated_ plug version will eventually be _undeployed_ (but not _removed_) by an external background task,  once proven that no waylay rule template or task references it.  Use `?force=true` to skip the deprecation and immediately remove the version(s).  Use `?undeploy=true` to undeploy the plug version(s), but keep it registered in a `undeployed` state. An `undeployed` version can later be restored by a _rebuild_ action.
@@ -2406,9 +2491,13 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.UndeployedResponseV2",
-            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.UndeployedResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2416,6 +2505,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2482,6 +2572,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> UndeployedResponseV2:
         ...
 
@@ -2494,6 +2585,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[UndeployedResponseV2]:
         ...
 
@@ -2506,7 +2598,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2]]:
+        select_path: str = "",
+    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2], Any]:
         """Remove Plug.
 
         Deprecate, undeploy and/or remove all versions of this named <em>plug</em>.  By default, a `DELETE`  * marks _published_ version(s) _deprecated_: they remain active, but are no longer included in listings by default. * completely removes any _draft_ version(s) (_deprecate_, _undeploy_ and _remove_)  A _deprecated_ plug version will eventually be _undeployed_ (but not _removed_) by an external background task,  once proven that no waylay rule template or task references it.  Use `?force=true` to skip the deprecation and immediately remove the version(s).  Use `?undeploy=true` to undeploy the plug version(s), but keep it registered in a `undeployed` state. An `undeployed` version can later be restored by a _rebuild_ action.
@@ -2543,9 +2636,13 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.UndeployedResponseV2",
-            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.UndeployedResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2553,6 +2650,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2628,6 +2726,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostPlugJobSyncResponseV2:
         ...
 
@@ -2652,6 +2751,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostPlugJobSyncResponseV2]:
         ...
 
@@ -2676,7 +2776,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2], Any]:
         """Update Plug Asset.
 
         The provided asset will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing asset with the same name.    Please note that it is not allowed to update the plug.json json file with a changed value for any of the     <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
@@ -2719,9 +2820,13 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2729,6 +2834,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2813,6 +2919,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostPlugJobSyncResponseV2:
         ...
 
@@ -2842,6 +2949,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostPlugJobSyncResponseV2]:
         ...
 
@@ -2871,7 +2979,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[PostPlugJobSyncResponseV2, ApiResponse[PostPlugJobSyncResponseV2], Any]:
         """Update Plug Assets.
 
         Update a draft <em>plug</em> function by updating its assets.      The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
@@ -2913,9 +3022,13 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostPlugJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2923,6 +3036,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -3009,6 +3123,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> VerifyPlugSyncResponseV2:
         ...
 
@@ -3024,6 +3139,7 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[VerifyPlugSyncResponseV2]:
         ...
 
@@ -3039,7 +3155,8 @@ class PlugFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[VerifyPlugSyncResponseV2, ApiResponse[VerifyPlugSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[VerifyPlugSyncResponseV2, ApiResponse[VerifyPlugSyncResponseV2], Any]:
         """Verify Health Of Plug.
 
         Verify health of plug deployed on openfaas.
@@ -3077,9 +3194,13 @@ class PlugFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.VerifyPlugSyncResponseV2",
-            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.VerifyPlugSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostPlugJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -3087,6 +3208,7 @@ class PlugFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 

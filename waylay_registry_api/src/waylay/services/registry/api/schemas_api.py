@@ -74,6 +74,7 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> Dict[str, object]:
         ...
 
@@ -87,6 +88,7 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[Dict[str, object]]:
         ...
 
@@ -100,7 +102,8 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[Dict[str, object], ApiResponse[Dict[str, object]]]:
+        select_path: str = "",
+    ) -> Union[Dict[str, object], ApiResponse[Dict[str, object]], Any]:
         """Get Asset Schema (Deprecated).
 
         Get the JSON schema that is used to validate the asset.
@@ -136,8 +139,8 @@ class SchemasApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "Dict[str, object]",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "Dict[str, object]" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -145,6 +148,7 @@ class SchemasApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -196,6 +200,7 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> Dict[str, object]:
         ...
 
@@ -208,6 +213,7 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[Dict[str, object]]:
         ...
 
@@ -220,7 +226,8 @@ class SchemasApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[Dict[str, object], ApiResponse[Dict[str, object]]]:
+        select_path: str = "",
+    ) -> Union[Dict[str, object], ApiResponse[Dict[str, object]], Any]:
         """Get Asset Schema.
 
         Get the JSON schema that is used to validate an asset.
@@ -249,8 +256,8 @@ class SchemasApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "Dict[str, object]",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "Dict[str, object]" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -258,6 +265,7 @@ class SchemasApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 

@@ -75,6 +75,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostPlugJobSyncResponseV2**](PostPlugJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -140,6 +141,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostPlugJobSyncResponseV2**](PostPlugJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -199,6 +201,7 @@ Name | Type | Description  | Notes
  **ls** | **bool**| If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default to False]
 
 ### Return type
+
 
 **bytearray**
 
@@ -261,6 +264,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 **bytearray**
 
 ### HTTP request headers
@@ -322,6 +326,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**GetPlugResponseV2**](GetPlugResponseV2.md)
 
 ### HTTP request headers
@@ -380,6 +385,7 @@ Name | Type | Description  | Notes
  **version** | **str**| The version of the function. | 
 
 ### Return type
+
 
 [**GetPlugResponseV2**](GetPlugResponseV2.md)
 
@@ -448,6 +454,7 @@ Name | Type | Description  | Notes
  **created_after** | [**TimestampSpec**](.md)| Filter on jobs that created after the given timestamp or age | [optional] 
 
 ### Return type
+
 
 [**JobsForPlugResponseV2**](JobsForPlugResponseV2.md)
 
@@ -529,6 +536,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**LatestPlugsResponseV2**](LatestPlugsResponseV2.md)
 
 ### HTTP request headers
@@ -604,6 +612,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PlugVersionsResponseV2**](PlugVersionsResponseV2.md)
 
 ### HTTP request headers
@@ -666,6 +675,7 @@ Name | Type | Description  | Notes
  **documentation** | [**Documentation**](Documentation.md)|  | [optional] 
 
 ### Return type
+
 
 [**GetPlugResponseV2**](GetPlugResponseV2.md)
 
@@ -730,6 +740,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**GetPlugResponseV2**](GetPlugResponseV2.md)
 
 ### HTTP request headers
@@ -792,6 +803,7 @@ Name | Type | Description  | Notes
  **var_async** | **bool**| Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default to True]
 
 ### Return type
+
 
 [**PostPlugJobSyncResponseV2**](PostPlugJobSyncResponseV2.md)
 
@@ -862,6 +874,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**RebuildPlugSyncResponseV2**](RebuildPlugSyncResponseV2.md)
 
 ### HTTP request headers
@@ -926,6 +939,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
 ### HTTP request headers
@@ -987,6 +1001,7 @@ Name | Type | Description  | Notes
  **undeploy** | **bool**| If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
 
 ### Return type
+
 
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
@@ -1056,6 +1071,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostPlugJobSyncResponseV2**](PostPlugJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1122,6 +1138,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostPlugJobSyncResponseV2**](PostPlugJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1184,6 +1201,7 @@ Name | Type | Description  | Notes
  **scale_to_zero** | **bool**| Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
 
 ### Return type
+
 
 [**VerifyPlugSyncResponseV2**](VerifyPlugSyncResponseV2.md)
 

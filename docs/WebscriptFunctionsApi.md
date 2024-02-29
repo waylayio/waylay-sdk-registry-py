@@ -74,6 +74,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -139,6 +140,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -198,6 +200,7 @@ Name | Type | Description  | Notes
  **ls** | **bool**| If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default to False]
 
 ### Return type
+
 
 **bytearray**
 
@@ -260,6 +263,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 **bytearray**
 
 ### HTTP request headers
@@ -319,6 +323,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**GetWebscriptResponseV2**](GetWebscriptResponseV2.md)
 
 ### HTTP request headers
@@ -377,6 +382,7 @@ Name | Type | Description  | Notes
  **version** | **str**| The version of the function. | 
 
 ### Return type
+
 
 [**GetWebscriptResponseV2**](GetWebscriptResponseV2.md)
 
@@ -445,6 +451,7 @@ Name | Type | Description  | Notes
  **created_after** | [**TimestampSpec**](.md)| Filter on jobs that created after the given timestamp or age | [optional] 
 
 ### Return type
+
 
 [**JobsForWebscriptResponseV2**](JobsForWebscriptResponseV2.md)
 
@@ -519,6 +526,7 @@ Name | Type | Description  | Notes
  **runtime** | [**List[str]**](str.md)| Filter on the runtime of the function. | [optional] 
 
 ### Return type
+
 
 [**WebscriptVersionsResponseV2**](WebscriptVersionsResponseV2.md)
 
@@ -597,6 +605,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**LatestWebscriptsResponseV2**](LatestWebscriptsResponseV2.md)
 
 ### HTTP request headers
@@ -660,6 +669,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**GetWebscriptResponseV2**](GetWebscriptResponseV2.md)
 
 ### HTTP request headers
@@ -722,6 +732,7 @@ Name | Type | Description  | Notes
  **var_async** | **bool**| Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default to True]
 
 ### Return type
+
 
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
@@ -792,6 +803,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**RebuildWebscriptSyncResponseV2**](RebuildWebscriptSyncResponseV2.md)
 
 ### HTTP request headers
@@ -856,6 +868,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
 ### HTTP request headers
@@ -917,6 +930,7 @@ Name | Type | Description  | Notes
  **undeploy** | **bool**| If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
 
 ### Return type
+
 
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
@@ -986,6 +1000,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1052,6 +1067,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1114,6 +1130,7 @@ Name | Type | Description  | Notes
  **scale_to_zero** | **bool**| Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
 
 ### Return type
+
 
 [**VerifyWebscriptSyncResponseV2**](VerifyWebscriptSyncResponseV2.md)
 

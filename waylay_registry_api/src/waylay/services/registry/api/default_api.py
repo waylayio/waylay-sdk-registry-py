@@ -65,6 +65,7 @@ class DefaultApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> RootPageResponse:
         ...
 
@@ -76,6 +77,7 @@ class DefaultApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[RootPageResponse]:
         ...
 
@@ -87,7 +89,8 @@ class DefaultApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[RootPageResponse, ApiResponse[RootPageResponse]]:
+        select_path: str = "",
+    ) -> Union[RootPageResponse, ApiResponse[RootPageResponse], Any]:
         """Version.
 
         Get the version of this function registry deployment.
@@ -113,8 +116,10 @@ class DefaultApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "*": "waylay.services.registry.models.RootPageResponse",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "*": "waylay.services.registry.models.RootPageResponse"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -122,6 +127,7 @@ class DefaultApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 

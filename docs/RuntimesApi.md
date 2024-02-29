@@ -57,6 +57,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 **bytearray**
 
 ### HTTP request headers
@@ -118,6 +119,7 @@ Name | Type | Description  | Notes
  **include_deprecated** | **bool**| If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default to True]
 
 ### Return type
+
 
 **bytearray**
 
@@ -182,6 +184,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**RuntimeVersionResponse**](RuntimeVersionResponse.md)
 
 ### HTTP request headers
@@ -241,6 +244,7 @@ Name | Type | Description  | Notes
  **include_deprecated** | **bool**| If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default to True]
 
 ### Return type
+
 
 [**RuntimeVersionResponse**](RuntimeVersionResponse.md)
 
@@ -306,6 +310,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**RuntimeSummaryResponse**](RuntimeSummaryResponse.md)
 
 ### HTTP request headers
@@ -370,6 +375,7 @@ Name | Type | Description  | Notes
  **archive_format** | [**List[ArchiveFormat]**](ArchiveFormat.md)| If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
 
 ### Return type
+
 
 [**RuntimeSummaryResponse**](RuntimeSummaryResponse.md)
 

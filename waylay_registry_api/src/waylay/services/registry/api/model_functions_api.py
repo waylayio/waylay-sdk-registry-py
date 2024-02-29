@@ -228,6 +228,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostModelJobSyncResponseV2:
         ...
 
@@ -253,6 +254,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostModelJobSyncResponseV2]:
         ...
 
@@ -278,7 +280,10 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[
+        PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2], Any
+    ]:
         """Create Model.
 
         Creates a new <em>model</em> function by uploading its assets.      The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported.
@@ -322,9 +327,13 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -332,6 +341,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -434,6 +444,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostModelJobSyncResponseV2:
         ...
 
@@ -455,6 +466,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostModelJobSyncResponseV2]:
         ...
 
@@ -476,7 +488,10 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[
+        PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2], Any
+    ]:
         """Delete Model Asset.
 
         Delete an asset from the model's collection of existing assets.
@@ -517,9 +532,13 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -527,6 +546,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -595,6 +615,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> bytearray:
         ...
 
@@ -610,6 +631,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[bytearray]:
         ...
 
@@ -625,7 +647,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[bytearray, ApiResponse[bytearray]]:
+        select_path: str = "",
+    ) -> Union[bytearray, ApiResponse[bytearray], Any]:
         """Get Model Archive.
 
         Get the specification archive of a model.
@@ -659,8 +682,8 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "bytearray",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "bytearray" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -668,6 +691,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -731,6 +755,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> bytearray:
         ...
 
@@ -752,6 +777,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[bytearray]:
         ...
 
@@ -773,7 +799,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[bytearray, ApiResponse[bytearray]]:
+        select_path: str = "",
+    ) -> Union[bytearray, ApiResponse[bytearray], Any]:
         """Get File From Model Archive.
 
         Get a file from the specification archive of a model.
@@ -810,8 +837,8 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "bytearray",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "bytearray" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -819,6 +846,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -876,6 +904,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetModelResponseV2:
         ...
 
@@ -888,6 +917,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetModelResponseV2]:
         ...
 
@@ -900,7 +930,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetModelResponseV2, ApiResponse[GetModelResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetModelResponseV2, ApiResponse[GetModelResponseV2], Any]:
         """Get Latest Model Version.
 
         Fetch the latest version of a <em>model</em>.    By default, the result shows the latest non-deprecated, non-draft version.   If there is no such version, the latest deprecated or the latest draft version is returned, with the former taking precedence.       Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>     The returned <em>model version</em> will contain a link to its   latest _draft_ or latest _published_ version (if existing and different).
@@ -933,8 +964,10 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetModelResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetModelResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -942,6 +975,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1000,6 +1034,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetModelResponseV2:
         ...
 
@@ -1015,6 +1050,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetModelResponseV2]:
         ...
 
@@ -1030,7 +1066,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetModelResponseV2, ApiResponse[GetModelResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetModelResponseV2, ApiResponse[GetModelResponseV2], Any]:
         """Get Model Version.
 
         Get a model by name and version.
@@ -1062,8 +1099,10 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetModelResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetModelResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1071,6 +1110,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1125,6 +1165,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> JobsForModelResponseV2:
         ...
 
@@ -1140,6 +1181,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[JobsForModelResponseV2]:
         ...
 
@@ -1155,7 +1197,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[JobsForModelResponseV2, ApiResponse[JobsForModelResponseV2]]:
+        select_path: str = "",
+    ) -> Union[JobsForModelResponseV2, ApiResponse[JobsForModelResponseV2], Any]:
         """List Model Jobs.
 
         List the ongoing and completed operations on a model.
@@ -1199,8 +1242,10 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.JobsForModelResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.JobsForModelResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1208,6 +1253,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1283,6 +1329,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> LatestModelsResponseV2:
         ...
 
@@ -1294,6 +1341,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[LatestModelsResponseV2]:
         ...
 
@@ -1305,7 +1353,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[LatestModelsResponseV2, ApiResponse[LatestModelsResponseV2]]:
+        select_path: str = "",
+    ) -> Union[LatestModelsResponseV2, ApiResponse[LatestModelsResponseV2], Any]:
         """List Models.
 
         List the (latest) versions of available <em>models</em>.  ### List Latest Model Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>model</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no _version filters_ are used, each listed <em>model version</em> item will contain a HAL **link to the  latest** _draft_ (`entities[]._links.draft`) or latest _published_ (`entities[]._links.publisned`) version (if existing and different).  ### List Latest Model Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>model</em> that satisfy the filters, but **without links**.  ### List All Model Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>models</em> versions that satisfy the query, possibly multiple versions per named <em>models</em>. No HAL links are provided.  #### Filter on _status_ By default <em>model versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>model</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`
@@ -1371,8 +1420,10 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.LatestModelsResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.LatestModelsResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1380,6 +1431,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1506,6 +1558,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> ModelVersionsResponseV2:
         ...
 
@@ -1518,6 +1571,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[ModelVersionsResponseV2]:
         ...
 
@@ -1530,7 +1584,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[ModelVersionsResponseV2, ApiResponse[ModelVersionsResponseV2]]:
+        select_path: str = "",
+    ) -> Union[ModelVersionsResponseV2, ApiResponse[ModelVersionsResponseV2], Any]:
         """List Model Versions.
 
         List all deployed versions of a model.
@@ -1589,8 +1644,10 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.ModelVersionsResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.ModelVersionsResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1598,6 +1655,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1711,6 +1769,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> GetModelResponseV2:
         ...
 
@@ -1727,6 +1786,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[GetModelResponseV2]:
         ...
 
@@ -1743,7 +1803,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[GetModelResponseV2, ApiResponse[GetModelResponseV2]]:
+        select_path: str = "",
+    ) -> Union[GetModelResponseV2, ApiResponse[GetModelResponseV2], Any]:
         """Patch Model Metadata.
 
         Patch the metadata of a model version.
@@ -1779,8 +1840,10 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.GetModelResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.GetModelResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1788,6 +1851,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1847,6 +1911,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostModelJobSyncResponseV2:
         ...
 
@@ -1862,6 +1927,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostModelJobSyncResponseV2]:
         ...
 
@@ -1877,7 +1943,10 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[
+        PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2], Any
+    ]:
         """Publish Draft Model.
 
         Mark the <em>model</em> to be ready and stable, taking it out of draft mode.,    Typically, the <em>model</em> should be in the <code>running</code> status,    such that publishing becomes a simple operation where the existing deployment can be re-used.   In other statuses, plug-registry may need to initiate a new build and deployment procedure.
@@ -1915,9 +1984,13 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -1925,6 +1998,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -1990,6 +2064,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> RebuildModelSyncResponseV2:
         ...
 
@@ -2005,6 +2080,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[RebuildModelSyncResponseV2]:
         ...
 
@@ -2020,7 +2096,10 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[RebuildModelSyncResponseV2, ApiResponse[RebuildModelSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[
+        RebuildModelSyncResponseV2, ApiResponse[RebuildModelSyncResponseV2], Any
+    ]:
         """Rebuild Model.
 
         Rebuild and deploy a model with the original or updated base image.
@@ -2068,9 +2147,13 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.RebuildModelSyncResponseV2",
-            "202": "waylay.services.registry.models.RebuildModelAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.RebuildModelSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.RebuildModelAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2078,6 +2161,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2163,6 +2247,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> UndeployedResponseV2:
         ...
 
@@ -2178,6 +2263,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[UndeployedResponseV2]:
         ...
 
@@ -2193,7 +2279,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2]]:
+        select_path: str = "",
+    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2], Any]:
         """Remove Model Version.
 
         Deprecate, undeploy and/or remove a <em>model</em> version.    By default, a `DELETE`    * _deprecates_ the model version(s): they are no longer included in listings by default.   * _undeploys_ the model version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the model version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action.
@@ -2233,9 +2320,13 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.UndeployedResponseV2",
-            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.UndeployedResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2243,6 +2334,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2309,6 +2401,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> UndeployedResponseV2:
         ...
 
@@ -2321,6 +2414,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[UndeployedResponseV2]:
         ...
 
@@ -2333,7 +2427,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2]]:
+        select_path: str = "",
+    ) -> Union[UndeployedResponseV2, ApiResponse[UndeployedResponseV2], Any]:
         """Remove Model.
 
         Deprecate, undeploy and/or remove all versions of this named <em>model</em>.    By default, a `DELETE`    * _deprecates_ the model version(s): they are no longer included in listings by default.   * _undeploys_ the model version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the model version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action.
@@ -2370,9 +2465,13 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.UndeployedResponseV2",
-            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.UndeployedResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.UndeploySubmittedResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2380,6 +2479,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2455,6 +2555,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostModelJobSyncResponseV2:
         ...
 
@@ -2479,6 +2580,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostModelJobSyncResponseV2]:
         ...
 
@@ -2503,7 +2605,10 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[
+        PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2], Any
+    ]:
         """Update Model Asset.
 
         The provided asset will be added to the <em>model</em> function's collection of existing assets,   replacing any existing asset with the same name.    Please note that it is not allowed to update the model.json json file with a changed value for any of the     <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
@@ -2546,9 +2651,13 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2556,6 +2665,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2640,6 +2750,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> PostModelJobSyncResponseV2:
         ...
 
@@ -2669,6 +2780,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[PostModelJobSyncResponseV2]:
         ...
 
@@ -2698,7 +2810,10 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[
+        PostModelJobSyncResponseV2, ApiResponse[PostModelJobSyncResponseV2], Any
+    ]:
         """Update Model Assets.
 
         Update a draft <em>model</em> function by updating its assets.      The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
@@ -2740,9 +2855,13 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2",
-            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "201": "waylay.services.registry.models.PostModelJobSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2750,6 +2869,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -2836,6 +2956,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> VerifyModelSyncResponseV2:
         ...
 
@@ -2851,6 +2972,7 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[VerifyModelSyncResponseV2]:
         ...
 
@@ -2866,7 +2988,8 @@ class ModelFunctionsApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[VerifyModelSyncResponseV2, ApiResponse[VerifyModelSyncResponseV2]]:
+        select_path: str = "",
+    ) -> Union[VerifyModelSyncResponseV2, ApiResponse[VerifyModelSyncResponseV2], Any]:
         """Verify Health Of Model.
 
         Verify health of model deployed on openfaas.
@@ -2904,9 +3027,13 @@ class ModelFunctionsApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.VerifyModelSyncResponseV2",
-            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.VerifyModelSyncResponseV2"
+            if not select_path
+            else Any,
+            "202": "waylay.services.registry.models.PostModelJobAsyncResponseV2"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -2914,6 +3041,7 @@ class ModelFunctionsApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 

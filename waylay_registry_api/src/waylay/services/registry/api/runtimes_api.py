@@ -115,6 +115,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> bytearray:
         ...
 
@@ -130,6 +131,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[bytearray]:
         ...
 
@@ -145,7 +147,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[bytearray, ApiResponse[bytearray]]:
+        select_path: str = "",
+    ) -> Union[bytearray, ApiResponse[bytearray], Any]:
         """Get Runtime Example Archive.
 
         Get an example of the specification archive of the runtime.
@@ -181,8 +184,8 @@ class RuntimesApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "bytearray",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "bytearray" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -190,6 +193,7 @@ class RuntimesApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -257,6 +261,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> bytearray:
         ...
 
@@ -278,6 +283,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[bytearray]:
         ...
 
@@ -299,7 +305,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[bytearray, ApiResponse[bytearray]]:
+        select_path: str = "",
+    ) -> Union[bytearray, ApiResponse[bytearray], Any]:
         """Get File From Runtime Example Archive.
 
         Get a file from the example specification archive of the runtime.
@@ -338,8 +345,8 @@ class RuntimesApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "bytearray",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "bytearray" if not select_path else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -347,6 +354,7 @@ class RuntimesApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -408,6 +416,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> RuntimeVersionResponse:
         ...
 
@@ -420,6 +429,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[RuntimeVersionResponse]:
         ...
 
@@ -432,7 +442,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[RuntimeVersionResponse, ApiResponse[RuntimeVersionResponse]]:
+        select_path: str = "",
+    ) -> Union[RuntimeVersionResponse, ApiResponse[RuntimeVersionResponse], Any]:
         """Get Latest Runtime Version.
 
         Get a representation of the default runtime version by name.
@@ -469,8 +480,10 @@ class RuntimesApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.RuntimeVersionResponse",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.RuntimeVersionResponse"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -478,6 +491,7 @@ class RuntimesApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -548,6 +562,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> RuntimeVersionResponse:
         ...
 
@@ -563,6 +578,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[RuntimeVersionResponse]:
         ...
 
@@ -578,7 +594,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[RuntimeVersionResponse, ApiResponse[RuntimeVersionResponse]]:
+        select_path: str = "",
+    ) -> Union[RuntimeVersionResponse, ApiResponse[RuntimeVersionResponse], Any]:
         """Get Runtime Version.
 
         Get a representation of the default runtime version by name.
@@ -612,8 +629,10 @@ class RuntimesApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.RuntimeVersionResponse",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.RuntimeVersionResponse"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -621,6 +640,7 @@ class RuntimesApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -674,6 +694,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> RuntimeSummaryResponse:
         ...
 
@@ -685,6 +706,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[RuntimeSummaryResponse]:
         ...
 
@@ -696,7 +718,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[RuntimeSummaryResponse, ApiResponse[RuntimeSummaryResponse]]:
+        select_path: str = "",
+    ) -> Union[RuntimeSummaryResponse, ApiResponse[RuntimeSummaryResponse], Any]:
         """List Runtimes.
 
         List the runtimes that function registry supports.
@@ -734,8 +757,10 @@ class RuntimesApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.RuntimeSummaryResponse",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.RuntimeSummaryResponse"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -743,6 +768,7 @@ class RuntimesApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
@@ -815,6 +841,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[False] = False,
+        select_path: Literal[""] = "",
     ) -> RuntimeSummaryResponse:
         ...
 
@@ -827,6 +854,7 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: Literal[True],
+        select_path: Literal[""] = "",
     ) -> ApiResponse[RuntimeSummaryResponse]:
         ...
 
@@ -839,7 +867,8 @@ class RuntimesApi:
         _request_timeout: Optional[RESTTimeout] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         with_http_info: StrictBool = False,
-    ) -> Union[RuntimeSummaryResponse, ApiResponse[RuntimeSummaryResponse]]:
+        select_path: str = "",
+    ) -> Union[RuntimeSummaryResponse, ApiResponse[RuntimeSummaryResponse], Any]:
         """List Runtime Versions.
 
         List the supported versions of a specific runtime.
@@ -878,8 +907,10 @@ class RuntimesApi:
             _headers=_headers,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {
-            "200": "waylay.services.registry.models.RuntimeSummaryResponse",
+        _response_types_map: Dict[str, Optional[Union[str, Any]]] = {
+            "200": "waylay.services.registry.models.RuntimeSummaryResponse"
+            if not select_path
+            else Any,
         }
         response_data = await self._api_client.call_api(
             **_request_params, _request_timeout=_request_timeout
@@ -887,6 +918,7 @@ class RuntimesApi:
         result = self._api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
+            select_path=select_path,
         )
         return result if with_http_info else result.data
 
