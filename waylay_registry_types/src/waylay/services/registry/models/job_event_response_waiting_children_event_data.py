@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,7 +16,7 @@ import json
 from pydantic import ConfigDict
 
 from datetime import datetime
-from typing import Any, ClassVar, Dict, List
+from typing import Any, Dict
 from pydantic import BaseModel
 from pydantic import Field
 from ..models.function_ref import FunctionRef
@@ -25,10 +24,9 @@ from ..models.job_reference import JobReference
 from ..models.job_status_and_entity_hal_links import JobStatusAndEntityHALLinks
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class JobEventResponseWaitingChildrenEventData(BaseModel):
@@ -39,12 +37,12 @@ class JobEventResponseWaitingChildrenEventData(BaseModel):
     data: Dict[str, Any]
     timestamp: datetime = Field(description="Timestamp of the event")
     function: FunctionRef
-    __properties: ClassVar[List[str]] = ["_links", "job", "data", "timestamp", "function"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -62,8 +60,6 @@ class JobEventResponseWaitingChildrenEventData(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -75,19 +71,9 @@ class JobEventResponseWaitingChildrenEventData(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of links
-        if self.links:
-            _dict['_links'] = self.links.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of job
-        if self.job:
-            _dict['job'] = self.job.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of function
-        if self.function:
-            _dict['function'] = self.function.to_dict()
         return _dict
 
     @classmethod
@@ -95,15 +81,4 @@ class JobEventResponseWaitingChildrenEventData(BaseModel):
         """Create an instance of JobEventResponseWaitingChildrenEventData from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "_links": JobStatusAndEntityHALLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "job": JobReference.from_dict(obj.get("job")) if obj.get("job") is not None else None,    # type: ignore
-            "data": obj.get("data"),
-            "timestamp": obj.get("timestamp"),
-            "function": FunctionRef.from_dict(obj.get("function")) if obj.get("function") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

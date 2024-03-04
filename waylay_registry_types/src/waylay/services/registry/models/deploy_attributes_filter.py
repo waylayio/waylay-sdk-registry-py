@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,29 +16,39 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class DeployAttributesFilter(BaseModel):
     """DeployAttributesFilter."""
 
-    endpoint: Optional[StrictStr] = Field(default=None, description="Filter on the openfaas endpoint. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).")
-    image_name: Optional[StrictStr] = Field(default=None, description="Filter on the container image name. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).", alias="imageName")
-    storage_location: Optional[StrictStr] = Field(default=None, description="Filter on the storageLocation. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).", alias="storageLocation")
-    __properties: ClassVar[List[str]] = ["endpoint", "imageName", "storageLocation"]
+    endpoint: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the openfaas endpoint. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+    )
+    image_name: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the container image name. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+        alias="imageName",
+    )
+    storage_location: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the storageLocation. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+        alias="storageLocation",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -57,8 +66,6 @@ class DeployAttributesFilter(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -70,8 +77,7 @@ class DeployAttributesFilter(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -81,13 +87,4 @@ class DeployAttributesFilter(BaseModel):
         """Create an instance of DeployAttributesFilter from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "endpoint": obj.get("endpoint"),
-            "imageName": obj.get("imageName"),
-            "storageLocation": obj.get("storageLocation")
-        })
-        return _obj
+        return cls.model_validate(obj)

@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,15 +16,14 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictStr
 from ..models.resource_limits import ResourceLimits
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class ExposedOpenfaasDeploySpec(BaseModel):
@@ -38,12 +36,12 @@ class ExposedOpenfaasDeploySpec(BaseModel):
     annotations: Optional[Dict[str, StrictStr]] = None
     limits: Optional[ResourceLimits] = None
     requests: Optional[ResourceLimits] = None
-    __properties: ClassVar[List[str]] = ["service", "image", "namespace", "labels", "annotations", "limits", "requests"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -61,8 +59,6 @@ class ExposedOpenfaasDeploySpec(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -74,16 +70,9 @@ class ExposedOpenfaasDeploySpec(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of limits
-        if self.limits:
-            _dict['limits'] = self.limits.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of requests
-        if self.requests:
-            _dict['requests'] = self.requests.to_dict()
         return _dict
 
     @classmethod
@@ -91,17 +80,4 @@ class ExposedOpenfaasDeploySpec(BaseModel):
         """Create an instance of ExposedOpenfaasDeploySpec from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "service": obj.get("service"),
-            "image": obj.get("image"),
-            "namespace": obj.get("namespace"),
-            "labels": obj.get("labels"),
-            "annotations": obj.get("annotations"),
-            "limits": ResourceLimits.from_dict(obj.get("limits")) if obj.get("limits") is not None else None,    # type: ignore
-            "requests": ResourceLimits.from_dict(obj.get("requests")) if obj.get("requests") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

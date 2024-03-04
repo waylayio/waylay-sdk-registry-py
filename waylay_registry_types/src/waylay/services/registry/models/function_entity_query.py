@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,30 +16,38 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from ..models.archive_format import ArchiveFormat
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class FunctionEntityQuery(BaseModel):
     """Filter on function attributes that do not change across function versions.."""
 
-    name: Optional[StrictStr] = Field(default=None, description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).")
-    archive_format: Optional[List[ArchiveFormat]] = Field(default=None, description="Filter on the archive format of the function.", alias="archiveFormat")
-    runtime: Optional[List[StrictStr]] = Field(default=None, description="Filter on the runtime of the function.")
-    __properties: ClassVar[List[str]] = ["name", "archiveFormat", "runtime"]
+    name: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+    )
+    archive_format: Optional[List[ArchiveFormat]] = Field(
+        default=None,
+        description="Filter on the archive format of the function.",
+        alias="archiveFormat",
+    )
+    runtime: Optional[List[StrictStr]] = Field(
+        default=None, description="Filter on the runtime of the function."
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -58,8 +65,6 @@ class FunctionEntityQuery(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -71,8 +76,7 @@ class FunctionEntityQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,13 +86,4 @@ class FunctionEntityQuery(BaseModel):
         """Create an instance of FunctionEntityQuery from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "archiveFormat": obj.get("archiveFormat"),
-            "runtime": obj.get("runtime")
-        })
-        return _obj
+        return cls.model_validate(obj)

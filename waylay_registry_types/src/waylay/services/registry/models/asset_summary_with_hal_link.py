@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,17 +16,16 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from ..models.asset_role import AssetRole
 from ..models.asset_summary_with_hal_link_links import AssetSummaryWithHALLinkLinks
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class AssetSummaryWithHALLink(BaseModel):
@@ -38,12 +36,12 @@ class AssetSummaryWithHALLink(BaseModel):
     title: Optional[StrictStr] = None
     description: Optional[StrictStr] = None
     role: Optional[AssetRole] = None
-    __properties: ClassVar[List[str]] = ["_links", "name", "title", "description", "role"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -61,8 +59,6 @@ class AssetSummaryWithHALLink(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -74,13 +70,9 @@ class AssetSummaryWithHALLink(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of links
-        if self.links:
-            _dict['_links'] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -88,15 +80,4 @@ class AssetSummaryWithHALLink(BaseModel):
         """Create an instance of AssetSummaryWithHALLink from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "_links": AssetSummaryWithHALLinkLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "name": obj.get("name"),
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "role": obj.get("role")
-        })
-        return _obj
+        return cls.model_validate(obj)

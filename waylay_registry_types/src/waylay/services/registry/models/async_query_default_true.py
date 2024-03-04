@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,27 +16,30 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool
 from pydantic import Field
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class AsyncQueryDefaultTrue(BaseModel):
     """AsyncQueryDefaultTrue."""
 
-    var_async: Optional[StrictBool] = Field(default=True, description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.", alias="async")
-    __properties: ClassVar[List[str]] = ["async"]
+    var_async: Optional[StrictBool] = Field(
+        default=True,
+        description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+        alias="async",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -55,8 +57,6 @@ class AsyncQueryDefaultTrue(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -68,8 +68,7 @@ class AsyncQueryDefaultTrue(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -79,11 +78,4 @@ class AsyncQueryDefaultTrue(BaseModel):
         """Create an instance of AsyncQueryDefaultTrue from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "async": obj.get("async") if obj.get("async") is not None else True
-        })
-        return _obj
+        return cls.model_validate(obj)

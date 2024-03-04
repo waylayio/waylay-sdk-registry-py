@@ -53,6 +53,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 **Dict[str, object]**
 
 ### HTTP request headers
@@ -108,6 +109,7 @@ Name | Type | Description  | Notes
  **schema_id** | **str**| Schema id | 
 
 ### Return type
+
 
 **Dict[str, object]**
 

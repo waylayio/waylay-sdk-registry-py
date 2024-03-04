@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,17 +16,16 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from ..models.legacy_documentation import LegacyDocumentation
 from ..models.tag import Tag
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class LegacyPlugResponseMetadata(BaseModel):
@@ -40,12 +38,12 @@ class LegacyPlugResponseMetadata(BaseModel):
     tags: Optional[List[Tag]] = None
     icon_url: Optional[StrictStr] = Field(default=None, alias="iconURL")
     friendly_name: Optional[StrictStr] = Field(default=None, alias="friendlyName")
-    __properties: ClassVar[List[str]] = ["documentation", "author", "description", "category", "tags", "iconURL", "friendlyName"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -63,8 +61,6 @@ class LegacyPlugResponseMetadata(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -76,20 +72,9 @@ class LegacyPlugResponseMetadata(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of documentation
-        if self.documentation:
-            _dict['documentation'] = self.documentation.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
-        _items = []
-        if self.tags:
-            for _item in self.tags:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['tags'] = _items
         return _dict
 
     @classmethod
@@ -97,17 +82,4 @@ class LegacyPlugResponseMetadata(BaseModel):
         """Create an instance of LegacyPlugResponseMetadata from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "documentation": LegacyDocumentation.from_dict(obj.get("documentation")) if obj.get("documentation") is not None else None,    # type: ignore
-            "author": obj.get("author"),
-            "description": obj.get("description"),
-            "category": obj.get("category"),
-            "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,  # type: ignore
-            "iconURL": obj.get("iconURL"),
-            "friendlyName": obj.get("friendlyName")
-        })
-        return _obj
+        return cls.model_validate(obj)

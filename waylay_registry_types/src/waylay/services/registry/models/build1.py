@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,7 +16,7 @@ import json
 from pydantic import ConfigDict
 
 from datetime import datetime
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictStr, field_validator
 from pydantic import Field
 from ..models.function_ref import FunctionRef
@@ -25,30 +24,36 @@ from ..models.job_and_function_hal_link import JobAndFunctionHALLink
 from ..models.job_state_result import JobStateResult
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class Build1(BaseModel):
     """Build1."""
 
     type: StrictStr = Field(description="The type of the background task.")
-    operation: StrictStr = Field(description="The operation name for the background task.")
-    id: StrictStr = Field(description="The id of the background job, or the constant `_unknown_`")
+    operation: StrictStr = Field(
+        description="The operation name for the background task."
+    )
+    id: StrictStr = Field(
+        description="The id of the background job, or the constant `_unknown_`"
+    )
     state: JobStateResult
-    created_at: datetime = Field(description="The creation time of this job", alias="createdAt")
-    created_by: StrictStr = Field(description="The user that initiated this job", alias="createdBy")
+    created_at: datetime = Field(
+        description="The creation time of this job", alias="createdAt"
+    )
+    created_by: StrictStr = Field(
+        description="The user that initiated this job", alias="createdBy"
+    )
     function: Optional[FunctionRef] = None
     links: JobAndFunctionHALLink = Field(alias="_links")
-    __properties: ClassVar[List[str]] = ["type", "operation", "id", "state", "createdAt", "createdBy", "function", "_links"]
 
-    @field_validator('type')
+    @field_validator("type")
     @classmethod
     def type_validate_enum(cls, value):
         """Validate the enum."""
-        if value not in ('build'):
+        if value not in ("build"):
             raise ValueError("must be one of enum values ('build')")
         return value
 
@@ -56,6 +61,7 @@ class Build1(BaseModel):
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -73,8 +79,6 @@ class Build1(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -86,19 +90,9 @@ class Build1(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of state
-        if self.state:
-            _dict['state'] = self.state.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of function
-        if self.function:
-            _dict['function'] = self.function.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of links
-        if self.links:
-            _dict['_links'] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -106,18 +100,4 @@ class Build1(BaseModel):
         """Create an instance of Build1 from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "operation": obj.get("operation"),
-            "id": obj.get("id"),
-            "state": JobStateResult.from_dict(obj.get("state")) if obj.get("state") is not None else None,    # type: ignore
-            "createdAt": obj.get("createdAt"),
-            "createdBy": obj.get("createdBy"),
-            "function": FunctionRef.from_dict(obj.get("function")) if obj.get("function") is not None else None,    # type: ignore
-            "_links": JobAndFunctionHALLink.from_dict(obj.get("_links")) if obj.get("_links") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

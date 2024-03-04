@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,37 +16,40 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List
+from typing import Any, Dict
 from pydantic import BaseModel, StrictStr, field_validator
 from pydantic import Field
 from typing_extensions import Annotated
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class NameAndVersion(BaseModel):
     """NameAndVersion."""
 
     name: StrictStr = Field(description="The name of the function.")
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
-    __properties: ClassVar[List[str]] = ["name", "version"]
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -65,8 +67,6 @@ class NameAndVersion(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -78,8 +78,7 @@ class NameAndVersion(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -89,12 +88,4 @@ class NameAndVersion(BaseModel):
         """Create an instance of NameAndVersion from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "version": obj.get("version")
-        })
-        return _obj
+        return cls.model_validate(obj)

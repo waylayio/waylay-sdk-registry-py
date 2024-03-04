@@ -9,133 +9,21 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
-from inspect import getfullargspec
-import json
-import pprint
 import re  # noqa: F401
 
-from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
 from ..models.latest_plug_versions_query import LatestPlugVersionsQuery
 from ..models.latest_plugs_query import LatestPlugsQuery
 
-from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
-
-LATESTPLUGVERSIONSQUERYV2_ANY_OF_SCHEMAS = ["LatestPlugVersionsQuery", "LatestPlugsQuery"]
+from typing import (
+    Union,  # >=3.8
+)
+from typing_extensions import (
+    Annotated,  # >=3.9
+)
 
 
-class LatestPlugVersionsQueryV2(BaseModel):
-    """Latest plug versions listing query.."""
-
-    # data type: LatestPlugVersionsQuery
-    anyof_schema_1_validator: Optional[LatestPlugVersionsQuery] = None
-    # data type: LatestPlugsQuery
-    anyof_schema_2_validator: Optional[LatestPlugsQuery] = None
-    if TYPE_CHECKING:
-        actual_instance: Optional[Union[LatestPlugVersionsQuery, LatestPlugsQuery]] = None
-    else:
-        actual_instance: Any = None
-    any_of_schemas: List[str] = LATESTPLUGVERSIONSQUERYV2_ANY_OF_SCHEMAS
-
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
-
-    def __init__(self, *args, **kwargs) -> None:
-        """Create a LatestPlugVersionsQueryV2 model instance."""
-        if args:
-            if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
-            if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
-            super().__init__(actual_instance=args[0])
-        else:
-            super().__init__(**kwargs)
-
-    @field_validator('actual_instance')
-    @classmethod
-    def actual_instance_must_validate_anyof(cls, v):
-        """Validate the actual instance on deserialisation."""
-        instance = LatestPlugVersionsQueryV2.model_construct()
-        error_messages = []
-        # validate data type: LatestPlugVersionsQuery
-        if not isinstance(v, LatestPlugVersionsQuery):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `LatestPlugVersionsQuery`")
-        else:
-            return v
-
-        # validate data type: LatestPlugsQuery
-        if not isinstance(v, LatestPlugsQuery):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `LatestPlugsQuery`")
-        else:
-            return v
-
-        if error_messages:
-            # no match
-            raise ValueError("No match found when setting the actual_instance in LatestPlugVersionsQueryV2 with anyOf schemas: LatestPlugVersionsQuery, LatestPlugsQuery. Details: " + ", ".join(error_messages))
-        else:
-            return v
-
-    @classmethod
-    def from_dict(cls, obj: dict) -> Self:
-        """Get a dict representation of an object."""
-        return cls.from_json(json.dumps(obj, default=str))
-
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
-        error_messages = []
-        # anyof_schema_1_validator: Optional[LatestPlugVersionsQuery] = None
-        try:
-            instance.actual_instance = LatestPlugVersionsQuery.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[LatestPlugsQuery] = None
-        try:
-            instance.actual_instance = LatestPlugsQuery.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-
-        if error_messages:
-            # no match
-            raise ValueError("No match found when deserializing the JSON string into LatestPlugVersionsQueryV2 with anyOf schemas: LatestPlugVersionsQuery, LatestPlugsQuery. Details: " + ", ".join(error_messages))
-        else:
-            return instance
-
-    def to_json(self) -> str:
-        """Get the JSON representation of the actual instance."""
-        if self.actual_instance is None:
-            return "null"
-
-        to_json = getattr(self.actual_instance, "to_json", None)
-        if callable(to_json):
-            return self.actual_instance.to_json()  # type: ignore
-        else:
-            return json.dumps(self.actual_instance, default=str)
-
-    def to_dict(self) -> Optional[Dict]:
-        """Get the dict representation of the actual instance."""
-        if self.actual_instance is None:
-            return None
-
-        to_dict = getattr(self.actual_instance, "to_dict", None)
-        if callable(to_dict):
-            return self.actual_instance.to_dict()  # type: ignore
-        else:
-            return json.dumps(self.actual_instance, default=str)  # type: ignore
-
-    def to_str(self) -> str:
-        """Get the string representation of the actual instance."""
-        return pprint.pformat(self.model_dump())
+LatestPlugVersionsQueryV2 = Union[
+    Annotated[LatestPlugVersionsQuery, ""], Annotated[LatestPlugsQuery, ""]
+]
+"""Latest plug versions listing query.."""

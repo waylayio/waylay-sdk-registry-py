@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,29 +16,30 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List
-from pydantic import BaseModel, StrictStr, field_validator
+from typing import Any, Dict, List
+from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from typing_extensions import Annotated
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class UndeployedResponseV2(BaseModel):
     """Undeployed."""
 
     message: StrictStr
-    versions: List[Annotated[str, Field(strict=True)]] = Field(description="The versions that where deprecated, undeployed and/or removed.")
-    __properties: ClassVar[List[str]] = ["message", "versions"]
+    versions: List[Annotated[str, Field(strict=True)]] = Field(
+        description="The versions that where deprecated, undeployed and/or removed."
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -57,8 +57,6 @@ class UndeployedResponseV2(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -70,8 +68,7 @@ class UndeployedResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -81,12 +78,4 @@ class UndeployedResponseV2(BaseModel):
         """Create an instance of UndeployedResponseV2 from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "message": obj.get("message"),
-            "versions": obj.get("versions")
-        })
-        return _obj
+        return cls.model_validate(obj)

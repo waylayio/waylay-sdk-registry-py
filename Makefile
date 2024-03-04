@@ -7,70 +7,111 @@ help:
 	@awk 'BEGIN {FS = ":[^#]*? ## "} /^[a-zA-Z0-9_\-\.]+:[^#]* ## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 .DEFAULT_GOAL := help
 
-
 SERVICE_NAME=registry
+
+API_FOLDER=waylay_${SERVICE_NAME}_api
+API_SRC=${API_FOLDER}/src
+TYPES_FOLDER=waylay_${SERVICE_NAME}_types
+TYPES_SRC=${TYPES_FOLDER}/src
+TEST_FOLDER=test
+
+CMD_FORMAT=ruff format
+CMD_FIX=ruff check --fix
+CMD_CHECK=ruff check
 
 # disables test QA unless set to empty string
 TEST_QA_PREFIX?=echo DISABLED
 
-lint: ### Run linting checks
-	cd waylay_${SERVICE_NAME}_api && pylint --errors-only src/
-	@${printMsg} 'lint ${SERVICE_NAME} api package' 'OK'
-	cd waylay_${SERVICE_NAME}_types && pylint --errors-only src/
-	@${printMsg} 'lint ${SERVICE_NAME} types package' 'OK'
-	pylint --errors-only test/
-	@${printMsg} 'lint ${SERVICE_NAME} test package OK'
+VENV_DIR=.venv
+VENV_ACTIVATE_CMD=${VENV_DIR}/bin/activate
+VENV_ACTIVATE=. ${VENV_ACTIVATE_CMD}
 
-codestyle: ### Run codestyle checks
-	pycodestyle waylay_${SERVICE_NAME}_api/src/
-	@${printMsg} 'codestyle ${SERVICE_NAME} api package' 'OK'
-	pycodestyle waylay_${SERVICE_NAME}_types/src/
-	@${printMsg} 'codestyle ${SERVICE_NAME} types package' 'OK'
-	pycodestyle test/
-	@${printMsg} 'codestyle ${SERVICE_NAME} test package' 'OK'
+${VENV_ACTIVATE_CMD}:
+	python3 -m venv ${VENV_DIR}
+	${VENV_ACTIVATE} && make exec-dev-install
 
-typecheck: ### Run type checks
-	cd waylay_${SERVICE_NAME}_api/src/ && mypy --namespace-packages -p waylay
-	@${printMsg} 'typecheck api package OK'
-	cd waylay_${SERVICE_NAME}_types/src/ && mypy --namespace-packages -p waylay
-	@${printMsg} 'typecheck types package OK'
-	${TEST_QA_PREFIX} mypy test
-	@${printMsg} 'typecheck test package' '${TEST_QA_PREFIX} OK'
+install: ${VENV_ACTIVATE_CMD}
 
-docstyle: ### Run docstyle checks
-	pydocstyle waylay_${SERVICE_NAME}_api/src/
-	@${printMsg} 'pydocstyle ${SERVICE_NAME} api package' 'OK'
-	pydocstyle waylay_${SERVICE_NAME}_types/src/
-	@${printMsg} 'pydocstyle ${SERVICE_NAME} types package' 'OK'
-	${TEST_QA_PREFIX} pydocstyle test/
-	@${printMsg} 'pydocstyle ${SERVICE_SUBMODULE} test package' '${TEST_QA_PREFIX} OK'
+clean:
+	rm -fr ${VENV_DIR}
+	rm -fr .*_cache
+	rm -fr */.*_cache
+	rm -fr */src/*.egg-info
 
-code-qa: codestyle docstyle lint typecheck ### perform code quality checks
+lint: install ### Run linting checks
+	@${VENV_ACTIVATE} && make exec-lint
 
-ci-code-qa: code-qa ### perform ci code quality checks
+typecheck: install ### Run type checks
+	@${VENV_ACTIVATE} && make exec-typecheck
 
-dev-install: _install_requirements ### Install the development environment
-	pip install -e waylay_${SERVICE_NAME}_api[dev]
-	pip install -e waylay_${SERVICE_NAME}_types[dev]
+code-qa: install ### perform code quality checks
+	@${VENV_ACTIVATE} && make exec-code-qa
+
+test: install ### Run unit tests
+	@${VENV_ACTIVATE} && make exec-test
+
+format: install ### Format code
+	@${VENV_ACTIVATE} && make exec-format
+
+exec-lint: ### Run linting checks
+	cd ${API_FOLDER} && ${CMD_CHECK}
+	@${printMsg} 'lint ${API_FOLDER}' 'OK'
+	cd ${TYPES_FOLDER} && ${CMD_CHECK}
+	@${printMsg} 'lint ${TYPES_FOLDER}' 'OK'
+	${CMD_CHECK}
+	@${printMsg} 'lint test' 'OK'
+
+exec-typecheck: ### Run type checks
+	cd ${API_SRC}/ && mypy --namespace-packages -p waylay
+	@${printMsg} 'typecheck api' 'OK'
+	cd ${TYPES_SRC}/ && mypy --namespace-packages -p waylay
+	@${printMsg} 'typecheck types' 'OK'
+	${TEST_QA_PREFIX} mypy ${TEST_FOLDER}
+	@${printMsg} 'typecheck test' '${TEST_QA_PREFIX} OK'
+
+exec-test: ### Run unit tests
+	pytest ${TEST_FOLDER}
+
+exec-format: ### Format code
+	${CMD_FIX} ${API_FOLDER}
+	${CMD_FORMAT} ${API_FOLDER}
+	@${printMsg} 'format api' 'OK'
+	${CMD_FIX} ${TYPES_FOLDER}
+	${CMD_FORMAT} ${TYPES_FOLDER}
+	@${printMsg} 'format types' 'OK'
+	${CMD_FIX} ${TEST_FOLDER}
+	${CMD_FORMAT} ${TEST_FOLDER}
+	@${printMsg} 'format test' 'OK'
+
+exec-code-qa: exec-lint exec-typecheck ### perform code quality checks
+
+ci-code-qa: exec-code-qa ### perform ci code quality checks
+
+exec-dev-install: _install_requirements ### Install the development environment
+	pip install -e ${API_FOLDER}[dev]
+	pip install -e ${TYPES_FOLDER}[dev]
 
 ci-install: _install_requirements ### Install the environment with frozen dependencies
-	pip install './waylay_${SERVICE_NAME}_api[dev]'
-	pip install './waylay_${SERVICE_NAME}_types[dev]'
+	pip install './${API_FOLDER}[dev]'
+	pip install './${TYPES_FOLDER}[dev]'
 
 _install_requirements:
 	pip install --upgrade pip
-	pip install -r test-requirements.txt
 	pip install -r requirements.txt
 
+_GENERATED_FOLDER?=.
+_GENERATED_FILES=.openapi-generator/FILES
 
-test: ### Run unit tests
-	pytest test/
-
-format: ### Format code
-	pip install autopep8
-	autopep8 waylay_${SERVICE_NAME}_api/src
-	@${printMsg} 'formatted ${SERVICE_NAME} api package'
-	autopep8 waylay_${SERVICE_NAME}_types/src
-	@${printMsg} 'formatted ${SERVICE_NAME} types package'
-	autopep8 test
-	@${printMsg} 'formatted ${SERVICE_NAME} test package'
+_clean_gen:  ### Removes all code-generated files
+	@test -s ${_GENERATED_FOLDER}/${_GENERATED_FILES} || ( \
+		${printMsg} 'clean-generated ${_GENERATED_FOLDER}' 'FAILED (no ${_GENERATED_FILES}).' \
+		&& exit -1 \
+	)
+	cd ${_GENERATED_FOLDER} && xargs rm -f < ${_GENERATED_FILES} && find . -empty -type d -delete
+	@${printMsg} 'clean-generated ${_GENERATED_FOLDER}' 'OK'
+	
+clean-generated:  ### Removes all code-generated files
+	@make clean
+	@_GENERATED_FOLDER=${TYPES_FOLDER} make _clean_gen
+	@_GENERATED_FOLDER=${API_FOLDER} make _clean_gen
+	@_GENERATED_FOLDER='.' make _clean_gen

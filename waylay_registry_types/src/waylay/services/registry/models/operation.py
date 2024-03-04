@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,15 +16,14 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List
+from typing import Any, Dict
 from pydantic import BaseModel, StrictStr
 from ..models.job_type import JobType
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class Operation(BaseModel):
@@ -35,12 +33,12 @@ class Operation(BaseModel):
     description: StrictStr
     name: StrictStr
     type: JobType
-    __properties: ClassVar[List[str]] = ["id", "description", "name", "type"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -58,8 +56,6 @@ class Operation(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -71,8 +67,7 @@ class Operation(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,14 +77,4 @@ class Operation(BaseModel):
         """Create an instance of Operation from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "description": obj.get("description"),
-            "name": obj.get("name"),
-            "type": obj.get("type")
-        })
-        return _obj
+        return cls.model_validate(obj)

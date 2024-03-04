@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,29 +16,44 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 from pydantic import BaseModel
 from pydantic import Field
 from typing_extensions import Annotated
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class PagingQuery(BaseModel):
     """PagingQuery."""
 
-    limit: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.")
-    page: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The number of pages to skip when returning result to this query.")
-    __properties: ClassVar[List[str]] = ["limit", "page"]
+    limit: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.",
+    )
+    page: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The number of pages to skip when returning result to this query.",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -57,8 +71,6 @@ class PagingQuery(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -70,8 +82,7 @@ class PagingQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -81,12 +92,4 @@ class PagingQuery(BaseModel):
         """Create an instance of PagingQuery from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "page": obj.get("page")
-        })
-        return _obj
+        return cls.model_validate(obj)

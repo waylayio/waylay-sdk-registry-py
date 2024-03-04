@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,17 +16,18 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List
+from typing import Any, Dict
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
-from ..models.invokable_webscript_response_entity import InvokableWebscriptResponseEntity
+from ..models.invokable_webscript_response_entity import (
+    InvokableWebscriptResponseEntity,
+)
 from ..models.invoke_internal_hal_link import InvokeInternalHALLink
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class UnhealthyInvokableWebscriptError(BaseModel):
@@ -37,12 +37,12 @@ class UnhealthyInvokableWebscriptError(BaseModel):
     links: InvokeInternalHALLink = Field(alias="_links")
     error: StrictStr
     code: StrictStr
-    __properties: ClassVar[List[str]] = ["entity", "_links", "error", "code"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -60,8 +60,6 @@ class UnhealthyInvokableWebscriptError(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -73,16 +71,9 @@ class UnhealthyInvokableWebscriptError(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of entity
-        if self.entity:
-            _dict['entity'] = self.entity.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of links
-        if self.links:
-            _dict['_links'] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -90,14 +81,4 @@ class UnhealthyInvokableWebscriptError(BaseModel):
         """Create an instance of UnhealthyInvokableWebscriptError from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "entity": InvokableWebscriptResponseEntity.from_dict(obj.get("entity")) if obj.get("entity") is not None else None,    # type: ignore
-            "_links": InvokeInternalHALLink.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "error": obj.get("error"),
-            "code": obj.get("code")
-        })
-        return _obj
+        return cls.model_validate(obj)

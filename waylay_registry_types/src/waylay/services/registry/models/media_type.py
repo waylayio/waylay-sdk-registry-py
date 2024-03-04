@@ -9,18 +9,15 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class MediaType(str, Enum):
@@ -29,10 +26,10 @@ class MediaType(str, Enum):
     """
     allowed enum values
     """
-    APPLICATION_SLASH_JAVASCRIPT = 'application/javascript'
-    APPLICATION_SLASH_JAVA_MINUS_VM = 'application/java-vm'
-    TEXT_SLASH_X_MINUS_PYTHON = 'text/x-python'
-    TEXT_SLASH_X_MINUS_GOLANG = 'text/x-golang'
+    APPLICATION_SLASH_JAVASCRIPT = "application/javascript"
+    APPLICATION_SLASH_JAVA_MINUS_VM = "application/java-vm"
+    TEXT_SLASH_X_MINUS_PYTHON = "text/x-python"
+    TEXT_SLASH_X_MINUS_GOLANG = "text/x-golang"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

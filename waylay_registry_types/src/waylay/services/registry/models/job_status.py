@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,17 +16,16 @@ import json
 from pydantic import ConfigDict
 
 from datetime import datetime
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 from pydantic import Field
 from ..models.job_status_progress import JobStatusProgress
 from ..models.parent_keys import ParentKeys
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class JobStatus(BaseModel):
@@ -42,12 +40,12 @@ class JobStatus(BaseModel):
     failed_reason: Optional[StrictStr] = Field(default=None, alias="failedReason")
     parent: Optional[ParentKeys] = None
     delay: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties: ClassVar[List[str]] = ["id", "name", "progress", "attemptsMade", "finishedOn", "processedOn", "failedReason", "parent", "delay"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -65,8 +63,6 @@ class JobStatus(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -78,16 +74,9 @@ class JobStatus(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of progress
-        if self.progress:
-            _dict['progress'] = self.progress.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of parent
-        if self.parent:
-            _dict['parent'] = self.parent.to_dict()
         return _dict
 
     @classmethod
@@ -95,19 +84,4 @@ class JobStatus(BaseModel):
         """Create an instance of JobStatus from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "progress": JobStatusProgress.from_dict(obj.get("progress")) if obj.get("progress") is not None else None,    # type: ignore
-            "attemptsMade": obj.get("attemptsMade"),
-            "finishedOn": obj.get("finishedOn"),
-            "processedOn": obj.get("processedOn"),
-            "failedReason": obj.get("failedReason"),
-            "parent": ParentKeys.from_dict(obj.get("parent")) if obj.get("parent") is not None else None,    # type: ignore
-            "delay": obj.get("delay")
-        })
-        return _obj
+        return cls.model_validate(obj)

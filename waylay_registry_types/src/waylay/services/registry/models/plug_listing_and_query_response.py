@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,31 +16,37 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt
 from pydantic import Field
 from ..models.plug_response import PlugResponse
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class PlugListingAndQueryResponse(BaseModel):
     """Successful Response."""
 
-    count: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The total count of matching items, from which this result is one page.")
-    limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page size used for this query result.")
-    page: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page number of a paged query result.")
+    count: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None,
+        description="The total count of matching items, from which this result is one page.",
+    )
+    limit: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page size used for this query result."
+    )
+    page: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page number of a paged query result."
+    )
     plugs: List[PlugResponse]
-    __properties: ClassVar[List[str]] = ["count", "limit", "page", "plugs"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -59,8 +64,6 @@ class PlugListingAndQueryResponse(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -72,17 +75,9 @@ class PlugListingAndQueryResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in plugs (list)
-        _items = []
-        if self.plugs:
-            for _item in self.plugs:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['plugs'] = _items
         return _dict
 
     @classmethod
@@ -90,14 +85,4 @@ class PlugListingAndQueryResponse(BaseModel):
         """Create an instance of PlugListingAndQueryResponse from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "count": obj.get("count"),
-            "limit": obj.get("limit"),
-            "page": obj.get("page"),
-            "plugs": [PlugResponse.from_dict(_item) for _item in obj.get("plugs")] if obj.get("plugs") is not None else None  # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

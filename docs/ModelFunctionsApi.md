@@ -8,10 +8,10 @@ Method | HTTP request | Description
 [**delete_asset**](ModelFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Delete Model Asset
 [**get_archive**](ModelFunctionsApi.md#get_archive) | **GET** /registry/v2/models/{name}/versions/{version}/content | Get Model Archive
 [**get_asset**](ModelFunctionsApi.md#get_asset) | **GET** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Get File From Model Archive
-[**get_latest_version**](ModelFunctionsApi.md#get_latest_version) | **GET** /registry/v2/models/{name} | Get Latest Model Version
-[**get_version**](ModelFunctionsApi.md#get_version) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
+[**get_latest**](ModelFunctionsApi.md#get_latest) | **GET** /registry/v2/models/{name} | Get Latest Model Version
+[**get**](ModelFunctionsApi.md#get) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
 [**jobs**](ModelFunctionsApi.md#jobs) | **GET** /registry/v2/models/{name}/versions/{version}/jobs | List Model Jobs
-[**list_all**](ModelFunctionsApi.md#list_all) | **GET** /registry/v2/models/ | List Models
+[**list**](ModelFunctionsApi.md#list) | **GET** /registry/v2/models/ | List Models
 [**list_versions**](ModelFunctionsApi.md#list_versions) | **GET** /registry/v2/models/{name}/versions | List Model Versions
 [**patch_metadata**](ModelFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/models/{name}/versions/{version}/metadata | Patch Model Metadata
 [**publish**](ModelFunctionsApi.md#publish) | **POST** /registry/v2/models/{name}/versions/{version}/publish | Publish Draft Model
@@ -73,6 +73,7 @@ Name | Type | Description  | Notes
  **multipart_file_upload** | [**MultipartFileUpload**](MultipartFileUpload.md)| The assets for a &lt;em&gt;model&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;      The required &lt;code&gt;model.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;kfserving&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
 
 ### Return type
+
 
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
@@ -139,6 +140,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -198,6 +200,7 @@ Name | Type | Description  | Notes
  **ls** | **bool**| If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default to False]
 
 ### Return type
+
 
 **bytearray**
 
@@ -260,6 +263,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 **bytearray**
 
 ### HTTP request headers
@@ -275,8 +279,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_latest_version**
-> GetModelResponseV2 get_latest_version(name: str, query=GetLatestVersionQuery)
+# **get_latest**
+> GetModelResponseV2 get_latest(name: str, query=GetLatestQuery)
 
 Get Latest Model Version
 
@@ -301,11 +305,11 @@ name = 'name_example' # str | The name of the function.,
 
 try:
     # Get Latest Model Version
-    api_response = await waylay_client.registry.model_functions.get_latest_version(name=name, )
-    print("The response of registry.model_functions.get_latest_version:\n")
+    api_response = await waylay_client.registry.model_functions.get_latest(name=name, )
+    print("The response of registry.model_functions.get_latest:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.model_functions.get_latest_version: %s\n" % e)
+    print("Exception when calling registry.model_functions.get_latest: %s\n" % e)
 ```
 
 ### Parameters
@@ -318,6 +322,7 @@ Name | Type | Description  | Notes
  **include_deprecated** | **bool**| Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions are **included**. If set to &#x60;false&#x60;, deprecated versions are **excluded**. | [optional] 
 
 ### Return type
+
 
 [**GetModelResponseV2**](GetModelResponseV2.md)
 
@@ -334,8 +339,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_version**
-> GetModelResponseV2 get_version(name: str, version: str, query=GetVersionQuery)
+# **get**
+> GetModelResponseV2 get(name: str, version: str, query=GetQuery)
 
 Get Model Version
 
@@ -361,11 +366,11 @@ version = 'version_example' # str | The version of the function.,
 
 try:
     # Get Model Version
-    api_response = await waylay_client.registry.model_functions.get_version(name=name, version=version, )
-    print("The response of registry.model_functions.get_version:\n")
+    api_response = await waylay_client.registry.model_functions.get(name=name, version=version, )
+    print("The response of registry.model_functions.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.model_functions.get_version: %s\n" % e)
+    print("Exception when calling registry.model_functions.get: %s\n" % e)
 ```
 
 ### Parameters
@@ -377,6 +382,7 @@ Name | Type | Description  | Notes
  **version** | **str**| The version of the function. | 
 
 ### Return type
+
 
 [**GetModelResponseV2**](GetModelResponseV2.md)
 
@@ -446,6 +452,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**JobsForModelResponseV2**](JobsForModelResponseV2.md)
 
 ### HTTP request headers
@@ -461,8 +468,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list_all**
-> LatestModelsResponseV2 list_all(query=ListAllQuery)
+# **list**
+> LatestModelsResponseV2 list(query=ListQuery)
 
 List Models
 
@@ -488,11 +495,11 @@ from waylay.services.registry.models.status_filter import StatusFilter
 
 try:
     # List Models
-    api_response = await waylay_client.registry.model_functions.list_all()
-    print("The response of registry.model_functions.list_all:\n")
+    api_response = await waylay_client.registry.model_functions.list()
+    print("The response of registry.model_functions.list:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.model_functions.list_all: %s\n" % e)
+    print("Exception when calling registry.model_functions.list: %s\n" % e)
 ```
 
 ### Parameters
@@ -522,6 +529,7 @@ Name | Type | Description  | Notes
  **latest** | **bool**| When &#x60;true&#x60;, only the latest version per function name is returned. If set to &#x60;false&#x60;, multiple versions per named function can be returned. Defaults to &#x60;true&#x60;, except when specific versions are selected with the &#x60;nameVersion&#x60; filter. | [optional] 
 
 ### Return type
+
 
 [**LatestModelsResponseV2**](LatestModelsResponseV2.md)
 
@@ -597,6 +605,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**ModelVersionsResponseV2**](ModelVersionsResponseV2.md)
 
 ### HTTP request headers
@@ -660,6 +669,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**GetModelResponseV2**](GetModelResponseV2.md)
 
 ### HTTP request headers
@@ -722,6 +732,7 @@ Name | Type | Description  | Notes
  **var_async** | **bool**| Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default to True]
 
 ### Return type
+
 
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
@@ -792,6 +803,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**RebuildModelSyncResponseV2**](RebuildModelSyncResponseV2.md)
 
 ### HTTP request headers
@@ -856,6 +868,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
 ### HTTP request headers
@@ -917,6 +930,7 @@ Name | Type | Description  | Notes
  **var_async** | **bool**| Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default to True]
 
 ### Return type
+
 
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
@@ -986,6 +1000,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1052,6 +1067,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1114,6 +1130,7 @@ Name | Type | Description  | Notes
  **scale_to_zero** | **bool**| Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
 
 ### Return type
+
 
 [**VerifyModelSyncResponseV2**](VerifyModelSyncResponseV2.md)
 

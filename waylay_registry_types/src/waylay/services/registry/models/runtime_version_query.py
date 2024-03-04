@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,17 +16,16 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool
 from pydantic import Field
 from ..models.latest_version_level import LatestVersionLevel
 from ..models.semantic_version_range import SemanticVersionRange
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class RuntimeVersionQuery(BaseModel):
@@ -35,13 +33,17 @@ class RuntimeVersionQuery(BaseModel):
 
     version: Optional[SemanticVersionRange] = None
     latest: Optional[LatestVersionLevel] = None
-    include_deprecated: Optional[StrictBool] = Field(default=False, description="If set to `true`, deprecated runtimes will be included in the query.", alias="includeDeprecated")
-    __properties: ClassVar[List[str]] = ["version", "latest", "includeDeprecated"]
+    include_deprecated: Optional[StrictBool] = Field(
+        default=False,
+        description="If set to `true`, deprecated runtimes will be included in the query.",
+        alias="includeDeprecated",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -59,8 +61,6 @@ class RuntimeVersionQuery(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -72,13 +72,9 @@ class RuntimeVersionQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of version
-        if self.version:
-            _dict['version'] = self.version.to_dict()
         return _dict
 
     @classmethod
@@ -86,13 +82,4 @@ class RuntimeVersionQuery(BaseModel):
         """Create an instance of RuntimeVersionQuery from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "version": SemanticVersionRange.from_dict(obj.get("version")) if obj.get("version") is not None else None,    # type: ignore
-            "latest": obj.get("latest"),
-            "includeDeprecated": obj.get("includeDeprecated") if obj.get("includeDeprecated") is not None else False
-        })
-        return _obj
+        return cls.model_validate(obj)

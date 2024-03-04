@@ -9,15 +9,9 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
-from inspect import getfullargspec
-import json
-import pprint
 import re  # noqa: F401
 
-from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
 from ..models.active_event_sse import ActiveEventSSE
 from ..models.completed_event_sse import CompletedEventSSE
 from ..models.delayed_event_sse import DelayedEventSSE
@@ -25,177 +19,20 @@ from ..models.failed_event_sse import FailedEventSSE
 from ..models.waiting_children_event_sse import WaitingChildrenEventSSE
 from ..models.waiting_event_sse import WaitingEventSSE
 
-from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
-
-JOBEVENTSSE_ANY_OF_SCHEMAS = ["ActiveEventSSE", "CompletedEventSSE", "DelayedEventSSE", "FailedEventSSE", "WaitingChildrenEventSSE", "WaitingEventSSE"]
+from typing import (
+    Union,  # >=3.8
+)
+from typing_extensions import (
+    Annotated,  # >=3.9
+)
 
 
-class JobEventSSE(BaseModel):
-    """JobEventSSE."""
-
-    # data type: ActiveEventSSE
-    anyof_schema_1_validator: Optional[ActiveEventSSE] = None
-    # data type: CompletedEventSSE
-    anyof_schema_2_validator: Optional[CompletedEventSSE] = None
-    # data type: FailedEventSSE
-    anyof_schema_3_validator: Optional[FailedEventSSE] = None
-    # data type: DelayedEventSSE
-    anyof_schema_4_validator: Optional[DelayedEventSSE] = None
-    # data type: WaitingEventSSE
-    anyof_schema_5_validator: Optional[WaitingEventSSE] = None
-    # data type: WaitingChildrenEventSSE
-    anyof_schema_6_validator: Optional[WaitingChildrenEventSSE] = None
-    if TYPE_CHECKING:
-        actual_instance: Optional[Union[ActiveEventSSE, CompletedEventSSE, DelayedEventSSE, FailedEventSSE, WaitingChildrenEventSSE, WaitingEventSSE]] = None
-    else:
-        actual_instance: Any = None
-    any_of_schemas: List[str] = JOBEVENTSSE_ANY_OF_SCHEMAS
-
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
-
-    def __init__(self, *args, **kwargs) -> None:
-        """Create a JobEventSSE model instance."""
-        if args:
-            if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
-            if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
-            super().__init__(actual_instance=args[0])
-        else:
-            super().__init__(**kwargs)
-
-    @field_validator('actual_instance')
-    @classmethod
-    def actual_instance_must_validate_anyof(cls, v):
-        """Validate the actual instance on deserialisation."""
-        instance = JobEventSSE.model_construct()
-        error_messages = []
-        # validate data type: ActiveEventSSE
-        if not isinstance(v, ActiveEventSSE):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `ActiveEventSSE`")
-        else:
-            return v
-
-        # validate data type: CompletedEventSSE
-        if not isinstance(v, CompletedEventSSE):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `CompletedEventSSE`")
-        else:
-            return v
-
-        # validate data type: FailedEventSSE
-        if not isinstance(v, FailedEventSSE):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `FailedEventSSE`")
-        else:
-            return v
-
-        # validate data type: DelayedEventSSE
-        if not isinstance(v, DelayedEventSSE):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `DelayedEventSSE`")
-        else:
-            return v
-
-        # validate data type: WaitingEventSSE
-        if not isinstance(v, WaitingEventSSE):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `WaitingEventSSE`")
-        else:
-            return v
-
-        # validate data type: WaitingChildrenEventSSE
-        if not isinstance(v, WaitingChildrenEventSSE):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `WaitingChildrenEventSSE`")
-        else:
-            return v
-
-        if error_messages:
-            # no match
-            raise ValueError("No match found when setting the actual_instance in JobEventSSE with anyOf schemas: ActiveEventSSE, CompletedEventSSE, DelayedEventSSE, FailedEventSSE, WaitingChildrenEventSSE, WaitingEventSSE. Details: " + ", ".join(error_messages))
-        else:
-            return v
-
-    @classmethod
-    def from_dict(cls, obj: dict) -> Self:
-        """Get a dict representation of an object."""
-        return cls.from_json(json.dumps(obj, default=str))
-
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
-        error_messages = []
-        # anyof_schema_1_validator: Optional[ActiveEventSSE] = None
-        try:
-            instance.actual_instance = ActiveEventSSE.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[CompletedEventSSE] = None
-        try:
-            instance.actual_instance = CompletedEventSSE.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # anyof_schema_3_validator: Optional[FailedEventSSE] = None
-        try:
-            instance.actual_instance = FailedEventSSE.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # anyof_schema_4_validator: Optional[DelayedEventSSE] = None
-        try:
-            instance.actual_instance = DelayedEventSSE.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # anyof_schema_5_validator: Optional[WaitingEventSSE] = None
-        try:
-            instance.actual_instance = WaitingEventSSE.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # anyof_schema_6_validator: Optional[WaitingChildrenEventSSE] = None
-        try:
-            instance.actual_instance = WaitingChildrenEventSSE.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-
-        if error_messages:
-            # no match
-            raise ValueError("No match found when deserializing the JSON string into JobEventSSE with anyOf schemas: ActiveEventSSE, CompletedEventSSE, DelayedEventSSE, FailedEventSSE, WaitingChildrenEventSSE, WaitingEventSSE. Details: " + ", ".join(error_messages))
-        else:
-            return instance
-
-    def to_json(self) -> str:
-        """Get the JSON representation of the actual instance."""
-        if self.actual_instance is None:
-            return "null"
-
-        to_json = getattr(self.actual_instance, "to_json", None)
-        if callable(to_json):
-            return self.actual_instance.to_json()  # type: ignore
-        else:
-            return json.dumps(self.actual_instance, default=str)
-
-    def to_dict(self) -> Optional[Dict]:
-        """Get the dict representation of the actual instance."""
-        if self.actual_instance is None:
-            return None
-
-        to_dict = getattr(self.actual_instance, "to_dict", None)
-        if callable(to_dict):
-            return self.actual_instance.to_dict()  # type: ignore
-        else:
-            return json.dumps(self.actual_instance, default=str)  # type: ignore
-
-    def to_str(self) -> str:
-        """Get the string representation of the actual instance."""
-        return pprint.pformat(self.model_dump())
+JobEventSSE = Union[
+    Annotated[ActiveEventSSE, ""],
+    Annotated[CompletedEventSSE, ""],
+    Annotated[FailedEventSSE, ""],
+    Annotated[DelayedEventSSE, ""],
+    Annotated[WaitingEventSSE, ""],
+    Annotated[WaitingChildrenEventSSE, ""],
+]
+"""JobEventSSE."""

@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,15 +16,14 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 from ..models.plug_property_format_type import PlugPropertyFormatType
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class LegacyConfigurationObjectFormat(BaseModel):
@@ -33,12 +31,12 @@ class LegacyConfigurationObjectFormat(BaseModel):
 
     type: Optional[PlugPropertyFormatType] = None
     values: Optional[List[Any]] = None
-    __properties: ClassVar[List[str]] = ["type", "values"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -56,8 +54,6 @@ class LegacyConfigurationObjectFormat(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -69,8 +65,7 @@ class LegacyConfigurationObjectFormat(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -80,12 +75,4 @@ class LegacyConfigurationObjectFormat(BaseModel):
         """Create an instance of LegacyConfigurationObjectFormat from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "values": obj.get("values")
-        })
-        return _obj
+        return cls.model_validate(obj)

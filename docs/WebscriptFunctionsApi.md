@@ -8,11 +8,11 @@ Method | HTTP request | Description
 [**delete_asset**](WebscriptFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Delete Webscript Asset
 [**get_archive**](WebscriptFunctionsApi.md#get_archive) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content | Get Webscript Archive
 [**get_asset**](WebscriptFunctionsApi.md#get_asset) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Get File From Webscript Archive
-[**get_latest_version**](WebscriptFunctionsApi.md#get_latest_version) | **GET** /registry/v2/webscripts/{name} | Get Latest Webscript Version
-[**get_latest_versions**](WebscriptFunctionsApi.md#get_latest_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Webscript Versions
-[**get_version**](WebscriptFunctionsApi.md#get_version) | **GET** /registry/v2/webscripts/{name}/versions/{version} | Get Webscript Version
+[**get_latest**](WebscriptFunctionsApi.md#get_latest) | **GET** /registry/v2/webscripts/{name} | Get Latest Webscript Version
+[**get**](WebscriptFunctionsApi.md#get) | **GET** /registry/v2/webscripts/{name}/versions/{version} | Get Webscript Version
 [**jobs**](WebscriptFunctionsApi.md#jobs) | **GET** /registry/v2/webscripts/{name}/versions/{version}/jobs | List Webscript Jobs
-[**list_all**](WebscriptFunctionsApi.md#list_all) | **GET** /registry/v2/webscripts/ | List Webscripts
+[**list_versions**](WebscriptFunctionsApi.md#list_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Webscript Versions
+[**list**](WebscriptFunctionsApi.md#list) | **GET** /registry/v2/webscripts/ | List Webscripts
 [**patch_metadata**](WebscriptFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/metadata | Patch Webscript Metadata
 [**publish**](WebscriptFunctionsApi.md#publish) | **POST** /registry/v2/webscripts/{name}/versions/{version}/publish | Publish Draft Webscript
 [**rebuild**](WebscriptFunctionsApi.md#rebuild) | **POST** /registry/v2/webscripts/{name}/versions/{version}/rebuild | Rebuild Webscript
@@ -73,6 +73,7 @@ Name | Type | Description  | Notes
  **multipart_file_upload** | [**MultipartFileUpload**](MultipartFileUpload.md)| The assets for a &lt;em&gt;webscript&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;      The required &lt;code&gt;webscript.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;webscripts&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
 
 ### Return type
+
 
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
@@ -139,6 +140,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -198,6 +200,7 @@ Name | Type | Description  | Notes
  **ls** | **bool**| If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default to False]
 
 ### Return type
+
 
 **bytearray**
 
@@ -260,6 +263,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 **bytearray**
 
 ### HTTP request headers
@@ -275,8 +279,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_latest_version**
-> GetWebscriptResponseV2 get_latest_version(name: str, query=GetLatestVersionQuery)
+# **get_latest**
+> GetWebscriptResponseV2 get_latest(name: str, query=GetLatestQuery)
 
 Get Latest Webscript Version
 
@@ -301,11 +305,11 @@ name = 'name_example' # str | The name of the function.,
 
 try:
     # Get Latest Webscript Version
-    api_response = await waylay_client.registry.webscript_functions.get_latest_version(name=name, )
-    print("The response of registry.webscript_functions.get_latest_version:\n")
+    api_response = await waylay_client.registry.webscript_functions.get_latest(name=name, )
+    print("The response of registry.webscript_functions.get_latest:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.get_latest_version: %s\n" % e)
+    print("Exception when calling registry.webscript_functions.get_latest: %s\n" % e)
 ```
 
 ### Parameters
@@ -318,6 +322,7 @@ Name | Type | Description  | Notes
  **include_deprecated** | **bool**| Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions are **included**. If set to &#x60;false&#x60;, deprecated versions are **excluded**. | [optional] 
 
 ### Return type
+
 
 [**GetWebscriptResponseV2**](GetWebscriptResponseV2.md)
 
@@ -334,82 +339,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **get_latest_versions**
-> WebscriptVersionsResponseV2 get_latest_versions(name: str, query=GetLatestVersionsQuery)
-
-List Webscript Versions
-
-List all deployed versions of a webscript.
-
-### Example
-
-```python
-from pprint import pprint
-
-# Import the waylay-client from the waylay-sdk package
-from waylay.sdk.client import WaylayClient
-from waylay.sdk.api.api_exceptions import ApiError
-
-# Intialize a waylay client instance
-waylay_client = WaylayClient.from_profile()
-
-from waylay.services.registry.models.archive_format import ArchiveFormat
-from waylay.services.registry.models.status_filter import StatusFilter
-from waylay.services.registry.models.webscript_versions_response_v2 import WebscriptVersionsResponseV2
-
-name = 'name_example' # str | The name of the function.,
-
-
-try:
-    # List Webscript Versions
-    api_response = await waylay_client.registry.webscript_functions.get_latest_versions(name=name, )
-    print("The response of registry.webscript_functions.get_latest_versions:\n")
-    pprint(api_response)
-except ApiError as e:
-    print("Exception when calling registry.webscript_functions.get_latest_versions: %s\n" % e)
-```
-
-### Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **name** | **str**| The name of the function. | 
- **limit** | **float**| The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
- **page** | **float**| The number of pages to skip when returning result to this query. | [optional] 
- **deprecated** | **bool**| Filter on the deprecation status of the function. | [optional] 
- **draft** | **bool**| Filter on the draft status of the function. | [optional] 
- **version** | **str**| Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
- **status** | [**List[StatusFilter]**](StatusFilter.md)| Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
- **runtime_version** | [**SemanticVersionRange**](.md)| Filter on the runtime version. | [optional] 
- **created_by** | **str**| Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
- **updated_by** | **str**| Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
- **created_before** | [**TimestampSpec**](.md)| Filter on funtions that were created before the given timestamp or age. | [optional] 
- **created_after** | [**TimestampSpec**](.md)| Filter on funtions that were created after the given timestamp or age. | [optional] 
- **updated_before** | [**TimestampSpec**](.md)| Filter on funtions that were updated before the given timestamp or age. | [optional] 
- **updated_after** | [**TimestampSpec**](.md)| Filter on funtions that were updated after the given timestamp or age. | [optional] 
- **archive_format** | [**List[ArchiveFormat]**](ArchiveFormat.md)| Filter on the archive format of the function. | [optional] 
- **runtime** | [**List[str]**](str.md)| Filter on the runtime of the function. | [optional] 
-
-### Return type
-
-[**WebscriptVersionsResponseV2**](WebscriptVersionsResponseV2.md)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Default Response |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **get_version**
-> GetWebscriptResponseV2 get_version(name: str, version: str, query=GetVersionQuery)
+# **get**
+> GetWebscriptResponseV2 get(name: str, version: str, query=GetQuery)
 
 Get Webscript Version
 
@@ -435,11 +366,11 @@ version = 'version_example' # str | The version of the function.,
 
 try:
     # Get Webscript Version
-    api_response = await waylay_client.registry.webscript_functions.get_version(name=name, version=version, )
-    print("The response of registry.webscript_functions.get_version:\n")
+    api_response = await waylay_client.registry.webscript_functions.get(name=name, version=version, )
+    print("The response of registry.webscript_functions.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.get_version: %s\n" % e)
+    print("Exception when calling registry.webscript_functions.get: %s\n" % e)
 ```
 
 ### Parameters
@@ -451,6 +382,7 @@ Name | Type | Description  | Notes
  **version** | **str**| The version of the function. | 
 
 ### Return type
+
 
 [**GetWebscriptResponseV2**](GetWebscriptResponseV2.md)
 
@@ -520,6 +452,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**JobsForWebscriptResponseV2**](JobsForWebscriptResponseV2.md)
 
 ### HTTP request headers
@@ -535,8 +468,83 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **list_all**
-> LatestWebscriptsResponseV2 list_all(query=ListAllQuery)
+# **list_versions**
+> WebscriptVersionsResponseV2 list_versions(name: str, query=ListVersionsQuery)
+
+List Webscript Versions
+
+List all deployed versions of a webscript.
+
+### Example
+
+```python
+from pprint import pprint
+
+# Import the waylay-client from the waylay-sdk package
+from waylay.sdk.client import WaylayClient
+from waylay.sdk.api.api_exceptions import ApiError
+
+# Intialize a waylay client instance
+waylay_client = WaylayClient.from_profile()
+
+from waylay.services.registry.models.archive_format import ArchiveFormat
+from waylay.services.registry.models.status_filter import StatusFilter
+from waylay.services.registry.models.webscript_versions_response_v2 import WebscriptVersionsResponseV2
+
+name = 'name_example' # str | The name of the function.,
+
+
+try:
+    # List Webscript Versions
+    api_response = await waylay_client.registry.webscript_functions.list_versions(name=name, )
+    print("The response of registry.webscript_functions.list_versions:\n")
+    pprint(api_response)
+except ApiError as e:
+    print("Exception when calling registry.webscript_functions.list_versions: %s\n" % e)
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **str**| The name of the function. | 
+ **limit** | **float**| The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
+ **page** | **float**| The number of pages to skip when returning result to this query. | [optional] 
+ **deprecated** | **bool**| Filter on the deprecation status of the function. | [optional] 
+ **draft** | **bool**| Filter on the draft status of the function. | [optional] 
+ **version** | **str**| Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
+ **status** | [**List[StatusFilter]**](StatusFilter.md)| Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
+ **runtime_version** | [**SemanticVersionRange**](.md)| Filter on the runtime version. | [optional] 
+ **created_by** | **str**| Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
+ **updated_by** | **str**| Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
+ **created_before** | [**TimestampSpec**](.md)| Filter on funtions that were created before the given timestamp or age. | [optional] 
+ **created_after** | [**TimestampSpec**](.md)| Filter on funtions that were created after the given timestamp or age. | [optional] 
+ **updated_before** | [**TimestampSpec**](.md)| Filter on funtions that were updated before the given timestamp or age. | [optional] 
+ **updated_after** | [**TimestampSpec**](.md)| Filter on funtions that were updated after the given timestamp or age. | [optional] 
+ **archive_format** | [**List[ArchiveFormat]**](ArchiveFormat.md)| Filter on the archive format of the function. | [optional] 
+ **runtime** | [**List[str]**](str.md)| Filter on the runtime of the function. | [optional] 
+
+### Return type
+
+
+[**WebscriptVersionsResponseV2**](WebscriptVersionsResponseV2.md)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Default Response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **list**
+> LatestWebscriptsResponseV2 list(query=ListQuery)
 
 List Webscripts
 
@@ -562,11 +570,11 @@ from waylay.services.registry.models.status_filter import StatusFilter
 
 try:
     # List Webscripts
-    api_response = await waylay_client.registry.webscript_functions.list_all()
-    print("The response of registry.webscript_functions.list_all:\n")
+    api_response = await waylay_client.registry.webscript_functions.list()
+    print("The response of registry.webscript_functions.list:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.list_all: %s\n" % e)
+    print("Exception when calling registry.webscript_functions.list: %s\n" % e)
 ```
 
 ### Parameters
@@ -596,6 +604,7 @@ Name | Type | Description  | Notes
  **latest** | **bool**| When &#x60;true&#x60;, only the latest version per function name is returned. If set to &#x60;false&#x60;, multiple versions per named function can be returned. Defaults to &#x60;true&#x60;, except when specific versions are selected with the &#x60;nameVersion&#x60; filter. | [optional] 
 
 ### Return type
+
 
 [**LatestWebscriptsResponseV2**](LatestWebscriptsResponseV2.md)
 
@@ -660,6 +669,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**GetWebscriptResponseV2**](GetWebscriptResponseV2.md)
 
 ### HTTP request headers
@@ -722,6 +732,7 @@ Name | Type | Description  | Notes
  **var_async** | **bool**| Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default to True]
 
 ### Return type
+
 
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
@@ -792,6 +803,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**RebuildWebscriptSyncResponseV2**](RebuildWebscriptSyncResponseV2.md)
 
 ### HTTP request headers
@@ -856,6 +868,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
 ### HTTP request headers
@@ -917,6 +930,7 @@ Name | Type | Description  | Notes
  **undeploy** | **bool**| If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
 
 ### Return type
+
 
 [**UndeployedResponseV2**](UndeployedResponseV2.md)
 
@@ -986,6 +1000,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1052,6 +1067,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
+
 [**PostWebscriptJobSyncResponseV2**](PostWebscriptJobSyncResponseV2.md)
 
 ### HTTP request headers
@@ -1114,6 +1130,7 @@ Name | Type | Description  | Notes
  **scale_to_zero** | **bool**| Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
 
 ### Return type
+
 
 [**VerifyWebscriptSyncResponseV2**](VerifyWebscriptSyncResponseV2.md)
 

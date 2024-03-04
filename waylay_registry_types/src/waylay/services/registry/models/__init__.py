@@ -3,7 +3,7 @@
 
 This code was generated from the OpenAPI documentation of 'Waylay Function Registry'
 
-version: 2.12.1
+version: 2.12.2
 
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
@@ -43,7 +43,6 @@ from .batch_result import BatchResult
 from .build import Build
 from .build1 import Build1
 from .build_args import BuildArgs
-from .build_job_for_function import BuildJobForFunction
 from .build_job_status import BuildJobStatus
 from .build_result import BuildResult
 from .build_spec import BuildSpec
@@ -64,7 +63,6 @@ from .deploy1 import Deploy1
 from .deploy_args import DeployArgs
 from .deploy_args_deploy_spec_overrides import DeployArgsDeploySpecOverrides
 from .deploy_attributes_filter import DeployAttributesFilter
-from .deploy_job_for_function import DeployJobForFunction
 from .deploy_job_status import DeployJobStatus
 from .deploy_result import DeployResult
 from .deploy_spec import DeploySpec
@@ -118,7 +116,9 @@ from .get_webscript_response_v2_links import GetWebscriptResponseV2Links
 from .hal_link import HALLink
 from .invokable_webscript_response import InvokableWebscriptResponse
 from .invokable_webscript_response_entity import InvokableWebscriptResponseEntity
-from .invokable_webscript_response_entity_webscript import InvokableWebscriptResponseEntityWebscript
+from .invokable_webscript_response_entity_webscript import (
+    InvokableWebscriptResponseEntityWebscript,
+)
 from .invoke_hal_link import InvokeHALLink
 from .invoke_internal_hal_link import InvokeInternalHALLink
 from .job_and_function_hal_link import JobAndFunctionHALLink
@@ -128,13 +128,17 @@ from .job_event_payload_active_event_data import JobEventPayloadActiveEventData
 from .job_event_payload_completed_event_data import JobEventPayloadCompletedEventData
 from .job_event_payload_delayed_event_data import JobEventPayloadDelayedEventData
 from .job_event_payload_failed_event_data import JobEventPayloadFailedEventData
-from .job_event_payload_waiting_children_event_data import JobEventPayloadWaitingChildrenEventData
+from .job_event_payload_waiting_children_event_data import (
+    JobEventPayloadWaitingChildrenEventData,
+)
 from .job_event_payload_waiting_event_data import JobEventPayloadWaitingEventData
 from .job_event_response_active_event_data import JobEventResponseActiveEventData
 from .job_event_response_completed_event_data import JobEventResponseCompletedEventData
 from .job_event_response_delayed_event_data import JobEventResponseDelayedEventData
 from .job_event_response_failed_event_data import JobEventResponseFailedEventData
-from .job_event_response_waiting_children_event_data import JobEventResponseWaitingChildrenEventData
+from .job_event_response_waiting_children_event_data import (
+    JobEventResponseWaitingChildrenEventData,
+)
 from .job_event_response_waiting_event_data import JobEventResponseWaitingEventData
 from .job_event_sse import JobEventSSE
 from .job_events_and_function_hal_link import JobEventsAndFunctionHALLink
@@ -177,7 +181,9 @@ from .jobs_for_webscript_response_v2_links import JobsForWebscriptResponseV2Link
 from .jobs_hal_link import JobsHALLink
 from .jobs_response import JobsResponse
 from .kf_serving_delete_multiple_response import KFServingDeleteMultipleResponse
-from .kf_serving_delete_multiple_with_job_response import KFServingDeleteMultipleWithJobResponse
+from .kf_serving_delete_multiple_with_job_response import (
+    KFServingDeleteMultipleWithJobResponse,
+)
 from .kf_serving_delete_query_v1 import KFServingDeleteQueryV1
 from .kf_serving_delete_query_v2 import KFServingDeleteQueryV2
 from .kf_serving_delete_response import KFServingDeleteResponse
@@ -195,7 +201,9 @@ from .language_release import LanguageRelease
 from .latest_function_versions_query import LatestFunctionVersionsQuery
 from .latest_functions_query import LatestFunctionsQuery
 from .latest_models_response_v2 import LatestModelsResponseV2
-from .latest_models_response_v2_entities_inner import LatestModelsResponseV2EntitiesInner
+from .latest_models_response_v2_entities_inner import (
+    LatestModelsResponseV2EntitiesInner,
+)
 from .latest_plug_query import LatestPlugQuery
 from .latest_plug_version_query_v2 import LatestPlugVersionQueryV2
 from .latest_plug_versions_query import LatestPlugVersionsQuery
@@ -205,7 +213,9 @@ from .latest_plugs_response_v2 import LatestPlugsResponseV2
 from .latest_plugs_response_v2_entities_inner import LatestPlugsResponseV2EntitiesInner
 from .latest_version_level import LatestVersionLevel
 from .latest_webscripts_response_v2 import LatestWebscriptsResponseV2
-from .latest_webscripts_response_v2_entities_inner import LatestWebscriptsResponseV2EntitiesInner
+from .latest_webscripts_response_v2_entities_inner import (
+    LatestWebscriptsResponseV2EntitiesInner,
+)
 from .legacy_configuration_object import LegacyConfigurationObject
 from .legacy_configuration_object_format import LegacyConfigurationObjectFormat
 from .legacy_configuration_response_object import LegacyConfigurationResponseObject
@@ -222,9 +232,15 @@ from .legacy_plug_meta_request import LegacyPlugMetaRequest
 from .legacy_plug_query import LegacyPlugQuery
 from .legacy_plug_request import LegacyPlugRequest
 from .legacy_plug_request_metadata import LegacyPlugRequestMetadata
-from .legacy_plug_request_metadata_documentation import LegacyPlugRequestMetadataDocumentation
-from .legacy_plug_request_metadata_documentation_any_of import LegacyPlugRequestMetadataDocumentationAnyOf
-from .legacy_plug_request_metadata_raw_data_inner import LegacyPlugRequestMetadataRawDataInner
+from .legacy_plug_request_metadata_documentation import (
+    LegacyPlugRequestMetadataDocumentation,
+)
+from .legacy_plug_request_metadata_documentation_any_of import (
+    LegacyPlugRequestMetadataDocumentationAnyOf,
+)
+from .legacy_plug_request_metadata_raw_data_inner import (
+    LegacyPlugRequestMetadataRawDataInner,
+)
 from .legacy_plug_response import LegacyPlugResponse
 from .legacy_plug_response_metadata import LegacyPlugResponseMetadata
 from .legacy_plug_script_meta import LegacyPlugScriptMeta
@@ -245,10 +261,16 @@ from .name import Name
 from .name_and_version import NameAndVersion
 from .named_function_versions_query import NamedFunctionVersionsQuery
 from .named_kf_serving_versions_query_v2 import NamedKFServingVersionsQueryV2
-from .named_parameters_typeof_as_job_reference import NamedParametersTypeofAsJobReference
-from .named_parameters_typeof_as_job_reference_job_status import NamedParametersTypeofAsJobReferenceJobStatus
+from .named_parameters_typeof_as_job_reference import (
+    NamedParametersTypeofAsJobReference,
+)
+from .named_parameters_typeof_as_job_reference_job_status import (
+    NamedParametersTypeofAsJobReferenceJobStatus,
+)
 from .named_parameters_typeof_from_legacy import NamedParametersTypeofFromLegacy
-from .named_parameters_typeof_from_legacy_documentation import NamedParametersTypeofFromLegacyDocumentation
+from .named_parameters_typeof_from_legacy_documentation import (
+    NamedParametersTypeofFromLegacyDocumentation,
+)
 from .named_parameters_typeof_is_not_legacy import NamedParametersTypeofIsNotLegacy
 from .named_plug_versions_query_v2 import NamedPlugVersionsQueryV2
 from .named_versions_filter import NamedVersionsFilter
@@ -329,7 +351,6 @@ from .runtime_version_summary import RuntimeVersionSummary
 from .scale import Scale
 from .scale1 import Scale1
 from .scale_args import ScaleArgs
-from .scale_job_for_function import ScaleJobForFunction
 from .scale_job_status import ScaleJobStatus
 from .schema_by_id_params import SchemaByIdParams
 from .schema_params import SchemaParams
@@ -352,7 +373,6 @@ from .timestamp_spec import TimestampSpec
 from .undeploy import Undeploy
 from .undeploy1 import Undeploy1
 from .undeploy_args import UndeployArgs
-from .undeploy_job_for_function import UndeployJobForFunction
 from .undeploy_job_status import UndeployJobStatus
 from .undeploy_result import UndeployResult
 from .undeploy_submitted_response_v2 import UndeploySubmittedResponseV2
@@ -367,7 +387,6 @@ from .user_plug_meta import UserPlugMeta
 from .verify import Verify
 from .verify1 import Verify1
 from .verify_args import VerifyArgs
-from .verify_job_for_function import VerifyJobForFunction
 from .verify_job_status import VerifyJobStatus
 from .verify_model_sync_response_v2 import VerifyModelSyncResponseV2
 from .verify_plug_sync_response_v2 import VerifyPlugSyncResponseV2

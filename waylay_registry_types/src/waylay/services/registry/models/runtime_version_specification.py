@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,7 +16,7 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictBool, StrictStr, field_validator
 from pydantic import Field
 from typing_extensions import Annotated
@@ -28,10 +27,9 @@ from ..models.language_release import LanguageRelease
 from ..models.provided_dependency import ProvidedDependency
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class RuntimeVersionSpecification(BaseModel):
@@ -40,26 +38,37 @@ class RuntimeVersionSpecification(BaseModel):
     build: Optional[BuildSpec] = None
     deploy: Optional[DeploySpec] = None
     language: Optional[LanguageRelease] = None
-    provided_dependencies: Optional[List[ProvidedDependency]] = Field(default=None, description="Description of dependencies provided by this runtime version.", alias="providedDependencies")
+    provided_dependencies: Optional[List[ProvidedDependency]] = Field(
+        default=None,
+        description="Description of dependencies provided by this runtime version.",
+        alias="providedDependencies",
+    )
     assets: Optional[AssetsConditions] = None
-    deprecated: Optional[StrictBool] = Field(default=None, description="If true, this runtime should no longer be used for new functions.")
+    deprecated: Optional[StrictBool] = Field(
+        default=None,
+        description="If true, this runtime should no longer be used for new functions.",
+    )
     title: StrictStr
     description: Optional[StrictStr] = None
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
-    __properties: ClassVar[List[str]] = ["build", "deploy", "language", "providedDependencies", "assets", "deprecated", "title", "description", "version"]
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -77,8 +86,6 @@ class RuntimeVersionSpecification(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -90,29 +97,9 @@ class RuntimeVersionSpecification(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of build
-        if self.build:
-            _dict['build'] = self.build.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of deploy
-        if self.deploy:
-            _dict['deploy'] = self.deploy.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of language
-        if self.language:
-            _dict['language'] = self.language.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in provided_dependencies (list)
-        _items = []
-        if self.provided_dependencies:
-            for _item in self.provided_dependencies:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['providedDependencies'] = _items
-        # override the default output from pydantic by calling `to_dict()` of assets
-        if self.assets:
-            _dict['assets'] = self.assets.to_dict()
         return _dict
 
     @classmethod
@@ -120,19 +107,4 @@ class RuntimeVersionSpecification(BaseModel):
         """Create an instance of RuntimeVersionSpecification from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "build": BuildSpec.from_dict(obj.get("build")) if obj.get("build") is not None else None,    # type: ignore
-            "deploy": DeploySpec.from_dict(obj.get("deploy")) if obj.get("deploy") is not None else None,    # type: ignore
-            "language": LanguageRelease.from_dict(obj.get("language")) if obj.get("language") is not None else None,    # type: ignore
-            "providedDependencies": [ProvidedDependency.from_dict(_item) for _item in obj.get("providedDependencies")] if obj.get("providedDependencies") is not None else None,  # type: ignore
-            "assets": AssetsConditions.from_dict(obj.get("assets")) if obj.get("assets") is not None else None,    # type: ignore
-            "deprecated": obj.get("deprecated"),
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "version": obj.get("version")
-        })
-        return _obj
+        return cls.model_validate(obj)

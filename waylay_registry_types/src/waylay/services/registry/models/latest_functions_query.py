@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,35 +16,67 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, StrictBool, StrictStr
 from pydantic import Field
 from typing_extensions import Annotated
 from ..models.archive_format import ArchiveFormat
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class LatestFunctionsQuery(BaseModel):
     """Request to list latest function versions per named function. A request that only uses these query parameters will include links to the _latest_ draft/published versions.."""
 
-    limit: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.")
-    page: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The number of pages to skip when returning result to this query.")
-    include_draft: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.", alias="includeDraft")
-    include_deprecated: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.", alias="includeDeprecated")
-    name: Optional[StrictStr] = Field(default=None, description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).")
-    archive_format: Optional[List[ArchiveFormat]] = Field(default=None, description="Filter on the archive format of the function.", alias="archiveFormat")
-    runtime: Optional[List[StrictStr]] = Field(default=None, description="Filter on the runtime of the function.")
-    __properties: ClassVar[List[str]] = ["limit", "page", "includeDraft", "includeDeprecated", "name", "archiveFormat", "runtime"]
+    limit: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.",
+    )
+    page: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The number of pages to skip when returning result to this query.",
+    )
+    include_draft: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.",
+        alias="includeDraft",
+    )
+    include_deprecated: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.",
+        alias="includeDeprecated",
+    )
+    name: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+    )
+    archive_format: Optional[List[ArchiveFormat]] = Field(
+        default=None,
+        description="Filter on the archive format of the function.",
+        alias="archiveFormat",
+    )
+    runtime: Optional[List[StrictStr]] = Field(
+        default=None, description="Filter on the runtime of the function."
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -63,8 +94,6 @@ class LatestFunctionsQuery(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -76,8 +105,7 @@ class LatestFunctionsQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -87,17 +115,4 @@ class LatestFunctionsQuery(BaseModel):
         """Create an instance of LatestFunctionsQuery from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "page": obj.get("page"),
-            "includeDraft": obj.get("includeDraft"),
-            "includeDeprecated": obj.get("includeDeprecated"),
-            "name": obj.get("name"),
-            "archiveFormat": obj.get("archiveFormat"),
-            "runtime": obj.get("runtime")
-        })
-        return _obj
+        return cls.model_validate(obj)

@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -43,19 +42,35 @@ class BuildJobForFunction(BaseModel):
     state: JobStateResult
     request: Optional[BuildArgs] = None
     result: Optional[BuildResult] = None
-    created_at: datetime = Field(description="The timestamp of creation of this job", alias="createdAt")
-    created_by: StrictStr = Field(description="The user that created this job", alias="createdBy")
+    created_at: datetime = Field(
+        description="The timestamp of creation of this job", alias="createdAt"
+    )
+    created_by: StrictStr = Field(
+        description="The user that created this job", alias="createdBy"
+    )
     operation: StrictStr = Field(description="Request operation")
     function: Optional[FunctionRef] = None
     job: Optional[JobStatus] = None
     failure_reason: Optional[FailureReason] = Field(default=None, alias="failureReason")
-    __properties: ClassVar[List[str]] = ["_links", "type", "state", "request", "result", "createdAt", "createdBy", "operation", "function", "job", "failureReason"]
+    __properties: ClassVar[List[str]] = [
+        "_links",
+        "type",
+        "state",
+        "request",
+        "result",
+        "createdAt",
+        "createdBy",
+        "operation",
+        "function",
+        "job",
+        "failureReason",
+    ]
 
-    @field_validator('type')
+    @field_validator("type")
     @classmethod
     def type_validate_enum(cls, value):
         """Validate the enum."""
-        if value not in ('build'):
+        if value not in ("build"):
             raise ValueError("must be one of enum values ('build')")
         return value
 
@@ -93,31 +108,30 @@ class BuildJobForFunction(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of links
         if self.links:
-            _dict['_links'] = self.links.to_dict()
+            _dict["_links"] = self.links.to_dict()
         # override the default output from pydantic by calling `to_dict()` of state
         if self.state:
-            _dict['state'] = self.state.to_dict()
+            _dict["state"] = self.state.to_dict()
         # override the default output from pydantic by calling `to_dict()` of request
         if self.request:
-            _dict['request'] = self.request.to_dict()
+            _dict["request"] = self.request.to_dict()
         # override the default output from pydantic by calling `to_dict()` of result
         if self.result:
-            _dict['result'] = self.result.to_dict()
+            _dict["result"] = self.result.to_dict()
         # override the default output from pydantic by calling `to_dict()` of function
         if self.function:
-            _dict['function'] = self.function.to_dict()
+            _dict["function"] = self.function.to_dict()
         # override the default output from pydantic by calling `to_dict()` of job
         if self.job:
-            _dict['job'] = self.job.to_dict()
+            _dict["job"] = self.job.to_dict()
         # override the default output from pydantic by calling `to_dict()` of failure_reason
         if self.failure_reason:
-            _dict['failureReason'] = self.failure_reason.to_dict()
+            _dict["failureReason"] = self.failure_reason.to_dict()
         return _dict
 
     @classmethod
@@ -129,17 +143,33 @@ class BuildJobForFunction(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "_links": JobHALLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "type": obj.get("type"),
-            "state": JobStateResult.from_dict(obj.get("state")) if obj.get("state") is not None else None,    # type: ignore
-            "request": BuildArgs.from_dict(obj.get("request")) if obj.get("request") is not None else None,    # type: ignore
-            "result": BuildResult.from_dict(obj.get("result")) if obj.get("result") is not None else None,    # type: ignore
-            "createdAt": obj.get("createdAt"),
-            "createdBy": obj.get("createdBy"),
-            "operation": obj.get("operation"),
-            "function": FunctionRef.from_dict(obj.get("function")) if obj.get("function") is not None else None,    # type: ignore
-            "job": JobStatus.from_dict(obj.get("job")) if obj.get("job") is not None else None,    # type: ignore
-            "failureReason": FailureReason.from_dict(obj.get("failureReason")) if obj.get("failureReason") is not None else None    # type: ignore
-        })
+        _obj = cls.model_validate(
+            {
+                "_links": JobHALLinks.from_dict(obj.get("_links"))
+                if obj.get("_links") is not None
+                else None,  # type: ignore
+                "type": obj.get("type"),
+                "state": JobStateResult.from_dict(obj.get("state"))
+                if obj.get("state") is not None
+                else None,  # type: ignore
+                "request": BuildArgs.from_dict(obj.get("request"))
+                if obj.get("request") is not None
+                else None,  # type: ignore
+                "result": BuildResult.from_dict(obj.get("result"))
+                if obj.get("result") is not None
+                else None,  # type: ignore
+                "createdAt": obj.get("createdAt"),
+                "createdBy": obj.get("createdBy"),
+                "operation": obj.get("operation"),
+                "function": FunctionRef.from_dict(obj.get("function"))
+                if obj.get("function") is not None
+                else None,  # type: ignore
+                "job": JobStatus.from_dict(obj.get("job"))
+                if obj.get("job") is not None
+                else None,  # type: ignore
+                "failureReason": FailureReason.from_dict(obj.get("failureReason"))
+                if obj.get("failureReason") is not None
+                else None,  # type: ignore
+            }
+        )
         return _obj

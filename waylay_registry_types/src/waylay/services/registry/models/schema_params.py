@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,17 +16,16 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List
+from typing import Any, Dict
 from pydantic import BaseModel
 from pydantic import Field
 from ..models.asset_role import AssetRole
 from ..models.function_type import FunctionType
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class SchemaParams(BaseModel):
@@ -35,12 +33,12 @@ class SchemaParams(BaseModel):
 
     function_type: FunctionType = Field(alias="functionType")
     role: AssetRole
-    __properties: ClassVar[List[str]] = ["functionType", "role"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -58,8 +56,6 @@ class SchemaParams(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -71,8 +67,7 @@ class SchemaParams(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,12 +77,4 @@ class SchemaParams(BaseModel):
         """Create an instance of SchemaParams from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "functionType": obj.get("functionType"),
-            "role": obj.get("role")
-        })
-        return _obj
+        return cls.model_validate(obj)

@@ -9,7 +9,6 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
@@ -17,30 +16,40 @@ import json
 from pydantic import ConfigDict
 
 
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class FunctionMeta(BaseModel):
     """FunctionMeta."""
 
-    author: Optional[StrictStr] = Field(default=None, description="The author of the function.")
-    description: Optional[StrictStr] = Field(default=None, description="A description of the function")
-    icon_url: Optional[StrictStr] = Field(default=None, description="An url to an icon that represents this function.", alias="iconURL")
-    category: Optional[StrictStr] = Field(default=None, description="A category for this function (Deprecated: use tags to categorise your functions)")
-    __properties: ClassVar[List[str]] = ["author", "description", "iconURL", "category"]
+    author: Optional[StrictStr] = Field(
+        default=None, description="The author of the function."
+    )
+    description: Optional[StrictStr] = Field(
+        default=None, description="A description of the function"
+    )
+    icon_url: Optional[StrictStr] = Field(
+        default=None,
+        description="An url to an icon that represents this function.",
+        alias="iconURL",
+    )
+    category: Optional[StrictStr] = Field(
+        default=None,
+        description="A category for this function (Deprecated: use tags to categorise your functions)",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -58,8 +67,6 @@ class FunctionMeta(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -71,8 +78,7 @@ class FunctionMeta(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,14 +88,4 @@ class FunctionMeta(BaseModel):
         """Create an instance of FunctionMeta from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "author": obj.get("author"),
-            "description": obj.get("description"),
-            "iconURL": obj.get("iconURL"),
-            "category": obj.get("category")
-        })
-        return _obj
+        return cls.model_validate(obj)
