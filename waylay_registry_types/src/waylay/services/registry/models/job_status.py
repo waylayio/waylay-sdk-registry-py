@@ -14,18 +14,15 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 from datetime import datetime
 from typing import Any, Dict, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 from pydantic import Field
 from ..models.job_status_progress import JobStatusProgress
 from ..models.parent_keys import ParentKeys
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class JobStatus(BaseModel):

@@ -10,7 +10,7 @@ Do not edit the class manually.
 
 from __future__ import annotations  # for Python 3.7–3.9
 
-from pydantic import validate_call, StrictBool
+from pydantic import StrictBool, TypeAdapter, ConfigDict
 from typing import (
     Dict,
     Literal,
@@ -22,8 +22,12 @@ from typing import (
 )
 
 from waylay.sdk.plugin import WithApiClient
-from waylay.sdk.api import Request, Response, HeaderTypes, RequestFiles
-from httpx import Headers
+from waylay.sdk.api import (
+    Response,
+    HeaderTypes,
+    QueryParamTypes,
+)
+from waylay.sdk.api._models import Model
 
 if TYPE_CHECKING:
     from waylay.services.registry.queries.default_api import GetQuery
@@ -47,9 +51,12 @@ except ImportError:
     if not TYPE_CHECKING:
         GetQuery = dict
 
-        RootPageResponse = Any
+        RootPageResponse = Model
 
-        RootPageResponse = Any
+        RootPageResponse = Model
+
+
+StringAdapter = TypeAdapter(str, config=ConfigDict(coerce_numbers_to_str=True))
 
 
 class DefaultApi(WithApiClient):
@@ -65,7 +72,7 @@ class DefaultApi(WithApiClient):
     async def get(
         self,
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -76,31 +83,30 @@ class DefaultApi(WithApiClient):
     async def get(
         self,
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get(
         self,
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[RootPageResponse, Response, Any]:
+    ) -> Union[RootPageResponse, Response, Model]:
         """Version.
 
         Get the version of this function registry deployment.
-
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetQuery | QueryParamTypes, optional
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -119,57 +125,39 @@ class DefaultApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_serialize(
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {}
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "*": RootPageResponse if not select_path else Any,
+            "*": RootPageResponse if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _get_serialize(
-        self,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if query is not None:
-            pass
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )

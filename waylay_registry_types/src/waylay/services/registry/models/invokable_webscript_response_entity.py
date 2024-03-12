@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool, StrictStr
@@ -22,11 +24,6 @@ from ..models.invokable_webscript_response_entity_webscript import (
     InvokableWebscriptResponseEntityWebscript,
 )
 from ..models.status import Status
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class InvokableWebscriptResponseEntity(BaseModel):

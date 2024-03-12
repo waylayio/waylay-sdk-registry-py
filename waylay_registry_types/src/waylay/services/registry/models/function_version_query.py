@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
@@ -22,11 +24,6 @@ from pydantic import Field
 from ..models.semantic_version_range import SemanticVersionRange
 from ..models.status_filter import StatusFilter
 from ..models.timestamp_spec import TimestampSpec
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class FunctionVersionQuery(BaseModel):

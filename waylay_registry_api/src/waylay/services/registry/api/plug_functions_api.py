@@ -10,8 +10,7 @@ Do not edit the class manually.
 
 from __future__ import annotations  # for Python 3.7–3.9
 
-import enum
-from pydantic import validate_call, Field, StrictStr, StrictBool
+from pydantic import Field, StrictStr, StrictBool, TypeAdapter, ConfigDict
 from typing import (
     Dict,
     Literal,
@@ -26,8 +25,14 @@ from typing_extensions import (
 )
 
 from waylay.sdk.plugin import WithApiClient
-from waylay.sdk.api import ApiValueError, Request, Response, HeaderTypes, RequestFiles
-from httpx import Headers
+from waylay.sdk.api import (
+    Response,
+    HeaderTypes,
+    QueryParamTypes,
+    RequestFiles,
+    RequestContent,
+)
+from waylay.sdk.api._models import Model
 
 if TYPE_CHECKING:
     from waylay.services.registry.models import MultipartFileUpload
@@ -275,21 +280,21 @@ except ImportError:
     types_available = False
 
     if not TYPE_CHECKING:
-        MultipartFileUpload = Any
+        MultipartFileUpload = Model
 
         CreateQuery = dict
 
-        PostPlugJobSyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
 
-        PostPlugJobSyncResponseV2 = Any
-        PostPlugJobAsyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
         DeleteAssetQuery = dict
 
-        PostPlugJobSyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
 
-        PostPlugJobSyncResponseV2 = Any
-        PostPlugJobAsyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
         GetArchiveQuery = dict
 
@@ -297,102 +302,105 @@ except ImportError:
 
         GetLatestQuery = dict
 
-        GetPlugResponseV2 = Any
+        GetPlugResponseV2 = Model
 
-        GetPlugResponseV2 = Any
+        GetPlugResponseV2 = Model
 
         GetQuery = dict
 
-        GetPlugResponseV2 = Any
+        GetPlugResponseV2 = Model
 
-        GetPlugResponseV2 = Any
+        GetPlugResponseV2 = Model
 
         JobsQuery = dict
 
-        JobsForPlugResponseV2 = Any
+        JobsForPlugResponseV2 = Model
 
-        JobsForPlugResponseV2 = Any
+        JobsForPlugResponseV2 = Model
 
         ListQuery = dict
 
-        LatestPlugsResponseV2 = Any
+        LatestPlugsResponseV2 = Model
 
-        LatestPlugsResponseV2 = Any
+        LatestPlugsResponseV2 = Model
 
         ListVersionsQuery = dict
 
-        PlugVersionsResponseV2 = Any
+        PlugVersionsResponseV2 = Model
 
-        PlugVersionsResponseV2 = Any
+        PlugVersionsResponseV2 = Model
 
-        Documentation = Any
+        Documentation = Model
 
         PatchInterfaceQuery = dict
 
-        GetPlugResponseV2 = Any
+        GetPlugResponseV2 = Model
 
-        GetPlugResponseV2 = Any
+        GetPlugResponseV2 = Model
 
-        UpdateMetadataRequestV2 = Any
+        UpdateMetadataRequestV2 = Model
 
         PatchMetadataQuery = dict
 
-        GetPlugResponseV2 = Any
+        GetPlugResponseV2 = Model
 
-        GetPlugResponseV2 = Any
+        GetPlugResponseV2 = Model
 
         PublishQuery = dict
 
-        PostPlugJobSyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
 
-        PostPlugJobSyncResponseV2 = Any
-        PostPlugJobAsyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
         RebuildQuery = dict
 
-        RebuildPlugSyncResponseV2 = Any
+        RebuildPlugSyncResponseV2 = Model
 
-        RebuildPlugSyncResponseV2 = Any
-        RebuildPlugAsyncResponseV2 = Any
+        RebuildPlugSyncResponseV2 = Model
+        RebuildPlugAsyncResponseV2 = Model
 
         RemoveVersionQuery = dict
 
-        UndeployedResponseV2 = Any
+        UndeployedResponseV2 = Model
 
-        UndeployedResponseV2 = Any
-        UndeploySubmittedResponseV2 = Any
+        UndeployedResponseV2 = Model
+        UndeploySubmittedResponseV2 = Model
 
         RemoveVersionsQuery = dict
 
-        UndeployedResponseV2 = Any
+        UndeployedResponseV2 = Model
 
-        UndeployedResponseV2 = Any
-        UndeploySubmittedResponseV2 = Any
+        UndeployedResponseV2 = Model
+        UndeploySubmittedResponseV2 = Model
 
-        FileUpload = Any
+        FileUpload = Model
 
         UpdateAssetQuery = dict
 
-        PostPlugJobSyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
 
-        PostPlugJobSyncResponseV2 = Any
-        PostPlugJobAsyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
-        MultipartFileUpload = Any
+        MultipartFileUpload = Model
 
         UpdateAssetsQuery = dict
 
-        PostPlugJobSyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
 
-        PostPlugJobSyncResponseV2 = Any
-        PostPlugJobAsyncResponseV2 = Any
+        PostPlugJobSyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
         VerifyQuery = dict
 
-        VerifyPlugSyncResponseV2 = Any
+        VerifyPlugSyncResponseV2 = Model
 
-        VerifyPlugSyncResponseV2 = Any
-        PostPlugJobAsyncResponseV2 = Any
+        VerifyPlugSyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
+
+
+StringAdapter = TypeAdapter(str, config=ConfigDict(coerce_numbers_to_str=True))
 
 
 class PlugFunctionsApi(WithApiClient):
@@ -408,21 +416,16 @@ class PlugFunctionsApi(WithApiClient):
     async def create(
         self,
         *,
-        body: Union[
-            Annotated[
-                Optional[MultipartFileUpload],
-                Field(
-                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
-                ),
-            ],
-            Annotated[
-                Dict[StrictStr, Any], Field(description="Multipart file upload.")
-            ],
+        content: Annotated[
+            Optional[RequestContent],
+            Field(
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
+            ),
         ] = None,
         files: Annotated[
-            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+            Optional[RequestFiles], Field(description="Multipart file upload")
         ] = None,
-        query: Optional[CreateQuery] = None,
+        query: Optional[Union[CreateQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -433,77 +436,66 @@ class PlugFunctionsApi(WithApiClient):
     async def create(
         self,
         *,
-        body: Union[
-            Annotated[
-                Optional[MultipartFileUpload],
-                Field(
-                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
-                ),
-            ],
-            Annotated[
-                Dict[StrictStr, Any], Field(description="Multipart file upload.")
-            ],
+        content: Annotated[
+            Optional[RequestContent],
+            Field(
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
+            ),
         ] = None,
         files: Annotated[
-            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+            Optional[RequestFiles], Field(description="Multipart file upload")
         ] = None,
-        query: Optional[CreateQuery] = None,
+        query: Optional[Union[CreateQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def create(
         self,
         *,
-        body: Union[
-            Annotated[
-                Optional[MultipartFileUpload],
-                Field(
-                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
-                ),
-            ],
-            Annotated[
-                Dict[StrictStr, Any], Field(description="Multipart file upload.")
-            ],
+        content: Annotated[
+            Optional[RequestContent],
+            Field(
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
+            ),
         ] = None,
         files: Annotated[
-            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+            Optional[RequestFiles], Field(description="Multipart file upload")
         ] = None,
-        query: Optional[CreateQuery] = None,
+        query: Optional[Union[CreateQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[PostPlugJobSyncResponseV2, Response, Any]:
+    ) -> Union[PostPlugJobSyncResponseV2, Response, Model]:
         """Create Plug.
 
         Creates a new <em>plug</em> function by uploading its assets.      The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.
-
-        :param body: The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.
-        :type body: MultipartFileUpload
-        :param files: The multipart file upload. This equivalent to setting `body` along with the `content-type: multipart/form-data` header.
-        :type files: Dict[str, bytearray], optional,
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.deprecate_previous: Set the cleanup policy used to automatically deprecate/delete previous versions.
-            :type query.deprecate_previous: DeprecatePreviousPolicy
-            :param query.dry_run: If set to <code>true</code>, validates the deployment conditions, but does not change anything.
-            :type query.dry_run: bool
-            :param query.var_async: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
-            :type query.var_async: bool
-            :param query.scale_to_zero: If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.
-            :type query.scale_to_zero: bool
-            :param query.version: If set, the function version will be an increment of the latest existing version that satisfies the `version` range. Note that this increment always takes precedence over an explicit `version` in the function manifest.
-            :type query.version: SemanticVersionRange
-            :param query.name: If set, the value will be used as the function name instead of the one specified in the manifest.
-            :type query.name: str
-            :param query.draft: If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.
-            :type query.draft: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param content: The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.
+        :type content: ContentRequest, optional
+        :param files: The files of a `content-type: multipart/form-data` request.
+        :type files: FilesRequest, optional
+        :param query: URL Query parameters.
+        :type query: CreateQuery | QueryParamTypes, optional
+        :param query['deprecatePrevious']: Set the cleanup policy used to automatically deprecate/delete previous versions.
+        :type query['deprecatePrevious']: DeprecatePreviousPolicy
+        :param query['dryRun']: If set to <code>true</code>, validates the deployment conditions, but does not change anything.
+        :type query['dryRun']: bool
+        :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
+        :type query['async']: bool
+        :param query['scaleToZero']: If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.
+        :type query['scaleToZero']: bool
+        :param query['version']: If set, the function version will be an increment of the latest existing version that satisfies the `version` range. Note that this increment always takes precedence over an explicit `version` in the function manifest.
+        :type query['version']: SemanticVersionRange
+        :param query['name']: If set, the value will be used as the function name instead of the one specified in the manifest.
+        :type query['name']: str
+        :param query['draft']: If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.
+        :type query['draft']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -522,101 +514,44 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._create_serialize(
-            body=body,
-            files=files,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {}
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+        body_args["content"] = content
+        body_args["files"] = files
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="POST",
+            resource_path="/registry/v2/plugs/",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "201": PostPlugJobSyncResponseV2 if not select_path else Any,
-            "202": PostPlugJobAsyncResponseV2 if not select_path else Any,
+            "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+            "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _create_serialize(
-        self,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("deprecate_previous", None)
-            if query_param is not None:
-                _query_params["deprecatePrevious"] = query_param.value
-            query_param = query.get("dry_run", None)
-            if query_param is not None:
-                _query_params["dryRun"] = query_param
-            query_param = query.get("var_async", None)
-            if query_param is not None:
-                _query_params["async"] = query_param
-            query_param = query.get("scale_to_zero", None)
-            if query_param is not None:
-                _query_params["scaleToZero"] = query_param
-            query_param = query.get("version", None)
-            if query_param is not None:
-                _query_params["version"] = query_param
-            query_param = query.get("name", None)
-            if query_param is not None:
-                _query_params["name"] = query_param
-            query_param = query.get("draft", None)
-            if query_param is not None:
-                _query_params["draft"] = query_param
-        # process the form parameters
-        if files:
-            _files = files
-        # if `body` and `content-type` multipart/form-data, wrap it in `files` instead of `body`
-        content_type = _header_params.get("content-type", None)
-        if (
-            not files
-            and body
-            and content_type
-            and content_type.startswith("multipart/form-data")
-        ):
-            try:
-                _files = body
-                body = None
-                if "boundary" not in content_type:
-                    # Content-Type header does not cotain a boundary, and hence, is not valid.
-                    # Remove it to force the http framework to set it instead.
-                    _header_params.pop("content-type")
-            except ValueError as err:
-                raise ApiValueError("Body is not a valid dictionary", "body") from err
-        # process the body parameter
-        if body is not None:
-            _body_params = body
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="POST",
-            resource_path="/registry/v2/plugs/",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -633,7 +568,7 @@ class PlugFunctionsApi(WithApiClient):
             ),
         ],
         *,
-        query: Optional[DeleteAssetQuery] = None,
+        query: Optional[Union[DeleteAssetQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -654,14 +589,14 @@ class PlugFunctionsApi(WithApiClient):
             ),
         ],
         *,
-        query: Optional[DeleteAssetQuery] = None,
+        query: Optional[Union[DeleteAssetQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def delete_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -675,32 +610,31 @@ class PlugFunctionsApi(WithApiClient):
             ),
         ],
         *,
-        query: Optional[DeleteAssetQuery] = None,
+        query: Optional[Union[DeleteAssetQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[PostPlugJobSyncResponseV2, Response, Any]:
+    ) -> Union[PostPlugJobSyncResponseV2, Response, Model]:
         """Delete Plug Asset.
 
         Delete an asset from the plug's collection of existing assets.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
         :param wildcard: Full path or path prefix of the asset within the archive (required)
         :type wildcard: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-            :param query.var_async: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
-            :type query.var_async: bool
-            :param query.chown: If set, ownership of the draft function is transferred to the current user. (required)
-            :type query.chown: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: DeleteAssetQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
+        :type query['async']: bool
+        :param query['chown']: If set, ownership of the draft function is transferred to the current user. (required)
+        :type query['chown']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -719,80 +653,46 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._delete_asset_serialize(
-            name=name,
-            version=version,
-            wildcard=wildcard,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+            "wildcard": StringAdapter.validate_python(wildcard),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="DELETE",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "201": PostPlugJobSyncResponseV2 if not select_path else Any,
-            "202": PostPlugJobAsyncResponseV2 if not select_path else Any,
+            "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+            "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _delete_asset_serialize(
-        self,
-        name,
-        version,
-        wildcard,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        if wildcard is not None:
-            _path_params["wildcard"] = wildcard
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-            query_param = query.get("var_async", None)
-            if query_param is not None:
-                _query_params["async"] = query_param
-            query_param = query.get("chown", None)
-            if query_param is not None:
-                _query_params["chown"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="DELETE",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -803,7 +703,7 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetArchiveQuery] = None,
+        query: Optional[Union[GetArchiveQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -818,14 +718,14 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetArchiveQuery] = None,
+        query: Optional[Union[GetArchiveQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get_archive(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -833,26 +733,25 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetArchiveQuery] = None,
+        query: Optional[Union[GetArchiveQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[bytearray, Response, Any]:
+    ) -> Union[bytearray, Response, Model]:
         """Get Plug Archive.
 
         Get the specification archive of a plug.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.ls: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
-            :type query.ls: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetArchiveQuery | QueryParamTypes, optional
+        :param query['ls']: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
+        :type query['ls']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -871,69 +770,44 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_archive_serialize(
-            name=name,
-            version=version,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": bytearray if not select_path else Any,
+            "200": bytearray if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _get_archive_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("ls", None)
-            if query_param is not None:
-                _query_params["ls"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/content",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -950,7 +824,7 @@ class PlugFunctionsApi(WithApiClient):
             ),
         ],
         *,
-        query: Optional[GetAssetQuery] = None,
+        query: Optional[Union[GetAssetQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -971,14 +845,14 @@ class PlugFunctionsApi(WithApiClient):
             ),
         ],
         *,
-        query: Optional[GetAssetQuery] = None,
+        query: Optional[Union[GetAssetQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -992,28 +866,27 @@ class PlugFunctionsApi(WithApiClient):
             ),
         ],
         *,
-        query: Optional[GetAssetQuery] = None,
+        query: Optional[Union[GetAssetQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[bytearray, Response, Any]:
+    ) -> Union[bytearray, Response, Model]:
         """Get File From Plug Archive.
 
         Get a file from the specification archive of a plug.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
         :param wildcard: Full path or path prefix of the asset within the archive (required)
         :type wildcard: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.ls: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
-            :type query.ls: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetAssetQuery | QueryParamTypes, optional
+        :param query['ls']: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
+        :type query['ls']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -1032,73 +905,45 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_asset_serialize(
-            name=name,
-            version=version,
-            wildcard=wildcard,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+            "wildcard": StringAdapter.validate_python(wildcard),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": bytearray if not select_path else Any,
+            "200": bytearray if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _get_asset_serialize(
-        self,
-        name,
-        version,
-        wildcard,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        if wildcard is not None:
-            _path_params["wildcard"] = wildcard
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("ls", None)
-            if query_param is not None:
-                _query_params["ls"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -1106,7 +951,7 @@ class PlugFunctionsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[GetLatestQuery] = None,
+        query: Optional[Union[GetLatestQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -1118,40 +963,39 @@ class PlugFunctionsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[GetLatestQuery] = None,
+        query: Optional[Union[GetLatestQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get_latest(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[GetLatestQuery] = None,
+        query: Optional[Union[GetLatestQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[GetPlugResponseV2, Response, Any]:
+    ) -> Union[GetPlugResponseV2, Response, Model]:
         """Get Latest Plug Version.
 
         Fetch the latest version of a <em>plug</em>.    By default, the result shows the latest non-deprecated, non-draft version.   If there is no such version, the latest deprecated or the latest draft version is returned, with the former taking precedence.       Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>     The returned <em>plug version</em> will contain a link to its   latest _draft_ or latest _published_ version (if existing and different).
-
         :param name: The name of the function. (required)
         :type name: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.type: If set, filters on the type of plug.
-            :type query.type: PlugType
-            :param query.include_draft: Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.
-            :type query.include_draft: bool
-            :param query.include_deprecated: Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.
-            :type query.include_deprecated: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetLatestQuery | QueryParamTypes, optional
+        :param query['type']: If set, filters on the type of plug.
+        :type query['type']: PlugType
+        :param query['includeDraft']: Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.
+        :type query['includeDraft']: bool
+        :param query['includeDeprecated']: Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.
+        :type query['includeDeprecated']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -1170,71 +1014,43 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_latest_serialize(
-            name=name,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": GetPlugResponseV2 if not select_path else Any,
+            "200": GetPlugResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _get_latest_serialize(
-        self,
-        name,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("type", None)
-            if query_param is not None:
-                _query_params["type"] = query_param.value
-            query_param = query.get("include_draft", None)
-            if query_param is not None:
-                _query_params["includeDraft"] = query_param
-            query_param = query.get("include_deprecated", None)
-            if query_param is not None:
-                _query_params["includeDeprecated"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/plugs/{name}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -1245,7 +1061,7 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -1260,14 +1076,14 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -1275,24 +1091,23 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[GetPlugResponseV2, Response, Any]:
+    ) -> Union[GetPlugResponseV2, Response, Model]:
         """Get Plug Version.
 
         Get a specific version of a plug.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetQuery | QueryParamTypes, optional
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -1311,67 +1126,44 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_serialize(
-            name=name,
-            version=version,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": GetPlugResponseV2 if not select_path else Any,
+            "200": GetPlugResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _get_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            pass
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -1382,7 +1174,7 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[JobsQuery] = None,
+        query: Optional[Union[JobsQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -1397,14 +1189,14 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[JobsQuery] = None,
+        query: Optional[Union[JobsQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def jobs(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -1412,36 +1204,35 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[JobsQuery] = None,
+        query: Optional[Union[JobsQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[JobsForPlugResponseV2, Response, Any]:
+    ) -> Union[JobsForPlugResponseV2, Response, Model]:
         """List Plug Jobs.
 
         List the ongoing and completed operations on a specific plug.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.limit: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
-            :type query.limit: float
-            :param query.type: Filter on job type
-            :type query.type: List[JobTypeSchema]
-            :param query.state: Filter on job state
-            :type query.state: List[JobStateResult]
-            :param query.function_type: Filter on function type
-            :type query.function_type: List[FunctionType]
-            :param query.created_before: Filter on jobs that created before the given timestamp or age
-            :type query.created_before: TimestampSpec
-            :param query.created_after: Filter on jobs that created after the given timestamp or age
-            :type query.created_after: TimestampSpec
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: JobsQuery | QueryParamTypes, optional
+        :param query['limit']: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
+        :type query['limit']: float
+        :param query['type']: Filter on job type
+        :type query['type']: List[JobTypeSchema]
+        :param query['state']: Filter on job state
+        :type query['state']: List[JobStateResult]
+        :param query['functionType']: Filter on function type
+        :type query['functionType']: List[FunctionType]
+        :param query['createdBefore']: Filter on jobs that created before the given timestamp or age
+        :type query['createdBefore']: TimestampSpec
+        :param query['createdAfter']: Filter on jobs that created after the given timestamp or age
+        :type query['createdAfter']: TimestampSpec
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -1460,93 +1251,51 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._jobs_serialize(
-            name=name,
-            version=version,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/jobs",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": JobsForPlugResponseV2 if not select_path else Any,
+            "200": JobsForPlugResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
         )
 
-    def _jobs_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("limit", None)
-            if query_param is not None:
-                _query_params["limit"] = query_param
-            query_param = query.get("type", None)
-            if query_param is not None:
-                _query_params["type"] = query_param
-            query_param = query.get("state", None)
-            if query_param is not None:
-                _query_params["state"] = query_param
-            query_param = query.get("function_type", None)
-            if query_param is not None:
-                _query_params["functionType"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-            query_param = query.get("created_before", None)
-            if query_param is not None:
-                _query_params["createdBefore"] = query_param
-            query_param = query.get("created_after", None)
-            if query_param is not None:
-                _query_params["createdAfter"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/jobs",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
-        )
-
     @overload
     async def list(
         self,
         *,
-        query: Optional[ListQuery] = None,
+        query: Optional[Union[ListQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -1557,75 +1306,74 @@ class PlugFunctionsApi(WithApiClient):
     async def list(
         self,
         *,
-        query: Optional[ListQuery] = None,
+        query: Optional[Union[ListQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def list(
         self,
         *,
-        query: Optional[ListQuery] = None,
+        query: Optional[Union[ListQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[LatestPlugsResponseV2, Response, Any]:
+    ) -> Union[LatestPlugsResponseV2, Response, Model]:
         """List Plugs.
 
         List the (latest) versions of available <em>plugs</em>.  ### List Latest Plug Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>plug</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no _version filters_ are used, each listed <em>plug version</em> item will contain a HAL **link to the  latest** _draft_ (`entities[]._links.draft`) or latest _published_ (`entities[]._links.publisned`) version (if existing and different).  ### List Latest Plug Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>plug</em> that satisfy the filters, but **without links**.  ### List All Plug Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>plugs</em> versions that satisfy the query, possibly multiple versions per named <em>plugs</em>. No HAL links are provided.  #### Filter on _status_ By default <em>plug versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>plug</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags`
-
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.tags: Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected.
-            :type query.tags: TagsFilter
-            :param query.type: If set, filters on the type of plug.
-            :type query.type: PlugType
-            :param query.limit: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
-            :type query.limit: float
-            :param query.page: The number of pages to skip when returning result to this query.
-            :type query.page: float
-            :param query.include_draft: Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.
-            :type query.include_draft: bool
-            :param query.include_deprecated: Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.
-            :type query.include_deprecated: bool
-            :param query.deprecated: Filter on the deprecation status of the function.
-            :type query.deprecated: bool
-            :param query.draft: Filter on the draft status of the function.
-            :type query.draft: bool
-            :param query.name_version: Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered.
-            :type query.name_version: List[str]
-            :param query.version: Filter on the version of the function (case-sensitive, supports wildcards).
-            :type query.version: str
-            :param query.status: Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.
-            :type query.status: List[StatusFilter]
-            :param query.runtime_version: Filter on the runtime version.
-            :type query.runtime_version: SemanticVersionRange
-            :param query.created_by: Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.
-            :type query.created_by: str
-            :param query.updated_by: Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.
-            :type query.updated_by: str
-            :param query.created_before: Filter on funtions that were created before the given timestamp or age.
-            :type query.created_before: TimestampSpec
-            :param query.created_after: Filter on funtions that were created after the given timestamp or age.
-            :type query.created_after: TimestampSpec
-            :param query.updated_before: Filter on funtions that were updated before the given timestamp or age.
-            :type query.updated_before: TimestampSpec
-            :param query.updated_after: Filter on funtions that were updated after the given timestamp or age.
-            :type query.updated_after: TimestampSpec
-            :param query.name: Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).
-            :type query.name: str
-            :param query.archive_format: Filter on the archive format of the function.
-            :type query.archive_format: List[ArchiveFormat]
-            :param query.runtime: Filter on the runtime of the function.
-            :type query.runtime: List[str]
-            :param query.latest: When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter.
-            :type query.latest: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: ListQuery | QueryParamTypes, optional
+        :param query['tags']: Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected.
+        :type query['tags']: TagsFilter
+        :param query['type']: If set, filters on the type of plug.
+        :type query['type']: PlugType
+        :param query['limit']: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
+        :type query['limit']: float
+        :param query['page']: The number of pages to skip when returning result to this query.
+        :type query['page']: float
+        :param query['includeDraft']: Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.
+        :type query['includeDraft']: bool
+        :param query['includeDeprecated']: Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.
+        :type query['includeDeprecated']: bool
+        :param query['deprecated']: Filter on the deprecation status of the function.
+        :type query['deprecated']: bool
+        :param query['draft']: Filter on the draft status of the function.
+        :type query['draft']: bool
+        :param query['nameVersion']: Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered.
+        :type query['nameVersion']: List[str]
+        :param query['version']: Filter on the version of the function (case-sensitive, supports wildcards).
+        :type query['version']: str
+        :param query['status']: Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.
+        :type query['status']: List[StatusFilter]
+        :param query['runtimeVersion']: Filter on the runtime version.
+        :type query['runtimeVersion']: SemanticVersionRange
+        :param query['createdBy']: Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.
+        :type query['createdBy']: str
+        :param query['updatedBy']: Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.
+        :type query['updatedBy']: str
+        :param query['createdBefore']: Filter on funtions that were created before the given timestamp or age.
+        :type query['createdBefore']: TimestampSpec
+        :param query['createdAfter']: Filter on funtions that were created after the given timestamp or age.
+        :type query['createdAfter']: TimestampSpec
+        :param query['updatedBefore']: Filter on funtions that were updated before the given timestamp or age.
+        :type query['updatedBefore']: TimestampSpec
+        :param query['updatedAfter']: Filter on funtions that were updated after the given timestamp or age.
+        :type query['updatedAfter']: TimestampSpec
+        :param query['name']: Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).
+        :type query['name']: str
+        :param query['archiveFormat']: Filter on the archive format of the function.
+        :type query['archiveFormat']: List[ArchiveFormat]
+        :param query['runtime']: Filter on the runtime of the function.
+        :type query['runtime']: List[str]
+        :param query['latest']: When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter.
+        :type query['latest']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -1644,126 +1392,41 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._list_serialize(
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {}
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/plugs/",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": LatestPlugsResponseV2 if not select_path else Any,
+            "200": LatestPlugsResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _list_serialize(
-        self,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("tags", None)
-            if query_param is not None:
-                _query_params["tags"] = query_param
-            query_param = query.get("type", None)
-            if query_param is not None:
-                _query_params["type"] = query_param.value
-            query_param = query.get("limit", None)
-            if query_param is not None:
-                _query_params["limit"] = query_param
-            query_param = query.get("page", None)
-            if query_param is not None:
-                _query_params["page"] = query_param
-            query_param = query.get("include_draft", None)
-            if query_param is not None:
-                _query_params["includeDraft"] = query_param
-            query_param = query.get("include_deprecated", None)
-            if query_param is not None:
-                _query_params["includeDeprecated"] = query_param
-            query_param = query.get("deprecated", None)
-            if query_param is not None:
-                _query_params["deprecated"] = query_param
-            query_param = query.get("draft", None)
-            if query_param is not None:
-                _query_params["draft"] = query_param
-            query_param = query.get("name_version", None)
-            if query_param is not None:
-                _query_params["nameVersion"] = query_param
-            query_param = query.get("version", None)
-            if query_param is not None:
-                _query_params["version"] = query_param
-            query_param = query.get("status", None)
-            if query_param is not None:
-                _query_params["status"] = query_param
-            query_param = query.get("runtime_version", None)
-            if query_param is not None:
-                _query_params["runtimeVersion"] = query_param
-            query_param = query.get("created_by", None)
-            if query_param is not None:
-                _query_params["createdBy"] = query_param
-            query_param = query.get("updated_by", None)
-            if query_param is not None:
-                _query_params["updatedBy"] = query_param
-            query_param = query.get("created_before", None)
-            if query_param is not None:
-                _query_params["createdBefore"] = query_param
-            query_param = query.get("created_after", None)
-            if query_param is not None:
-                _query_params["createdAfter"] = query_param
-            query_param = query.get("updated_before", None)
-            if query_param is not None:
-                _query_params["updatedBefore"] = query_param
-            query_param = query.get("updated_after", None)
-            if query_param is not None:
-                _query_params["updatedAfter"] = query_param
-            query_param = query.get("name", None)
-            if query_param is not None:
-                _query_params["name"] = query_param
-            query_param = query.get("archive_format", None)
-            if query_param is not None:
-                _query_params["archiveFormat"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-            query_param = query.get("runtime", None)
-            if query_param is not None:
-                _query_params["runtime"] = query_param
-            query_param = query.get("latest", None)
-            if query_param is not None:
-                _query_params["latest"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/plugs/",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -1771,7 +1434,7 @@ class PlugFunctionsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[ListVersionsQuery] = None,
+        query: Optional[Union[ListVersionsQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -1783,66 +1446,65 @@ class PlugFunctionsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[ListVersionsQuery] = None,
+        query: Optional[Union[ListVersionsQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def list_versions(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[ListVersionsQuery] = None,
+        query: Optional[Union[ListVersionsQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[PlugVersionsResponseV2, Response, Any]:
+    ) -> Union[PlugVersionsResponseV2, Response, Model]:
         """List Plug Versions.
 
         List all versions of a plug, including deprecated versions or not.
-
         :param name: The name of the function. (required)
         :type name: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.tags: Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected.
-            :type query.tags: TagsFilter
-            :param query.limit: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
-            :type query.limit: float
-            :param query.page: The number of pages to skip when returning result to this query.
-            :type query.page: float
-            :param query.deprecated: Filter on the deprecation status of the function.
-            :type query.deprecated: bool
-            :param query.draft: Filter on the draft status of the function.
-            :type query.draft: bool
-            :param query.version: Filter on the version of the function (case-sensitive, supports wildcards).
-            :type query.version: str
-            :param query.status: Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.
-            :type query.status: List[StatusFilter]
-            :param query.runtime_version: Filter on the runtime version.
-            :type query.runtime_version: SemanticVersionRange
-            :param query.created_by: Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.
-            :type query.created_by: str
-            :param query.updated_by: Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.
-            :type query.updated_by: str
-            :param query.created_before: Filter on funtions that were created before the given timestamp or age.
-            :type query.created_before: TimestampSpec
-            :param query.created_after: Filter on funtions that were created after the given timestamp or age.
-            :type query.created_after: TimestampSpec
-            :param query.updated_before: Filter on funtions that were updated before the given timestamp or age.
-            :type query.updated_before: TimestampSpec
-            :param query.updated_after: Filter on funtions that were updated after the given timestamp or age.
-            :type query.updated_after: TimestampSpec
-            :param query.archive_format: Filter on the archive format of the function.
-            :type query.archive_format: List[ArchiveFormat]
-            :param query.runtime: Filter on the runtime of the function.
-            :type query.runtime: List[str]
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: ListVersionsQuery | QueryParamTypes, optional
+        :param query['tags']: Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected.
+        :type query['tags']: TagsFilter
+        :param query['limit']: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
+        :type query['limit']: float
+        :param query['page']: The number of pages to skip when returning result to this query.
+        :type query['page']: float
+        :param query['deprecated']: Filter on the deprecation status of the function.
+        :type query['deprecated']: bool
+        :param query['draft']: Filter on the draft status of the function.
+        :type query['draft']: bool
+        :param query['version']: Filter on the version of the function (case-sensitive, supports wildcards).
+        :type query['version']: str
+        :param query['status']: Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.
+        :type query['status']: List[StatusFilter]
+        :param query['runtimeVersion']: Filter on the runtime version.
+        :type query['runtimeVersion']: SemanticVersionRange
+        :param query['createdBy']: Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.
+        :type query['createdBy']: str
+        :param query['updatedBy']: Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.
+        :type query['updatedBy']: str
+        :param query['createdBefore']: Filter on funtions that were created before the given timestamp or age.
+        :type query['createdBefore']: TimestampSpec
+        :param query['createdAfter']: Filter on funtions that were created after the given timestamp or age.
+        :type query['createdAfter']: TimestampSpec
+        :param query['updatedBefore']: Filter on funtions that were updated before the given timestamp or age.
+        :type query['updatedBefore']: TimestampSpec
+        :param query['updatedAfter']: Filter on funtions that were updated after the given timestamp or age.
+        :type query['updatedAfter']: TimestampSpec
+        :param query['archiveFormat']: Filter on the archive format of the function.
+        :type query['archiveFormat']: List[ArchiveFormat]
+        :param query['runtime']: Filter on the runtime of the function.
+        :type query['runtime']: List[str]
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -1861,112 +1523,43 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._list_versions_serialize(
-            name=name,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/plugs/{name}/versions",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": PlugVersionsResponseV2 if not select_path else Any,
+            "200": PlugVersionsResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _list_versions_serialize(
-        self,
-        name,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("tags", None)
-            if query_param is not None:
-                _query_params["tags"] = query_param
-            query_param = query.get("limit", None)
-            if query_param is not None:
-                _query_params["limit"] = query_param
-            query_param = query.get("page", None)
-            if query_param is not None:
-                _query_params["page"] = query_param
-            query_param = query.get("deprecated", None)
-            if query_param is not None:
-                _query_params["deprecated"] = query_param
-            query_param = query.get("draft", None)
-            if query_param is not None:
-                _query_params["draft"] = query_param
-            query_param = query.get("version", None)
-            if query_param is not None:
-                _query_params["version"] = query_param
-            query_param = query.get("status", None)
-            if query_param is not None:
-                _query_params["status"] = query_param
-            query_param = query.get("runtime_version", None)
-            if query_param is not None:
-                _query_params["runtimeVersion"] = query_param
-            query_param = query.get("created_by", None)
-            if query_param is not None:
-                _query_params["createdBy"] = query_param
-            query_param = query.get("updated_by", None)
-            if query_param is not None:
-                _query_params["updatedBy"] = query_param
-            query_param = query.get("created_before", None)
-            if query_param is not None:
-                _query_params["createdBefore"] = query_param
-            query_param = query.get("created_after", None)
-            if query_param is not None:
-                _query_params["createdAfter"] = query_param
-            query_param = query.get("updated_before", None)
-            if query_param is not None:
-                _query_params["updatedBefore"] = query_param
-            query_param = query.get("updated_after", None)
-            if query_param is not None:
-                _query_params["updatedAfter"] = query_param
-            query_param = query.get("archive_format", None)
-            if query_param is not None:
-                _query_params["archiveFormat"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-            query_param = query.get("runtime", None)
-            if query_param is not None:
-                _query_params["runtime"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/plugs/{name}/versions",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -1977,8 +1570,8 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        body: Optional[Documentation] = None,
-        query: Optional[PatchInterfaceQuery] = None,
+        json: Optional[Documentation] = None,
+        query: Optional[Union[PatchInterfaceQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -1993,15 +1586,15 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        body: Optional[Documentation] = None,
-        query: Optional[PatchInterfaceQuery] = None,
+        json: Optional[Documentation] = None,
+        query: Optional[Union[PatchInterfaceQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def patch_interface(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -2009,29 +1602,28 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        body: Optional[Documentation] = None,
-        query: Optional[PatchInterfaceQuery] = None,
+        json: Optional[Documentation] = None,
+        query: Optional[Union[PatchInterfaceQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[GetPlugResponseV2, Response, Any]:
+    ) -> Union[GetPlugResponseV2, Response, Model]:
         """Patch Plug Interface.
 
         Patch the interface documentation of a plug version.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param body: The request body.
-        :type body: Documentation
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param json: The json request body.
+        :type json: Documentation, optional
+        :param query: URL Query parameters.
+        :type query: PatchInterfaceQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -2050,71 +1642,45 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._patch_interface_serialize(
-            name=name,
-            version=version,
-            body=body,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+        body_args["json"] = json
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="PATCH",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/interface",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": GetPlugResponseV2 if not select_path else Any,
+            "200": GetPlugResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _patch_interface_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-        # process the form parameters
-        # process the body parameter
-        if body is not None:
-            _body_params = body
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="PATCH",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/interface",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -2125,8 +1691,8 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        body: Optional[UpdateMetadataRequestV2] = None,
-        query: Optional[PatchMetadataQuery] = None,
+        json: Optional[UpdateMetadataRequestV2] = None,
+        query: Optional[Union[PatchMetadataQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -2141,15 +1707,15 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        body: Optional[UpdateMetadataRequestV2] = None,
-        query: Optional[PatchMetadataQuery] = None,
+        json: Optional[UpdateMetadataRequestV2] = None,
+        query: Optional[Union[PatchMetadataQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def patch_metadata(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -2157,29 +1723,28 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        body: Optional[UpdateMetadataRequestV2] = None,
-        query: Optional[PatchMetadataQuery] = None,
+        json: Optional[UpdateMetadataRequestV2] = None,
+        query: Optional[Union[PatchMetadataQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[GetPlugResponseV2, Response, Any]:
+    ) -> Union[GetPlugResponseV2, Response, Model]:
         """Patch Plug Metadata.
 
         Patch the metadata of a plug version.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param body: The request body.
-        :type body: UpdateMetadataRequestV2
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param json: The json request body.
+        :type json: UpdateMetadataRequestV2, optional
+        :param query: URL Query parameters.
+        :type query: PatchMetadataQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -2198,71 +1763,45 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._patch_metadata_serialize(
-            name=name,
-            version=version,
-            body=body,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+        body_args["json"] = json
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="PATCH",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/metadata",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": GetPlugResponseV2 if not select_path else Any,
+            "200": GetPlugResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _patch_metadata_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-        # process the form parameters
-        # process the body parameter
-        if body is not None:
-            _body_params = body
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="PATCH",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/metadata",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -2273,7 +1812,7 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[PublishQuery] = None,
+        query: Optional[Union[PublishQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -2288,14 +1827,14 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[PublishQuery] = None,
+        query: Optional[Union[PublishQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def publish(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -2303,30 +1842,29 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[PublishQuery] = None,
+        query: Optional[Union[PublishQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[PostPlugJobSyncResponseV2, Response, Any]:
+    ) -> Union[PostPlugJobSyncResponseV2, Response, Model]:
         """Publish Draft Plug.
 
         Mark the <em>plug</em> to be ready and stable, taking it out of draft mode.,    Typically, the <em>plug</em> should be in the <code>running</code> status,    such that publishing becomes a simple operation where the existing deployment can be re-used.   In other statuses, plug-registry may need to initiate a new build and deployment procedure.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-            :param query.deprecate_previous: Set the cleanup policy used to automatically deprecate/delete previous versions.
-            :type query.deprecate_previous: DeprecatePreviousPolicy
-            :param query.var_async: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
-            :type query.var_async: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: PublishQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['deprecatePrevious']: Set the cleanup policy used to automatically deprecate/delete previous versions.
+        :type query['deprecatePrevious']: DeprecatePreviousPolicy
+        :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
+        :type query['async']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -2345,76 +1883,45 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._publish_serialize(
-            name=name,
-            version=version,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="POST",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/publish",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "201": PostPlugJobSyncResponseV2 if not select_path else Any,
-            "202": PostPlugJobAsyncResponseV2 if not select_path else Any,
+            "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+            "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _publish_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-            query_param = query.get("deprecate_previous", None)
-            if query_param is not None:
-                _query_params["deprecatePrevious"] = query_param.value
-            query_param = query.get("var_async", None)
-            if query_param is not None:
-                _query_params["async"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="POST",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/publish",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -2425,7 +1932,7 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[RebuildQuery] = None,
+        query: Optional[Union[RebuildQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -2440,14 +1947,14 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[RebuildQuery] = None,
+        query: Optional[Union[RebuildQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def rebuild(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -2455,40 +1962,39 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[RebuildQuery] = None,
+        query: Optional[Union[RebuildQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[RebuildPlugSyncResponseV2, Response, Any]:
+    ) -> Union[RebuildPlugSyncResponseV2, Response, Model]:
         """Rebuild Plug.
 
         Rebuild and deploy a plug with the original or updated base image.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-            :param query.dry_run: If set to <code>true</code>, checks whether rebuild jobs are needed, but do not start any jobs.
-            :type query.dry_run: bool
-            :param query.var_async: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
-            :type query.var_async: bool
-            :param query.upgrade: If set, force a rebuild with the given <em>runtime</em> version selection policy. <ul>  <li><code>same</code> <b>patch</b> version.   This should only include backward compatible upgrades.  </li>  <li><code>minor</code> <b>major</b> version.   This might include an upgrade of e.g. the language runtime and/or provided   dependencies that could break compatiblity with the function. .</li> </ul>
-            :type query.upgrade: RebuildPolicy
-            :param query.force_version: If set, force a rebuild with the given runtime version (including downgrades). This parameter is mutually exclusive to the `upgrade` parameter.
-            :type query.force_version: str
-            :param query.ignore_checks: If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in `pending`, `running`, `failed` or `undeployed` * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the `dryRun` option
-            :type query.ignore_checks: bool
-            :param query.scale_to_zero: Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command.
-            :type query.scale_to_zero: bool
-            :param query.skip_rebuild: If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function.
-            :type query.skip_rebuild: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: RebuildQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['dryRun']: If set to <code>true</code>, checks whether rebuild jobs are needed, but do not start any jobs.
+        :type query['dryRun']: bool
+        :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
+        :type query['async']: bool
+        :param query['upgrade']: If set, force a rebuild with the given <em>runtime</em> version selection policy. <ul>  <li><code>same</code> <b>patch</b> version.   This should only include backward compatible upgrades.  </li>  <li><code>minor</code> <b>major</b> version.   This might include an upgrade of e.g. the language runtime and/or provided   dependencies that could break compatiblity with the function. .</li> </ul>
+        :type query['upgrade']: RebuildPolicy
+        :param query['forceVersion']: If set, force a rebuild with the given runtime version (including downgrades). This parameter is mutually exclusive to the `upgrade` parameter.
+        :type query['forceVersion']: str
+        :param query['ignoreChecks']: If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in `pending`, `running`, `failed` or `undeployed` * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the `dryRun` option
+        :type query['ignoreChecks']: bool
+        :param query['scaleToZero']: Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command.
+        :type query['scaleToZero']: bool
+        :param query['skipRebuild']: If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function.
+        :type query['skipRebuild']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -2507,91 +2013,45 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._rebuild_serialize(
-            name=name,
-            version=version,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="POST",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/rebuild",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": RebuildPlugSyncResponseV2 if not select_path else Any,
-            "202": RebuildPlugAsyncResponseV2 if not select_path else Any,
+            "200": RebuildPlugSyncResponseV2 if not select_path else Model,
+            "202": RebuildPlugAsyncResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _rebuild_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-            query_param = query.get("dry_run", None)
-            if query_param is not None:
-                _query_params["dryRun"] = query_param
-            query_param = query.get("var_async", None)
-            if query_param is not None:
-                _query_params["async"] = query_param
-            query_param = query.get("upgrade", None)
-            if query_param is not None:
-                _query_params["upgrade"] = query_param.value
-            query_param = query.get("force_version", None)
-            if query_param is not None:
-                _query_params["forceVersion"] = query_param
-            query_param = query.get("ignore_checks", None)
-            if query_param is not None:
-                _query_params["ignoreChecks"] = query_param
-            query_param = query.get("scale_to_zero", None)
-            if query_param is not None:
-                _query_params["scaleToZero"] = query_param
-            query_param = query.get("skip_rebuild", None)
-            if query_param is not None:
-                _query_params["skipRebuild"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="POST",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/rebuild",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -2602,7 +2062,7 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[RemoveVersionQuery] = None,
+        query: Optional[Union[RemoveVersionQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -2617,14 +2077,14 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[RemoveVersionQuery] = None,
+        query: Optional[Union[RemoveVersionQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def remove_version(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -2632,32 +2092,31 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[RemoveVersionQuery] = None,
+        query: Optional[Union[RemoveVersionQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[UndeployedResponseV2, Response, Any]:
+    ) -> Union[UndeployedResponseV2, Response, Model]:
         """Remove Plug Version.
 
         Deprecate, undeploy and/or remove a <em>plug</em> version.  By default, a `DELETE`  * marks _published_ version(s) _deprecated_: they remain active, but are no longer included in listings by default. * completely removes any _draft_ version(s) (_deprecate_, _undeploy_ and _remove_)  A _deprecated_ plug version will eventually be _undeployed_ (but not _removed_) by an external background task,  once proven that no waylay rule template or task references it.  Use `?force=true` to skip the deprecation and immediately remove the version(s).  Use `?undeploy=true` to undeploy the plug version(s), but keep it registered in a `undeployed` state. An `undeployed` version can later be restored by a _rebuild_ action.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-            :param query.var_async: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
-            :type query.var_async: bool
-            :param query.force: If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.
-            :type query.force: bool
-            :param query.undeploy: If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
-            :type query.undeploy: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: RemoveVersionQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
+        :type query['async']: bool
+        :param query['force']: If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.
+        :type query['force']: bool
+        :param query['undeploy']: If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
+        :type query['undeploy']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -2676,79 +2135,45 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._remove_version_serialize(
-            name=name,
-            version=version,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="DELETE",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": UndeployedResponseV2 if not select_path else Any,
-            "202": UndeploySubmittedResponseV2 if not select_path else Any,
+            "200": UndeployedResponseV2 if not select_path else Model,
+            "202": UndeploySubmittedResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _remove_version_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-            query_param = query.get("var_async", None)
-            if query_param is not None:
-                _query_params["async"] = query_param
-            query_param = query.get("force", None)
-            if query_param is not None:
-                _query_params["force"] = query_param
-            query_param = query.get("undeploy", None)
-            if query_param is not None:
-                _query_params["undeploy"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="DELETE",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -2756,7 +2181,7 @@ class PlugFunctionsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[RemoveVersionsQuery] = None,
+        query: Optional[Union[RemoveVersionsQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -2768,42 +2193,41 @@ class PlugFunctionsApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[RemoveVersionsQuery] = None,
+        query: Optional[Union[RemoveVersionsQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def remove_versions(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
         *,
-        query: Optional[RemoveVersionsQuery] = None,
+        query: Optional[Union[RemoveVersionsQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[UndeployedResponseV2, Response, Any]:
+    ) -> Union[UndeployedResponseV2, Response, Model]:
         """Remove Plug.
 
         Deprecate, undeploy and/or remove all versions of this named <em>plug</em>.  By default, a `DELETE`  * marks _published_ version(s) _deprecated_: they remain active, but are no longer included in listings by default. * completely removes any _draft_ version(s) (_deprecate_, _undeploy_ and _remove_)  A _deprecated_ plug version will eventually be _undeployed_ (but not _removed_) by an external background task,  once proven that no waylay rule template or task references it.  Use `?force=true` to skip the deprecation and immediately remove the version(s).  Use `?undeploy=true` to undeploy the plug version(s), but keep it registered in a `undeployed` state. An `undeployed` version can later be restored by a _rebuild_ action.
-
         :param name: The name of the function. (required)
         :type name: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-            :param query.var_async: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
-            :type query.var_async: bool
-            :param query.force: If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.
-            :type query.force: bool
-            :param query.undeploy: If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
-            :type query.undeploy: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: RemoveVersionsQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
+        :type query['async']: bool
+        :param query['force']: If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.
+        :type query['force']: bool
+        :param query['undeploy']: If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
+        :type query['undeploy']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -2822,75 +2246,44 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._remove_versions_serialize(
-            name=name,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="DELETE",
+            resource_path="/registry/v2/plugs/{name}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": UndeployedResponseV2 if not select_path else Any,
-            "202": UndeploySubmittedResponseV2 if not select_path else Any,
+            "200": UndeployedResponseV2 if not select_path else Model,
+            "202": UndeploySubmittedResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _remove_versions_serialize(
-        self,
-        name,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-            query_param = query.get("var_async", None)
-            if query_param is not None:
-                _query_params["async"] = query_param
-            query_param = query.get("force", None)
-            if query_param is not None:
-                _query_params["force"] = query_param
-            query_param = query.get("undeploy", None)
-            if query_param is not None:
-                _query_params["undeploy"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="DELETE",
-            resource_path="/registry/v2/plugs/{name}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -2907,10 +2300,10 @@ class PlugFunctionsApi(WithApiClient):
             ),
         ],
         *,
-        body: Annotated[
-            Optional[FileUpload], Field(description="A single asset file.")
+        content: Annotated[
+            Optional[RequestContent], Field(description="A single asset file.")
         ] = None,
-        query: Optional[UpdateAssetQuery] = None,
+        query: Optional[Union[UpdateAssetQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -2931,17 +2324,17 @@ class PlugFunctionsApi(WithApiClient):
             ),
         ],
         *,
-        body: Annotated[
-            Optional[FileUpload], Field(description="A single asset file.")
+        content: Annotated[
+            Optional[RequestContent], Field(description="A single asset file.")
         ] = None,
-        query: Optional[UpdateAssetQuery] = None,
+        query: Optional[Union[UpdateAssetQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def update_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -2955,37 +2348,36 @@ class PlugFunctionsApi(WithApiClient):
             ),
         ],
         *,
-        body: Annotated[
-            Optional[FileUpload], Field(description="A single asset file.")
+        content: Annotated[
+            Optional[RequestContent], Field(description="A single asset file.")
         ] = None,
-        query: Optional[UpdateAssetQuery] = None,
+        query: Optional[Union[UpdateAssetQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[PostPlugJobSyncResponseV2, Response, Any]:
+    ) -> Union[PostPlugJobSyncResponseV2, Response, Model]:
         """Update Plug Asset.
 
         The provided asset will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing asset with the same name.    Please note that it is not allowed to update the plug.json json file with a changed value for any of the     <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
         :param wildcard: Full path or path prefix of the asset within the archive (required)
         :type wildcard: str
-        :param body: A single asset file.
-        :type body: FileUpload
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-            :param query.var_async: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
-            :type query.var_async: bool
-            :param query.chown: If set, ownership of the draft function is transferred to the current user. (required)
-            :type query.chown: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param content: A single asset file.
+        :type content: ContentRequest, optional
+        :param query: URL Query parameters.
+        :type query: UpdateAssetQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
+        :type query['async']: bool
+        :param query['chown']: If set, ownership of the draft function is transferred to the current user. (required)
+        :type query['chown']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -3004,82 +2396,47 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._update_asset_serialize(
-            name=name,
-            version=version,
-            wildcard=wildcard,
-            body=body,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+            "wildcard": StringAdapter.validate_python(wildcard),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+        body_args["content"] = content
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="PUT",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "201": PostPlugJobSyncResponseV2 if not select_path else Any,
-            "202": PostPlugJobAsyncResponseV2 if not select_path else Any,
+            "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+            "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _update_asset_serialize(
-        self,
-        name,
-        version,
-        wildcard,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        if wildcard is not None:
-            _path_params["wildcard"] = wildcard
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-            query_param = query.get("var_async", None)
-            if query_param is not None:
-                _query_params["async"] = query_param
-            query_param = query.get("chown", None)
-            if query_param is not None:
-                _query_params["chown"] = query_param
-        # process the form parameters
-        # process the body parameter
-        if body is not None:
-            _body_params = body
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="PUT",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -3090,21 +2447,16 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        body: Union[
-            Annotated[
-                Optional[MultipartFileUpload],
-                Field(
-                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
-                ),
-            ],
-            Annotated[
-                Dict[StrictStr, Any], Field(description="Multipart file upload.")
-            ],
+        content: Annotated[
+            Optional[RequestContent],
+            Field(
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+            ),
         ] = None,
         files: Annotated[
-            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+            Optional[RequestFiles], Field(description="Multipart file upload")
         ] = None,
-        query: Optional[UpdateAssetsQuery] = None,
+        query: Optional[Union[UpdateAssetsQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -3119,28 +2471,23 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        body: Union[
-            Annotated[
-                Optional[MultipartFileUpload],
-                Field(
-                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
-                ),
-            ],
-            Annotated[
-                Dict[StrictStr, Any], Field(description="Multipart file upload.")
-            ],
+        content: Annotated[
+            Optional[RequestContent],
+            Field(
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+            ),
         ] = None,
         files: Annotated[
-            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+            Optional[RequestFiles], Field(description="Multipart file upload")
         ] = None,
-        query: Optional[UpdateAssetsQuery] = None,
+        query: Optional[Union[UpdateAssetsQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def update_assets(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -3148,48 +2495,42 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        body: Union[
-            Annotated[
-                Optional[MultipartFileUpload],
-                Field(
-                    description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
-                ),
-            ],
-            Annotated[
-                Dict[StrictStr, Any], Field(description="Multipart file upload.")
-            ],
+        content: Annotated[
+            Optional[RequestContent],
+            Field(
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+            ),
         ] = None,
         files: Annotated[
-            Optional[Dict[StrictStr, Any]], Field(description="Multipart file upload.")
+            Optional[RequestFiles], Field(description="Multipart file upload")
         ] = None,
-        query: Optional[UpdateAssetsQuery] = None,
+        query: Optional[Union[UpdateAssetsQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[PostPlugJobSyncResponseV2, Response, Any]:
+    ) -> Union[PostPlugJobSyncResponseV2, Response, Model]:
         """Update Plug Assets.
 
         Update a draft <em>plug</em> function by updating its assets.      The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param body: The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
-        :type body: MultipartFileUpload
-        :param files: The multipart file upload. This equivalent to setting `body` along with the `content-type: multipart/form-data` header.
-        :type files: Dict[str, bytearray], optional,
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-            :param query.var_async: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
-            :type query.var_async: bool
-            :param query.chown: If set, ownership of the draft function is transferred to the current user. (required)
-            :type query.chown: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param content: The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
+        :type content: ContentRequest, optional
+        :param files: The files of a `content-type: multipart/form-data` request.
+        :type files: FilesRequest, optional
+        :param query: URL Query parameters.
+        :type query: UpdateAssetsQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
+        :type query['async']: bool
+        :param query['chown']: If set, ownership of the draft function is transferred to the current user. (required)
+        :type query['chown']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -3208,97 +2549,47 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._update_assets_serialize(
-            name=name,
-            version=version,
-            body=body,
-            files=files,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+        body_args["content"] = content
+        body_args["files"] = files
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="PUT",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "201": PostPlugJobSyncResponseV2 if not select_path else Any,
-            "202": PostPlugJobAsyncResponseV2 if not select_path else Any,
+            "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+            "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _update_assets_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-            query_param = query.get("var_async", None)
-            if query_param is not None:
-                _query_params["async"] = query_param
-            query_param = query.get("chown", None)
-            if query_param is not None:
-                _query_params["chown"] = query_param
-        # process the form parameters
-        if files:
-            _files = files
-        # if `body` and `content-type` multipart/form-data, wrap it in `files` instead of `body`
-        content_type = _header_params.get("content-type", None)
-        if (
-            not files
-            and body
-            and content_type
-            and content_type.startswith("multipart/form-data")
-        ):
-            try:
-                _files = body
-                body = None
-                if "boundary" not in content_type:
-                    # Content-Type header does not cotain a boundary, and hence, is not valid.
-                    # Remove it to force the http framework to set it instead.
-                    _header_params.pop("content-type")
-            except ValueError as err:
-                raise ApiValueError("Body is not a valid dictionary", "body") from err
-        # process the body parameter
-        if body is not None:
-            _body_params = body
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="PUT",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/content",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -3309,7 +2600,7 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[VerifyQuery] = None,
+        query: Optional[Union[VerifyQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -3324,14 +2615,14 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[VerifyQuery] = None,
+        query: Optional[Union[VerifyQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def verify(
         self,
         name: Annotated[StrictStr, Field(description="The name of the function.")],
@@ -3339,30 +2630,29 @@ class PlugFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        query: Optional[VerifyQuery] = None,
+        query: Optional[Union[VerifyQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[VerifyPlugSyncResponseV2, Response, Any]:
+    ) -> Union[VerifyPlugSyncResponseV2, Response, Model]:
         """Verify Health Of Plug.
 
         Verify health of plug deployed on openfaas.
-
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.comment: An optional user-specified comment corresponding to the operation.
-            :type query.comment: str
-            :param query.var_async: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
-            :type query.var_async: bool
-            :param query.scale_to_zero: Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.
-            :type query.scale_to_zero: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: VerifyQuery | QueryParamTypes, optional
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
+        :type query['async']: bool
+        :param query['scaleToZero']: Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.
+        :type query['scaleToZero']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -3381,74 +2671,43 @@ class PlugFunctionsApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._verify_serialize(
-            name=name,
-            version=version,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="POST",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/verify",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": VerifyPlugSyncResponseV2 if not select_path else Any,
-            "202": PostPlugJobAsyncResponseV2 if not select_path else Any,
+            "200": VerifyPlugSyncResponseV2 if not select_path else Model,
+            "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _verify_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("comment", None)
-            if query_param is not None:
-                _query_params["comment"] = query_param
-            query_param = query.get("var_async", None)
-            if query_param is not None:
-                _query_params["async"] = query_param
-            query_param = query.get("scale_to_zero", None)
-            if query_param is not None:
-                _query_params["scaleToZero"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="POST",
-            resource_path="/registry/v2/plugs/{name}/versions/{version}/verify",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )

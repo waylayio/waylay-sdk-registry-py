@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt
 from pydantic import Field
 from ..models.plug_response_v2 import PlugResponseV2
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class PlugVersionsResponseV2(BaseModel):

@@ -14,18 +14,15 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool
 from pydantic import Field
 from ..models.latest_version_level import LatestVersionLevel
 from ..models.semantic_version_range import SemanticVersionRange
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class RuntimeVersionQuery(BaseModel):

@@ -14,15 +14,12 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
-
-from typing import Any, Dict, Optional, Union
-from pydantic import BaseModel, StrictBytes, StrictStr
-
-
 from typing_extensions import (
     Self,  # >=3.11
 )
+
+from typing import Any, Dict, Optional, Union
+from pydantic import BaseModel, StrictBytes, StrictStr
 
 
 class FileUpload(BaseModel):

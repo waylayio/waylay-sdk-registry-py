@@ -35,6 +35,7 @@ from ..models.latest_version_level import LatestVersionLevel
 class ExampleArchiveQuery(TypedDict):
     """example_archive query parameters."""
 
+    # TODO use ls
     ls: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -43,6 +44,7 @@ class ExampleArchiveQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use includeDeprecated
     include_deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -56,6 +58,7 @@ class ExampleArchiveQuery(TypedDict):
 class GetExampleAssetQuery(TypedDict):
     """get_example_asset query parameters."""
 
+    # TODO use ls
     ls: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -64,6 +67,7 @@ class GetExampleAssetQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use includeDeprecated
     include_deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -77,6 +81,7 @@ class GetExampleAssetQuery(TypedDict):
 class GetLatestQuery(TypedDict):
     """get_latest query parameters."""
 
+    # TODO use version
     version: NotRequired[
         Annotated[
             Optional[Any],
@@ -85,6 +90,7 @@ class GetLatestQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use includeDeprecated
     include_deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -93,6 +99,7 @@ class GetLatestQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use functionType
     function_type: NotRequired[
         Annotated[
             Optional[List[FunctionType]],
@@ -101,6 +108,7 @@ class GetLatestQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use archiveFormat
     archive_format: NotRequired[
         Annotated[
             Optional[List[ArchiveFormat]],
@@ -114,6 +122,7 @@ class GetLatestQuery(TypedDict):
 class GetQuery(TypedDict):
     """get query parameters."""
 
+    # TODO use includeDeprecated
     include_deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -127,6 +136,7 @@ class GetQuery(TypedDict):
 class ListQuery(TypedDict):
     """list query parameters."""
 
+    # TODO use version
     version: NotRequired[
         Annotated[
             Optional[Any],
@@ -135,6 +145,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use latest
     latest: NotRequired[
         Annotated[
             Optional[LatestVersionLevel],
@@ -143,6 +154,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use includeDeprecated
     include_deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -151,6 +163,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use name
     name: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -159,6 +172,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use functionType
     function_type: NotRequired[
         Annotated[
             Optional[List[FunctionType]],
@@ -167,6 +181,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use archiveFormat
     archive_format: NotRequired[
         Annotated[
             Optional[List[ArchiveFormat]],
@@ -180,6 +195,7 @@ class ListQuery(TypedDict):
 class ListVersionsQuery(TypedDict):
     """list_versions query parameters."""
 
+    # TODO use version
     version: NotRequired[
         Annotated[
             Optional[Any],
@@ -188,6 +204,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use latest
     latest: NotRequired[
         Annotated[
             Optional[LatestVersionLevel],
@@ -196,6 +213,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use includeDeprecated
     include_deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -204,6 +222,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use functionType
     function_type: NotRequired[
         Annotated[
             Optional[List[FunctionType]],
@@ -212,6 +231,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use archiveFormat
     archive_format: NotRequired[
         Annotated[
             Optional[List[ArchiveFormat]],

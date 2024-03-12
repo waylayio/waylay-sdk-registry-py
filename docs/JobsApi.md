@@ -8,9 +8,11 @@ Method | HTTP request | Description
 [**get**](JobsApi.md#get) | **GET** /registry/v2/jobs/{type}/{id} | Get Job
 [**list**](JobsApi.md#list) | **GET** /registry/v2/jobs/ | List Jobs
 
-
 # **events**
-> EventWithCloseSSE events(query=EventsQuery)
+> events(
+> query: EventsQuery,
+> headers
+> ) -> EventWithCloseSSE 
 
 Stream Events
 
@@ -30,26 +32,36 @@ waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.event_with_close_sse import EventWithCloseSSE
 from waylay.services.registry.models.job_type import JobType
-
-
-
 try:
     # Stream Events
-    api_response = await waylay_client.registry.jobs.events()
+    # calls `GET /registry/v2/jobs/events`
+    api_response = await waylay_client.registry.jobs.events(
+        # query parameters:
+        query = {
+            'type': waylay.services.registry.JobType()
+            'id': 'id_example'
+            'children': True
+        },
+    )
     print("The response of registry.jobs.events:\n")
     pprint(api_response)
 except ApiError as e:
     print("Exception when calling registry.jobs.events: %s\n" % e)
 ```
 
+### Endpoint
+```
+GET /registry/v2/jobs/events
+```
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **type** | [**JobType**](.md)| The type of the job. | [optional] 
- **id** | **str**| The id of the job. | [optional] 
- **children** | **bool**| If set to &lt;code&gt;true&lt;/code&gt;, the event stream will include events of the job&#39;s dependants. E.g., when subscribing to a verify job with &#x60;children&#x3D;true&#x60;, you will also receive the events of the underlying build and deploy jobs. Defaults to &lt;code&gt;false&lt;/code&gt;. | [optional] 
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['type']** | [**JobType**](.md) | query parameter `"type"` | The type of the job. | [optional] 
+**query['id']** | **str** | query parameter `"id"` | The id of the job. | [optional] 
+**query['children']** | **bool** | query parameter `"children"` | If set to &lt;code&gt;true&lt;/code&gt;, the event stream will include events of the job&#39;s dependants. E.g., when subscribing to a verify job with &#x60;children&#x3D;true&#x60;, you will also receive the events of the underlying build and deploy jobs. Defaults to &lt;code&gt;false&lt;/code&gt;. | [optional] 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
@@ -70,7 +82,11 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get**
-> JobResponse get(type: JobType, id: str, query=GetQuery)
+> get(
+> type: JobType,
+> id: str,
+> headers
+> ) -> JobResponse 
 
 Get Job
 
@@ -90,27 +106,30 @@ waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.job_response import JobResponse
 from waylay.services.registry.models.job_type import JobType
-
-type = waylay.services.registry.JobType() # JobType | ,
-id = 'id_example' # str | ,
-
-
 try:
     # Get Job
-    api_response = await waylay_client.registry.jobs.get(type=type, id=id, )
+    # calls `GET /registry/v2/jobs/{type}/{id}`
+    api_response = await waylay_client.registry.jobs.get(
+        waylay.services.registry.JobType(), # type | path param "type"
+        'id_example', # id | path param "id"
+    )
     print("The response of registry.jobs.get:\n")
     pprint(api_response)
 except ApiError as e:
     print("Exception when calling registry.jobs.get: %s\n" % e)
 ```
 
+### Endpoint
+```
+GET /registry/v2/jobs/{type}/{id}
+```
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **type** | [**JobType**](.md)|  | 
- **id** | **str**|  | 
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**type** | [**JobType**](.md) | path parameter `"type"` |  | 
+**id** | **str** | path parameter `"id"` |  | 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
@@ -131,7 +150,10 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list**
-> JobsResponse list(query=ListQuery)
+> list(
+> query: ListQuery,
+> headers
+> ) -> JobsResponse 
 
 List Jobs
 
@@ -153,29 +175,42 @@ from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.job_state_result import JobStateResult
 from waylay.services.registry.models.job_type_schema import JobTypeSchema
 from waylay.services.registry.models.jobs_response import JobsResponse
-
-
-
 try:
     # List Jobs
-    api_response = await waylay_client.registry.jobs.list()
+    # calls `GET /registry/v2/jobs/`
+    api_response = await waylay_client.registry.jobs.list(
+        # query parameters:
+        query = {
+            'limit': 3.4
+            'type': [waylay.services.registry.JobTypeSchema()]
+            'state': [waylay.services.registry.JobStateResult()]
+            'functionType': [waylay.services.registry.FunctionType()]
+            'createdBefore': waylay.services.registry.TimestampSpec()
+            'createdAfter': waylay.services.registry.TimestampSpec()
+        },
+    )
     print("The response of registry.jobs.list:\n")
     pprint(api_response)
 except ApiError as e:
     print("Exception when calling registry.jobs.list: %s\n" % e)
 ```
 
+### Endpoint
+```
+GET /registry/v2/jobs/
+```
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **limit** | **float**| The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
- **type** | [**List[JobTypeSchema]**](JobTypeSchema.md)| Filter on job type | [optional] 
- **state** | [**List[JobStateResult]**](JobStateResult.md)| Filter on job state | [optional] 
- **function_type** | [**List[FunctionType]**](FunctionType.md)| Filter on function type | [optional] 
- **created_before** | [**TimestampSpec**](.md)| Filter on jobs that created before the given timestamp or age | [optional] 
- **created_after** | [**TimestampSpec**](.md)| Filter on jobs that created after the given timestamp or age | [optional] 
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['limit']** | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
+**query['type']** | [**List[JobTypeSchema]**](JobTypeSchema.md) | query parameter `"type"` | Filter on job type | [optional] 
+**query['state']** | [**List[JobStateResult]**](JobStateResult.md) | query parameter `"state"` | Filter on job state | [optional] 
+**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | Filter on function type | [optional] 
+**query['createdBefore']** | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on jobs that created before the given timestamp or age | [optional] 
+**query['createdAfter']** | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on jobs that created after the given timestamp or age | [optional] 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 

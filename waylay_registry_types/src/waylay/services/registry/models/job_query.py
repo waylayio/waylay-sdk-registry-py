@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel
@@ -24,11 +26,6 @@ from ..models.function_type import FunctionType
 from ..models.job_state_result import JobStateResult
 from ..models.job_type_schema import JobTypeSchema
 from ..models.timestamp_spec import TimestampSpec
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class JobQuery(BaseModel):

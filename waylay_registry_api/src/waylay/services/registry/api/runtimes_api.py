@@ -10,8 +10,7 @@ Do not edit the class manually.
 
 from __future__ import annotations  # for Python 3.7–3.9
 
-import enum
-from pydantic import validate_call, Field, StrictStr, StrictBool
+from pydantic import Field, StrictStr, StrictBool, TypeAdapter, ConfigDict
 from typing import (
     Dict,
     Literal,
@@ -26,8 +25,12 @@ from typing_extensions import (
 )
 
 from waylay.sdk.plugin import WithApiClient
-from waylay.sdk.api import Request, Response, HeaderTypes, RequestFiles
-from httpx import Headers
+from waylay.sdk.api import (
+    Response,
+    HeaderTypes,
+    QueryParamTypes,
+)
+from waylay.sdk.api._models import Model
 
 if TYPE_CHECKING:
     from waylay.services.registry.models import SemanticVersionRange
@@ -115,29 +118,32 @@ except ImportError:
 
         GetLatestQuery = dict
 
-        RuntimeVersionResponse = Any
+        RuntimeVersionResponse = Model
 
-        RuntimeVersionResponse = Any
+        RuntimeVersionResponse = Model
 
         SemanticVersionRange = str
 
         GetQuery = dict
 
-        RuntimeVersionResponse = Any
+        RuntimeVersionResponse = Model
 
-        RuntimeVersionResponse = Any
+        RuntimeVersionResponse = Model
 
         ListQuery = dict
 
-        RuntimeSummaryResponse = Any
+        RuntimeSummaryResponse = Model
 
-        RuntimeSummaryResponse = Any
+        RuntimeSummaryResponse = Model
 
         ListVersionsQuery = dict
 
-        RuntimeSummaryResponse = Any
+        RuntimeSummaryResponse = Model
 
-        RuntimeSummaryResponse = Any
+        RuntimeSummaryResponse = Model
+
+
+StringAdapter = TypeAdapter(str, config=ConfigDict(coerce_numbers_to_str=True))
 
 
 class RuntimesApi(WithApiClient):
@@ -157,7 +163,7 @@ class RuntimesApi(WithApiClient):
             Any, Field(description="A version range for a <em>runtime</em>")
         ],
         *,
-        query: Optional[ExampleArchiveQuery] = None,
+        query: Optional[Union[ExampleArchiveQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -172,14 +178,14 @@ class RuntimesApi(WithApiClient):
             Any, Field(description="A version range for a <em>runtime</em>")
         ],
         *,
-        query: Optional[ExampleArchiveQuery] = None,
+        query: Optional[Union[ExampleArchiveQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def example_archive(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
@@ -187,28 +193,27 @@ class RuntimesApi(WithApiClient):
             Any, Field(description="A version range for a <em>runtime</em>")
         ],
         *,
-        query: Optional[ExampleArchiveQuery] = None,
+        query: Optional[Union[ExampleArchiveQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[bytearray, Response, Any]:
+    ) -> Union[bytearray, Response, Model]:
         """Get Runtime Example Archive.
 
         Get an example of the specification archive of the runtime.
-
         :param name: The name of a <em>runtime</em> (required)
         :type name: str
         :param version: A version range for a <em>runtime</em> (required)
         :type version: SemanticVersionRange
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.ls: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
-            :type query.ls: bool
-            :param query.include_deprecated: If set to `true`, deprecated runtimes will be included in the query.
-            :type query.include_deprecated: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: ExampleArchiveQuery | QueryParamTypes, optional
+        :param query['ls']: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
+        :type query['ls']: bool
+        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :type query['includeDeprecated']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -227,72 +232,44 @@ class RuntimesApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._example_archive_serialize(
-            name=name,
-            version=version,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}/versions/{version}/example",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": bytearray if not select_path else Any,
+            "200": bytearray if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _example_archive_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("ls", None)
-            if query_param is not None:
-                _query_params["ls"] = query_param
-            query_param = query.get("include_deprecated", None)
-            if query_param is not None:
-                _query_params["includeDeprecated"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/runtimes/{name}/versions/{version}/example",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -309,7 +286,7 @@ class RuntimesApi(WithApiClient):
             ),
         ],
         *,
-        query: Optional[GetExampleAssetQuery] = None,
+        query: Optional[Union[GetExampleAssetQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -330,14 +307,14 @@ class RuntimesApi(WithApiClient):
             ),
         ],
         *,
-        query: Optional[GetExampleAssetQuery] = None,
+        query: Optional[Union[GetExampleAssetQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get_example_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
@@ -351,30 +328,29 @@ class RuntimesApi(WithApiClient):
             ),
         ],
         *,
-        query: Optional[GetExampleAssetQuery] = None,
+        query: Optional[Union[GetExampleAssetQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[bytearray, Response, Any]:
+    ) -> Union[bytearray, Response, Model]:
         """Get File From Runtime Example Archive.
 
         Get a file from the example specification archive of the runtime.
-
         :param name: The name of a <em>runtime</em> (required)
         :type name: str
         :param version: A version range for a <em>runtime</em> (required)
         :type version: SemanticVersionRange
         :param wildcard: Full path or path prefix of the asset within the archive (required)
         :type wildcard: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.ls: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
-            :type query.ls: bool
-            :param query.include_deprecated: If set to `true`, deprecated runtimes will be included in the query.
-            :type query.include_deprecated: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetExampleAssetQuery | QueryParamTypes, optional
+        :param query['ls']: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
+        :type query['ls']: bool
+        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :type query['includeDeprecated']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -393,76 +369,45 @@ class RuntimesApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_example_asset_serialize(
-            name=name,
-            version=version,
-            wildcard=wildcard,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+            "wildcard": StringAdapter.validate_python(wildcard),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}/versions/{version}/example/{wildcard}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": bytearray if not select_path else Any,
+            "200": bytearray if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _get_example_asset_serialize(
-        self,
-        name,
-        version,
-        wildcard,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        if wildcard is not None:
-            _path_params["wildcard"] = wildcard
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("ls", None)
-            if query_param is not None:
-                _query_params["ls"] = query_param
-            query_param = query.get("include_deprecated", None)
-            if query_param is not None:
-                _query_params["includeDeprecated"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/runtimes/{name}/versions/{version}/example/{wildcard}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -470,7 +415,7 @@ class RuntimesApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
         *,
-        query: Optional[GetLatestQuery] = None,
+        query: Optional[Union[GetLatestQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -482,42 +427,41 @@ class RuntimesApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
         *,
-        query: Optional[GetLatestQuery] = None,
+        query: Optional[Union[GetLatestQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get_latest(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
         *,
-        query: Optional[GetLatestQuery] = None,
+        query: Optional[Union[GetLatestQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[RuntimeVersionResponse, Response, Any]:
+    ) -> Union[RuntimeVersionResponse, Response, Model]:
         """Get Latest Runtime Version.
 
         Get a representation of the default runtime version by name.
-
         :param name: The name of a <em>runtime</em> (required)
         :type name: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.version: If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
-            :type query.version: SemanticVersionRange
-            :param query.include_deprecated: If set to `true`, deprecated runtimes will be included in the query.
-            :type query.include_deprecated: bool
-            :param query.function_type: If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
-            :type query.function_type: List[FunctionType]
-            :param query.archive_format: If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
-            :type query.archive_format: List[ArchiveFormat]
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetLatestQuery | QueryParamTypes, optional
+        :param query['version']: If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
+        :type query['version']: SemanticVersionRange
+        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :type query['includeDeprecated']: bool
+        :param query['functionType']: If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
+        :type query['functionType']: List[FunctionType]
+        :param query['archiveFormat']: If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
+        :type query['archiveFormat']: List[ArchiveFormat]
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -536,78 +480,43 @@ class RuntimesApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_latest_serialize(
-            name=name,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": RuntimeVersionResponse if not select_path else Any,
+            "200": RuntimeVersionResponse if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _get_latest_serialize(
-        self,
-        name,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("version", None)
-            if query_param is not None:
-                _query_params["version"] = query_param
-            query_param = query.get("include_deprecated", None)
-            if query_param is not None:
-                _query_params["includeDeprecated"] = query_param
-            query_param = query.get("function_type", None)
-            if query_param is not None:
-                _query_params["functionType"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-            query_param = query.get("archive_format", None)
-            if query_param is not None:
-                _query_params["archiveFormat"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/runtimes/{name}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -618,7 +527,7 @@ class RuntimesApi(WithApiClient):
             Any, Field(description="A version range for a <em>runtime</em>")
         ],
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -633,14 +542,14 @@ class RuntimesApi(WithApiClient):
             Any, Field(description="A version range for a <em>runtime</em>")
         ],
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
@@ -648,26 +557,25 @@ class RuntimesApi(WithApiClient):
             Any, Field(description="A version range for a <em>runtime</em>")
         ],
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[RuntimeVersionResponse, Response, Any]:
+    ) -> Union[RuntimeVersionResponse, Response, Model]:
         """Get Runtime Version.
 
         Get a representation of the default runtime version by name.
-
         :param name: The name of a <em>runtime</em> (required)
         :type name: str
         :param version: A version range for a <em>runtime</em> (required)
         :type version: SemanticVersionRange
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.include_deprecated: If set to `true`, deprecated runtimes will be included in the query.
-            :type query.include_deprecated: bool
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetQuery | QueryParamTypes, optional
+        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :type query['includeDeprecated']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -686,76 +594,51 @@ class RuntimesApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_serialize(
-            name=name,
-            version=version,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+            "version": StringAdapter.validate_python(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}/versions/{version}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": RuntimeVersionResponse if not select_path else Any,
+            "200": RuntimeVersionResponse if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
         )
 
-    def _get_serialize(
-        self,
-        name,
-        version,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        if version is not None:
-            _path_params["version"] = version
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("include_deprecated", None)
-            if query_param is not None:
-                _query_params["includeDeprecated"] = query_param
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/runtimes/{name}/versions/{version}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
-        )
-
     @overload
     async def list(
         self,
         *,
-        query: Optional[ListQuery] = None,
+        query: Optional[Union[ListQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -766,43 +649,42 @@ class RuntimesApi(WithApiClient):
     async def list(
         self,
         *,
-        query: Optional[ListQuery] = None,
+        query: Optional[Union[ListQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def list(
         self,
         *,
-        query: Optional[ListQuery] = None,
+        query: Optional[Union[ListQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[RuntimeSummaryResponse, Response, Any]:
+    ) -> Union[RuntimeSummaryResponse, Response, Model]:
         """List Runtimes.
 
         List the runtimes that function registry supports.
-
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.version: If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
-            :type query.version: SemanticVersionRange
-            :param query.latest: If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.
-            :type query.latest: LatestVersionLevel
-            :param query.include_deprecated: If set to `true`, deprecated runtimes will be included in the query.
-            :type query.include_deprecated: bool
-            :param query.name: If set, filters on the <code>name</code> of a runtime. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive.
-            :type query.name: str
-            :param query.function_type: If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
-            :type query.function_type: List[FunctionType]
-            :param query.archive_format: If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
-            :type query.archive_format: List[ArchiveFormat]
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: ListQuery | QueryParamTypes, optional
+        :param query['version']: If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
+        :type query['version']: SemanticVersionRange
+        :param query['latest']: If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.
+        :type query['latest']: LatestVersionLevel
+        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :type query['includeDeprecated']: bool
+        :param query['name']: If set, filters on the <code>name</code> of a runtime. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive.
+        :type query['name']: str
+        :param query['functionType']: If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
+        :type query['functionType']: List[FunctionType]
+        :param query['archiveFormat']: If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
+        :type query['archiveFormat']: List[ArchiveFormat]
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -821,80 +703,41 @@ class RuntimesApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._list_serialize(
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {}
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/runtimes/",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": RuntimeSummaryResponse if not select_path else Any,
+            "200": RuntimeSummaryResponse if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _list_serialize(
-        self,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("version", None)
-            if query_param is not None:
-                _query_params["version"] = query_param
-            query_param = query.get("latest", None)
-            if query_param is not None:
-                _query_params["latest"] = query_param.value
-            query_param = query.get("include_deprecated", None)
-            if query_param is not None:
-                _query_params["includeDeprecated"] = query_param
-            query_param = query.get("name", None)
-            if query_param is not None:
-                _query_params["name"] = query_param
-            query_param = query.get("function_type", None)
-            if query_param is not None:
-                _query_params["functionType"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-            query_param = query.get("archive_format", None)
-            if query_param is not None:
-                _query_params["archiveFormat"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/runtimes/",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -902,7 +745,7 @@ class RuntimesApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
         *,
-        query: Optional[ListVersionsQuery] = None,
+        query: Optional[Union[ListVersionsQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -914,44 +757,43 @@ class RuntimesApi(WithApiClient):
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
         *,
-        query: Optional[ListVersionsQuery] = None,
+        query: Optional[Union[ListVersionsQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def list_versions(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
         *,
-        query: Optional[ListVersionsQuery] = None,
+        query: Optional[Union[ListVersionsQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[RuntimeSummaryResponse, Response, Any]:
+    ) -> Union[RuntimeSummaryResponse, Response, Model]:
         """List Runtime Versions.
 
         List the supported versions of a specific runtime.
-
         :param name: The name of a <em>runtime</em> (required)
         :type name: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-            :param query.version: If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
-            :type query.version: SemanticVersionRange
-            :param query.latest: If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.
-            :type query.latest: LatestVersionLevel
-            :param query.include_deprecated: If set to `true`, deprecated runtimes will be included in the query.
-            :type query.include_deprecated: bool
-            :param query.function_type: If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
-            :type query.function_type: List[FunctionType]
-            :param query.archive_format: If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
-            :type query.archive_format: List[ArchiveFormat]
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: ListVersionsQuery | QueryParamTypes, optional
+        :param query['version']: If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
+        :type query['version']: SemanticVersionRange
+        :param query['latest']: If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.
+        :type query['latest']: LatestVersionLevel
+        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :type query['includeDeprecated']: bool
+        :param query['functionType']: If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
+        :type query['functionType']: List[FunctionType]
+        :param query['archiveFormat']: If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
+        :type query['archiveFormat']: List[ArchiveFormat]
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -970,79 +812,41 @@ class RuntimesApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._list_versions_serialize(
-            name=name,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": StringAdapter.validate_python(name),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/runtimes/{name}/versions",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": RuntimeSummaryResponse if not select_path else Any,
+            "200": RuntimeSummaryResponse if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _list_versions_serialize(
-        self,
-        name,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if name is not None:
-            _path_params["name"] = name
-        # process the query parameters
-        if query is not None:
-            query_param = query.get("version", None)
-            if query_param is not None:
-                _query_params["version"] = query_param
-            query_param = query.get("latest", None)
-            if query_param is not None:
-                _query_params["latest"] = query_param.value
-            query_param = query.get("include_deprecated", None)
-            if query_param is not None:
-                _query_params["includeDeprecated"] = query_param
-            query_param = query.get("function_type", None)
-            if query_param is not None:
-                _query_params["functionType"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-            query_param = query.get("archive_format", None)
-            if query_param is not None:
-                _query_params["archiveFormat"] = [
-                    v.value if isinstance(v, enum.Enum) else v for v in query_param
-                ]
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/runtimes/{name}/versions",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )

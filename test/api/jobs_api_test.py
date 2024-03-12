@@ -12,24 +12,37 @@ import pytest
 from typeguard import check_type
 from pytest_httpx import HTTPXMock
 import json
+import re
+from importlib.util import find_spec
+from urllib.parse import quote
+
 from waylay.sdk import ApiClient, WaylayClient
+from waylay.sdk.api._models import Model
 from waylay.services.registry.api import JobsApi
 from waylay.services.registry.service import RegistryService
 
 
 from ..types.event_with_close_sse_stub import EventWithCloseSSEStub
-from waylay.services.registry.models import EventWithCloseSSE
-
-
-from ..types.job_type_stub import JobTypeStub
 
 
 from ..types.job_response_stub import JobResponseStub
-from waylay.services.registry.models import JobResponse
 
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
 
 from ..types.jobs_response_stub import JobsResponseStub
-from waylay.services.registry.models import JobsResponse
+
+
+try:
+    from waylay.services.registry.models import EventWithCloseSSE
+    from waylay.services.registry.models import JobResponse
+    from waylay.services.registry.models import JobsResponse
+
+    MODELS_AVAILABLE = find_spec("waylay.services.registry.models") is not None
+except ImportError:
+    MODELS_AVAILABLE = False
 
 
 # some mappings that are needed for some <example> interpolations
@@ -46,7 +59,19 @@ def test_registered(waylay_client: WaylayClient):
     assert isinstance(waylay_client.registry.jobs, JobsApi)
 
 
+def _events_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
+    mock_response = EventWithCloseSSEStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(f"^{gateway_url}/registry/v2/jobs/events(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
 @pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_events(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -54,61 +79,138 @@ async def test_events(
     Stream Events
     """
     # set path params
-
-    mock_response = EventWithCloseSSEStub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/jobs/events",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
+    kwargs = {
+        "query": {
+            "type": "build",
+            "id": "id_example",
+            "children": True,
+        },
     }
-    httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {}
+    _events_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.events(**kwargs)
     check_type(resp, EventWithCloseSSE)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_events_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for events with models not installed
+    Stream Events
+    """
+    # set path params
+    kwargs = {
+        "query": {
+            "type": "build",
+            "id": "id_example",
+            "children": True,
+        },
+    }
+    _events_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.jobs.events(**kwargs)
+    check_type(resp, Model)
+
+
+def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, type: str, id: str):
+    mock_response = JobResponseStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(f"^{gateway_url}/registry/v2/jobs/{type}/{id}(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
     Get Job
     """
     # set path params
-    type = JobTypeStub.create_instance().value
+    type = "build"
 
     id = "id_example"
 
-    mock_response = JobResponseStub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/jobs/{type}/{id}",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {
-        "type": type,
-        "id": id,
-    }
-    resp = await service.jobs.get(**kwargs)
+    kwargs = {}
+    _get_set_mock_response(httpx_mock, gateway_url, quote(str(type)), quote(str(id)))
+    resp = await service.jobs.get(type, id, **kwargs)
     check_type(resp, JobResponse)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_get_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for get with models not installed
+    Get Job
+    """
+    # set path params
+    type = "build"
+
+    id = "id_example"
+
+    kwargs = {}
+    _get_set_mock_response(httpx_mock, gateway_url, quote(str(type)), quote(str(id)))
+    resp = await service.jobs.get(type, id, **kwargs)
+    check_type(resp, Model)
+
+
+def _list_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
+    mock_response = JobsResponseStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(f"^{gateway_url}/registry/v2/jobs/(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list
     List Jobs
     """
     # set path params
-
-    mock_response = JobsResponseStub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/jobs/",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
+    kwargs = {
+        "query": {
+            "limit": 3.4,
+            "type": [],
+            "state": [],
+            "functionType": [],
+            "createdBefore": TimestampSpecStub.create_json(),
+            "createdAfter": TimestampSpecStub.create_json(),
+        },
     }
-    httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {}
+    _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.list(**kwargs)
     check_type(resp, JobsResponse)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_list_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for list with models not installed
+    List Jobs
+    """
+    # set path params
+    kwargs = {
+        "query": {
+            "limit": 3.4,
+            "type": [],
+            "state": [],
+            "functionType": [],
+            "createdBefore": TimestampSpecStub.create_json(),
+            "createdAfter": TimestampSpecStub.create_json(),
+        },
+    }
+    _list_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.jobs.list(**kwargs)
+    check_type(resp, Model)

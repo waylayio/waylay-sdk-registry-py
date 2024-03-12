@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, Optional
 from pydantic import BaseModel
 from ..models.legacy_plug_request_metadata_documentation import (
     LegacyPlugRequestMetadataDocumentation,
-)
-
-
-from typing_extensions import (
-    Self,  # >=3.11
 )
 
 

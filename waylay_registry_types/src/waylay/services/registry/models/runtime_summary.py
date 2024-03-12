@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
@@ -22,11 +24,6 @@ from pydantic import Field
 from ..models.archive_format import ArchiveFormat
 from ..models.function_type import FunctionType
 from ..models.runtime_version_info import RuntimeVersionInfo
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class RuntimeSummary(BaseModel):

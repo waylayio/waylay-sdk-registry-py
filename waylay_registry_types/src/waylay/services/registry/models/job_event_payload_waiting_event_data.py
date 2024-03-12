@@ -14,18 +14,15 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 from datetime import datetime
 from typing import Any, Dict
 from pydantic import BaseModel
 from pydantic import Field
 from ..models.job_reference import JobReference
 from ..models.waiting_event_data import WaitingEventData
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class JobEventPayloadWaitingEventData(BaseModel):

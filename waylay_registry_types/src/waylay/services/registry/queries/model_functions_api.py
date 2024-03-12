@@ -40,6 +40,7 @@ from ..models.status_filter import StatusFilter
 class CreateQuery(TypedDict):
     """create query parameters."""
 
+    # TODO use deprecatePrevious
     deprecate_previous: NotRequired[
         Annotated[
             Optional[DeprecatePreviousPolicy],
@@ -48,6 +49,7 @@ class CreateQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use dryRun
     dry_run: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -56,6 +58,7 @@ class CreateQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use async
     var_async: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -64,6 +67,7 @@ class CreateQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use scaleToZero
     scale_to_zero: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -72,6 +76,7 @@ class CreateQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use version
     version: NotRequired[
         Annotated[
             Optional[Any],
@@ -80,6 +85,7 @@ class CreateQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use name
     name: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -88,6 +94,7 @@ class CreateQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use draft
     draft: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -101,12 +108,14 @@ class CreateQuery(TypedDict):
 class DeleteAssetQuery(TypedDict):
     """delete_asset query parameters."""
 
+    # TODO use chown
     chown: Annotated[
         StrictBool,
         Field(
             description="If set, ownership of the draft function is transferred to the current user."
         ),
     ]
+    # TODO use comment
     comment: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -115,6 +124,7 @@ class DeleteAssetQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use async
     var_async: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -128,6 +138,7 @@ class DeleteAssetQuery(TypedDict):
 class GetArchiveQuery(TypedDict):
     """get_archive query parameters."""
 
+    # TODO use ls
     ls: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -141,6 +152,7 @@ class GetArchiveQuery(TypedDict):
 class GetAssetQuery(TypedDict):
     """get_asset query parameters."""
 
+    # TODO use ls
     ls: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -154,6 +166,7 @@ class GetAssetQuery(TypedDict):
 class GetLatestQuery(TypedDict):
     """get_latest query parameters."""
 
+    # TODO use includeDraft
     include_draft: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -162,6 +175,7 @@ class GetLatestQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use includeDeprecated
     include_deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -179,6 +193,7 @@ class GetQuery(TypedDict):
 class JobsQuery(TypedDict):
     """jobs query parameters."""
 
+    # TODO use limit
     limit: NotRequired[
         Annotated[
             Optional[
@@ -192,21 +207,25 @@ class JobsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use type
     type: NotRequired[
         Annotated[
             Optional[List[JobTypeSchema]], Field(description="Filter on job type")
         ]
     ]
+    # TODO use state
     state: NotRequired[
         Annotated[
             Optional[List[JobStateResult]], Field(description="Filter on job state")
         ]
     ]
+    # TODO use functionType
     function_type: NotRequired[
         Annotated[
             Optional[List[FunctionType]], Field(description="Filter on function type")
         ]
     ]
+    # TODO use createdBefore
     created_before: NotRequired[
         Annotated[
             Optional[Any],
@@ -215,6 +234,7 @@ class JobsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use createdAfter
     created_after: NotRequired[
         Annotated[
             Optional[Any],
@@ -228,6 +248,7 @@ class JobsQuery(TypedDict):
 class ListQuery(TypedDict):
     """list query parameters."""
 
+    # TODO use limit
     limit: NotRequired[
         Annotated[
             Optional[
@@ -241,6 +262,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use page
     page: NotRequired[
         Annotated[
             Optional[
@@ -254,6 +276,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use includeDraft
     include_draft: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -262,6 +285,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use includeDeprecated
     include_deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -270,18 +294,21 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use deprecated
     deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
             Field(description="Filter on the deprecation status of the function."),
         ]
     ]
+    # TODO use draft
     draft: NotRequired[
         Annotated[
             Optional[StrictBool],
             Field(description="Filter on the draft status of the function."),
         ]
     ]
+    # TODO use nameVersion
     name_version: NotRequired[
         Annotated[
             Optional[List[Annotated[str, Field(strict=True)]]],
@@ -290,6 +317,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use version
     version: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -298,6 +326,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use status
     status: NotRequired[
         Annotated[
             Optional[List[StatusFilter]],
@@ -306,9 +335,11 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use runtimeVersion
     runtime_version: NotRequired[
         Annotated[Optional[Any], Field(description="Filter on the runtime version.")]
     ]
+    # TODO use createdBy
     created_by: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -317,6 +348,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use updatedBy
     updated_by: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -325,6 +357,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use createdBefore
     created_before: NotRequired[
         Annotated[
             Optional[Any],
@@ -333,6 +366,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use createdAfter
     created_after: NotRequired[
         Annotated[
             Optional[Any],
@@ -341,6 +375,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use updatedBefore
     updated_before: NotRequired[
         Annotated[
             Optional[Any],
@@ -349,6 +384,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use updatedAfter
     updated_after: NotRequired[
         Annotated[
             Optional[Any],
@@ -357,6 +393,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use name
     name: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -365,18 +402,21 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use archiveFormat
     archive_format: NotRequired[
         Annotated[
             Optional[List[ArchiveFormat]],
             Field(description="Filter on the archive format of the function."),
         ]
     ]
+    # TODO use runtime
     runtime: NotRequired[
         Annotated[
             Optional[List[StrictStr]],
             Field(description="Filter on the runtime of the function."),
         ]
     ]
+    # TODO use latest
     latest: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -390,6 +430,7 @@ class ListQuery(TypedDict):
 class ListVersionsQuery(TypedDict):
     """list_versions query parameters."""
 
+    # TODO use limit
     limit: NotRequired[
         Annotated[
             Optional[
@@ -403,6 +444,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use page
     page: NotRequired[
         Annotated[
             Optional[
@@ -416,18 +458,21 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use deprecated
     deprecated: NotRequired[
         Annotated[
             Optional[StrictBool],
             Field(description="Filter on the deprecation status of the function."),
         ]
     ]
+    # TODO use draft
     draft: NotRequired[
         Annotated[
             Optional[StrictBool],
             Field(description="Filter on the draft status of the function."),
         ]
     ]
+    # TODO use version
     version: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -436,6 +481,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use status
     status: NotRequired[
         Annotated[
             Optional[List[StatusFilter]],
@@ -444,9 +490,11 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use runtimeVersion
     runtime_version: NotRequired[
         Annotated[Optional[Any], Field(description="Filter on the runtime version.")]
     ]
+    # TODO use createdBy
     created_by: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -455,6 +503,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use updatedBy
     updated_by: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -463,6 +512,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use createdBefore
     created_before: NotRequired[
         Annotated[
             Optional[Any],
@@ -471,6 +521,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use createdAfter
     created_after: NotRequired[
         Annotated[
             Optional[Any],
@@ -479,6 +530,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use updatedBefore
     updated_before: NotRequired[
         Annotated[
             Optional[Any],
@@ -487,6 +539,7 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use updatedAfter
     updated_after: NotRequired[
         Annotated[
             Optional[Any],
@@ -495,12 +548,14 @@ class ListVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use archiveFormat
     archive_format: NotRequired[
         Annotated[
             Optional[List[ArchiveFormat]],
             Field(description="Filter on the archive format of the function."),
         ]
     ]
+    # TODO use runtime
     runtime: NotRequired[
         Annotated[
             Optional[List[StrictStr]],
@@ -512,6 +567,7 @@ class ListVersionsQuery(TypedDict):
 class PatchMetadataQuery(TypedDict):
     """patch_metadata query parameters."""
 
+    # TODO use comment
     comment: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -525,6 +581,7 @@ class PatchMetadataQuery(TypedDict):
 class PublishQuery(TypedDict):
     """publish query parameters."""
 
+    # TODO use comment
     comment: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -533,6 +590,7 @@ class PublishQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use deprecatePrevious
     deprecate_previous: NotRequired[
         Annotated[
             Optional[DeprecatePreviousPolicy],
@@ -541,6 +599,7 @@ class PublishQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use async
     var_async: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -554,6 +613,7 @@ class PublishQuery(TypedDict):
 class RebuildQuery(TypedDict):
     """rebuild query parameters."""
 
+    # TODO use comment
     comment: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -562,6 +622,7 @@ class RebuildQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use dryRun
     dry_run: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -570,6 +631,7 @@ class RebuildQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use async
     var_async: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -578,6 +640,7 @@ class RebuildQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use upgrade
     upgrade: NotRequired[
         Annotated[
             Optional[RebuildPolicy],
@@ -586,6 +649,7 @@ class RebuildQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use forceVersion
     force_version: NotRequired[
         Annotated[
             Optional[Annotated[str, Field(strict=True)]],
@@ -594,6 +658,7 @@ class RebuildQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use ignoreChecks
     ignore_checks: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -602,6 +667,7 @@ class RebuildQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use scaleToZero
     scale_to_zero: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -610,6 +676,7 @@ class RebuildQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use skipRebuild
     skip_rebuild: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -623,6 +690,7 @@ class RebuildQuery(TypedDict):
 class RemoveVersionQuery(TypedDict):
     """remove_version query parameters."""
 
+    # TODO use comment
     comment: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -631,6 +699,7 @@ class RemoveVersionQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use async
     var_async: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -639,6 +708,7 @@ class RemoveVersionQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use force
     force: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -647,6 +717,7 @@ class RemoveVersionQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use undeploy
     undeploy: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -660,6 +731,7 @@ class RemoveVersionQuery(TypedDict):
 class RemoveVersionsQuery(TypedDict):
     """remove_versions query parameters."""
 
+    # TODO use comment
     comment: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -668,6 +740,7 @@ class RemoveVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use force
     force: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -676,6 +749,7 @@ class RemoveVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use undeploy
     undeploy: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -684,6 +758,7 @@ class RemoveVersionsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use async
     var_async: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -697,12 +772,14 @@ class RemoveVersionsQuery(TypedDict):
 class UpdateAssetQuery(TypedDict):
     """update_asset query parameters."""
 
+    # TODO use chown
     chown: Annotated[
         StrictBool,
         Field(
             description="If set, ownership of the draft function is transferred to the current user."
         ),
     ]
+    # TODO use comment
     comment: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -711,6 +788,7 @@ class UpdateAssetQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use async
     var_async: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -724,12 +802,14 @@ class UpdateAssetQuery(TypedDict):
 class UpdateAssetsQuery(TypedDict):
     """update_assets query parameters."""
 
+    # TODO use chown
     chown: Annotated[
         StrictBool,
         Field(
             description="If set, ownership of the draft function is transferred to the current user."
         ),
     ]
+    # TODO use comment
     comment: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -738,6 +818,7 @@ class UpdateAssetsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use async
     var_async: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -751,6 +832,7 @@ class UpdateAssetsQuery(TypedDict):
 class VerifyQuery(TypedDict):
     """verify query parameters."""
 
+    # TODO use comment
     comment: NotRequired[
         Annotated[
             Optional[StrictStr],
@@ -759,6 +841,7 @@ class VerifyQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use async
     var_async: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -767,6 +850,7 @@ class VerifyQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use scaleToZero
     scale_to_zero: NotRequired[
         Annotated[
             Optional[StrictBool],

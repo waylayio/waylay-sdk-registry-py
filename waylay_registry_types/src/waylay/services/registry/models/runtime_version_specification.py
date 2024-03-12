@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictBool, StrictStr, field_validator
@@ -25,11 +27,6 @@ from ..models.build_spec import BuildSpec
 from ..models.deploy_spec import DeploySpec
 from ..models.language_release import LanguageRelease
 from ..models.provided_dependency import ProvidedDependency
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class RuntimeVersionSpecification(BaseModel):

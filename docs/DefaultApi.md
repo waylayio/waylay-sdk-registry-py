@@ -6,9 +6,10 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**get**](DefaultApi.md#get) | **GET** /registry/v2/ | Version
 
-
 # **get**
-> RootPageResponse get(query=GetQuery)
+> get(
+> headers
+> ) -> RootPageResponse 
 
 Version
 
@@ -27,21 +28,25 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.root_page_response import RootPageResponse
-
-
-
 try:
     # Version
-    api_response = await waylay_client.registry.default.get()
+    # calls `GET /registry/v2/`
+    api_response = await waylay_client.registry.default.get(
+    )
     print("The response of registry.default.get:\n")
     pprint(api_response)
 except ApiError as e:
     print("Exception when calling registry.default.get: %s\n" % e)
 ```
 
+### Endpoint
+```
+GET /registry/v2/
+```
 ### Parameters
 
 This endpoint does not need any parameter.
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 

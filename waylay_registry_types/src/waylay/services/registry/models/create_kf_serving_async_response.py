@@ -14,18 +14,15 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from ..models.job_hal_links import JobHALLinks
 from ..models.kf_serving_manifest import KFServingManifest
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class CreateKFServingAsyncResponse(BaseModel):

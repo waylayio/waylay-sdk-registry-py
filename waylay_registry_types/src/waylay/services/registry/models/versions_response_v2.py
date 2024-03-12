@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt
 from pydantic import Field
 from ..models.any_function_response import AnyFunctionResponse
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class VersionsResponseV2(BaseModel):

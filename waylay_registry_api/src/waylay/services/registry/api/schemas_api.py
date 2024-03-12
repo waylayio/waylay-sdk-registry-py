@@ -11,7 +11,7 @@ Do not edit the class manually.
 from __future__ import annotations  # for Python 3.7–3.9
 import warnings
 
-from pydantic import validate_call, Field, StrictStr, StrictBool
+from pydantic import Field, StrictStr, StrictBool, TypeAdapter, ConfigDict
 from typing import (
     Dict,
     Literal,
@@ -26,8 +26,12 @@ from typing_extensions import (
 )
 
 from waylay.sdk.plugin import WithApiClient
-from waylay.sdk.api import Request, Response, HeaderTypes, RequestFiles
-from httpx import Headers
+from waylay.sdk.api import (
+    Response,
+    HeaderTypes,
+    QueryParamTypes,
+)
+from waylay.sdk.api._models import Model
 
 if TYPE_CHECKING:
     from waylay.services.registry.models import FunctionType
@@ -62,6 +66,9 @@ except ImportError:
         GetQuery = dict
 
 
+StringAdapter = TypeAdapter(str, config=ConfigDict(coerce_numbers_to_str=True))
+
+
 class SchemasApi(WithApiClient):
     """SchemasApi service methods.
 
@@ -77,7 +84,7 @@ class SchemasApi(WithApiClient):
         function_type: Annotated[FunctionType, Field(description="Function type")],
         role: Annotated[AssetRole, Field(description="Asset role")],
         *,
-        query: Optional[GetByRoleQuery] = None,
+        query: Optional[Union[GetByRoleQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -90,37 +97,36 @@ class SchemasApi(WithApiClient):
         function_type: Annotated[FunctionType, Field(description="Function type")],
         role: Annotated[AssetRole, Field(description="Asset role")],
         *,
-        query: Optional[GetByRoleQuery] = None,
+        query: Optional[Union[GetByRoleQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get_by_role(
         self,
         function_type: Annotated[FunctionType, Field(description="Function type")],
         role: Annotated[AssetRole, Field(description="Asset role")],
         *,
-        query: Optional[GetByRoleQuery] = None,
+        query: Optional[Union[GetByRoleQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[Dict[str, object], Response, Any]:
+    ) -> Union[Dict[str, object], Response, Model]:
         """Get Asset Schema (Deprecated).
 
         Get the JSON schema that is used to validate the asset.
-
         :param function_type: Function type (required)
         :type function_type: FunctionType
         :param role: Asset role (required)
         :type role: AssetRole
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetByRoleQuery | QueryParamTypes, optional
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -139,71 +145,48 @@ class SchemasApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
         warnings.warn(
             "GET /registry/v2/schemas/{functionType}/{role}/schema is deprecated.",
             DeprecationWarning,
         )
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_by_role_serialize(
-            function_type=function_type,
-            role=role,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "functionType": StringAdapter.validate_python(function_type),
+            "role": StringAdapter.validate_python(role),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/schemas/{functionType}/{role}/schema",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": Dict[str, object] if not select_path else Any,
+            "200": Dict[str, object] if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _get_by_role_serialize(
-        self,
-        function_type,
-        role,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if function_type is not None:
-            _path_params["functionType"] = function_type.value
-        if role is not None:
-            _path_params["role"] = role.value
-        # process the query parameters
-        if query is not None:
-            pass
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/schemas/{functionType}/{role}/schema",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )
 
     @overload
@@ -211,7 +194,7 @@ class SchemasApi(WithApiClient):
         self,
         schema_id: Annotated[StrictStr, Field(description="Schema id")],
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""],
         headers: Optional[HeaderTypes] = None,
@@ -223,34 +206,33 @@ class SchemasApi(WithApiClient):
         self,
         schema_id: Annotated[StrictStr, Field(description="Schema id")],
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
     ) -> Response: ...
 
-    @validate_call
+    # @validate_call
     async def get(
         self,
         schema_id: Annotated[StrictStr, Field(description="Schema id")],
         *,
-        query: Optional[GetQuery] = None,
+        query: Optional[Union[GetQuery, QueryParamTypes]] = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         headers: Optional[HeaderTypes] = None,
         **kwargs,
-    ) -> Union[Dict[str, object], Response, Any]:
+    ) -> Union[Dict[str, object], Response, Model]:
         """Get Asset Schema.
 
         Get the JSON schema that is used to validate an asset.
-
         :param schema_id: Schema id (required)
         :type schema_id: str
-        :param query: Supported query params. (optional)
-        :type query: TypedDict, optional:
-        :raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :select_path: Denotes the json path applied to the response object before returning it.
+        :param query: URL Query parameters.
+        :type query: GetQuery | QueryParamTypes, optional
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param headers: Header parameters for this request
         :type headers: dict, optional
@@ -269,61 +251,41 @@ class SchemasApi(WithApiClient):
         :raises APIError: If the http request has a status code different from `2XX`. This
             object wraps both the http Response and any parsed data.
         """
+
+        # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
             if key in kwargs:
                 send_args[key] = kwargs.pop(key)
-        api_request = self._get_serialize(
-            schema_id=schema_id,
-            body=None,
-            files=None,
-            query=query,
+        # path parameters
+        path_params: Dict[str, str] = {
+            "schemaId": StringAdapter.validate_python(schema_id),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        ## create httpx.Request
+        api_request = self.api_client.build_request(
+            method="GET",
+            resource_path="/registry/v2/schemas/{schemaId}",
+            path_params=path_params,
+            params=query,
+            **body_args,
             headers=headers,
             **kwargs,
         )
+
+        ## initiate http request
         response = await self.api_client.send(api_request, **send_args)
+
+        ## render response
         if raw_response:
             return response
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
-            "200": Dict[str, object] if not select_path else Any,
+            "200": Dict[str, object] if not select_path else Model,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
             response, response_types_map, select_path, stream=stream
-        )
-
-    def _get_serialize(
-        self,
-        schema_id,
-        body,
-        files: Optional[RequestFiles],
-        query,
-        headers: Optional[HeaderTypes] = None,
-        **kwargs,
-    ) -> Request:
-        _path_params: Dict[str, str] = {}
-        _query_params: Dict[str, Any] = {}
-        _header_params: Headers = Headers(headers) if headers else Headers()
-        _files: Optional[RequestFiles] = None
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if schema_id is not None:
-            _path_params["schemaId"] = schema_id
-        # process the query parameters
-        if query is not None:
-            pass
-        # process the form parameters
-        # process the body parameter
-
-        headers = _header_params
-        return self.api_client.build_api_request(
-            method="GET",
-            resource_path="/registry/v2/schemas/{schemaId}",
-            path_params=_path_params,
-            query_params=_query_params,
-            body=_body_params,
-            files=_files,
-            headers=headers,
-            **kwargs,
         )

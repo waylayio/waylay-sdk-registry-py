@@ -14,18 +14,15 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool, StrictStr
 from pydantic import Field
 from ..models.legacy_configuration_object_format import LegacyConfigurationObjectFormat
 from ..models.plug_property_data_type import PlugPropertyDataType
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class LegacyConfigurationObject(BaseModel):

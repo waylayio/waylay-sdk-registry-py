@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict
 from pydantic import BaseModel, StrictStr, field_validator
 from pydantic import Field
 from typing_extensions import Annotated
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class KFServingDeleteResponse(BaseModel):

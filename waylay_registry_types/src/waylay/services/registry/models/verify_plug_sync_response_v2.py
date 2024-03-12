@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict
 from pydantic import BaseModel, StrictStr
 from ..models.plug_response_v2 import PlugResponseV2
 from ..models.verify_result import VerifyResult
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class VerifyPlugSyncResponseV2(BaseModel):

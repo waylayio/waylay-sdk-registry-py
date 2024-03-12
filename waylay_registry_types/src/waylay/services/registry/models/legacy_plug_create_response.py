@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, Union
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 from pydantic import Field
 from ..models.legacy_plug_script_response import LegacyPlugScriptResponse
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class LegacyPlugCreateResponse(BaseModel):

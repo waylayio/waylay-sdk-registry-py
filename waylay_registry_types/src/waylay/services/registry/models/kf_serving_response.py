@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr, field_validator
@@ -26,11 +28,6 @@ from ..models.function_meta import FunctionMeta
 from ..models.job_hal_links import JobHALLinks
 from ..models.semantic_version_range import SemanticVersionRange
 from ..models.status import Status
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class KFServingResponse(BaseModel):

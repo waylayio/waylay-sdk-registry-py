@@ -12,13 +12,23 @@ import pytest
 from typeguard import check_type
 from pytest_httpx import HTTPXMock
 import json
+import re
+from importlib.util import find_spec
+
 from waylay.sdk import ApiClient, WaylayClient
+from waylay.sdk.api._models import Model
 from waylay.services.registry.api import DefaultApi
 from waylay.services.registry.service import RegistryService
 
-
 from ..types.root_page_response_stub import RootPageResponseStub
-from waylay.services.registry.models import RootPageResponse
+
+
+try:
+    from waylay.services.registry.models import RootPageResponse
+
+    MODELS_AVAILABLE = find_spec("waylay.services.registry.models") is not None
+except ImportError:
+    MODELS_AVAILABLE = False
 
 
 # some mappings that are needed for some <example> interpolations
@@ -35,21 +45,40 @@ def test_registered(waylay_client: WaylayClient):
     assert isinstance(waylay_client.registry.default, DefaultApi)
 
 
+def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
+    mock_response = RootPageResponseStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(f"^{gateway_url}/registry/v2/(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
 @pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
     Version
     """
     # set path params
-
-    mock_response = RootPageResponseStub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {}
+    _get_set_mock_response(httpx_mock, gateway_url)
     resp = await service.default.get(**kwargs)
     check_type(resp, RootPageResponse)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_get_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for get with models not installed
+    Version
+    """
+    # set path params
+    kwargs = {}
+    _get_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.default.get(**kwargs)
+    check_type(resp, Model)

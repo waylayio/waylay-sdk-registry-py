@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 from pydantic import Field
 from ..models.plug_property_format_type import PlugPropertyFormatType
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class PlugPropertyFormat(BaseModel):

@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictBool, StrictStr, field_validator
@@ -27,11 +29,6 @@ from ..models.legacy_configuration_response_object import (
 from ..models.legacy_plug_response_metadata import LegacyPlugResponseMetadata
 from ..models.media_type import MediaType
 from ..models.status import Status
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class LegacyPlugResponse(BaseModel):

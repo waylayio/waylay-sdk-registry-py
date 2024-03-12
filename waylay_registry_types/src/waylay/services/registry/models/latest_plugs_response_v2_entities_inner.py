@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictBool, StrictStr
@@ -25,11 +27,6 @@ from ..models.plug_manifest import PlugManifest
 from ..models.runtime_attributes import RuntimeAttributes
 from ..models.status import Status
 from ..models.update_record import UpdateRecord
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class LatestPlugsResponseV2EntitiesInner(BaseModel):

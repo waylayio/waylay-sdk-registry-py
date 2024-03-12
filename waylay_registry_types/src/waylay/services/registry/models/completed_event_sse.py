@@ -14,18 +14,15 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict
 from pydantic import BaseModel, StrictStr, field_validator
 from pydantic import Field
 from ..models.job_event_response_completed_event_data import (
     JobEventResponseCompletedEventData,
-)
-
-
-from typing_extensions import (
-    Self,  # >=3.11
 )
 
 

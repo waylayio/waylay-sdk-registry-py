@@ -2,6 +2,10 @@
 
 import pytest
 
+import starlette.requests as req
+import starlette.responses as res
+import httpx
+
 from waylay.sdk import WaylayConfig, ApiClient, WaylayClient
 from waylay.sdk.auth import NoCredentials
 from waylay.services.registry.service import RegistryService
@@ -32,3 +36,36 @@ def fixture_service(waylay_api_client: ApiClient) -> RegistryService:
 @pytest.fixture(name="waylay_client")
 def fixture_waylay_client(waylay_config: WaylayConfig) -> WaylayClient:
     return WaylayClient(waylay_config, {"auth": None})
+
+
+@pytest.fixture(name="test_app", scope="module")
+def fixture_my_app():
+    async def echo_app(scope, receive, send):
+        request = req.Request(scope, receive)
+        content_type = request.headers.get("content-type", "application/octet-stream")
+        if content_type.startswith("application/json"):
+            response = res.JSONResponse(await request.json())
+        elif content_type.startswith("multipart/form-data") or content_type.startswith(
+            "application/x-www-form-urlencoded"
+        ):
+            form = await request.form()
+            response = res.JSONResponse(
+                {
+                    key: (value if isinstance(value, str) else {"size": value.size})
+                    for key, value in form.items()
+                }
+            )
+        else:
+            bytes = await request.body()
+            response = res.JSONResponse({"bytes": str(bytes, encoding="utf-8")})
+        await response(scope, receive, send)
+
+    return echo_app
+
+
+@pytest.fixture(name="echo_service")
+async def fixture_echo_client(service, test_app):
+    async with service(
+        {"transport": httpx.ASGITransport(test_app), "auth": None}
+    ) as srv:
+        yield srv

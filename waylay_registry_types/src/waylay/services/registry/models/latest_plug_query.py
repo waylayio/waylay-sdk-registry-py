@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, StrictBool, StrictStr
@@ -26,11 +28,6 @@ from ..models.semantic_version_range import SemanticVersionRange
 from ..models.status_filter import StatusFilter
 from ..models.tags_filter import TagsFilter
 from ..models.timestamp_spec import TimestampSpec
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class LatestPlugQuery(BaseModel):

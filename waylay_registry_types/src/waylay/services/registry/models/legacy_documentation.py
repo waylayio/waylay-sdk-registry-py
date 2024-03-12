@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List
 from pydantic import BaseModel
 from pydantic import Field
 from ..models.documentation_property import DocumentationProperty
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class LegacyDocumentation(BaseModel):

@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, Optional
 from pydantic import BaseModel
@@ -23,11 +25,6 @@ from ..models.get_plug_response_v2_links_published import (
     GetPlugResponseV2LinksPublished,
 )
 from ..models.hal_link import HALLink
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class GetPlugResponseV2Links(BaseModel):

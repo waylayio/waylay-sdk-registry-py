@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 from datetime import datetime
 from typing import Any, Dict
 from pydantic import BaseModel
@@ -22,11 +24,6 @@ from pydantic import Field
 from ..models.function_ref import FunctionRef
 from ..models.job_reference import JobReference
 from ..models.job_status_and_entity_hal_links import JobStatusAndEntityHALLinks
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class JobEventResponseWaitingChildrenEventData(BaseModel):

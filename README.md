@@ -2,7 +2,7 @@
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
 This Python package is automatically generated based on the 
-Waylay Registry OpenAPI specification (API version: 2.12.2)
+Waylay Registry OpenAPI specification (API version: 2.12.3)
 
 It consists of two sub-packages that are both plugins for the  package.
 - The `waylay_registry_api` sub-package contains the Registry api methods.
@@ -37,12 +37,20 @@ from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.job_state_result import JobStateResult
 from waylay.services.registry.models.job_type_schema import JobTypeSchema
 from waylay.services.registry.models.jobs_response import JobsResponse
-
-
-
 try:
     # List Jobs
-    api_response = await waylay_client.registry.jobs.list()
+    # calls `GET /registry/v2/jobs/`
+    api_response = await waylay_client.registry.jobs.list(
+        # query parameters:
+        query = {
+            'limit': 3.4
+            'type': [waylay.services.registry.JobTypeSchema()]
+            'state': [waylay.services.registry.JobStateResult()]
+            'functionType': [waylay.services.registry.FunctionType()]
+            'createdBefore': waylay.services.registry.TimestampSpec()
+            'createdAfter': waylay.services.registry.TimestampSpec()
+        },
+    )
     print("The response of registry.jobs.list:\n")
     pprint(api_response)
 except ApiError as e:

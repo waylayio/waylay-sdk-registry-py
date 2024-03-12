@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
@@ -28,11 +30,6 @@ from ..models.legacy_plug_request_metadata_raw_data_inner import (
 )
 from ..models.legacy_required_properties_inner import LegacyRequiredPropertiesInner
 from ..models.tag import Tag
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class LegacyPlugRequestMetadata(BaseModel):

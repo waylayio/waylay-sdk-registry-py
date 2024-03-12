@@ -14,18 +14,15 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, Optional
 from pydantic import BaseModel
 from pydantic import Field
 from ..models.legacy_plug_meta_request import LegacyPlugMetaRequest
 from ..models.plug_interface import PlugInterface
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class NamedParametersTypeofFromLegacy(BaseModel):

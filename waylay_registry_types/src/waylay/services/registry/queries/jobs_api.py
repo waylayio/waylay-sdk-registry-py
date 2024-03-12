@@ -37,12 +37,15 @@ from ..models.job_type_schema import JobTypeSchema
 class EventsQuery(TypedDict):
     """events query parameters."""
 
+    # TODO use type
     type: NotRequired[
         Annotated[Optional[JobType], Field(description="The type of the job.")]
     ]
+    # TODO use id
     id: NotRequired[
         Annotated[Optional[StrictStr], Field(description="The id of the job.")]
     ]
+    # TODO use children
     children: NotRequired[
         Annotated[
             Optional[StrictBool],
@@ -60,6 +63,7 @@ class GetQuery(TypedDict):
 class ListQuery(TypedDict):
     """list query parameters."""
 
+    # TODO use limit
     limit: NotRequired[
         Annotated[
             Optional[
@@ -73,21 +77,25 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use type
     type: NotRequired[
         Annotated[
             Optional[List[JobTypeSchema]], Field(description="Filter on job type")
         ]
     ]
+    # TODO use state
     state: NotRequired[
         Annotated[
             Optional[List[JobStateResult]], Field(description="Filter on job state")
         ]
     ]
+    # TODO use functionType
     function_type: NotRequired[
         Annotated[
             Optional[List[FunctionType]], Field(description="Filter on function type")
         ]
     ]
+    # TODO use createdBefore
     created_before: NotRequired[
         Annotated[
             Optional[Any],
@@ -96,6 +104,7 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use createdAfter
     created_after: NotRequired[
         Annotated[
             Optional[Any],

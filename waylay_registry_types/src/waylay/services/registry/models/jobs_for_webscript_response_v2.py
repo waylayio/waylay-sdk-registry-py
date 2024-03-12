@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
@@ -23,11 +25,6 @@ from ..models.any_job_for_function import AnyJobForFunction
 from ..models.function_ref import FunctionRef
 from ..models.jobs_for_webscript_response_v2_links import (
     JobsForWebscriptResponseV2Links,
-)
-
-
-from typing_extensions import (
-    Self,  # >=3.11
 )
 
 

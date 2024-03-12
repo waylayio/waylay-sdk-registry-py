@@ -14,6 +14,7 @@ API_SRC=${API_FOLDER}/src
 TYPES_FOLDER=waylay_${SERVICE_NAME}_types
 TYPES_SRC=${TYPES_FOLDER}/src
 TEST_FOLDER=test
+TEST_RUN_FOLDER=${TEST_FOLDER}/_run
 
 CMD_FORMAT=ruff format
 CMD_FIX=ruff check --fix
@@ -23,35 +24,57 @@ CMD_CHECK=ruff check
 TEST_QA_PREFIX?=echo DISABLED
 
 VENV_DIR=.venv
-VENV_ACTIVATE_CMD=${VENV_DIR}/bin/activate
-VENV_ACTIVATE=. ${VENV_ACTIVATE_CMD}
+VENV_TYPES_DIR=.venv/types
+VENV_TYPES_ACTIVATE_CMD=${VENV_TYPES_DIR}/bin/activate
+VENV_TYPES_ACTIVATE=. ${VENV_TYPES_ACTIVATE_CMD}
 
-${VENV_ACTIVATE_CMD}:
-	python3 -m venv ${VENV_DIR}
-	${VENV_ACTIVATE} && make exec-dev-install
+${VENV_TYPES_ACTIVATE_CMD}:
+	python3 -m venv ${VENV_TYPES_DIR}
+	${VENV_TYPES_ACTIVATE} && make exec-dev-install-types
 
-install: ${VENV_ACTIVATE_CMD}
+VENV_NOTYPES_DIR=.venv/notypes
+VENV_NOTYPES_ACTIVATE_CMD=${VENV_NOTYPES_DIR}/bin/activate
+VENV_NOTYPES_ACTIVATE=. ${VENV_NOTYPES_ACTIVATE_CMD}
+
+${VENV_NOTYPES_ACTIVATE_CMD}:
+	python3 -m venv ${VENV_NOTYPES_DIR}
+	${VENV_NOTYPES_ACTIVATE} && make exec-dev-install-api
+
+
+install-types: ${VENV_TYPES_ACTIVATE_CMD}
+
+install-notypes: ${VENV_NOTYPES_ACTIVATE_CMD}
+
+install: install-types
 
 clean:
 	rm -fr ${VENV_DIR}
 	rm -fr .*_cache
 	rm -fr */.*_cache
 	rm -fr */src/*.egg-info
+	rm -fr **/__pycache__
 
 lint: install ### Run linting checks
-	@${VENV_ACTIVATE} && make exec-lint
+	@${VENV_TYPES_ACTIVATE} && make exec-lint
 
 typecheck: install ### Run type checks
-	@${VENV_ACTIVATE} && make exec-typecheck
+	@${VENV_TYPES_ACTIVATE} && make exec-typecheck
 
 code-qa: install ### perform code quality checks
-	@${VENV_ACTIVATE} && make exec-code-qa
+	@${VENV_TYPES_ACTIVATE} && make exec-code-qa
 
-test: install ### Run unit tests
-	@${VENV_ACTIVATE} && make exec-test
+test: test-types test-notypes ### Run unit tests with and without types installed
+
+test-types: install-types ### Run unit tests with types installed
+	@${VENV_TYPES_ACTIVATE} && make exec-test
+	@${printMsg} 'tests with types package installed' 'OK'
+
+test-notypes: install-notypes ### Run unit tests with types installed
+	@${VENV_NOTYPES_ACTIVATE} && make exec-test
+	@${printMsg} 'tests without types package installed' 'OK'
 
 format: install ### Format code
-	@${VENV_ACTIVATE} && make exec-format
+	@${VENV_TYPES_ACTIVATE} && make exec-format
 
 exec-lint: ### Run linting checks
 	cd ${API_FOLDER} && ${CMD_CHECK}
@@ -69,8 +92,19 @@ exec-typecheck: ### Run type checks
 	${TEST_QA_PREFIX} mypy ${TEST_FOLDER}
 	@${printMsg} 'typecheck test' '${TEST_QA_PREFIX} OK'
 
-exec-test: ### Run unit tests
-	pytest ${TEST_FOLDER}
+${TEST_RUN_FOLDER}: # workaround for JSF schema resolution
+	mkdir -p ${TEST_RUN_FOLDER}
+	cp -r openapi ${TEST_RUN_FOLDER}/openapi
+	# let JSF loader resolve './xx.yaml' to 'openapi/xx.yaml.json'
+	# and make contentEncoding=base64 work
+	cd ${TEST_RUN_FOLDER}/openapi && for f in `ls *.yaml`; \
+		do \
+			cat $$f | yq 'tojson' | sed -e 's/"base64"/"base-64"/' > $$f.json; \
+			cd .. && ln -s openapi/$$f.json $$f; cd openapi; \
+		done
+
+exec-test: ${TEST_RUN_FOLDER} ### Run unit tests
+	cd ${TEST_RUN_FOLDER} && pytest ..
 
 exec-format: ### Format code
 	${CMD_FIX} ${API_FOLDER}
@@ -87,13 +121,17 @@ exec-code-qa: exec-lint exec-typecheck ### perform code quality checks
 
 ci-code-qa: exec-code-qa ### perform ci code quality checks
 
-exec-dev-install: _install_requirements ### Install the development environment
-	pip install -e ${API_FOLDER}[dev]
+exec-dev-install-types: exec-dev-install-api ### Install the development environment including types
 	pip install -e ${TYPES_FOLDER}[dev]
 
-ci-install: _install_requirements ### Install the environment with frozen dependencies
-	pip install './${API_FOLDER}[dev]'
+exec-dev-install-api: _install_requirements ### Install the minimal development environment
+	pip install -e ${API_FOLDER}[dev]
+
+ci-install-types: ci-install-api ### Install the environment including types with frozen requirements
 	pip install './${TYPES_FOLDER}[dev]'
+
+ci-install-api: _install_requirements ### Install the minimal environment with frozen requirements
+	pip install './${API_FOLDER}[dev]'
 
 _install_requirements:
 	pip install --upgrade pip

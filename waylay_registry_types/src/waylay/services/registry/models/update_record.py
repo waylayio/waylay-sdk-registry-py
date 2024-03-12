@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from ..models.request_operation import RequestOperation
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class UpdateRecord(BaseModel):

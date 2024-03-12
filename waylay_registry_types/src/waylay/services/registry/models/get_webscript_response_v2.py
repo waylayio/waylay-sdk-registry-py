@@ -14,18 +14,15 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict
 from pydantic import BaseModel
 from pydantic import Field
 from ..models.get_webscript_response_v2_links import GetWebscriptResponseV2Links
 from ..models.webscript_response_v2 import WebscriptResponseV2
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class GetWebscriptResponseV2(BaseModel):

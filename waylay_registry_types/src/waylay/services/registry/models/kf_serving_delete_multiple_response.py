@@ -14,15 +14,12 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
-
-from typing import Any, Dict, List
-from pydantic import BaseModel, StrictStr
-
-
 from typing_extensions import (
     Self,  # >=3.11
 )
+
+from typing import Any, Dict, List
+from pydantic import BaseModel, StrictStr
 
 
 class KFServingDeleteMultipleResponse(BaseModel):

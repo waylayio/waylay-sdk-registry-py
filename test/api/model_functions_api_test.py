@@ -12,75 +12,107 @@ import pytest
 from typeguard import check_type
 from pytest_httpx import HTTPXMock
 import json
+import re
+from importlib.util import find_spec
+from urllib.parse import quote
+
 from waylay.sdk import ApiClient, WaylayClient
+from waylay.sdk.api._models import Model
 from waylay.services.registry.api import ModelFunctionsApi
 from waylay.services.registry.service import RegistryService
 
 
-from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncResponseV2Stub
-from waylay.services.registry.models import PostModelJobSyncResponseV2
+from ..types.semantic_version_range_stub import SemanticVersionRangeStub
 
 
 from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncResponseV2Stub
-from waylay.services.registry.models import PostModelJobSyncResponseV2
+
+from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncResponseV2Stub
 
 
 from ..types.get_model_response_v2_stub import GetModelResponseV2Stub
-from waylay.services.registry.models import GetModelResponseV2
-
 
 from ..types.get_model_response_v2_stub import GetModelResponseV2Stub
-from waylay.services.registry.models import GetModelResponseV2
 
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
 
 from ..types.jobs_for_model_response_v2_stub import JobsForModelResponseV2Stub
-from waylay.services.registry.models import JobsForModelResponseV2
+
+
+from ..types.semantic_version_range_stub import SemanticVersionRangeStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
 
 
 from ..types.latest_models_response_v2_stub import LatestModelsResponseV2Stub
-from waylay.services.registry.models import LatestModelsResponseV2
+
+
+from ..types.semantic_version_range_stub import SemanticVersionRangeStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
+
+from ..types.timestamp_spec_stub import TimestampSpecStub
 
 
 from ..types.model_versions_response_v2_stub import ModelVersionsResponseV2Stub
-from waylay.services.registry.models import ModelVersionsResponseV2
-
 
 from ..types.function_meta_stub import FunctionMetaStub
 
-
 from ..types.get_model_response_v2_stub import GetModelResponseV2Stub
-from waylay.services.registry.models import GetModelResponseV2
 
 
 from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncResponseV2Stub
-from waylay.services.registry.models import PostModelJobSyncResponseV2
 
 
 from ..types.rebuild_model_sync_response_v2_stub import RebuildModelSyncResponseV2Stub
-from waylay.services.registry.models import RebuildModelSyncResponseV2
-
 
 from ..types.undeployed_response_v2_stub import UndeployedResponseV2Stub
-from waylay.services.registry.models import UndeployedResponseV2
-
 
 from ..types.undeployed_response_v2_stub import UndeployedResponseV2Stub
-from waylay.services.registry.models import UndeployedResponseV2
-
-
-from ..types.file_upload_stub import FileUploadStub
 
 
 from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncResponseV2Stub
-from waylay.services.registry.models import PostModelJobSyncResponseV2
 
 
 from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncResponseV2Stub
-from waylay.services.registry.models import PostModelJobSyncResponseV2
-
 
 from ..types.verify_model_sync_response_v2_stub import VerifyModelSyncResponseV2Stub
-from waylay.services.registry.models import VerifyModelSyncResponseV2
+
+
+try:
+    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostModelJobSyncResponseV2
+
+    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import JobsForModelResponseV2
+    from waylay.services.registry.models import LatestModelsResponseV2
+    from waylay.services.registry.models import ModelVersionsResponseV2
+    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import RebuildModelSyncResponseV2
+    from waylay.services.registry.models import UndeployedResponseV2
+    from waylay.services.registry.models import UndeployedResponseV2
+    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import VerifyModelSyncResponseV2
+
+    MODELS_AVAILABLE = find_spec("waylay.services.registry.models") is not None
+except ImportError:
+    MODELS_AVAILABLE = False
 
 
 # some mappings that are needed for some <example> interpolations
@@ -97,7 +129,19 @@ def test_registered(waylay_client: WaylayClient):
     assert isinstance(waylay_client.registry.model_functions, ModelFunctionsApi)
 
 
+def _create_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
+    mock_response = PostModelJobSyncResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(f"^{gateway_url}/registry/v2/models/(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 201,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
 @pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_create(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -105,28 +149,76 @@ async def test_create(
     Create Model
     """
     # set path params
-    # set files param
-    files = {
-        "myFile1": b"...first file content...",
-        "myFile2": b"...second file content...",
-    }
-
-    mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "POST",
-        "url": gateway_url + f"/registry/v2/models/",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 201,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "files": files,
+        "query": {
+            "deprecatePrevious": "none",
+            "dryRun": True,
+            "async": True,
+            "scaleToZero": False,
+            "version": SemanticVersionRangeStub.create_json(),
+            "name": "name_example",
+            "draft": False,
+        },
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
+        "files": {
+            "myFile1": b"...first file content...",
+            "myFile2": b"...second file content...",
+        },
     }
+    _create_set_mock_response(httpx_mock, gateway_url)
     resp = await service.model_functions.create(**kwargs)
     check_type(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_create_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for create with models not installed
+    Create Model
+    """
+    # set path params
+    kwargs = {
+        "query": {
+            "deprecatePrevious": "none",
+            "dryRun": True,
+            "async": True,
+            "scaleToZero": False,
+            "version": SemanticVersionRangeStub.create_json(),
+            "name": "name_example",
+            "draft": False,
+        },
+        "files": {
+            "myFile1": b"...first file content...",
+            "myFile2": b"...second file content...",
+        },
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
+    }
+    _create_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.model_functions.create(**kwargs)
+    check_type(resp, Model)
+
+
+def _delete_asset_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str, wildcard: str
+):
+    mock_response = PostModelJobSyncResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "DELETE",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/content/{wildcard}(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 201,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_delete_asset(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -140,25 +232,74 @@ async def test_delete_asset(
 
     wildcard = "wildcard_example"
 
-    mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "DELETE",
-        "url": gateway_url
-        + f"/registry/v2/models/{name}/versions/{version}/content/{wildcard}",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 201,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
-        "wildcard": wildcard,
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "chown": False,
+        },
     }
-    resp = await service.model_functions.delete_asset(**kwargs)
+    _delete_asset_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(wildcard)),
+    )
+    resp = await service.model_functions.delete_asset(name, version, wildcard, **kwargs)
     check_type(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_delete_asset_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for delete_asset with models not installed
+    Delete Model Asset
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    wildcard = "wildcard_example"
+
+    kwargs = {
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "chown": False,
+        },
+    }
+    _delete_asset_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(wildcard)),
+    )
+    resp = await service.model_functions.delete_asset(name, version, wildcard, **kwargs)
+    check_type(resp, Model)
+
+
+def _get_archive_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = bytes(b"blah")
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/content(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_get_archive(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -170,23 +311,60 @@ async def test_get_archive(
 
     version = "version_example"
 
-    mock_response = bytes(b"blah")
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/content",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
+        "query": {
+            "ls": False,
+        },
     }
-    resp = await service.model_functions.get_archive(**kwargs)
+    _get_archive_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.get_archive(name, version, **kwargs)
     check_type(resp, bytes)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_get_archive_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for get_archive with models not installed
+    Get Model Archive
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "ls": False,
+        },
+    }
+    _get_archive_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.get_archive(name, version, **kwargs)
+    check_type(resp, bytes)
+
+
+def _get_asset_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str, wildcard: str
+):
+    mock_response = bytes(b"blah")
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/content/{wildcard}(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_get_asset(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -200,25 +378,66 @@ async def test_get_asset(
 
     wildcard = "wildcard_example"
 
-    mock_response = bytes(b"blah")
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url
-        + f"/registry/v2/models/{name}/versions/{version}/content/{wildcard}",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
-        "wildcard": wildcard,
+        "query": {
+            "ls": False,
+        },
     }
-    resp = await service.model_functions.get_asset(**kwargs)
+    _get_asset_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(wildcard)),
+    )
+    resp = await service.model_functions.get_asset(name, version, wildcard, **kwargs)
     check_type(resp, bytes)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_get_asset_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for get_asset with models not installed
+    Get File From Model Archive
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    wildcard = "wildcard_example"
+
+    kwargs = {
+        "query": {
+            "ls": False,
+        },
+    }
+    _get_asset_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(wildcard)),
+    )
+    resp = await service.model_functions.get_asset(name, version, wildcard, **kwargs)
+    check_type(resp, bytes)
+
+
+def _get_latest_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, name: str):
+    mock_response = GetModelResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(f"^{gateway_url}/registry/v2/models/{name}(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_get_latest(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -228,22 +447,56 @@ async def test_get_latest(
     # set path params
     name = "name_example"
 
-    mock_response = GetModelResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
+        "query": {
+            "includeDraft": True,
+            "includeDeprecated": True,
+        },
     }
-    resp = await service.model_functions.get_latest(**kwargs)
+    _get_latest_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.model_functions.get_latest(name, **kwargs)
     check_type(resp, GetModelResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_get_latest_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for get_latest with models not installed
+    Get Latest Model Version
+    """
+    # set path params
+    name = "name_example"
+
+    kwargs = {
+        "query": {
+            "includeDraft": True,
+            "includeDeprecated": True,
+        },
+    }
+    _get_latest_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.model_functions.get_latest(name, **kwargs)
+    check_type(resp, Model)
+
+
+def _get_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = GetModelResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
     Get Model Version
@@ -253,23 +506,52 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
 
     version = "version_example"
 
-    mock_response = GetModelResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {
-        "name": name,
-        "version": version,
-    }
-    resp = await service.model_functions.get(**kwargs)
+    kwargs = {}
+    _get_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.get(name, version, **kwargs)
     check_type(resp, GetModelResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_get_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for get with models not installed
+    Get Model Version
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {}
+    _get_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.get(name, version, **kwargs)
+    check_type(resp, Model)
+
+
+def _jobs_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = JobsForModelResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/jobs(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for jobs
     List Model Jobs
@@ -279,43 +561,153 @@ async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTP
 
     version = "version_example"
 
-    mock_response = JobsForModelResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/jobs",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
+        "query": {
+            "limit": 3.4,
+            "type": [],
+            "state": [],
+            "functionType": [],
+            "createdBefore": TimestampSpecStub.create_json(),
+            "createdAfter": TimestampSpecStub.create_json(),
+        },
     }
-    resp = await service.model_functions.jobs(**kwargs)
+    _jobs_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.jobs(name, version, **kwargs)
     check_type(resp, JobsForModelResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_jobs_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for jobs with models not installed
+    List Model Jobs
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "limit": 3.4,
+            "type": [],
+            "state": [],
+            "functionType": [],
+            "createdBefore": TimestampSpecStub.create_json(),
+            "createdAfter": TimestampSpecStub.create_json(),
+        },
+    }
+    _jobs_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.jobs(name, version, **kwargs)
+    check_type(resp, Model)
+
+
+def _list_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
+    mock_response = LatestModelsResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(f"^{gateway_url}/registry/v2/models/(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list
     List Models
     """
     # set path params
-
-    mock_response = LatestModelsResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
+    kwargs = {
+        "query": {
+            "limit": 3.4,
+            "page": 3.4,
+            "includeDraft": True,
+            "includeDeprecated": True,
+            "deprecated": True,
+            "draft": True,
+            "nameVersion": [],
+            "version": "version_example",
+            "status": [],
+            "runtimeVersion": SemanticVersionRangeStub.create_json(),
+            "createdBy": "@me",
+            "updatedBy": "@me",
+            "createdBefore": TimestampSpecStub.create_json(),
+            "createdAfter": TimestampSpecStub.create_json(),
+            "updatedBefore": TimestampSpecStub.create_json(),
+            "updatedAfter": TimestampSpecStub.create_json(),
+            "name": "name_example",
+            "archiveFormat": [],
+            "runtime": [],
+            "latest": True,
+        },
     }
-    httpx_mock.add_response(**httpx_mock_kwargs)
-    kwargs = {}
+    _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.model_functions.list(**kwargs)
     check_type(resp, LatestModelsResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_list_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for list with models not installed
+    List Models
+    """
+    # set path params
+    kwargs = {
+        "query": {
+            "limit": 3.4,
+            "page": 3.4,
+            "includeDraft": True,
+            "includeDeprecated": True,
+            "deprecated": True,
+            "draft": True,
+            "nameVersion": [],
+            "version": "version_example",
+            "status": [],
+            "runtimeVersion": SemanticVersionRangeStub.create_json(),
+            "createdBy": "@me",
+            "updatedBy": "@me",
+            "createdBefore": TimestampSpecStub.create_json(),
+            "createdAfter": TimestampSpecStub.create_json(),
+            "updatedBefore": TimestampSpecStub.create_json(),
+            "updatedAfter": TimestampSpecStub.create_json(),
+            "name": "name_example",
+            "archiveFormat": [],
+            "runtime": [],
+            "latest": True,
+        },
+    }
+    _list_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.model_functions.list(**kwargs)
+    check_type(resp, Model)
+
+
+def _list_versions_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str
+):
+    mock_response = ModelVersionsResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(f"^{gateway_url}/registry/v2/models/{name}/versions(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_list_versions(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -325,22 +717,82 @@ async def test_list_versions(
     # set path params
     name = "name_example"
 
-    mock_response = ModelVersionsResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "GET",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
+        "query": {
+            "limit": 3.4,
+            "page": 3.4,
+            "deprecated": True,
+            "draft": True,
+            "version": "version_example",
+            "status": [],
+            "runtimeVersion": SemanticVersionRangeStub.create_json(),
+            "createdBy": "@me",
+            "updatedBy": "@me",
+            "createdBefore": TimestampSpecStub.create_json(),
+            "createdAfter": TimestampSpecStub.create_json(),
+            "updatedBefore": TimestampSpecStub.create_json(),
+            "updatedAfter": TimestampSpecStub.create_json(),
+            "archiveFormat": [],
+            "runtime": [],
+        },
     }
-    resp = await service.model_functions.list_versions(**kwargs)
+    _list_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.model_functions.list_versions(name, **kwargs)
     check_type(resp, ModelVersionsResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_list_versions_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for list_versions with models not installed
+    List Model Versions
+    """
+    # set path params
+    name = "name_example"
+
+    kwargs = {
+        "query": {
+            "limit": 3.4,
+            "page": 3.4,
+            "deprecated": True,
+            "draft": True,
+            "version": "version_example",
+            "status": [],
+            "runtimeVersion": SemanticVersionRangeStub.create_json(),
+            "createdBy": "@me",
+            "updatedBy": "@me",
+            "createdBefore": TimestampSpecStub.create_json(),
+            "createdAfter": TimestampSpecStub.create_json(),
+            "updatedBefore": TimestampSpecStub.create_json(),
+            "updatedAfter": TimestampSpecStub.create_json(),
+            "archiveFormat": [],
+            "runtime": [],
+        },
+    }
+    _list_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.model_functions.list_versions(name, **kwargs)
+    check_type(resp, Model)
+
+
+def _patch_metadata_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = GetModelResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "PATCH",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/metadata(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_patch_metadata(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -352,30 +804,62 @@ async def test_patch_metadata(
 
     version = "version_example"
 
-    # set body param
-    body = FunctionMetaStub.create_instance()
-    content_type = None
-    # content_type = 'application/json'
-
-    mock_response = GetModelResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "PATCH",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/metadata",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
-        "body": body,
-        "headers": {"content-type": content_type} if content_type else None,
+        "query": {
+            "comment": "comment_example",
+        },
+        "json": FunctionMetaStub.create_instance(),
     }
-    resp = await service.model_functions.patch_metadata(**kwargs)
+    _patch_metadata_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.patch_metadata(name, version, **kwargs)
     check_type(resp, GetModelResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_patch_metadata_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for patch_metadata with models not installed
+    Patch Model Metadata
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "comment": "comment_example",
+        },
+        "json": FunctionMetaStub.create_json(),
+    }
+    _patch_metadata_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.patch_metadata(name, version, **kwargs)
+    check_type(resp, Model)
+
+
+def _publish_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = PostModelJobSyncResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/publish(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 201,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_publish(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -387,23 +871,64 @@ async def test_publish(
 
     version = "version_example"
 
-    mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "POST",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/publish",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 201,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
+        "query": {
+            "comment": "comment_example",
+            "deprecatePrevious": "none",
+            "async": True,
+        },
     }
-    resp = await service.model_functions.publish(**kwargs)
+    _publish_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.publish(name, version, **kwargs)
     check_type(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_publish_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for publish with models not installed
+    Publish Draft Model
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "comment": "comment_example",
+            "deprecatePrevious": "none",
+            "async": True,
+        },
+    }
+    _publish_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.publish(name, version, **kwargs)
+    check_type(resp, Model)
+
+
+def _rebuild_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = RebuildModelSyncResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/rebuild(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_rebuild(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -415,23 +940,74 @@ async def test_rebuild(
 
     version = "version_example"
 
-    mock_response = RebuildModelSyncResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "POST",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/rebuild",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
+        "query": {
+            "comment": "comment_example",
+            "dryRun": True,
+            "async": True,
+            "upgrade": "patch",
+            "forceVersion": "force_version_example",
+            "ignoreChecks": True,
+            "scaleToZero": True,
+            "skipRebuild": True,
+        },
     }
-    resp = await service.model_functions.rebuild(**kwargs)
+    _rebuild_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.rebuild(name, version, **kwargs)
     check_type(resp, RebuildModelSyncResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_rebuild_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for rebuild with models not installed
+    Rebuild Model
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "comment": "comment_example",
+            "dryRun": True,
+            "async": True,
+            "upgrade": "patch",
+            "forceVersion": "force_version_example",
+            "ignoreChecks": True,
+            "scaleToZero": True,
+            "skipRebuild": True,
+        },
+    }
+    _rebuild_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.rebuild(name, version, **kwargs)
+    check_type(resp, Model)
+
+
+def _remove_version_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = UndeployedResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "DELETE",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_remove_version(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -443,23 +1019,64 @@ async def test_remove_version(
 
     version = "version_example"
 
-    mock_response = UndeployedResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "DELETE",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "force": True,
+            "undeploy": True,
+        },
     }
-    resp = await service.model_functions.remove_version(**kwargs)
+    _remove_version_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.remove_version(name, version, **kwargs)
     check_type(resp, UndeployedResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_remove_version_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for remove_version with models not installed
+    Remove Model Version
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "force": True,
+            "undeploy": True,
+        },
+    }
+    _remove_version_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.remove_version(name, version, **kwargs)
+    check_type(resp, Model)
+
+
+def _remove_versions_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str
+):
+    mock_response = UndeployedResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "DELETE",
+        "url": re.compile(f"^{gateway_url}/registry/v2/models/{name}(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_remove_versions(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -469,22 +1086,60 @@ async def test_remove_versions(
     # set path params
     name = "name_example"
 
-    mock_response = UndeployedResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "DELETE",
-        "url": gateway_url + f"/registry/v2/models/{name}",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
+        "query": {
+            "comment": "comment_example",
+            "force": True,
+            "undeploy": True,
+            "async": True,
+        },
     }
-    resp = await service.model_functions.remove_versions(**kwargs)
+    _remove_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.model_functions.remove_versions(name, **kwargs)
     check_type(resp, UndeployedResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_remove_versions_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for remove_versions with models not installed
+    Remove Model
+    """
+    # set path params
+    name = "name_example"
+
+    kwargs = {
+        "query": {
+            "comment": "comment_example",
+            "force": True,
+            "undeploy": True,
+            "async": True,
+        },
+    }
+    _remove_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.model_functions.remove_versions(name, **kwargs)
+    check_type(resp, Model)
+
+
+def _update_asset_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str, wildcard: str
+):
+    mock_response = PostModelJobSyncResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "PUT",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/content/{wildcard}(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 201,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_update_asset(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -498,32 +1153,78 @@ async def test_update_asset(
 
     wildcard = "wildcard_example"
 
-    # set body param
-    body = FileUploadStub.create_instance()
-    content_type = None
-    # content_type = 'application/octet-stream'
-
-    mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "PUT",
-        "url": gateway_url
-        + f"/registry/v2/models/{name}/versions/{version}/content/{wildcard}",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 201,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
-        "wildcard": wildcard,
-        "body": body,
-        "headers": {"content-type": content_type} if content_type else None,
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "chown": False,
+        },
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
     }
-    resp = await service.model_functions.update_asset(**kwargs)
+    _update_asset_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(wildcard)),
+    )
+    resp = await service.model_functions.update_asset(name, version, wildcard, **kwargs)
     check_type(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_update_asset_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for update_asset with models not installed
+    Update Model Asset
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    wildcard = "wildcard_example"
+
+    kwargs = {
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "chown": False,
+        },
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
+    }
+    _update_asset_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(wildcard)),
+    )
+    resp = await service.model_functions.update_asset(name, version, wildcard, **kwargs)
+    check_type(resp, Model)
+
+
+def _update_assets_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = PostModelJobSyncResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "PUT",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/content(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 201,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_update_assets(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -535,30 +1236,76 @@ async def test_update_assets(
 
     version = "version_example"
 
-    # set files param
-    files = {
-        "myFile1": b"...first file content...",
-        "myFile2": b"...second file content...",
-    }
-
-    mock_response = PostModelJobSyncResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "PUT",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/content",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 201,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
-        "files": files,
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "chown": False,
+        },
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
+        "files": {
+            "myFile1": b"...first file content...",
+            "myFile2": b"...second file content...",
+        },
     }
-    resp = await service.model_functions.update_assets(**kwargs)
+    _update_assets_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.update_assets(name, version, **kwargs)
     check_type(resp, PostModelJobSyncResponseV2)
 
 
 @pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_update_assets_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for update_assets with models not installed
+    Update Model Assets
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "chown": False,
+        },
+        "files": {
+            "myFile1": b"...first file content...",
+            "myFile2": b"...second file content...",
+        },
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
+    }
+    _update_assets_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.update_assets(name, version, **kwargs)
+    check_type(resp, Model)
+
+
+def _verify_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = VerifyModelSyncResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/models/{name}/versions/{version}/verify(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_verify(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
@@ -570,17 +1317,42 @@ async def test_verify(
 
     version = "version_example"
 
-    mock_response = VerifyModelSyncResponseV2Stub.create_instance().to_dict()
-    httpx_mock_kwargs = {
-        "method": "POST",
-        "url": gateway_url + f"/registry/v2/models/{name}/versions/{version}/verify",  # noqa: F541
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
     kwargs = {
-        "name": name,
-        "version": version,
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "scaleToZero": True,
+        },
     }
-    resp = await service.model_functions.verify(**kwargs)
+    _verify_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.verify(name, version, **kwargs)
     check_type(resp, VerifyModelSyncResponseV2)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_verify_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for verify with models not installed
+    Verify Health Of Model
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "comment": "comment_example",
+            "async": True,
+            "scaleToZero": True,
+        },
+    }
+    _verify_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.model_functions.verify(name, version, **kwargs)
+    check_type(resp, Model)

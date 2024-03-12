@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
@@ -22,11 +24,6 @@ from pydantic import Field
 from ..models.asset_condition_content_type import AssetConditionContentType
 from ..models.asset_condition_pattern import AssetConditionPattern
 from ..models.asset_role import AssetRole
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class AssetCondition(BaseModel):

@@ -14,17 +14,14 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict
 from pydantic import BaseModel, StrictStr
 from ..models.job_causes import JobCauses
 from ..models.webscript_response_v2 import WebscriptResponseV2
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class RebuildWebscriptSyncResponseV2(BaseModel):

@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 from datetime import datetime
 from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictStr, field_validator
@@ -25,11 +27,6 @@ from ..models.job_hal_links import JobHALLinks
 from ..models.job_state_result import JobStateResult
 from ..models.job_status import JobStatus
 from ..models.scale_args import ScaleArgs
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class Scale(BaseModel):

@@ -14,16 +14,13 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, List
 from pydantic import BaseModel
 from ..models.asset_summary_with_hal_link import AssetSummaryWithHALLink
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class ContentValidationListing(BaseModel):

@@ -14,7 +14,9 @@ import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictStr, field_validator
@@ -23,11 +25,6 @@ from typing_extensions import Annotated
 from ..models.function_deploy_overrides_type import FunctionDeployOverridesType
 from ..models.function_meta import FunctionMeta
 from ..models.semantic_version_range import SemanticVersionRange
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class LegacyDebugPlugManifest(BaseModel):
