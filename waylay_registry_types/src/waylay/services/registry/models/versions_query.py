@@ -9,16 +9,17 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from pydantic import BaseModel, StrictBool, StrictStr, field_validator
+from typing import Any, Dict, List, Optional, Union
+from pydantic import BaseModel, StrictBool, StrictStr
 from pydantic import Field
 from typing_extensions import Annotated
 from ..models.archive_format import ArchiveFormat
@@ -27,41 +28,95 @@ from ..models.status_filter import StatusFilter
 from ..models.timestamp_spec import TimestampSpec
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
-
-
 class VersionsQuery(BaseModel):
     """Function versions paged query."""
 
-    limit: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.")
-    page: Optional[Union[Annotated[float, Field(strict=True, ge=0)], Annotated[int, Field(strict=True, ge=0)]]] = Field(default=None, description="The number of pages to skip when returning result to this query.")
-    endpoint: Optional[StrictStr] = Field(default=None, description="Filter on the openfaas endpoint. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).")
-    image_name: Optional[StrictStr] = Field(default=None, description="Filter on the container image name. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).", alias="imageName")
-    storage_location: Optional[StrictStr] = Field(default=None, description="Filter on the storageLocation. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).", alias="storageLocation")
-    deprecated: Optional[StrictBool] = Field(default=None, description="Filter on the deprecation status of the function.")
-    draft: Optional[StrictBool] = Field(default=None, description="Filter on the draft status of the function.")
-    name_version: Optional[List[Annotated[str, Field(strict=True)]]] = Field(default=None, description="Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered.", alias="nameVersion")
-    version: Optional[StrictStr] = Field(default=None, description="Filter on the version of the function (case-sensitive, supports wildcards).")
-    status: Optional[List[StatusFilter]] = Field(default=None, description="Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.")
-    runtime_version: Optional[SemanticVersionRange] = Field(default=None, alias="runtimeVersion")
-    created_by: Optional[StrictStr] = Field(default=None, description="Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.", alias="createdBy")
-    updated_by: Optional[StrictStr] = Field(default=None, description="Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.", alias="updatedBy")
+    limit: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.",
+    )
+    page: Optional[
+        Union[
+            Annotated[float, Field(strict=True, ge=0)],
+            Annotated[int, Field(strict=True, ge=0)],
+        ]
+    ] = Field(
+        default=None,
+        description="The number of pages to skip when returning result to this query.",
+    )
+    endpoint: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the openfaas endpoint. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+    )
+    image_name: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the container image name. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+        alias="imageName",
+    )
+    storage_location: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the storageLocation. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+        alias="storageLocation",
+    )
+    deprecated: Optional[StrictBool] = Field(
+        default=None, description="Filter on the deprecation status of the function."
+    )
+    draft: Optional[StrictBool] = Field(
+        default=None, description="Filter on the draft status of the function."
+    )
+    name_version: Optional[List[Annotated[str, Field(strict=True)]]] = Field(
+        default=None,
+        description="Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered.",
+        alias="nameVersion",
+    )
+    version: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the version of the function (case-sensitive, supports wildcards).",
+    )
+    status: Optional[List[StatusFilter]] = Field(
+        default=None,
+        description="Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.",
+    )
+    runtime_version: Optional[SemanticVersionRange] = Field(
+        default=None, alias="runtimeVersion"
+    )
+    created_by: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.",
+        alias="createdBy",
+    )
+    updated_by: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.",
+        alias="updatedBy",
+    )
     created_before: Optional[TimestampSpec] = Field(default=None, alias="createdBefore")
     created_after: Optional[TimestampSpec] = Field(default=None, alias="createdAfter")
     updated_before: Optional[TimestampSpec] = Field(default=None, alias="updatedBefore")
     updated_after: Optional[TimestampSpec] = Field(default=None, alias="updatedAfter")
-    name: Optional[StrictStr] = Field(default=None, description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).")
-    archive_format: Optional[List[ArchiveFormat]] = Field(default=None, description="Filter on the archive format of the function.", alias="archiveFormat")
-    runtime: Optional[List[StrictStr]] = Field(default=None, description="Filter on the runtime of the function.")
-    __properties: ClassVar[List[str]] = ["limit", "page", "endpoint", "imageName", "storageLocation", "deprecated", "draft", "nameVersion", "version", "status", "runtimeVersion", "createdBy", "updatedBy", "createdBefore", "createdAfter", "updatedBefore", "updatedAfter", "name", "archiveFormat", "runtime"]
+    name: Optional[StrictStr] = Field(
+        default=None,
+        description="Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).",
+    )
+    archive_format: Optional[List[ArchiveFormat]] = Field(
+        default=None,
+        description="Filter on the archive format of the function.",
+        alias="archiveFormat",
+    )
+    runtime: Optional[List[StrictStr]] = Field(
+        default=None, description="Filter on the runtime of the function."
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -79,8 +134,6 @@ class VersionsQuery(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -92,32 +145,9 @@ class VersionsQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in status (list)
-        _items = []
-        if self.status:
-            for _item in self.status:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['status'] = _items
-        # override the default output from pydantic by calling `to_dict()` of runtime_version
-        if self.runtime_version:
-            _dict['runtimeVersion'] = self.runtime_version.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of created_before
-        if self.created_before:
-            _dict['createdBefore'] = self.created_before.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of created_after
-        if self.created_after:
-            _dict['createdAfter'] = self.created_after.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of updated_before
-        if self.updated_before:
-            _dict['updatedBefore'] = self.updated_before.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of updated_after
-        if self.updated_after:
-            _dict['updatedAfter'] = self.updated_after.to_dict()
         return _dict
 
     @classmethod
@@ -125,30 +155,4 @@ class VersionsQuery(BaseModel):
         """Create an instance of VersionsQuery from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "page": obj.get("page"),
-            "endpoint": obj.get("endpoint"),
-            "imageName": obj.get("imageName"),
-            "storageLocation": obj.get("storageLocation"),
-            "deprecated": obj.get("deprecated"),
-            "draft": obj.get("draft"),
-            "nameVersion": obj.get("nameVersion"),
-            "version": obj.get("version"),
-            "status": [StatusFilter.from_dict(_item) for _item in obj.get("status")] if obj.get("status") is not None else None,  # type: ignore
-            "runtimeVersion": SemanticVersionRange.from_dict(obj.get("runtimeVersion")) if obj.get("runtimeVersion") is not None else None,    # type: ignore
-            "createdBy": obj.get("createdBy"),
-            "updatedBy": obj.get("updatedBy"),
-            "createdBefore": TimestampSpec.from_dict(obj.get("createdBefore")) if obj.get("createdBefore") is not None else None,    # type: ignore
-            "createdAfter": TimestampSpec.from_dict(obj.get("createdAfter")) if obj.get("createdAfter") is not None else None,    # type: ignore
-            "updatedBefore": TimestampSpec.from_dict(obj.get("updatedBefore")) if obj.get("updatedBefore") is not None else None,    # type: ignore
-            "updatedAfter": TimestampSpec.from_dict(obj.get("updatedAfter")) if obj.get("updatedAfter") is not None else None,    # type: ignore
-            "name": obj.get("name"),
-            "archiveFormat": obj.get("archiveFormat"),
-            "runtime": obj.get("runtime")
-        })
-        return _obj
+        return cls.model_validate(obj)

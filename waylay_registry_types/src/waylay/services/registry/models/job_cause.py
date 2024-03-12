@@ -9,39 +9,49 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool, StrictStr
 from pydantic import Field
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class JobCause(BaseModel):
     """The motivation for including or excluding a job (<em>build</em>, <em>deploy</em>, <em>verify</em>, ...) in response to a <em>rebuild</em> request.."""
 
-    changed: StrictBool = Field(description="If <code>true</code>, the argument configuration for this job has changed in comparison to the previous job execution. A <code>false</code> will prevent the job to be run. Use <code>forceVersion</code> or <code>upgrade</code> parameter to force a rebuild.")
-    reason: StrictStr = Field(description="Human readable message describing the cause.")
-    backoff: Optional[StrictBool] = Field(default=None, description="If <code>true</code>, recent failures of the job prevented the re-execution. Use <code>forceVersion</code> or <code>upgrade</code> parameter to force a rebuild.")
-    new_value: Optional[StrictStr] = Field(default=None, description="The new configuration value that causes the change.", alias="newValue")
-    old_value: Optional[StrictStr] = Field(default=None, description="The old configuration value used by the last succeeded job.", alias="oldValue")
-    __properties: ClassVar[List[str]] = ["changed", "reason", "backoff", "newValue", "oldValue"]
+    changed: StrictBool = Field(
+        description="If <code>true</code>, the argument configuration for this job has changed in comparison to the previous job execution. A <code>false</code> will prevent the job to be run. Use <code>forceVersion</code> or <code>upgrade</code> parameter to force a rebuild."
+    )
+    reason: StrictStr = Field(
+        description="Human readable message describing the cause."
+    )
+    backoff: Optional[StrictBool] = Field(
+        default=None,
+        description="If <code>true</code>, recent failures of the job prevented the re-execution. Use <code>forceVersion</code> or <code>upgrade</code> parameter to force a rebuild.",
+    )
+    new_value: Optional[StrictStr] = Field(
+        default=None,
+        description="The new configuration value that causes the change.",
+        alias="newValue",
+    )
+    old_value: Optional[StrictStr] = Field(
+        default=None,
+        description="The old configuration value used by the last succeeded job.",
+        alias="oldValue",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -59,8 +69,6 @@ class JobCause(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -72,8 +80,7 @@ class JobCause(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,15 +90,4 @@ class JobCause(BaseModel):
         """Create an instance of JobCause from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "changed": obj.get("changed"),
-            "reason": obj.get("reason"),
-            "backoff": obj.get("backoff"),
-            "newValue": obj.get("newValue"),
-            "oldValue": obj.get("oldValue")
-        })
-        return _obj
+        return cls.model_validate(obj)

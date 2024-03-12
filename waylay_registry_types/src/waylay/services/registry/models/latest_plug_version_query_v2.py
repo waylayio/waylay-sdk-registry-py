@@ -9,38 +9,41 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool
 from pydantic import Field
 from ..models.plug_type import PlugType
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class LatestPlugVersionQueryV2(BaseModel):
     """Latest named plug version listing query."""
 
     type: Optional[PlugType] = None
-    include_draft: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.", alias="includeDraft")
-    include_deprecated: Optional[StrictBool] = Field(default=None, description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.", alias="includeDeprecated")
-    __properties: ClassVar[List[str]] = ["type", "includeDraft", "includeDeprecated"]
+    include_draft: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.",
+        alias="includeDraft",
+    )
+    include_deprecated: Optional[StrictBool] = Field(
+        default=None,
+        description="Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.",
+        alias="includeDeprecated",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -58,8 +61,6 @@ class LatestPlugVersionQueryV2(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -71,8 +72,7 @@ class LatestPlugVersionQueryV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,13 +82,4 @@ class LatestPlugVersionQueryV2(BaseModel):
         """Create an instance of LatestPlugVersionQueryV2 from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "includeDraft": obj.get("includeDraft"),
-            "includeDeprecated": obj.get("includeDeprecated")
-        })
-        return _obj
+        return cls.model_validate(obj)

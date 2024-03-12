@@ -9,37 +9,38 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt
 from pydantic import Field
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class WithPaging(BaseModel):
     """WithPaging."""
 
-    limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page size used for this query result.")
-    count: Union[StrictFloat, StrictInt] = Field(description="The total count of matching items, from which this result is one page.")
-    page: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The page number of a paged query result.")
-    __properties: ClassVar[List[str]] = ["limit", "count", "page"]
+    limit: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page size used for this query result."
+    )
+    count: Union[StrictFloat, StrictInt] = Field(
+        description="The total count of matching items, from which this result is one page."
+    )
+    page: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None, description="The page number of a paged query result."
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -57,8 +58,6 @@ class WithPaging(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -70,8 +69,7 @@ class WithPaging(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -81,13 +79,4 @@ class WithPaging(BaseModel):
         """Create an instance of WithPaging from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "limit": obj.get("limit"),
-            "count": obj.get("count"),
-            "page": obj.get("page")
-        })
-        return _obj
+        return cls.model_validate(obj)

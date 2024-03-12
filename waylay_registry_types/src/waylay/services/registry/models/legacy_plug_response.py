@@ -9,40 +9,41 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictBool, StrictStr, field_validator
 from pydantic import Field
 from typing_extensions import Annotated
 from ..models.failure_reason import FailureReason
-from ..models.legacy_configuration_response_object import LegacyConfigurationResponseObject
+from ..models.legacy_configuration_response_object import (
+    LegacyConfigurationResponseObject,
+)
 from ..models.legacy_plug_response_metadata import LegacyPlugResponseMetadata
 from ..models.media_type import MediaType
 from ..models.status import Status
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class LegacyPlugResponse(BaseModel):
     """LegacyPlugResponse."""
 
     name: StrictStr
-    version: Annotated[str, Field(strict=True)] = Field(description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org")
+    version: Annotated[str, Field(strict=True)] = Field(
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org"
+    )
     author: Optional[StrictStr] = None
     category: Optional[StrictStr] = None
     icon_url: Optional[StrictStr] = Field(default=None, alias="iconURL")
-    documentation_url: Optional[StrictStr] = Field(default=None, alias="documentationURL")
+    documentation_url: Optional[StrictStr] = Field(
+        default=None, alias="documentationURL"
+    )
     is_deprecated: StrictBool = Field(alias="isDeprecated")
     description: Optional[StrictStr] = None
     states: Optional[List[StrictStr]] = None
@@ -53,20 +54,22 @@ class LegacyPlugResponse(BaseModel):
     status: Status
     failure_reason: Optional[FailureReason] = Field(default=None, alias="failureReason")
     metadata: LegacyPlugResponseMetadata
-    __properties: ClassVar[List[str]] = ["name", "version", "author", "category", "iconURL", "documentationURL", "isDeprecated", "description", "states", "rawData", "mediaType", "configuration", "commands", "status", "failureReason", "metadata"]
 
-    @field_validator('version')
+    @field_validator("version")
     @classmethod
     def version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -84,8 +87,6 @@ class LegacyPlugResponse(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -97,23 +98,9 @@ class LegacyPlugResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in configuration (list)
-        _items = []
-        if self.configuration:
-            for _item in self.configuration:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['configuration'] = _items
-        # override the default output from pydantic by calling `to_dict()` of failure_reason
-        if self.failure_reason:
-            _dict['failureReason'] = self.failure_reason.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of metadata
-        if self.metadata:
-            _dict['metadata'] = self.metadata.to_dict()
         return _dict
 
     @classmethod
@@ -121,26 +108,4 @@ class LegacyPlugResponse(BaseModel):
         """Create an instance of LegacyPlugResponse from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "version": obj.get("version"),
-            "author": obj.get("author"),
-            "category": obj.get("category"),
-            "iconURL": obj.get("iconURL"),
-            "documentationURL": obj.get("documentationURL"),
-            "isDeprecated": obj.get("isDeprecated"),
-            "description": obj.get("description"),
-            "states": obj.get("states"),
-            "rawData": obj.get("rawData"),
-            "mediaType": obj.get("mediaType"),
-            "configuration": [LegacyConfigurationResponseObject.from_dict(_item) for _item in obj.get("configuration")] if obj.get("configuration") is not None else None,  # type: ignore
-            "commands": obj.get("commands"),
-            "status": obj.get("status"),
-            "failureReason": FailureReason.from_dict(obj.get("failureReason")) if obj.get("failureReason") is not None else None,    # type: ignore
-            "metadata": LegacyPlugResponseMetadata.from_dict(obj.get("metadata")) if obj.get("metadata") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

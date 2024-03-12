@@ -9,15 +9,16 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 from datetime import datetime
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from ..models.failure_reason import FailureReason
@@ -27,32 +28,34 @@ from ..models.job_state_result import JobStateResult
 from ..models.job_status import JobStatus
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
-
-
 class NamedParametersTypeofAsJobReferenceJobStatus(BaseModel):
     """NamedParametersTypeofAsJobReferenceJobStatus."""
 
     links: Optional[JobHALLinks] = Field(default=None, alias="_links")
     type: Optional[Any] = Field(description="The type of the background task.")
     state: JobStateResult
-    request: Optional[Any] = Field(default=None, description="The request that initiated this job.")
-    result: Optional[Any] = Field(default=None, description="The result of the job if completed.")
-    created_at: datetime = Field(description="The timestamp of creation of this job", alias="createdAt")
-    created_by: StrictStr = Field(description="The user that created this job", alias="createdBy")
+    request: Optional[Any] = Field(
+        default=None, description="The request that initiated this job."
+    )
+    result: Optional[Any] = Field(
+        default=None, description="The result of the job if completed."
+    )
+    created_at: datetime = Field(
+        description="The timestamp of creation of this job", alias="createdAt"
+    )
+    created_by: StrictStr = Field(
+        description="The user that created this job", alias="createdBy"
+    )
     operation: StrictStr = Field(description="Request operation")
     function: Optional[FunctionRef] = None
     job: Optional[JobStatus] = None
     failure_reason: Optional[FailureReason] = Field(default=None, alias="failureReason")
-    __properties: ClassVar[List[str]] = ["_links", "type", "state", "request", "result", "createdAt", "createdBy", "operation", "function", "job", "failureReason"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -70,8 +73,6 @@ class NamedParametersTypeofAsJobReferenceJobStatus(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -83,39 +84,23 @@ class NamedParametersTypeofAsJobReferenceJobStatus(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of links
-        if self.links:
-            _dict['_links'] = self.links.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of state
-        if self.state:
-            _dict['state'] = self.state.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of function
-        if self.function:
-            _dict['function'] = self.function.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of job
-        if self.job:
-            _dict['job'] = self.job.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of failure_reason
-        if self.failure_reason:
-            _dict['failureReason'] = self.failure_reason.to_dict()
         # set to None if type (nullable) is None
         # and model_fields_set contains the field
-        if self.type is None and "type" in self.model_fields_set:
-            _dict['type'] = None
+        if self.type is None and "type" in self.model_fields_set:  # pylint: disable=unsupported-membership-test
+            _dict["type"] = None
 
         # set to None if request (nullable) is None
         # and model_fields_set contains the field
-        if self.request is None and "request" in self.model_fields_set:
-            _dict['request'] = None
+        if self.request is None and "request" in self.model_fields_set:  # pylint: disable=unsupported-membership-test
+            _dict["request"] = None
 
         # set to None if result (nullable) is None
         # and model_fields_set contains the field
-        if self.result is None and "result" in self.model_fields_set:
-            _dict['result'] = None
+        if self.result is None and "result" in self.model_fields_set:  # pylint: disable=unsupported-membership-test
+            _dict["result"] = None
 
         return _dict
 
@@ -124,21 +109,4 @@ class NamedParametersTypeofAsJobReferenceJobStatus(BaseModel):
         """Create an instance of NamedParametersTypeofAsJobReferenceJobStatus from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "_links": JobHALLinks.from_dict(obj.get("_links")) if obj.get("_links") is not None else None,    # type: ignore
-            "type": obj.get("type"),
-            "state": JobStateResult.from_dict(obj.get("state")) if obj.get("state") is not None else None,    # type: ignore
-            "request": obj.get("request"),
-            "result": obj.get("result"),
-            "createdAt": obj.get("createdAt"),
-            "createdBy": obj.get("createdBy"),
-            "operation": obj.get("operation"),
-            "function": FunctionRef.from_dict(obj.get("function")) if obj.get("function") is not None else None,    # type: ignore
-            "job": JobStatus.from_dict(obj.get("job")) if obj.get("job") is not None else None,    # type: ignore
-            "failureReason": FailureReason.from_dict(obj.get("failureReason")) if obj.get("failureReason") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

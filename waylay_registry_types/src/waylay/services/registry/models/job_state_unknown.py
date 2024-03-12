@@ -9,18 +9,15 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class JobStateUnknown(str, Enum):
@@ -29,7 +26,7 @@ class JobStateUnknown(str, Enum):
     """
     allowed enum values
     """
-    UNKNOWN = 'unknown'
+    UNKNOWN = "unknown"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

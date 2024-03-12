@@ -9,35 +9,33 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool
 from pydantic import Field
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class ContentQueryV2(BaseModel):
     """ContentQueryV2."""
 
-    ls: Optional[StrictBool] = Field(default=False, description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.")
-    __properties: ClassVar[List[str]] = ["ls"]
+    ls: Optional[StrictBool] = Field(
+        default=False,
+        description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -55,8 +53,6 @@ class ContentQueryV2(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -68,8 +64,7 @@ class ContentQueryV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -79,11 +74,4 @@ class ContentQueryV2(BaseModel):
         """Create an instance of ContentQueryV2 from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "ls": obj.get("ls") if obj.get("ls") is not None else False
-        })
-        return _obj
+        return cls.model_validate(obj)

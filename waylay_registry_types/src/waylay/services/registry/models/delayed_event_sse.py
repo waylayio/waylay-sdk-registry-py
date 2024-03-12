@@ -9,38 +9,36 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List
+from typing import Any, Dict
 from pydantic import BaseModel, StrictStr, field_validator
 from pydantic import Field
-from ..models.job_event_response_delayed_event_data import JobEventResponseDelayedEventData
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from ..models.job_event_response_delayed_event_data import (
+    JobEventResponseDelayedEventData,
+)
 
 
 class DelayedEventSSE(BaseModel):
     """A message that notifies a state change in a background job.."""
 
-    event: StrictStr = Field(description="The job queue event that trigged this message")
+    event: StrictStr = Field(
+        description="The job queue event that trigged this message"
+    )
     data: JobEventResponseDelayedEventData
-    __properties: ClassVar[List[str]] = ["event", "data"]
 
-    @field_validator('event')
+    @field_validator("event")
     @classmethod
     def event_validate_enum(cls, value):
         """Validate the enum."""
-        if value not in ('delayed'):
+        if value not in ("delayed"):
             raise ValueError("must be one of enum values ('delayed')")
         return value
 
@@ -48,6 +46,7 @@ class DelayedEventSSE(BaseModel):
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -65,8 +64,6 @@ class DelayedEventSSE(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -78,13 +75,9 @@ class DelayedEventSSE(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of data
-        if self.data:
-            _dict['data'] = self.data.to_dict()
         return _dict
 
     @classmethod
@@ -92,12 +85,4 @@ class DelayedEventSSE(BaseModel):
         """Create an instance of DelayedEventSSE from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "event": obj.get("event"),
-            "data": JobEventResponseDelayedEventData.from_dict(obj.get("data")) if obj.get("data") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

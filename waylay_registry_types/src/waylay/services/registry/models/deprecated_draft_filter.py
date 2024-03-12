@@ -9,36 +9,35 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool
 from pydantic import Field
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class DeprecatedDraftFilter(BaseModel):
     """DeprecatedDraftFilter."""
 
-    deprecated: Optional[StrictBool] = Field(default=None, description="Filter on the deprecation status of the function.")
-    draft: Optional[StrictBool] = Field(default=None, description="Filter on the draft status of the function.")
-    __properties: ClassVar[List[str]] = ["deprecated", "draft"]
+    deprecated: Optional[StrictBool] = Field(
+        default=None, description="Filter on the deprecation status of the function."
+    )
+    draft: Optional[StrictBool] = Field(
+        default=None, description="Filter on the draft status of the function."
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -56,8 +55,6 @@ class DeprecatedDraftFilter(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -69,8 +66,7 @@ class DeprecatedDraftFilter(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -80,12 +76,4 @@ class DeprecatedDraftFilter(BaseModel):
         """Create an instance of DeprecatedDraftFilter from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "deprecated": obj.get("deprecated"),
-            "draft": obj.get("draft")
-        })
-        return _obj
+        return cls.model_validate(obj)

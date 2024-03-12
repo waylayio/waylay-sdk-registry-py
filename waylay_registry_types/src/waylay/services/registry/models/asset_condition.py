@@ -9,26 +9,21 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 from pydantic import Field
 from ..models.asset_condition_content_type import AssetConditionContentType
 from ..models.asset_condition_pattern import AssetConditionPattern
 from ..models.asset_role import AssetRole
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class AssetCondition(BaseModel):
@@ -38,17 +33,33 @@ class AssetCondition(BaseModel):
     description: Optional[StrictStr] = None
     role: AssetRole
     pattern: AssetConditionPattern
-    content_type: Optional[AssetConditionContentType] = Field(default=None, alias="contentType")
-    min: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The minimal number of files that must match this pattern. Use `0` for an optional file.")
-    max: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The maximal number of files that can match this pattern. Use `0` for a disallowed file. This condition only raises an error if there are no other conditions that")
-    max_size: Optional[StrictStr] = Field(default=None, description="The maximum size for each file matching this pattern (in bytes, unless unit is provided)", alias="maxSize")
-    var_schema: Optional[Any] = Field(default=None, description="The json schema validator that applies (in case of `application/json` entries).", alias="schema")
-    __properties: ClassVar[List[str]] = ["title", "description", "role", "pattern", "contentType", "min", "max", "maxSize", "schema"]
+    content_type: Optional[AssetConditionContentType] = Field(
+        default=None, alias="contentType"
+    )
+    min: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None,
+        description="The minimal number of files that must match this pattern. Use `0` for an optional file.",
+    )
+    max: Optional[Union[StrictFloat, StrictInt]] = Field(
+        default=None,
+        description="The maximal number of files that can match this pattern. Use `0` for a disallowed file. This condition only raises an error if there are no other conditions that",
+    )
+    max_size: Optional[StrictStr] = Field(
+        default=None,
+        description="The maximum size for each file matching this pattern (in bytes, unless unit is provided)",
+        alias="maxSize",
+    )
+    var_schema: Optional[Any] = Field(
+        default=None,
+        description="The json schema validator that applies (in case of `application/json` entries).",
+        alias="schema",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -66,8 +77,6 @@ class AssetCondition(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -79,20 +88,13 @@ class AssetCondition(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of pattern
-        if self.pattern:
-            _dict['pattern'] = self.pattern.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of content_type
-        if self.content_type:
-            _dict['contentType'] = self.content_type.to_dict()
         # set to None if var_schema (nullable) is None
         # and model_fields_set contains the field
-        if self.var_schema is None and "var_schema" in self.model_fields_set:
-            _dict['schema'] = None
+        if self.var_schema is None and "var_schema" in self.model_fields_set:  # pylint: disable=unsupported-membership-test
+            _dict["schema"] = None
 
         return _dict
 
@@ -101,19 +103,4 @@ class AssetCondition(BaseModel):
         """Create an instance of AssetCondition from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "title": obj.get("title"),
-            "description": obj.get("description"),
-            "role": obj.get("role"),
-            "pattern": AssetConditionPattern.from_dict(obj.get("pattern")) if obj.get("pattern") is not None else None,    # type: ignore
-            "contentType": AssetConditionContentType.from_dict(obj.get("contentType")) if obj.get("contentType") is not None else None,    # type: ignore
-            "min": obj.get("min"),
-            "max": obj.get("max"),
-            "maxSize": obj.get("maxSize"),
-            "schema": obj.get("schema")
-        })
-        return _obj
+        return cls.model_validate(obj)

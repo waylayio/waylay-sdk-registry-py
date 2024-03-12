@@ -9,15 +9,16 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictBool
 from pydantic import Field
 from ..models.assets_conditions import AssetsConditions
@@ -27,27 +28,28 @@ from ..models.language_release import LanguageRelease
 from ..models.provided_dependency import ProvidedDependency
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
-
-
 class RuntimeSpecification(BaseModel):
     """Runtime (version) specification that says * what assets are required/allowed to build the function * what build parameters are used * what deployment parameters are used * which dependencies are provided by the runtime."""
 
     build: Optional[BuildSpec] = None
     deploy: Optional[DeploySpec] = None
     language: Optional[LanguageRelease] = None
-    provided_dependencies: Optional[List[ProvidedDependency]] = Field(default=None, description="Description of dependencies provided by this runtime version.", alias="providedDependencies")
+    provided_dependencies: Optional[List[ProvidedDependency]] = Field(
+        default=None,
+        description="Description of dependencies provided by this runtime version.",
+        alias="providedDependencies",
+    )
     assets: Optional[AssetsConditions] = None
-    deprecated: Optional[StrictBool] = Field(default=None, description="If true, this runtime should no longer be used for new functions.")
-    __properties: ClassVar[List[str]] = ["build", "deploy", "language", "providedDependencies", "assets", "deprecated"]
+    deprecated: Optional[StrictBool] = Field(
+        default=None,
+        description="If true, this runtime should no longer be used for new functions.",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -65,8 +67,6 @@ class RuntimeSpecification(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -78,29 +78,9 @@ class RuntimeSpecification(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of build
-        if self.build:
-            _dict['build'] = self.build.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of deploy
-        if self.deploy:
-            _dict['deploy'] = self.deploy.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of language
-        if self.language:
-            _dict['language'] = self.language.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in provided_dependencies (list)
-        _items = []
-        if self.provided_dependencies:
-            for _item in self.provided_dependencies:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['providedDependencies'] = _items
-        # override the default output from pydantic by calling `to_dict()` of assets
-        if self.assets:
-            _dict['assets'] = self.assets.to_dict()
         return _dict
 
     @classmethod
@@ -108,16 +88,4 @@ class RuntimeSpecification(BaseModel):
         """Create an instance of RuntimeSpecification from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "build": BuildSpec.from_dict(obj.get("build")) if obj.get("build") is not None else None,    # type: ignore
-            "deploy": DeploySpec.from_dict(obj.get("deploy")) if obj.get("deploy") is not None else None,    # type: ignore
-            "language": LanguageRelease.from_dict(obj.get("language")) if obj.get("language") is not None else None,    # type: ignore
-            "providedDependencies": [ProvidedDependency.from_dict(_item) for _item in obj.get("providedDependencies")] if obj.get("providedDependencies") is not None else None,  # type: ignore
-            "assets": AssetsConditions.from_dict(obj.get("assets")) if obj.get("assets") is not None else None,    # type: ignore
-            "deprecated": obj.get("deprecated")
-        })
-        return _obj
+        return cls.model_validate(obj)

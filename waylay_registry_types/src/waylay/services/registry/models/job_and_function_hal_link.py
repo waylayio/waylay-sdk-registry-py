@@ -9,163 +9,26 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
-from inspect import getfullargspec
-import json
-import pprint
 import re  # noqa: F401
 
-from typing import Optional
-from pydantic import BaseModel, Field, StrictStr, ValidationError, field_validator
 from ..models.job_hal_links import JobHALLinks
 from ..models.model1 import Model1
 from ..models.plug1 import Plug1
 from ..models.webscript1 import Webscript1
 
-from typing import Union, Any, List, TYPE_CHECKING, Optional, Dict
-from typing_extensions import Literal
-from pydantic import StrictStr, Field, ConfigDict
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
-
-JOBANDFUNCTIONHALLINK_ANY_OF_SCHEMAS = ["JobHALLinks", "Model1", "Plug1", "Webscript1"]
+from typing import (
+    Union,  # >=3.8
+)
+from typing_extensions import (
+    Annotated,  # >=3.9
+)
 
 
-class JobAndFunctionHALLink(BaseModel):
-    """HAL links to related actions.."""
-
-    # data type: Plug1
-    anyof_schema_1_validator: Optional[Plug1] = None
-    # data type: Webscript1
-    anyof_schema_2_validator: Optional[Webscript1] = None
-    # data type: Model1
-    anyof_schema_3_validator: Optional[Model1] = None
-    # data type: JobHALLinks
-    anyof_schema_4_validator: Optional[JobHALLinks] = None
-    if TYPE_CHECKING:
-        actual_instance: Optional[Union[JobHALLinks, Model1, Plug1, Webscript1]] = None
-    else:
-        actual_instance: Any = None
-    any_of_schemas: List[str] = JOBANDFUNCTIONHALLINK_ANY_OF_SCHEMAS
-
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
-
-    def __init__(self, *args, **kwargs) -> None:
-        """Create a JobAndFunctionHALLink model instance."""
-        if args:
-            if len(args) > 1:
-                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
-            if kwargs:
-                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
-            super().__init__(actual_instance=args[0])
-        else:
-            super().__init__(**kwargs)
-
-    @field_validator('actual_instance')
-    @classmethod
-    def actual_instance_must_validate_anyof(cls, v):
-        """Validate the actual instance on deserialisation."""
-        instance = JobAndFunctionHALLink.model_construct()
-        error_messages = []
-        # validate data type: Plug1
-        if not isinstance(v, Plug1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Plug1`")
-        else:
-            return v
-
-        # validate data type: Webscript1
-        if not isinstance(v, Webscript1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Webscript1`")
-        else:
-            return v
-
-        # validate data type: Model1
-        if not isinstance(v, Model1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Model1`")
-        else:
-            return v
-
-        # validate data type: JobHALLinks
-        if not isinstance(v, JobHALLinks):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `JobHALLinks`")
-        else:
-            return v
-
-        if error_messages:
-            # no match
-            raise ValueError("No match found when setting the actual_instance in JobAndFunctionHALLink with anyOf schemas: JobHALLinks, Model1, Plug1, Webscript1. Details: " + ", ".join(error_messages))
-        else:
-            return v
-
-    @classmethod
-    def from_dict(cls, obj: dict) -> Self:
-        """Get a dict representation of an object."""
-        return cls.from_json(json.dumps(obj, default=str))
-
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Get the object represented by the JSON string."""
-        instance = cls.model_construct()
-        error_messages = []
-        # anyof_schema_1_validator: Optional[Plug1] = None
-        try:
-            instance.actual_instance = Plug1.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[Webscript1] = None
-        try:
-            instance.actual_instance = Webscript1.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # anyof_schema_3_validator: Optional[Model1] = None
-        try:
-            instance.actual_instance = Model1.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # anyof_schema_4_validator: Optional[JobHALLinks] = None
-        try:
-            instance.actual_instance = JobHALLinks.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-
-        if error_messages:
-            # no match
-            raise ValueError("No match found when deserializing the JSON string into JobAndFunctionHALLink with anyOf schemas: JobHALLinks, Model1, Plug1, Webscript1. Details: " + ", ".join(error_messages))
-        else:
-            return instance
-
-    def to_json(self) -> str:
-        """Get the JSON representation of the actual instance."""
-        if self.actual_instance is None:
-            return "null"
-
-        to_json = getattr(self.actual_instance, "to_json", None)
-        if callable(to_json):
-            return self.actual_instance.to_json()  # type: ignore
-        else:
-            return json.dumps(self.actual_instance, default=str)
-
-    def to_dict(self) -> Optional[Dict]:
-        """Get the dict representation of the actual instance."""
-        if self.actual_instance is None:
-            return None
-
-        to_dict = getattr(self.actual_instance, "to_dict", None)
-        if callable(to_dict):
-            return self.actual_instance.to_dict()  # type: ignore
-        else:
-            return json.dumps(self.actual_instance, default=str)  # type: ignore
-
-    def to_str(self) -> str:
-        """Get the string representation of the actual instance."""
-        return pprint.pformat(self.model_dump())
+JobAndFunctionHALLink = Union[
+    Annotated[Plug1, ""],
+    Annotated[Webscript1, ""],
+    Annotated[Model1, ""],
+    Annotated[JobHALLinks, ""],
+]
+"""HAL links to related actions.."""

@@ -9,24 +9,19 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List
+from typing import Any, Dict
 from pydantic import BaseModel, StrictStr
 from ..models.job_causes import JobCauses
 from ..models.webscript_response_v2 import WebscriptResponseV2
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class RebuildWebscriptSyncResponseV2(BaseModel):
@@ -35,12 +30,12 @@ class RebuildWebscriptSyncResponseV2(BaseModel):
     message: StrictStr
     causes: JobCauses
     entity: WebscriptResponseV2
-    __properties: ClassVar[List[str]] = ["message", "causes", "entity"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -58,8 +53,6 @@ class RebuildWebscriptSyncResponseV2(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -71,16 +64,9 @@ class RebuildWebscriptSyncResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of causes
-        if self.causes:
-            _dict['causes'] = self.causes.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of entity
-        if self.entity:
-            _dict['entity'] = self.entity.to_dict()
         return _dict
 
     @classmethod
@@ -88,13 +74,4 @@ class RebuildWebscriptSyncResponseV2(BaseModel):
         """Create an instance of RebuildWebscriptSyncResponseV2 from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "message": obj.get("message"),
-            "causes": JobCauses.from_dict(obj.get("causes")) if obj.get("causes") is not None else None,    # type: ignore
-            "entity": WebscriptResponseV2.from_dict(obj.get("entity")) if obj.get("entity") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

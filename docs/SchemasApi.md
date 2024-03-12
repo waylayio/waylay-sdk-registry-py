@@ -7,9 +7,12 @@ Method | HTTP request | Description
 [**get_by_role**](SchemasApi.md#get_by_role) | **GET** /registry/v2/schemas/{functionType}/{role}/schema | Get Asset Schema
 [**get**](SchemasApi.md#get) | **GET** /registry/v2/schemas/{schemaId} | Get Asset Schema
 
-
 # **get_by_role**
-> Dict[str, object] get_by_role(function_type: FunctionType, role: AssetRole, query=GetByRoleQuery)
+> get_by_role(
+> function_type: FunctionType,
+> role: AssetRole,
+> headers
+> ) -> Dict[str, object] 
 
 Get Asset Schema
 
@@ -29,29 +32,33 @@ waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.asset_role import AssetRole
 from waylay.services.registry.models.function_type import FunctionType
-
-function_type = waylay.services.registry.FunctionType() # FunctionType | Function type,
-role = waylay.services.registry.AssetRole() # AssetRole | Asset role,
-
-
 try:
     # Get Asset Schema
-    api_response = await waylay_client.registry.schemas.get_by_role(function_type=function_type, role=role, )
+    # calls `GET /registry/v2/schemas/{functionType}/{role}/schema`
+    api_response = await waylay_client.registry.schemas.get_by_role(
+        waylay.services.registry.FunctionType(), # function_type | path param "functionType"
+        waylay.services.registry.AssetRole(), # role | path param "role"
+    )
     print("The response of registry.schemas.get_by_role:\n")
     pprint(api_response)
 except ApiError as e:
     print("Exception when calling registry.schemas.get_by_role: %s\n" % e)
 ```
 
+### Endpoint
+```
+GET /registry/v2/schemas/{functionType}/{role}/schema
+```
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **function_type** | [**FunctionType**](.md)| Function type | 
- **role** | [**AssetRole**](.md)| Asset role | 
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**function_type** | [**FunctionType**](.md) | path parameter `"functionType"` | Function type | 
+**role** | [**AssetRole**](.md) | path parameter `"role"` | Asset role | 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
+
 
 **Dict[str, object]**
 
@@ -69,7 +76,10 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get**
-> Dict[str, object] get(schema_id: str, query=GetQuery)
+> get(
+> schema_id: str,
+> headers
+> ) -> Dict[str, object] 
 
 Get Asset Schema
 
@@ -87,27 +97,31 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
-
-schema_id = 'schema_id_example' # str | Schema id,
-
-
 try:
     # Get Asset Schema
-    api_response = await waylay_client.registry.schemas.get(schema_id=schema_id, )
+    # calls `GET /registry/v2/schemas/{schemaId}`
+    api_response = await waylay_client.registry.schemas.get(
+        'schema_id_example', # schema_id | path param "schemaId"
+    )
     print("The response of registry.schemas.get:\n")
     pprint(api_response)
 except ApiError as e:
     print("Exception when calling registry.schemas.get: %s\n" % e)
 ```
 
+### Endpoint
+```
+GET /registry/v2/schemas/{schemaId}
+```
 ### Parameters
 
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **schema_id** | **str**| Schema id | 
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**schema_id** | **str** | path parameter `"schemaId"` | Schema id | 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
+
 
 **Dict[str, object]**
 

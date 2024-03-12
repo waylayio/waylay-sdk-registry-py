@@ -2,7 +2,7 @@
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
 This Python package is automatically generated based on the 
-Waylay Registry OpenAPI specification (API version: 2.12.1)
+Waylay Registry OpenAPI specification (API version: 2.12.3)
 
 It consists of two sub-packages that are both plugins for the  package.
 - The `waylay_registry_api` sub-package contains the Registry api methods.
@@ -37,12 +37,20 @@ from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.job_state_result import JobStateResult
 from waylay.services.registry.models.job_type_schema import JobTypeSchema
 from waylay.services.registry.models.jobs_response import JobsResponse
-
-
-
 try:
     # List Jobs
-    api_response = await waylay_client.registry.jobs.list()
+    # calls `GET /registry/v2/jobs/`
+    api_response = await waylay_client.registry.jobs.list(
+        # query parameters:
+        query = {
+            'limit': 3.4
+            'type': [waylay.services.registry.JobTypeSchema()]
+            'state': [waylay.services.registry.JobStateResult()]
+            'functionType': [waylay.services.registry.FunctionType()]
+            'createdBefore': waylay.services.registry.TimestampSpec()
+            'createdAfter': waylay.services.registry.TimestampSpec()
+        },
+    )
     print("The response of registry.jobs.list:\n")
     pprint(api_response)
 except ApiError as e:
@@ -63,10 +71,10 @@ Class | Method | HTTP request | Description
 *ModelFunctionsApi* | [**delete_asset**](docs/ModelFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Delete Model Asset
 *ModelFunctionsApi* | [**get_archive**](docs/ModelFunctionsApi.md#get_archive) | **GET** /registry/v2/models/{name}/versions/{version}/content | Get Model Archive
 *ModelFunctionsApi* | [**get_asset**](docs/ModelFunctionsApi.md#get_asset) | **GET** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Get File From Model Archive
-*ModelFunctionsApi* | [**get_latest_version**](docs/ModelFunctionsApi.md#get_latest_version) | **GET** /registry/v2/models/{name} | Get Latest Model Version
-*ModelFunctionsApi* | [**get_version**](docs/ModelFunctionsApi.md#get_version) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
+*ModelFunctionsApi* | [**get_latest**](docs/ModelFunctionsApi.md#get_latest) | **GET** /registry/v2/models/{name} | Get Latest Model Version
+*ModelFunctionsApi* | [**get**](docs/ModelFunctionsApi.md#get) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
 *ModelFunctionsApi* | [**jobs**](docs/ModelFunctionsApi.md#jobs) | **GET** /registry/v2/models/{name}/versions/{version}/jobs | List Model Jobs
-*ModelFunctionsApi* | [**list_all**](docs/ModelFunctionsApi.md#list_all) | **GET** /registry/v2/models/ | List Models
+*ModelFunctionsApi* | [**list**](docs/ModelFunctionsApi.md#list) | **GET** /registry/v2/models/ | List Models
 *ModelFunctionsApi* | [**list_versions**](docs/ModelFunctionsApi.md#list_versions) | **GET** /registry/v2/models/{name}/versions | List Model Versions
 *ModelFunctionsApi* | [**patch_metadata**](docs/ModelFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/models/{name}/versions/{version}/metadata | Patch Model Metadata
 *ModelFunctionsApi* | [**publish**](docs/ModelFunctionsApi.md#publish) | **POST** /registry/v2/models/{name}/versions/{version}/publish | Publish Draft Model
@@ -80,10 +88,10 @@ Class | Method | HTTP request | Description
 *PlugFunctionsApi* | [**delete_asset**](docs/PlugFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Delete Plug Asset
 *PlugFunctionsApi* | [**get_archive**](docs/PlugFunctionsApi.md#get_archive) | **GET** /registry/v2/plugs/{name}/versions/{version}/content | Get Plug Archive
 *PlugFunctionsApi* | [**get_asset**](docs/PlugFunctionsApi.md#get_asset) | **GET** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Get File From Plug Archive
-*PlugFunctionsApi* | [**get_latest_version**](docs/PlugFunctionsApi.md#get_latest_version) | **GET** /registry/v2/plugs/{name} | Get Latest Plug Version
-*PlugFunctionsApi* | [**get_version**](docs/PlugFunctionsApi.md#get_version) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Plug Version
+*PlugFunctionsApi* | [**get_latest**](docs/PlugFunctionsApi.md#get_latest) | **GET** /registry/v2/plugs/{name} | Get Latest Plug Version
+*PlugFunctionsApi* | [**get**](docs/PlugFunctionsApi.md#get) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Plug Version
 *PlugFunctionsApi* | [**jobs**](docs/PlugFunctionsApi.md#jobs) | **GET** /registry/v2/plugs/{name}/versions/{version}/jobs | List Plug Jobs
-*PlugFunctionsApi* | [**list_all**](docs/PlugFunctionsApi.md#list_all) | **GET** /registry/v2/plugs/ | List Plugs
+*PlugFunctionsApi* | [**list**](docs/PlugFunctionsApi.md#list) | **GET** /registry/v2/plugs/ | List Plugs
 *PlugFunctionsApi* | [**list_versions**](docs/PlugFunctionsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Plug Versions
 *PlugFunctionsApi* | [**patch_interface**](docs/PlugFunctionsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Plug Interface
 *PlugFunctionsApi* | [**patch_metadata**](docs/PlugFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Plug Metadata
@@ -106,11 +114,11 @@ Class | Method | HTTP request | Description
 *WebscriptFunctionsApi* | [**delete_asset**](docs/WebscriptFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Delete Webscript Asset
 *WebscriptFunctionsApi* | [**get_archive**](docs/WebscriptFunctionsApi.md#get_archive) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content | Get Webscript Archive
 *WebscriptFunctionsApi* | [**get_asset**](docs/WebscriptFunctionsApi.md#get_asset) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Get File From Webscript Archive
-*WebscriptFunctionsApi* | [**get_latest_version**](docs/WebscriptFunctionsApi.md#get_latest_version) | **GET** /registry/v2/webscripts/{name} | Get Latest Webscript Version
-*WebscriptFunctionsApi* | [**get_latest_versions**](docs/WebscriptFunctionsApi.md#get_latest_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Webscript Versions
-*WebscriptFunctionsApi* | [**get_version**](docs/WebscriptFunctionsApi.md#get_version) | **GET** /registry/v2/webscripts/{name}/versions/{version} | Get Webscript Version
+*WebscriptFunctionsApi* | [**get_latest**](docs/WebscriptFunctionsApi.md#get_latest) | **GET** /registry/v2/webscripts/{name} | Get Latest Webscript Version
+*WebscriptFunctionsApi* | [**get**](docs/WebscriptFunctionsApi.md#get) | **GET** /registry/v2/webscripts/{name}/versions/{version} | Get Webscript Version
 *WebscriptFunctionsApi* | [**jobs**](docs/WebscriptFunctionsApi.md#jobs) | **GET** /registry/v2/webscripts/{name}/versions/{version}/jobs | List Webscript Jobs
-*WebscriptFunctionsApi* | [**list_all**](docs/WebscriptFunctionsApi.md#list_all) | **GET** /registry/v2/webscripts/ | List Webscripts
+*WebscriptFunctionsApi* | [**list_versions**](docs/WebscriptFunctionsApi.md#list_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Webscript Versions
+*WebscriptFunctionsApi* | [**list**](docs/WebscriptFunctionsApi.md#list) | **GET** /registry/v2/webscripts/ | List Webscripts
 *WebscriptFunctionsApi* | [**patch_metadata**](docs/WebscriptFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/metadata | Patch Webscript Metadata
 *WebscriptFunctionsApi* | [**publish**](docs/WebscriptFunctionsApi.md#publish) | **POST** /registry/v2/webscripts/{name}/versions/{version}/publish | Publish Draft Webscript
 *WebscriptFunctionsApi* | [**rebuild**](docs/WebscriptFunctionsApi.md#rebuild) | **POST** /registry/v2/webscripts/{name}/versions/{version}/rebuild | Rebuild Webscript
@@ -154,7 +162,6 @@ Class | Method | HTTP request | Description
  - [Build](docs/Build.md)
  - [Build1](docs/Build1.md)
  - [BuildArgs](docs/BuildArgs.md)
- - [BuildJobForFunction](docs/BuildJobForFunction.md)
  - [BuildJobStatus](docs/BuildJobStatus.md)
  - [BuildResult](docs/BuildResult.md)
  - [BuildSpec](docs/BuildSpec.md)
@@ -175,7 +182,6 @@ Class | Method | HTTP request | Description
  - [DeployArgs](docs/DeployArgs.md)
  - [DeployArgsDeploySpecOverrides](docs/DeployArgsDeploySpecOverrides.md)
  - [DeployAttributesFilter](docs/DeployAttributesFilter.md)
- - [DeployJobForFunction](docs/DeployJobForFunction.md)
  - [DeployJobStatus](docs/DeployJobStatus.md)
  - [DeployResult](docs/DeployResult.md)
  - [DeploySpec](docs/DeploySpec.md)
@@ -440,7 +446,6 @@ Class | Method | HTTP request | Description
  - [Scale](docs/Scale.md)
  - [Scale1](docs/Scale1.md)
  - [ScaleArgs](docs/ScaleArgs.md)
- - [ScaleJobForFunction](docs/ScaleJobForFunction.md)
  - [ScaleJobStatus](docs/ScaleJobStatus.md)
  - [SchemaByIdParams](docs/SchemaByIdParams.md)
  - [SchemaParams](docs/SchemaParams.md)
@@ -463,7 +468,6 @@ Class | Method | HTTP request | Description
  - [Undeploy](docs/Undeploy.md)
  - [Undeploy1](docs/Undeploy1.md)
  - [UndeployArgs](docs/UndeployArgs.md)
- - [UndeployJobForFunction](docs/UndeployJobForFunction.md)
  - [UndeployJobStatus](docs/UndeployJobStatus.md)
  - [UndeployResult](docs/UndeployResult.md)
  - [UndeploySubmittedResponseV2](docs/UndeploySubmittedResponseV2.md)
@@ -478,7 +482,6 @@ Class | Method | HTTP request | Description
  - [Verify](docs/Verify.md)
  - [Verify1](docs/Verify1.md)
  - [VerifyArgs](docs/VerifyArgs.md)
- - [VerifyJobForFunction](docs/VerifyJobForFunction.md)
  - [VerifyJobStatus](docs/VerifyJobStatus.md)
  - [VerifyModelSyncResponseV2](docs/VerifyModelSyncResponseV2.md)
  - [VerifyPlugSyncResponseV2](docs/VerifyPlugSyncResponseV2.md)

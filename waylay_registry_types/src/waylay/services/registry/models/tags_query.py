@@ -9,35 +9,30 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel
 from ..models.tags_filter import TagsFilter
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class TagsQuery(BaseModel):
     """TagsQuery."""
 
     tags: Optional[TagsFilter] = None
-    __properties: ClassVar[List[str]] = ["tags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -55,8 +50,6 @@ class TagsQuery(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -68,13 +61,9 @@ class TagsQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of tags
-        if self.tags:
-            _dict['tags'] = self.tags.to_dict()
         return _dict
 
     @classmethod
@@ -82,11 +71,4 @@ class TagsQuery(BaseModel):
         """Create an instance of TagsQuery from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "tags": TagsFilter.from_dict(obj.get("tags")) if obj.get("tags") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

@@ -9,15 +9,16 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel
 from pydantic import Field
 from ..models.any_job_for_function import AnyJobForFunction
@@ -25,24 +26,20 @@ from ..models.function_ref import FunctionRef
 from ..models.jobs_for_plug_response_v2_links import JobsForPlugResponseV2Links
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
-
-
 class JobsForPlugResponseV2(BaseModel):
     """Plug Jobs Found."""
 
-    jobs: List[AnyJobForFunction] = Field(description="Listing of jobs related to the function deployment. This includes active jobs, and the most recently failed job (per type) that was archived on the entity.")
+    jobs: List[AnyJobForFunction] = Field(
+        description="Listing of jobs related to the function deployment. This includes active jobs, and the most recently failed job (per type) that was archived on the entity."
+    )
     function: FunctionRef
     links: Optional[JobsForPlugResponseV2Links] = Field(default=None, alias="_links")
-    __properties: ClassVar[List[str]] = ["jobs", "function", "_links"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -60,8 +57,6 @@ class JobsForPlugResponseV2(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -73,23 +68,9 @@ class JobsForPlugResponseV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in jobs (list)
-        _items = []
-        if self.jobs:
-            for _item in self.jobs:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['jobs'] = _items
-        # override the default output from pydantic by calling `to_dict()` of function
-        if self.function:
-            _dict['function'] = self.function.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of links
-        if self.links:
-            _dict['_links'] = self.links.to_dict()
         return _dict
 
     @classmethod
@@ -97,13 +78,4 @@ class JobsForPlugResponseV2(BaseModel):
         """Create an instance of JobsForPlugResponseV2 from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "jobs": [AnyJobForFunction.from_dict(_item) for _item in obj.get("jobs")] if obj.get("jobs") is not None else None,  # type: ignore
-            "function": FunctionRef.from_dict(obj.get("function")) if obj.get("function") is not None else None,    # type: ignore
-            "_links": JobsForPlugResponseV2Links.from_dict(obj.get("_links")) if obj.get("_links") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

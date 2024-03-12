@@ -9,36 +9,33 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List
+from typing import Any, Dict
 from pydantic import BaseModel
 from pydantic import Field
-from ..models.named_parameters_typeof_as_job_reference_job_status import NamedParametersTypeofAsJobReferenceJobStatus
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from ..models.named_parameters_typeof_as_job_reference_job_status import (
+    NamedParametersTypeofAsJobReferenceJobStatus,
+)
 
 
 class NamedParametersTypeofAsJobReference(BaseModel):
     """NamedParametersTypeofAsJobReference."""
 
     job_status: NamedParametersTypeofAsJobReferenceJobStatus = Field(alias="jobStatus")
-    __properties: ClassVar[List[str]] = ["jobStatus"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -56,8 +53,6 @@ class NamedParametersTypeofAsJobReference(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -69,13 +64,9 @@ class NamedParametersTypeofAsJobReference(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of job_status
-        if self.job_status:
-            _dict['jobStatus'] = self.job_status.to_dict()
         return _dict
 
     @classmethod
@@ -83,11 +74,4 @@ class NamedParametersTypeofAsJobReference(BaseModel):
         """Create an instance of NamedParametersTypeofAsJobReference from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "jobStatus": NamedParametersTypeofAsJobReferenceJobStatus.from_dict(obj.get("jobStatus")) if obj.get("jobStatus") is not None else None    # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

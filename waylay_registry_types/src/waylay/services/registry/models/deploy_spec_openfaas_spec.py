@@ -9,24 +9,19 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictBool, StrictStr
 from pydantic import Field
 from ..models.resource_limits import ResourceLimits
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class DeploySpecOpenfaasSpec(BaseModel):
@@ -45,13 +40,15 @@ class DeploySpecOpenfaasSpec(BaseModel):
     registry_auth: Optional[StrictStr] = Field(default=None, alias="registryAuth")
     limits: Optional[ResourceLimits] = None
     requests: Optional[ResourceLimits] = None
-    read_only_root_filesystem: Optional[StrictBool] = Field(default=None, alias="readOnlyRootFilesystem")
-    __properties: ClassVar[List[str]] = ["service", "image", "namespace", "envProcess", "network", "envVars", "constraints", "labels", "annotations", "secrets", "registryAuth", "limits", "requests", "readOnlyRootFilesystem"]
+    read_only_root_filesystem: Optional[StrictBool] = Field(
+        default=None, alias="readOnlyRootFilesystem"
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -69,8 +66,6 @@ class DeploySpecOpenfaasSpec(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -82,16 +77,9 @@ class DeploySpecOpenfaasSpec(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of limits
-        if self.limits:
-            _dict['limits'] = self.limits.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of requests
-        if self.requests:
-            _dict['requests'] = self.requests.to_dict()
         return _dict
 
     @classmethod
@@ -99,24 +87,4 @@ class DeploySpecOpenfaasSpec(BaseModel):
         """Create an instance of DeploySpecOpenfaasSpec from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "service": obj.get("service"),
-            "image": obj.get("image"),
-            "namespace": obj.get("namespace"),
-            "envProcess": obj.get("envProcess"),
-            "network": obj.get("network"),
-            "envVars": obj.get("envVars"),
-            "constraints": obj.get("constraints"),
-            "labels": obj.get("labels"),
-            "annotations": obj.get("annotations"),
-            "secrets": obj.get("secrets"),
-            "registryAuth": obj.get("registryAuth"),
-            "limits": ResourceLimits.from_dict(obj.get("limits")) if obj.get("limits") is not None else None,    # type: ignore
-            "requests": ResourceLimits.from_dict(obj.get("requests")) if obj.get("requests") is not None else None,    # type: ignore
-            "readOnlyRootFilesystem": obj.get("readOnlyRootFilesystem")
-        })
-        return _obj
+        return cls.model_validate(obj)

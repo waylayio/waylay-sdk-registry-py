@@ -9,18 +9,15 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import json
-import pprint
 import re  # noqa: F401
 from enum import Enum
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
 
 class QueueEvents(str, Enum):
@@ -29,22 +26,22 @@ class QueueEvents(str, Enum):
     """
     allowed enum values
     """
-    COMPLETED = 'completed'
-    FAILED = 'failed'
-    ACTIVE = 'active'
-    DELAYED = 'delayed'
-    WAITING = 'waiting'
-    WAITING_MINUS_CHILDREN = 'waiting-children'
-    ADDED = 'added'
-    CLEANED = 'cleaned'
-    DRAINED = 'drained'
-    ERROR = 'error'
-    PAUSED = 'paused'
-    PROGRESS = 'progress'
-    REMOVED = 'removed'
-    RESUMED = 'resumed'
-    RETRIES_MINUS_EXHAUSTED = 'retries-exhausted'
-    STALLED = 'stalled'
+    COMPLETED = "completed"
+    FAILED = "failed"
+    ACTIVE = "active"
+    DELAYED = "delayed"
+    WAITING = "waiting"
+    WAITING_MINUS_CHILDREN = "waiting-children"
+    ADDED = "added"
+    CLEANED = "cleaned"
+    DRAINED = "drained"
+    ERROR = "error"
+    PAUSED = "paused"
+    PROGRESS = "progress"
+    REMOVED = "removed"
+    RESUMED = "resumed"
+    RETRIES_MINUS_EXHAUSTED = "retries-exhausted"
+    STALLED = "stalled"
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

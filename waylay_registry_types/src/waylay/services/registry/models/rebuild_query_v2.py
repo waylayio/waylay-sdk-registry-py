@@ -9,41 +9,62 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, Optional
 from pydantic import BaseModel, StrictBool, StrictStr, field_validator
 from pydantic import Field
 from typing_extensions import Annotated
 from ..models.rebuild_policy import RebuildPolicy
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
-
-
 class RebuildQueryV2(BaseModel):
     """RebuildQueryV2."""
 
-    comment: Optional[StrictStr] = Field(default=None, description="An optional user-specified comment corresponding to the operation.")
-    dry_run: Optional[StrictBool] = Field(default=None, description="If set to <code>true</code>, checks whether rebuild jobs are needed, but do not start any jobs.", alias="dryRun")
-    var_async: Optional[StrictBool] = Field(default=True, description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.", alias="async")
+    comment: Optional[StrictStr] = Field(
+        default=None,
+        description="An optional user-specified comment corresponding to the operation.",
+    )
+    dry_run: Optional[StrictBool] = Field(
+        default=None,
+        description="If set to <code>true</code>, checks whether rebuild jobs are needed, but do not start any jobs.",
+        alias="dryRun",
+    )
+    var_async: Optional[StrictBool] = Field(
+        default=True,
+        description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+        alias="async",
+    )
     upgrade: Optional[RebuildPolicy] = None
-    force_version: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org", alias="forceVersion")
-    ignore_checks: Optional[StrictBool] = Field(default=None, description="If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in `pending`, `running`, `failed` or `undeployed` * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the `dryRun` option", alias="ignoreChecks")
-    scale_to_zero: Optional[StrictBool] = Field(default=None, description="Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command.", alias="scaleToZero")
-    skip_rebuild: Optional[StrictBool] = Field(default=None, description="If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function.", alias="skipRebuild")
-    __properties: ClassVar[List[str]] = ["comment", "dryRun", "async", "upgrade", "forceVersion", "ignoreChecks", "scaleToZero", "skipRebuild"]
+    force_version: Optional[Annotated[str, Field(strict=True)]] = Field(
+        default=None,
+        description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org",
+        alias="forceVersion",
+    )
+    ignore_checks: Optional[StrictBool] = Field(
+        default=None,
+        description="If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in `pending`, `running`, `failed` or `undeployed` * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the `dryRun` option",
+        alias="ignoreChecks",
+    )
+    scale_to_zero: Optional[StrictBool] = Field(
+        default=None,
+        description="Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command.",
+        alias="scaleToZero",
+    )
+    skip_rebuild: Optional[StrictBool] = Field(
+        default=None,
+        description="If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function.",
+        alias="skipRebuild",
+    )
 
-    @field_validator('force_version')
+    @field_validator("force_version")
     @classmethod
     def force_version_validate_regular_expression(cls, value):
         """Validate the regular expression."""
@@ -51,13 +72,16 @@ class RebuildQueryV2(BaseModel):
             return value
 
         if not re.match(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$", value):
-            raise ValueError(r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/")
+            raise ValueError(
+                r"must validate the regular expression /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/"
+            )
         return value
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -75,8 +99,6 @@ class RebuildQueryV2(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -88,8 +110,7 @@ class RebuildQueryV2(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -99,18 +120,4 @@ class RebuildQueryV2(BaseModel):
         """Create an instance of RebuildQueryV2 from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "comment": obj.get("comment"),
-            "dryRun": obj.get("dryRun"),
-            "async": obj.get("async") if obj.get("async") is not None else True,
-            "upgrade": obj.get("upgrade"),
-            "forceVersion": obj.get("forceVersion"),
-            "ignoreChecks": obj.get("ignoreChecks"),
-            "scaleToZero": obj.get("scaleToZero"),
-            "skipRebuild": obj.get("skipRebuild")
-        })
-        return _obj
+        return cls.model_validate(obj)

@@ -9,24 +9,19 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List
+from typing import Any, Dict, List
 from pydantic import BaseModel
 from pydantic import Field
 from ..models.documentation_property import DocumentationProperty
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class LegacyDocumentation(BaseModel):
@@ -35,12 +30,12 @@ class LegacyDocumentation(BaseModel):
     supported_states: List[DocumentationProperty] = Field(alias="supportedStates")
     configuration: List[DocumentationProperty]
     raw_data: List[DocumentationProperty] = Field(alias="rawData")
-    __properties: ClassVar[List[str]] = ["supportedStates", "configuration", "rawData"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -58,8 +53,6 @@ class LegacyDocumentation(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -71,31 +64,9 @@ class LegacyDocumentation(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in supported_states (list)
-        _items = []
-        if self.supported_states:
-            for _item in self.supported_states:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['supportedStates'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in configuration (list)
-        _items = []
-        if self.configuration:
-            for _item in self.configuration:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['configuration'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in raw_data (list)
-        _items = []
-        if self.raw_data:
-            for _item in self.raw_data:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['rawData'] = _items
         return _dict
 
     @classmethod
@@ -103,13 +74,4 @@ class LegacyDocumentation(BaseModel):
         """Create an instance of LegacyDocumentation from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "supportedStates": [DocumentationProperty.from_dict(_item) for _item in obj.get("supportedStates")] if obj.get("supportedStates") is not None else None,  # type: ignore
-            "configuration": [DocumentationProperty.from_dict(_item) for _item in obj.get("configuration")] if obj.get("configuration") is not None else None,  # type: ignore
-            "rawData": [DocumentationProperty.from_dict(_item) for _item in obj.get("rawData")] if obj.get("rawData") is not None else None  # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

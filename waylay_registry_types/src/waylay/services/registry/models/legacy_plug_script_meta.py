@@ -9,26 +9,23 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
+from typing_extensions import (
+    Self,  # >=3.11
+)
 
-
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
-from ..models.legacy_plug_script_meta_raw_data_inner import LegacyPlugScriptMetaRawDataInner
+from ..models.legacy_plug_script_meta_raw_data_inner import (
+    LegacyPlugScriptMetaRawDataInner,
+)
 from ..models.legacy_required_properties_inner import LegacyRequiredPropertiesInner
 from ..models.tag import Tag
-
-
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
 
 
 class LegacyPlugScriptMeta(BaseModel):
@@ -42,13 +39,15 @@ class LegacyPlugScriptMeta(BaseModel):
     friendly_name: Optional[StrictStr] = Field(default=None, alias="friendlyName")
     supported_states: List[StrictStr] = Field(alias="supportedStates")
     raw_data: List[LegacyPlugScriptMetaRawDataInner] = Field(alias="rawData")
-    required_properties: Optional[List[LegacyRequiredPropertiesInner]] = Field(default=None, alias="requiredProperties")
-    __properties: ClassVar[List[str]] = ["author", "description", "category", "tags", "iconURL", "friendlyName", "supportedStates", "rawData", "requiredProperties"]
+    required_properties: Optional[List[LegacyRequiredPropertiesInner]] = Field(
+        default=None, alias="requiredProperties"
+    )
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -66,8 +65,6 @@ class LegacyPlugScriptMeta(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -79,31 +76,9 @@ class LegacyPlugScriptMeta(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in tags (list)
-        _items = []
-        if self.tags:
-            for _item in self.tags:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['tags'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in raw_data (list)
-        _items = []
-        if self.raw_data:
-            for _item in self.raw_data:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['rawData'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in required_properties (list)
-        _items = []
-        if self.required_properties:
-            for _item in self.required_properties:  # type: ignore
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['requiredProperties'] = _items
         return _dict
 
     @classmethod
@@ -111,19 +86,4 @@ class LegacyPlugScriptMeta(BaseModel):
         """Create an instance of LegacyPlugScriptMeta from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "author": obj.get("author"),
-            "description": obj.get("description"),
-            "category": obj.get("category"),
-            "tags": [Tag.from_dict(_item) for _item in obj.get("tags")] if obj.get("tags") is not None else None,  # type: ignore
-            "iconURL": obj.get("iconURL"),
-            "friendlyName": obj.get("friendlyName"),
-            "supportedStates": obj.get("supportedStates"),
-            "rawData": [LegacyPlugScriptMetaRawDataInner.from_dict(_item) for _item in obj.get("rawData")] if obj.get("rawData") is not None else None,  # type: ignore
-            "requiredProperties": [LegacyRequiredPropertiesInner.from_dict(_item) for _item in obj.get("requiredProperties")] if obj.get("requiredProperties") is not None else None  # type: ignore
-        })
-        return _obj
+        return cls.model_validate(obj)

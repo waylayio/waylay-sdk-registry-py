@@ -9,40 +9,41 @@ Do not edit the class manually.
 
 """
 
-
 from __future__ import annotations
 import pprint
 import re  # noqa: F401
 import json
 from pydantic import ConfigDict
-
+from typing_extensions import (
+    Self,  # >=3.11
+)
 from datetime import datetime
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, StrictStr
 from pydantic import Field
 from ..models.request_operation import RequestOperation
 
 
-try:
-    from typing import Self
-except ImportError:
-    from typing_extensions import Self
-
-
 class UpdateRecord(BaseModel):
     """An update report corresponding to a modifying operation initiated by a user/administrator on the entity.."""
 
-    comment: Optional[StrictStr] = Field(default=None, description="An optional user-specified comment corresponding to the operation.")
+    comment: Optional[StrictStr] = Field(
+        default=None,
+        description="An optional user-specified comment corresponding to the operation.",
+    )
     operation: RequestOperation
-    jobs: Optional[List[StrictStr]] = Field(default=None, description="The job id's of the corresponding jobs, if applicable.")
+    jobs: Optional[List[StrictStr]] = Field(
+        default=None,
+        description="The job id's of the corresponding jobs, if applicable.",
+    )
     at: datetime
     by: StrictStr = Field(description="The user that initiated this operation.")
-    __properties: ClassVar[List[str]] = ["comment", "operation", "jobs", "at", "by"]
 
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
+        extra="ignore",
     )
 
     def to_str(self) -> str:
@@ -60,8 +61,6 @@ class UpdateRecord(BaseModel):
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
-        # pylint: disable=not-an-iterable, no-member, unsupported-membership-test
-        # pylint has some issues with `field` https://github.com/pylint-dev/pylint/issues/7437, so disable some checks
         """Get the dictionary representation of the model using alias.
 
         This has the following differences from calling pydantic's
@@ -73,8 +72,7 @@ class UpdateRecord(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -84,15 +82,4 @@ class UpdateRecord(BaseModel):
         """Create an instance of UpdateRecord from a dict."""
         if obj is None:
             return None
-
-        if not isinstance(obj, dict):
-            return cls.model_validate(obj)
-
-        _obj = cls.model_validate({
-            "comment": obj.get("comment"),
-            "operation": obj.get("operation"),
-            "jobs": obj.get("jobs"),
-            "at": obj.get("at"),
-            "by": obj.get("by")
-        })
-        return _obj
+        return cls.model_validate(obj)
