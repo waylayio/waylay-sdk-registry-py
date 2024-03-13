@@ -28,7 +28,7 @@ except ImportError as exc:
 job_type_model_schema = json.loads(r"""{
   "title" : "JobType",
   "type" : "string",
-  "enum" : [ "build", "deploy", "verify", "undeploy", "batch", "scale", "cleanup", "other" ]
+  "enum" : [ "build", "deploy", "verify", "undeploy", "batch", "scale", "cleanup", "notify", "other" ]
 }
 """)
 job_type_model_schema.update({"definitions": MODEL_DEFINITIONS})

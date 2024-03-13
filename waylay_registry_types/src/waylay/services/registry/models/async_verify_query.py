@@ -19,17 +19,13 @@ from typing_extensions import (
 )
 
 from typing import Any, Dict, Optional
-from pydantic import BaseModel, StrictBool, StrictStr
+from pydantic import BaseModel, StrictBool
 from pydantic import Field
 
 
 class AsyncVerifyQuery(BaseModel):
     """AsyncVerifyQuery."""
 
-    comment: Optional[StrictStr] = Field(
-        default=None,
-        description="An optional user-specified comment corresponding to the operation.",
-    )
     var_async: Optional[StrictBool] = Field(
         default=True,
         description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",

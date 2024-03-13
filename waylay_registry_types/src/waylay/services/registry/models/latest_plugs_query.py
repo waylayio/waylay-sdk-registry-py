@@ -24,12 +24,14 @@ from pydantic import Field
 from typing_extensions import Annotated
 from ..models.archive_format import ArchiveFormat
 from ..models.plug_type import PlugType
+from ..models.show_related_type import ShowRelatedType
 
 
 class LatestPlugsQuery(BaseModel):
     """Latest plug versions listing query with latest links. A request that only uses these query parameters will include links to the _latest_ draft/published versions of the plug.."""
 
     type: Optional[PlugType] = None
+    show_related: Optional[ShowRelatedType] = Field(default=None, alias="showRelated")
     limit: Optional[
         Union[
             Annotated[float, Field(strict=True, ge=0)],

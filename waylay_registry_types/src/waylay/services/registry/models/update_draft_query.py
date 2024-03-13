@@ -30,6 +30,10 @@ class UpdateDraftQuery(BaseModel):
         default=None,
         description="An optional user-specified comment corresponding to the operation.",
     )
+    author: Optional[StrictStr] = Field(
+        default=None,
+        description="Optionally changes the author metadata when updating a function.",
+    )
     var_async: Optional[StrictBool] = Field(
         default=True,
         description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",

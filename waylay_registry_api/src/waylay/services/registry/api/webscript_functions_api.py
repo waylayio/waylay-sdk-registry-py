@@ -10,7 +10,7 @@ Do not edit the class manually.
 
 from __future__ import annotations  # for Python 3.7–3.9
 
-from pydantic import Field, StrictStr, StrictBool, TypeAdapter, ConfigDict
+from pydantic import Field, StrictStr, StrictBool, StrictBytes, TypeAdapter, ConfigDict
 from typing import (
     Dict,
     Literal,
@@ -35,8 +35,6 @@ from waylay.sdk.api import (
 from waylay.sdk.api._models import Model
 
 if TYPE_CHECKING:
-    from waylay.services.registry.models import MultipartFileUpload
-
     from waylay.services.registry.queries.webscript_functions_api import CreateQuery
 
     from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
@@ -52,6 +50,7 @@ if TYPE_CHECKING:
 
     from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
     from waylay.services.registry.models import PostWebscriptJobAsyncResponseV2
+    from waylay.services.registry.models import RegistryErrorResponse
 
     from waylay.services.registry.queries.webscript_functions_api import GetArchiveQuery
 
@@ -141,8 +140,7 @@ if TYPE_CHECKING:
 
     from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
     from waylay.services.registry.models import PostWebscriptJobAsyncResponseV2
-
-    from waylay.services.registry.models import MultipartFileUpload
+    from waylay.services.registry.models import RegistryErrorResponse
 
     from waylay.services.registry.queries.webscript_functions_api import (
         UpdateAssetsQuery,
@@ -152,6 +150,7 @@ if TYPE_CHECKING:
 
     from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
     from waylay.services.registry.models import PostWebscriptJobAsyncResponseV2
+    from waylay.services.registry.models import RegistryErrorResponse
 
     from waylay.services.registry.queries.webscript_functions_api import VerifyQuery
 
@@ -162,8 +161,6 @@ if TYPE_CHECKING:
 
 
 try:
-    from waylay.services.registry.models import MultipartFileUpload
-
     from waylay.services.registry.queries.webscript_functions_api import CreateQuery
 
     from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
@@ -179,6 +176,7 @@ try:
 
     from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
     from waylay.services.registry.models import PostWebscriptJobAsyncResponseV2
+    from waylay.services.registry.models import RegistryErrorResponse
 
     from waylay.services.registry.queries.webscript_functions_api import GetArchiveQuery
 
@@ -268,8 +266,7 @@ try:
 
     from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
     from waylay.services.registry.models import PostWebscriptJobAsyncResponseV2
-
-    from waylay.services.registry.models import MultipartFileUpload
+    from waylay.services.registry.models import RegistryErrorResponse
 
     from waylay.services.registry.queries.webscript_functions_api import (
         UpdateAssetsQuery,
@@ -279,6 +276,7 @@ try:
 
     from waylay.services.registry.models import PostWebscriptJobSyncResponseV2
     from waylay.services.registry.models import PostWebscriptJobAsyncResponseV2
+    from waylay.services.registry.models import RegistryErrorResponse
 
     from waylay.services.registry.queries.webscript_functions_api import VerifyQuery
 
@@ -292,8 +290,6 @@ except ImportError:
     types_available = False
 
     if not TYPE_CHECKING:
-        MultipartFileUpload = Model
-
         CreateQuery = dict
 
         PostWebscriptJobSyncResponseV2 = Model
@@ -307,6 +303,7 @@ except ImportError:
 
         PostWebscriptJobSyncResponseV2 = Model
         PostWebscriptJobAsyncResponseV2 = Model
+        RegistryErrorResponse = Model
 
         GetArchiveQuery = dict
 
@@ -386,8 +383,7 @@ except ImportError:
 
         PostWebscriptJobSyncResponseV2 = Model
         PostWebscriptJobAsyncResponseV2 = Model
-
-        MultipartFileUpload = Model
+        RegistryErrorResponse = Model
 
         UpdateAssetsQuery = dict
 
@@ -395,6 +391,7 @@ except ImportError:
 
         PostWebscriptJobSyncResponseV2 = Model
         PostWebscriptJobAsyncResponseV2 = Model
+        RegistryErrorResponse = Model
 
         VerifyQuery = dict
 
@@ -420,10 +417,16 @@ class WebscriptFunctionsApi(WithApiClient):
     async def create(
         self,
         *,
+        json: Annotated[
+            Optional[Union[StrictBytes, StrictStr]],
+            Field(
+                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported. "
+            ),
+        ] = None,
         content: Annotated[
             Optional[RequestContent],
             Field(
-                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         files: Annotated[
@@ -440,10 +443,16 @@ class WebscriptFunctionsApi(WithApiClient):
     async def create(
         self,
         *,
+        json: Annotated[
+            Optional[Union[StrictBytes, StrictStr]],
+            Field(
+                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported. "
+            ),
+        ] = None,
         content: Annotated[
             Optional[RequestContent],
             Field(
-                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         files: Annotated[
@@ -460,10 +469,16 @@ class WebscriptFunctionsApi(WithApiClient):
     async def create(
         self,
         *,
+        json: Annotated[
+            Optional[Union[StrictBytes, StrictStr]],
+            Field(
+                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported. "
+            ),
+        ] = None,
         content: Annotated[
             Optional[RequestContent],
             Field(
-                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         files: Annotated[
@@ -477,13 +492,19 @@ class WebscriptFunctionsApi(WithApiClient):
     ) -> Union[PostWebscriptJobSyncResponseV2, Response, Model]:
         """Create Webscript Version.
 
-        Creates a new <em>webscript</em> function by uploading its assets.      The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported.
-        :param content: The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported.
+        Creates a new <em>webscript</em> function by uploading its assets.      The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported.
+        :param json: The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported.
+        :type json: bytearray, optional
+        :param content: The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported.
         :type content: ContentRequest, optional
         :param files: The files of a `content-type: multipart/form-data` request.
         :type files: FilesRequest, optional
         :param query: URL Query parameters.
         :type query: CreateQuery | QueryParamTypes, optional
+        :param query['author']: Optionally changes the author metadata when updating a function.
+        :type query['author']: str
+        :param query['comment']: An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
         :param query['deprecatePrevious']: Set the cleanup policy used to automatically deprecate/delete previous versions.
         :type query['deprecatePrevious']: DeprecatePreviousPolicy
         :param query['dryRun']: If set to <code>true</code>, validates the deployment conditions, but does not change anything.
@@ -498,6 +519,10 @@ class WebscriptFunctionsApi(WithApiClient):
         :type query['name']: str
         :param query['draft']: If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.
         :type query['draft']: bool
+        :param query['runtime']: If set, the created function will use the indicated runtime (latest version within specified range).  This takes precedence over the runtime specified in a function manifest (copied or from request body).
+        :type query['runtime']: str
+        :param query['copy']: Indicates the _source_ of initial assets for a _new function_.  When using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.  #### Selection of _assets_ source  * If set as `<sourceName>[@<sourceVersionRange>]`, the _new function_ will be created with copied assets of the selected _source function_. * If set as `!example`, a `runtime` query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.  #### Selection of the _source function_  When `<sourceVersionRange>` is a range (or is not given), the latest _published_ version (in that range) is used.  If no _published_ version exists, the latest _draft_ is selected.  If no versions in the range exist, a `404` _Not Found_ error is returned.  #### The `name` of the _new function_  If a `name` is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the `name` of the _new function_ will be that of the _source function_.  #### The `version` of the _new function_  When the _target_ and _source_ name are equal, the `version` query parameters is defaulted to `<sourceVersionRange>` (`~<sourceVersionRange>` when it's an exact version)  The version of the _new function_ will be: * If a `version` is NOT specified (either as query parameter, in an optional manifest asset, or as `<sourceVersionRange>` _default_)    * a **patch increment** (`<major>.<minor>.<patch>+1`) of the latest **existing version** with the target `name`    * **`1.0.0`** otherwise  * If a `version` is specified:    * the **lowest version** in that range **if no existing version** is in that range.    * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.    * otherwise, if all allowed versions already exist, a **`409` _Duplicate_ error** is raised.  #### Deployment overrides  The new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body.
+        :type query['copy']: CreateWebscriptFunctionsCopyParameter
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -529,6 +554,7 @@ class WebscriptFunctionsApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        body_args["json"] = json
         body_args["content"] = content
         body_args["files"] = files
 
@@ -633,6 +659,8 @@ class WebscriptFunctionsApi(WithApiClient):
         :type query: DeleteAssetQuery | QueryParamTypes, optional
         :param query['comment']: An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
+        :param query['author']: Optionally changes the author metadata when updating a function.
+        :type query['author']: str
         :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
         :param query['chown']: If set, ownership of the draft function is transferred to the current user. (required)
@@ -693,6 +721,7 @@ class WebscriptFunctionsApi(WithApiClient):
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
             "201": PostWebscriptJobSyncResponseV2 if not select_path else Model,
             "202": PostWebscriptJobAsyncResponseV2 if not select_path else Model,
+            "403": RegistryErrorResponse,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
@@ -1458,7 +1487,7 @@ class WebscriptFunctionsApi(WithApiClient):
     ) -> Union[LatestWebscriptsResponseV2, Response, Model]:
         """List Webscripts.
 
-        List the (latest) versions of available <em>webscripts</em>.  ### List Latest Webscript Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>webscript</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no _version filters_ are used, each listed <em>webscript version</em> item will contain a HAL **link to the  latest** _draft_ (`entities[]._links.draft`) or latest _published_ (`entities[]._links.publisned`) version (if existing and different).  ### List Latest Webscript Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>webscript</em> that satisfy the filters, but **without links**.  ### List All Webscript Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>webscripts</em> versions that satisfy the query, possibly multiple versions per named <em>webscripts</em>. No HAL links are provided.  #### Filter on _status_ By default <em>webscript versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>webscript</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`
+        List the (latest) versions of available <em>webscripts</em>.  ### List Latest Webscript Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>webscript</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no version filters are used, each listed <em>webscript version</em> contains representations of the latest draft (`entities[]._links.draft`)  or latest published (`entities[]._links.published`) version (if existing and different).   Use the query parameter `showRelated` to include only a link (default `showRelated=link`) or a full representation (`showRelated=embed`).  ### List Latest Webscript Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>webscript</em> that satisfy the filters, but **without links**.  ### List All Webscript Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>webscripts</em> versions that satisfy the query, possibly multiple versions per named <em>webscripts</em>. No HAL links are provided.  #### Filter on _status_ By default <em>webscript versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>webscript</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`
         :param query: URL Query parameters.
         :type query: ListQuery | QueryParamTypes, optional
         :param query['limit']: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
@@ -1501,6 +1530,8 @@ class WebscriptFunctionsApi(WithApiClient):
         :type query['runtime']: List[str]
         :param query['latest']: When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter.
         :type query['latest']: bool
+        :param query['showRelated']: Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. - `embed`: as full summary representation (in `_embedded`). - `link`: as HAL link in (in `_links`). - `none`: omitted.
+        :type query['showRelated']: ShowRelatedType
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -1734,6 +1765,8 @@ class WebscriptFunctionsApi(WithApiClient):
         :type query: PublishQuery | QueryParamTypes, optional
         :param query['comment']: An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
+        :param query['author']: Optionally changes the author metadata when updating a function.
+        :type query['author']: str
         :param query['deprecatePrevious']: Set the cleanup policy used to automatically deprecate/delete previous versions.
         :type query['deprecatePrevious']: DeprecatePreviousPolicy
         :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
@@ -2247,6 +2280,8 @@ class WebscriptFunctionsApi(WithApiClient):
         :type query: UpdateAssetQuery | QueryParamTypes, optional
         :param query['comment']: An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
+        :param query['author']: Optionally changes the author metadata when updating a function.
+        :type query['author']: str
         :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
         :param query['chown']: If set, ownership of the draft function is transferred to the current user. (required)
@@ -2308,6 +2343,7 @@ class WebscriptFunctionsApi(WithApiClient):
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
             "201": PostWebscriptJobSyncResponseV2 if not select_path else Model,
             "202": PostWebscriptJobAsyncResponseV2 if not select_path else Model,
+            "403": RegistryErrorResponse,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
@@ -2325,7 +2361,7 @@ class WebscriptFunctionsApi(WithApiClient):
         content: Annotated[
             Optional[RequestContent],
             Field(
-                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
             ),
         ] = None,
         files: Annotated[
@@ -2349,7 +2385,7 @@ class WebscriptFunctionsApi(WithApiClient):
         content: Annotated[
             Optional[RequestContent],
             Field(
-                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
             ),
         ] = None,
         files: Annotated[
@@ -2373,7 +2409,7 @@ class WebscriptFunctionsApi(WithApiClient):
         content: Annotated[
             Optional[RequestContent],
             Field(
-                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                description="The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
             ),
         ] = None,
         files: Annotated[
@@ -2387,12 +2423,12 @@ class WebscriptFunctionsApi(WithApiClient):
     ) -> Union[PostWebscriptJobSyncResponseV2, Response, Model]:
         """Update Webscript Assets.
 
-        Update a draft <em>webscript</em> function by updating its assets.      The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
+        Update a draft <em>webscript</em> function by updating its assets.      The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param content: The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
+        :param content: The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
         :type content: ContentRequest, optional
         :param files: The files of a `content-type: multipart/form-data` request.
         :type files: FilesRequest, optional
@@ -2400,6 +2436,8 @@ class WebscriptFunctionsApi(WithApiClient):
         :type query: UpdateAssetsQuery | QueryParamTypes, optional
         :param query['comment']: An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
+        :param query['author']: Optionally changes the author metadata when updating a function.
+        :type query['author']: str
         :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
         :param query['chown']: If set, ownership of the draft function is transferred to the current user. (required)
@@ -2461,6 +2499,7 @@ class WebscriptFunctionsApi(WithApiClient):
         response_types_map: Dict[str, Optional[Union[str, Any]]] = {
             "201": PostWebscriptJobSyncResponseV2 if not select_path else Model,
             "202": PostWebscriptJobAsyncResponseV2 if not select_path else Model,
+            "403": RegistryErrorResponse,
         }
         stream = send_args.get("stream", False)
         return self.api_client.response_deserialize(
@@ -2520,8 +2559,6 @@ class WebscriptFunctionsApi(WithApiClient):
         :type version: str
         :param query: URL Query parameters.
         :type query: VerifyQuery | QueryParamTypes, optional
-        :param query['comment']: An optional user-specified comment corresponding to the operation.
-        :type query['comment']: str
         :param query['async']: Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
         :param query['scaleToZero']: Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.

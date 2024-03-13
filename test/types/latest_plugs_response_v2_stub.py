@@ -47,7 +47,7 @@ latest_plugs_response_v2_model_schema = json.loads(r"""{
       "type" : "array",
       "description" : "The specification and deployment status of the queried functions",
       "items" : {
-        "$ref" : "#/components/schemas/LatestPlugsResponseV2_entities_inner"
+        "$ref" : "#/components/schemas/EntityWithLinks_IPlugResponseV2_"
       }
     }
   },

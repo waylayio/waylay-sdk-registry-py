@@ -34,6 +34,10 @@ publish_function_query_model_schema = json.loads(r"""{
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
     },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
+    },
     "deprecatePrevious" : {
       "$ref" : "#/components/schemas/DeprecatePreviousPolicy"
     },

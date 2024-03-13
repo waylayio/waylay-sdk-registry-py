@@ -47,7 +47,7 @@ latest_webscripts_response_v2_model_schema = json.loads(r"""{
       "type" : "array",
       "description" : "The specification and deployment status of the queried functions",
       "items" : {
-        "$ref" : "#/components/schemas/LatestWebscriptsResponseV2_entities_inner"
+        "$ref" : "#/components/schemas/EntityWithLinks_IWebscriptResponseWithInvokeLinkV2_"
       }
     }
   },

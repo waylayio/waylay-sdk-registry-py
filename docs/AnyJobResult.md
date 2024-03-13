@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **registration** | **bool** |  | 
 **job_count** | **float** |  | [optional] 
 **scheduled_job** | [**JobReference**](JobReference.md) |  | [optional] 
+**operation** | [**RequestOperation**](RequestOperation.md) |  | 
 
 ## Example
 

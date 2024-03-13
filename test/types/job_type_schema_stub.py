@@ -39,6 +39,8 @@ job_type_schema_model_schema = json.loads(r"""{
     "$ref" : "#/components/schemas/JobTypeScale"
   }, {
     "$ref" : "#/components/schemas/JobTypeBatch"
+  }, {
+    "$ref" : "#/components/schemas/JobTypeNotify"
   } ]
 }
 """)

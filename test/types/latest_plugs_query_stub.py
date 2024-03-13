@@ -31,6 +31,9 @@ latest_plugs_query_model_schema = json.loads(r"""{
     "type" : {
       "$ref" : "#/components/schemas/PlugType"
     },
+    "showRelated" : {
+      "$ref" : "#/components/schemas/ShowRelatedType"
+    },
     "limit" : {
       "minimum" : 0,
       "type" : "number",

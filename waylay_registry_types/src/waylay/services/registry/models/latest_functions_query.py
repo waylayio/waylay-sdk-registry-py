@@ -23,11 +23,13 @@ from pydantic import BaseModel, StrictBool, StrictStr
 from pydantic import Field
 from typing_extensions import Annotated
 from ..models.archive_format import ArchiveFormat
+from ..models.show_related_type import ShowRelatedType
 
 
 class LatestFunctionsQuery(BaseModel):
     """Request to list latest function versions per named function. A request that only uses these query parameters will include links to the _latest_ draft/published versions.."""
 
+    show_related: Optional[ShowRelatedType] = Field(default=None, alias="showRelated")
     limit: Optional[
         Union[
             Annotated[float, Field(strict=True, ge=0)],

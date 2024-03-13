@@ -19,8 +19,10 @@ from typing_extensions import (
 )
 
 from typing import Any, Dict, Optional
-from pydantic import BaseModel, StrictBool, StrictStr
+from pydantic import BaseModel, StrictBool, StrictStr, field_validator
 from pydantic import Field
+from typing_extensions import Annotated
+from ..models.create_function_query_v2_copy import CreateFunctionQueryV2Copy
 from ..models.deprecate_previous_policy import DeprecatePreviousPolicy
 from ..models.semantic_version_range import SemanticVersionRange
 
@@ -28,6 +30,14 @@ from ..models.semantic_version_range import SemanticVersionRange
 class CreateFunctionQueryV2(BaseModel):
     """CreateFunctionQueryV2."""
 
+    author: Optional[StrictStr] = Field(
+        default=None,
+        description="Optionally changes the author metadata when updating a function.",
+    )
+    comment: Optional[StrictStr] = Field(
+        default=None,
+        description="An optional user-specified comment corresponding to the operation.",
+    )
     deprecate_previous: Optional[DeprecatePreviousPolicy] = Field(
         default=None, alias="deprecatePrevious"
     )
@@ -55,6 +65,22 @@ class CreateFunctionQueryV2(BaseModel):
         default=False,
         description="If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.",
     )
+    runtime: Optional[Annotated[str, Field(strict=True)]] = Field(
+        default=None,
+        description="A name reference with optional version range: `<name>[@<versionRange>]`.  References (a version range of) a named and versioned entity like _function_ or _runtime_.",
+    )
+    copy_from: Optional[CreateFunctionQueryV2Copy] = Field(default=None, alias="copy")
+
+    @field_validator("runtime")
+    @classmethod
+    def runtime_validate_regular_expression(cls, value):
+        """Validate the regular expression."""
+        if value is None:
+            return value
+
+        if not re.match(r"^[^@]*(@.*)?$", value):
+            raise ValueError(r"must validate the regular expression /^[^@]*(@.*)?$/")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

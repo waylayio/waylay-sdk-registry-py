@@ -34,12 +34,31 @@ from ..models.function_type import FunctionType
 from ..models.job_state_result import JobStateResult
 from ..models.job_type_schema import JobTypeSchema
 from ..models.rebuild_policy import RebuildPolicy
+from ..models.show_related_type import ShowRelatedType
 from ..models.status_filter import StatusFilter
 
 
 class CreateQuery(TypedDict):
     """create query parameters."""
 
+    # TODO use author
+    author: NotRequired[
+        Annotated[
+            Optional[StrictStr],
+            Field(
+                description="Optionally changes the author metadata when updating a function."
+            ),
+        ]
+    ]
+    # TODO use comment
+    comment: NotRequired[
+        Annotated[
+            Optional[StrictStr],
+            Field(
+                description="An optional user-specified comment corresponding to the operation."
+            ),
+        ]
+    ]
     # TODO use deprecatePrevious
     deprecate_previous: NotRequired[
         Annotated[
@@ -103,6 +122,24 @@ class CreateQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use runtime
+    runtime: NotRequired[
+        Annotated[
+            Optional[Annotated[str, Field(strict=True)]],
+            Field(
+                description="If set, the created function will use the indicated runtime (latest version within specified range).  This takes precedence over the runtime specified in a function manifest (copied or from request body)."
+            ),
+        ]
+    ]
+    # TODO use copy
+    copy_from: NotRequired[
+        Annotated[
+            Optional[Any],
+            Field(
+                description="Indicates the _source_ of initial assets for a _new function_.  When using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.  #### Selection of _assets_ source  * If set as `<sourceName>[@<sourceVersionRange>]`, the _new function_ will be created with copied assets of the selected _source function_. * If set as `!example`, a `runtime` query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.  #### Selection of the _source function_  When `<sourceVersionRange>` is a range (or is not given), the latest _published_ version (in that range) is used.  If no _published_ version exists, the latest _draft_ is selected.  If no versions in the range exist, a `404` _Not Found_ error is returned.  #### The `name` of the _new function_  If a `name` is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the `name` of the _new function_ will be that of the _source function_.  #### The `version` of the _new function_  When the _target_ and _source_ name are equal, the `version` query parameters is defaulted to `<sourceVersionRange>` (`~<sourceVersionRange>` when it's an exact version)  The version of the _new function_ will be: * If a `version` is NOT specified (either as query parameter, in an optional manifest asset, or as `<sourceVersionRange>` _default_)    * a **patch increment** (`<major>.<minor>.<patch>+1`) of the latest **existing version** with the target `name`    * **`1.0.0`** otherwise  * If a `version` is specified:    * the **lowest version** in that range **if no existing version** is in that range.    * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.    * otherwise, if all allowed versions already exist, a **`409` _Duplicate_ error** is raised.  #### Deployment overrides  The new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body."
+            ),
+        ]
+    ]
 
 
 class DeleteAssetQuery(TypedDict):
@@ -121,6 +158,15 @@ class DeleteAssetQuery(TypedDict):
             Optional[StrictStr],
             Field(
                 description="An optional user-specified comment corresponding to the operation."
+            ),
+        ]
+    ]
+    # TODO use author
+    author: NotRequired[
+        Annotated[
+            Optional[StrictStr],
+            Field(
+                description="Optionally changes the author metadata when updating a function."
             ),
         ]
     ]
@@ -562,6 +608,15 @@ class ListQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use showRelated
+    show_related: NotRequired[
+        Annotated[
+            Optional[ShowRelatedType],
+            Field(
+                description="Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. - `embed`: as full summary representation (in `_embedded`). - `link`: as HAL link in (in `_links`). - `none`: omitted."
+            ),
+        ]
+    ]
 
 
 class PatchMetadataQuery(TypedDict):
@@ -587,6 +642,15 @@ class PublishQuery(TypedDict):
             Optional[StrictStr],
             Field(
                 description="An optional user-specified comment corresponding to the operation."
+            ),
+        ]
+    ]
+    # TODO use author
+    author: NotRequired[
+        Annotated[
+            Optional[StrictStr],
+            Field(
+                description="Optionally changes the author metadata when updating a function."
             ),
         ]
     ]
@@ -788,6 +852,15 @@ class UpdateAssetQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use author
+    author: NotRequired[
+        Annotated[
+            Optional[StrictStr],
+            Field(
+                description="Optionally changes the author metadata when updating a function."
+            ),
+        ]
+    ]
     # TODO use async
     var_async: NotRequired[
         Annotated[
@@ -818,6 +891,15 @@ class UpdateAssetsQuery(TypedDict):
             ),
         ]
     ]
+    # TODO use author
+    author: NotRequired[
+        Annotated[
+            Optional[StrictStr],
+            Field(
+                description="Optionally changes the author metadata when updating a function."
+            ),
+        ]
+    ]
     # TODO use async
     var_async: NotRequired[
         Annotated[
@@ -832,15 +914,6 @@ class UpdateAssetsQuery(TypedDict):
 class VerifyQuery(TypedDict):
     """verify query parameters."""
 
-    # TODO use comment
-    comment: NotRequired[
-        Annotated[
-            Optional[StrictStr],
-            Field(
-                description="An optional user-specified comment corresponding to the operation."
-            ),
-        ]
-    ]
     # TODO use async
     var_async: NotRequired[
         Annotated[

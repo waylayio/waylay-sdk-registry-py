@@ -31,6 +31,10 @@ class PublishFunctionQuery(BaseModel):
         default=None,
         description="An optional user-specified comment corresponding to the operation.",
     )
+    author: Optional[StrictStr] = Field(
+        default=None,
+        description="Optionally changes the author metadata when updating a function.",
+    )
     deprecate_previous: Optional[DeprecatePreviousPolicy] = Field(
         default=None, alias="deprecatePrevious"
     )

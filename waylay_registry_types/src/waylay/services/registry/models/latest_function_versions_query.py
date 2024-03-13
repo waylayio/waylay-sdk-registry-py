@@ -19,7 +19,7 @@ from typing_extensions import (
 )
 
 from typing import Any, Dict, List, Optional, Union
-from pydantic import BaseModel, StrictBool, StrictStr
+from pydantic import BaseModel, StrictBool, StrictStr, field_validator
 from pydantic import Field
 from typing_extensions import Annotated
 from ..models.archive_format import ArchiveFormat
@@ -111,6 +111,18 @@ class LatestFunctionVersionsQuery(BaseModel):
         default=None,
         description="When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter.",
     )
+    show_related: Optional[StrictStr] = Field(default=None, alias="showRelated")
+
+    @field_validator("show_related")
+    @classmethod
+    def show_related_validate_enum(cls, value):
+        """Validate the enum."""
+        if value is None:
+            return value
+
+        if value not in ("none"):
+            raise ValueError("must be one of enum values ('none')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

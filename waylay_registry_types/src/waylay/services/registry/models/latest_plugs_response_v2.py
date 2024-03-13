@@ -21,9 +21,7 @@ from typing_extensions import (
 from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, StrictFloat, StrictInt
 from pydantic import Field
-from ..models.latest_plugs_response_v2_entities_inner import (
-    LatestPlugsResponseV2EntitiesInner,
-)
+from ..models.entity_with_links_i_plug_response_v2 import EntityWithLinksIPlugResponseV2
 
 
 class LatestPlugsResponseV2(BaseModel):
@@ -38,7 +36,7 @@ class LatestPlugsResponseV2(BaseModel):
     page: Optional[Union[StrictFloat, StrictInt]] = Field(
         default=None, description="The page number of a paged query result."
     )
-    entities: List[LatestPlugsResponseV2EntitiesInner] = Field(
+    entities: List[EntityWithLinksIPlugResponseV2] = Field(
         description="The specification and deployment status of the queried functions"
     )
 

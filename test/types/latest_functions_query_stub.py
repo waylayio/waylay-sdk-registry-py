@@ -30,6 +30,9 @@ except ImportError as exc:
 latest_functions_query_model_schema = json.loads(r"""{
   "type" : "object",
   "properties" : {
+    "showRelated" : {
+      "$ref" : "#/components/schemas/ShowRelatedType"
+    },
     "limit" : {
       "minimum" : 0,
       "type" : "number",

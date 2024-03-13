@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Waylay Function Registry
-  version: 2.12.3
+  version: 2.13.0-beta.0
   x-visibility: stable
   description: V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML
     models).
@@ -46,6 +46,7 @@ components:
       - batch
       - scale
       - cleanup
+      - notify
       - other
     IJobEventsFilterQuery:
       type: object
@@ -113,71 +114,6 @@ components:
       - same
       description: The policy to select a new <em>runtime</em> version when a rebuild
         is issued.
-    IRebuildQueryParams:
-      type: object
-      properties:
-        upgrade:
-          $ref: '#/components/schemas/ERebuildPolicy'
-          description: If set, force a rebuild with the given <em>runtime</em> version
-            selection policy. <ul>  <li><code>same</code> <b>patch</b> version.   This
-            should only include backward compatible upgrades.  </li>  <li><code>minor</code>
-            <b>major</b> version.   This might include an upgrade of e.g. the language
-            runtime and/or provided   dependencies that could break compatiblity with
-            the function. .</li> </ul>
-        dryRun:
-          type: boolean
-          description: If set to <code>true</code>, checks whether rebuild jobs are
-            needed, but do not start any jobs.
-        forceVersion:
-          $ref: '#/components/schemas/SemanticVersion'
-          description: If set, force a rebuild with the given runtime version (including
-            downgrades). This parameter is mutually exclusive to the `upgrade` parameter.
-        ignoreChecks:
-          type: boolean
-          description: 'If set to true, checks that normally prevent a rebuild are
-            overriden. These checks include:
-
-            * function state in `pending`, `running`, `failed` or `undeployed`
-
-            * backoff period due to recent failures
-
-            * usage of deprecated dependencies
-
-            * running jobs on entity
-
-            * the `dryRun` option'
-        scaleToZero:
-          type: boolean
-          description: Indicates whether the function needs to be scaled down after
-            successful (re-)deployment. If not set, the function is scaled to zero
-            only if it was not active before this command.
-        skipRebuild:
-          type: boolean
-          description: If set, the function will not be rebuild. Always uses the current
-            runtime version when re-deploying/re-verifying the function.
-      additionalProperties: false
-    ILimitQuery:
-      type: object
-      properties:
-        limit:
-          type: number
-          description: The maximum number of items to be return from this query. Has
-            a deployment-defined default and maximum value.
-          minimum: 0
-      additionalProperties: false
-    IPagingQuery:
-      type: object
-      properties:
-        limit:
-          type: number
-          description: The maximum number of items to be return from this query. Has
-            a deployment-defined default and maximum value.
-          minimum: 0
-        page:
-          type: number
-          description: The number of pages to skip when returning result to this query.
-          minimum: 0
-      additionalProperties: false
     EStatusInclude:
       type: string
       enum:
@@ -214,161 +150,6 @@ components:
       - $ref: '#/components/schemas/EStatusAny'
       description: Inclusion or exclusion filter on the `status` property.
       title: Status Filter
-    IFunctionEntityQuery:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Filter on the name of the function. This is case-insensitive
-            and supports wild-cards `?` (any one character) and `*` (any sequence
-            of characters).
-        archiveFormat:
-          type: array
-          items:
-            $ref: '#/components/schemas/EArchiveFormat'
-          description: Filter on the archive format of the function.
-        runtime:
-          type: array
-          items:
-            $ref: '#/components/schemas/ERuntime'
-          description: Filter on the runtime of the function.
-      additionalProperties: false
-      description: Filter on function attributes that do not change across function
-        versions.
-    EArchiveFormat:
-      type: string
-      enum:
-      - node
-      - python
-      - golang
-      - byoml
-      - native
-    ERuntime:
-      type: string
-    IFunctionVersionQuery:
-      type: object
-      properties:
-        version:
-          type: string
-          description: Filter on the version of the function (case-sensitive, supports
-            wildcards).
-        status:
-          type: array
-          items:
-            $ref: '#/components/schemas/EStatusFilter'
-          description: Filter on the status of the plug. Filter values with a `-`
-            postfix exclude the status. Use the `any` filter value to include all
-            states. When not specified, a default `undeployed-` filter excludes _undeployed_
-            functions.
-        runtimeVersion:
-          $ref: '#/components/schemas/SemanticVersionRange'
-          description: Filter on the runtime version.
-        createdBy:
-          type: string
-          description: Filter on the user that create the plug. You can use the `@me`
-            token to indicate your own plugs.
-          examples:
-          - '@me'
-        updatedBy:
-          type: string
-          description: Filter on the user that last updated the plug. You can use
-            the `@me` token to indicate your own plugs.
-          examples:
-          - '@me'
-        createdBefore:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were created before the given timestamp
-            or age.
-        createdAfter:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were created after the given timestamp
-            or age.
-        updatedBefore:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were updated before the given timestamp
-            or age.
-        updatedAfter:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were updated after the given timestamp
-            or age.
-      additionalProperties: false
-      description: Filter on function attributes that can change across function versions.
-        When these query parameters are used, the query is considered a _function
-        version_ listing and no HAL links to latest (_draft_, _published_) versions
-        are included.
-    SemanticVersionRange:
-      anyOf:
-      - type: string
-      - $ref: '#/components/schemas/SemanticVersion'
-      description: A range of semantic versions. See https://devhints.io/semver
-    TimestampSpec:
-      anyOf:
-      - $ref: '#/components/schemas/TimestampAge'
-      - $ref: '#/components/schemas/TimestampAbsolute'
-      description: A timestamp specification.
-    TimestampAge:
-      anyOf:
-      - $ref: '#/components/schemas/ISO8601Period'
-      - $ref: '#/components/schemas/DurationSpec'
-      description: A timestamp expressed as a age relative to now
-      title: Age
-    ISO8601Period:
-      type: string
-      description: An ISO8601 period expression
-      pattern: P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+(\.\d+)S))?
-      format: duration
-      title: ISO8601 Period
-    DurationSpec:
-      type: string
-      description: An duration expression. A numeric value without unit is interpreted
-        as milliseconds.
-      pattern: \d+([ybwdhms])?
-      title: Duration
-    TimestampAbsolute:
-      anyOf:
-      - $ref: '#/components/schemas/ISO8601DateTime'
-      - $ref: '#/components/schemas/ISO8601Date'
-      description: An absolute timestamp as an ISO8601 string
-      title: Absolute
-    ISO8601DateTime:
-      type: string
-      description: An ISO8601 date-time expression.
-      pattern: \d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2})?(Z|([+-]\d\d:\d\d))?
-      format: date-time
-      title: ISO8601 Timestamp
-    ISO8601Date:
-      type: string
-      description: An ISO8601 date expression.
-      pattern: \d{4}-\d{2}-\d{2}(Z|([+-]\d\d:\d\d))?
-      format: date
-      title: ISO8601 Date
-    IDeprecatedDraftFilter:
-      type: object
-      properties:
-        deprecated:
-          type: boolean
-          description: Filter on the deprecation status of the function.
-        draft:
-          type: boolean
-          description: Filter on the draft status of the function.
-      additionalProperties: false
-    IDeployAttributesFilter:
-      type: object
-      properties:
-        endpoint:
-          type: string
-          description: Filter on the openfaas endpoint. This is case-insensitive and
-            supports wild-cards `?` (any one character) and `*` (any sequence of characters).
-        imageName:
-          type: string
-          description: Filter on the container image name. This is case-insensitive
-            and supports wild-cards `?` (any one character) and `*` (any sequence
-            of characters).
-        storageLocation:
-          type: string
-          description: Filter on the storageLocation. This is case-insensitive and
-            supports wild-cards `?` (any one character) and `*` (any sequence of characters).
-      additionalProperties: false
     IVersionIncludes:
       type: object
       properties:
@@ -385,25 +166,26 @@ components:
             when no other versions are available. If set to `true`, deprecated versions
             are **included**. If set to `false`, deprecated versions are **excluded**.
       additionalProperties: false
-    INamedVersionsFilter:
-      type: object
-      properties:
-        nameVersion:
-          type: array
-          items:
-            $ref: '#/components/schemas/NamedVersion'
-          description: Filter on exact `{name}@{version}` functions. Using this filter
-            implies a `latest=false` default, returning multiple versions of the same
-            named versions if they are filtered.
-      additionalProperties: false
-    NamedVersion:
+    ShowRelatedType:
       type: string
-      description: A function reference represented by `name@version`.
-      pattern: ^.*@(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$
+      enum:
+      - embed
+      - link
+      - none
     ILatestFunctionsQuery:
       type: object
       additionalProperties: false
       properties:
+        showRelated:
+          $ref: '#/components/schemas/ShowRelatedType'
+          description: 'Sets the representation of related function versions (like
+            the _latest_ draft and/or published) in the response.
+
+            - `embed`: as full summary representation (in `_embedded`).
+
+            - `link`: as HAL link in (in `_links`).
+
+            - `none`: omitted.'
         limit:
           type: number
           description: The maximum number of items to be return from this query. Has
@@ -443,6 +225,16 @@ components:
       description: Request to list latest function versions per named function. A
         request that only uses these query parameters will include links to the _latest_
         draft/published versions.
+    EArchiveFormat:
+      type: string
+      enum:
+      - node
+      - python
+      - golang
+      - byoml
+      - native
+    ERuntime:
+      type: string
     ILatestFunctionVersionsQuery:
       type: object
       properties:
@@ -544,192 +336,62 @@ components:
             If set to `false`, multiple versions per named function can be returned.
             Defaults to `true`, except when specific versions are selected with the
             `nameVersion` filter.
+        showRelated:
+          type: string
+          enum:
+          - none
       additionalProperties: false
       description: Latest function versions listing query.
-    INamedFunctionVersionsQuery:
-      type: object
-      additionalProperties: false
-      properties:
-        limit:
-          type: number
-          description: The maximum number of items to be return from this query. Has
-            a deployment-defined default and maximum value.
-          minimum: 0
-        page:
-          type: number
-          description: The number of pages to skip when returning result to this query.
-          minimum: 0
-        deprecated:
-          type: boolean
-          description: Filter on the deprecation status of the function.
-        draft:
-          type: boolean
-          description: Filter on the draft status of the function.
-        version:
-          type: string
-          description: Filter on the version of the function (case-sensitive, supports
-            wildcards).
-        status:
-          type: array
-          items:
-            $ref: '#/components/schemas/EStatusFilter'
-          description: Filter on the status of the plug. Filter values with a `-`
-            postfix exclude the status. Use the `any` filter value to include all
-            states. When not specified, a default `undeployed-` filter excludes _undeployed_
-            functions.
-        runtimeVersion:
-          $ref: '#/components/schemas/SemanticVersionRange'
-          description: Filter on the runtime version.
-        createdBy:
-          type: string
-          description: Filter on the user that create the plug. You can use the `@me`
-            token to indicate your own plugs.
-          examples:
-          - '@me'
-        updatedBy:
-          type: string
-          description: Filter on the user that last updated the plug. You can use
-            the `@me` token to indicate your own plugs.
-          examples:
-          - '@me'
-        createdBefore:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were created before the given timestamp
-            or age.
-        createdAfter:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were created after the given timestamp
-            or age.
-        updatedBefore:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were updated before the given timestamp
-            or age.
-        updatedAfter:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were updated after the given timestamp
-            or age.
-        archiveFormat:
-          type: array
-          items:
-            $ref: '#/components/schemas/EArchiveFormat'
-          description: Filter on the archive format of the function.
-        runtime:
-          type: array
-          items:
-            $ref: '#/components/schemas/ERuntime'
-          description: Filter on the runtime of the function.
-      description: Named function versions listing query.
-    IVersionsQuery:
-      type: object
-      additionalProperties: false
-      properties:
-        limit:
-          type: number
-          description: The maximum number of items to be return from this query. Has
-            a deployment-defined default and maximum value.
-          minimum: 0
-        page:
-          type: number
-          description: The number of pages to skip when returning result to this query.
-          minimum: 0
-        endpoint:
-          type: string
-          description: Filter on the openfaas endpoint. This is case-insensitive and
-            supports wild-cards `?` (any one character) and `*` (any sequence of characters).
-        imageName:
-          type: string
-          description: Filter on the container image name. This is case-insensitive
-            and supports wild-cards `?` (any one character) and `*` (any sequence
-            of characters).
-        storageLocation:
-          type: string
-          description: Filter on the storageLocation. This is case-insensitive and
-            supports wild-cards `?` (any one character) and `*` (any sequence of characters).
-        deprecated:
-          type: boolean
-          description: Filter on the deprecation status of the function.
-        draft:
-          type: boolean
-          description: Filter on the draft status of the function.
-        nameVersion:
-          type: array
-          items:
-            $ref: '#/components/schemas/NamedVersion'
-          description: Filter on exact `{name}@{version}` functions. Using this filter
-            implies a `latest=false` default, returning multiple versions of the same
-            named versions if they are filtered.
-        version:
-          type: string
-          description: Filter on the version of the function (case-sensitive, supports
-            wildcards).
-        status:
-          type: array
-          items:
-            $ref: '#/components/schemas/EStatusFilter'
-          description: Filter on the status of the plug. Filter values with a `-`
-            postfix exclude the status. Use the `any` filter value to include all
-            states. When not specified, a default `undeployed-` filter excludes _undeployed_
-            functions.
-        runtimeVersion:
-          $ref: '#/components/schemas/SemanticVersionRange'
-          description: Filter on the runtime version.
-        createdBy:
-          type: string
-          description: Filter on the user that create the plug. You can use the `@me`
-            token to indicate your own plugs.
-          examples:
-          - '@me'
-        updatedBy:
-          type: string
-          description: Filter on the user that last updated the plug. You can use
-            the `@me` token to indicate your own plugs.
-          examples:
-          - '@me'
-        createdBefore:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were created before the given timestamp
-            or age.
-        createdAfter:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were created after the given timestamp
-            or age.
-        updatedBefore:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were updated before the given timestamp
-            or age.
-        updatedAfter:
-          $ref: '#/components/schemas/TimestampSpec'
-          description: Filter on funtions that were updated after the given timestamp
-            or age.
-        name:
-          type: string
-          description: Filter on the name of the function. This is case-insensitive
-            and supports wild-cards `?` (any one character) and `*` (any sequence
-            of characters).
-        archiveFormat:
-          type: array
-          items:
-            $ref: '#/components/schemas/EArchiveFormat'
-          description: Filter on the archive format of the function.
-        runtime:
-          type: array
-          items:
-            $ref: '#/components/schemas/ERuntime'
-          description: Filter on the runtime of the function.
-      description: Function versions paged query
-    IPlugTypeQuery:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/EPlugType'
-          description: If set, filters on the type of plug.
-      additionalProperties: false
-    EPlugType:
+    SemanticVersionRange:
+      anyOf:
+      - type: string
+      - $ref: '#/components/schemas/SemanticVersion'
+      description: A range of semantic versions. See https://devhints.io/semver
+    TimestampSpec:
+      anyOf:
+      - $ref: '#/components/schemas/TimestampAge'
+      - $ref: '#/components/schemas/TimestampAbsolute'
+      description: A timestamp specification.
+    TimestampAge:
+      anyOf:
+      - $ref: '#/components/schemas/ISO8601Period'
+      - $ref: '#/components/schemas/DurationSpec'
+      description: A timestamp expressed as a age relative to now
+      title: Age
+    ISO8601Period:
       type: string
-      enum:
-      - sensor
-      - actuator
-      - transformer
+      description: An ISO8601 period expression
+      pattern: P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+(\.\d+)S))?
+      format: duration
+      title: ISO8601 Period
+    DurationSpec:
+      type: string
+      description: An duration expression. A numeric value without unit is interpreted
+        as milliseconds.
+      pattern: \d+([ybwdhms])?
+      title: Duration
+    TimestampAbsolute:
+      anyOf:
+      - $ref: '#/components/schemas/ISO8601DateTime'
+      - $ref: '#/components/schemas/ISO8601Date'
+      description: An absolute timestamp as an ISO8601 string
+      title: Absolute
+    ISO8601DateTime:
+      type: string
+      description: An ISO8601 date-time expression.
+      pattern: \d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2})?(Z|([+-]\d\d:\d\d))?
+      format: date-time
+      title: ISO8601 Timestamp
+    ISO8601Date:
+      type: string
+      description: An ISO8601 date expression.
+      pattern: \d{4}-\d{2}-\d{2}(Z|([+-]\d\d:\d\d))?
+      format: date
+      title: ISO8601 Date
+    NamedVersion:
+      type: string
+      description: A function version reference represented as `<name>@<version>`.
+      pattern: ^[^@]*@(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$
     ILatestPlugsQuery:
       type: object
       additionalProperties: false
@@ -737,6 +399,16 @@ components:
         type:
           $ref: '#/components/schemas/EPlugType'
           description: If set, filters on the type of plug.
+        showRelated:
+          $ref: '#/components/schemas/ShowRelatedType'
+          description: 'Sets the representation of related function versions (like
+            the _latest_ draft and/or published) in the response.
+
+            - `embed`: as full summary representation (in `_embedded`).
+
+            - `link`: as HAL link in (in `_links`).
+
+            - `none`: omitted.'
         limit:
           type: number
           description: The maximum number of items to be return from this query. Has
@@ -776,6 +448,12 @@ components:
       description: Latest plug versions listing query with latest links. A request
         that only uses these query parameters will include links to the _latest_ draft/published
         versions of the plug.
+    EPlugType:
+      type: string
+      enum:
+      - sensor
+      - actuator
+      - transformer
     ILatestPlugVersionsQuery:
       type: object
       additionalProperties: false
@@ -886,16 +564,11 @@ components:
             If set to `false`, multiple versions per named function can be returned.
             Defaults to `true`, except when specific versions are selected with the
             `nameVersion` filter.
+        showRelated:
+          type: string
+          enum:
+          - none
       description: Plug versions listing query.
-    ITagsQuery:
-      type: object
-      properties:
-        tags:
-          $ref: '#/components/schemas/TagsFilter'
-          description: Filter on the tags of the item. Can be a single tag, or a list
-            of tags. When multiple tags are specified, an item must have all of the
-            tags to be selected.
-      additionalProperties: false
     TagsFilter:
       anyOf:
       - type: array
@@ -918,45 +591,6 @@ components:
           examples:
           - '#4153ea'
       additionalProperties: false
-    IFunctionDeleteQuery:
-      type: object
-      properties:
-        force:
-          type: boolean
-          description: 'If <code>true</code>, the function version will be immediately
-            undeployed and removed.
-
-
-            Otherwise, the removal will be delayed to allow current invocations to
-            end. During that period, the function is marked _deprecated_.'
-        undeploy:
-          type: boolean
-          description: 'If `true`, the `DELETE` operation
-
-            * undeploys the (openfaas) function: it becomes no longer available for
-            invocation.
-
-            * does NOT remove the function from registry: it stays in an `undeployed`
-            status.  All assets and definitions are retained, so the version can be
-            restored later with a  _rebuild_ action.
-
-
-            If `false`, the `DELETE` operation
-
-            * _only_ marks the plug function as _deprecated_, the function remains
-            active but is removed from the default listings.   This also applies to
-            _draft_ versions.
-
-
-            This parameter is incompatible with `force=true`.
-
-
-            If not set the default behaviour applies:
-
-            * _draft_ versions are _undeployed_ and _removed_ from registry.
-
-            * non-_draft_ versions are marked _deprecated_ only.'
-      additionalProperties: false
     IPlugDeleteForceQuery:
       type: object
       properties:
@@ -965,42 +599,6 @@ components:
           description: If <code>true</code>, the plug version(s) will be undeployed
             and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>,
             i.e removed from regular listings.
-      additionalProperties: false
-    IPlugDeleteQuery:
-      type: object
-      properties:
-        force:
-          type: boolean
-          description: If <code>true</code>, the plug version(s) will be undeployed
-            and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>,
-            i.e removed from regular listings.
-        undeploy:
-          type: boolean
-          description: 'If `true`, the `DELETE` operation
-
-            * undeploys the (openfaas) function for the plug: it becomes no longer
-            available for invocation.
-
-            * does NOT remove the plug from registry: it stays in an `undeployed`
-            status.  All assets and definitions are retained, so the plug can be restored
-            later with a  _rebuild_ action.
-
-
-            If `false`, the `DELETE` operation
-
-            * _only_ marks the plug version(s) as _deprecated_: the plug remains active
-            but is removed from the default listings.   This also applies to _draft_
-            versions.
-
-
-            This parameter is incompatible with `force=true`.
-
-
-            If not set the default behaviour applies:
-
-            * _draft_ versions are _undeployed_ and _removed_ from registry.
-
-            * non-_draft_ versions are marked _deprecated_ only.'
       additionalProperties: false
     IAsyncQueryDefaultFalse:
       type: object
@@ -1013,23 +611,9 @@ components:
             job actions are completed, or a timeout occurs.
           default: false
       additionalProperties: false
-    IAsyncQueryDefaultTrue:
-      type: object
-      properties:
-        async:
-          type: boolean
-          description: Unless this is set to <code>false</code>, the server will start
-            the required job actions asynchronously and return a <code>202</code>
-            <em>Accepted</em> response. If <code>false</code> the request will block
-            until the job actions are completed, or a timeout occurs.
-          default: true
-      additionalProperties: false
     IAsyncVerifyQuery:
       type: object
       properties:
-        comment:
-          type: string
-          description: An optional user-specified comment corresponding to the operation.
         async:
           type: boolean
           description: Unless this is set to <code>false</code>, the server will start
@@ -1043,60 +627,6 @@ components:
             successful verification. If not set, the function is scaled to zero only
             if it was not active before this command.
       additionalProperties: false
-    IUpdateComment:
-      type: object
-      properties:
-        comment:
-          type: string
-          description: An optional user-specified comment corresponding to the operation.
-    IAsyncDeployQuery:
-      type: object
-      properties:
-        deprecatePrevious:
-          $ref: '#/components/schemas/DeprecatePreviousPolicy'
-          description: Set the cleanup policy used to automatically deprecate/delete
-            previous versions.
-        dryRun:
-          type: boolean
-          description: If set to <code>true</code>, validates the deployment conditions,
-            but does not change anything.
-        async:
-          type: boolean
-          description: Unless this is set to <code>false</code>, the server will start
-            the required job actions asynchronously and return a <code>202</code>
-            <em>Accepted</em> response. If <code>false</code> the request will block
-            until the job actions are completed, or a timeout occurs.
-          default: true
-        scaleToZero:
-          type: boolean
-          description: If set to <code>true</code>, after successful deployment, the
-            deployed function will be scaled to zero. Saves computing resources when
-            the function is not to be used immediately.
-          default: false
-      additionalProperties: false
-    IDryRunQuery:
-      type: object
-      properties:
-        dryRun:
-          type: boolean
-          description: If set to <code>true</code>, validates the deployment conditions,
-            but does not change anything.
-      additionalProperties: false
-    IDeprecatePreviousQuery:
-      type: object
-      properties:
-        deprecatePrevious:
-          $ref: '#/components/schemas/DeprecatePreviousPolicy'
-          description: Set the cleanup policy used to automatically deprecate/delete
-            previous versions.
-      additionalProperties: false
-    DeprecatePreviousPolicy:
-      type: string
-      enum:
-      - none
-      - all
-      - patch
-      - minor
     IJobQuery:
       type: object
       properties:
@@ -1135,6 +665,7 @@ components:
       - $ref: '#/components/schemas/JobTypeUndeploy'
       - $ref: '#/components/schemas/JobTypeScale'
       - $ref: '#/components/schemas/JobTypeBatch'
+      - $ref: '#/components/schemas/JobTypeNotify'
       title: Job Type
     JobTypeBuild:
       type: string
@@ -1173,6 +704,12 @@ components:
       title: Batch
       enum:
       - batch
+    JobTypeNotify:
+      type: string
+      description: A job to notify that an function version has changed.
+      title: Notify
+      enum:
+      - notify
     JobStateResult:
       anyOf:
       - $ref: '#/components/schemas/JobState'
@@ -2260,6 +1797,12 @@ components:
     ICreateFunctionQueryV2:
       type: object
       properties:
+        author:
+          type: string
+          description: Optionally changes the author metadata when updating a function.
+        comment:
+          type: string
+          description: An optional user-specified comment corresponding to the operation.
         deprecatePrevious:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
           description: Set the cleanup policy used to automatically deprecate/delete
@@ -2296,7 +1839,72 @@ components:
             assets are still mutable. A build and deploy is initiated only in the
             case when all necessary assets are present and valid.
           default: false
+        runtime:
+          $ref: '#/components/schemas/NamedVersionRange'
+          description: 'If set, the created function will use the indicated runtime
+            (latest version within specified range).
+
+
+            This takes precedence over the runtime specified in a function manifest
+            (copied or from request body).'
+        copy:
+          anyOf:
+          - $ref: '#/components/schemas/NamedVersionRange'
+          - $ref: '#/components/schemas/ExampleReference'
+          description: "Indicates the _source_ of initial assets for a _new function_.\n\
+            \nWhen using this query parameter, the request body does not need to contain\
+            \ assets, but any assets in the request body will overwrite the copied\
+            \ assets.\n\n#### Selection of _assets_ source\n\n* If set as `<sourceName>[@<sourceVersionRange>]`,\
+            \ the _new function_ will be created with copied assets of the selected\
+            \ _source function_.\n* If set as `!example`, a `runtime` query parameter\
+            \ is required, and the _new function_ will be initialized with assets\
+            \ of the _runtime example_.\n\n#### Selection of the _source function_\n\
+            \nWhen `<sourceVersionRange>` is a range (or is not given), the latest\
+            \ _published_ version (in that range) is used.\n\nIf no _published_ version\
+            \ exists, the latest _draft_ is selected.\n\nIf no versions in the range\
+            \ exist, a `404` _Not Found_ error is returned.\n\n#### The `name` of\
+            \ the _new function_\n\nIf a `name` is NOT specified (either as query\
+            \ parameter, or in an optional manifest asset in the request body), the\
+            \ `name` of the _new function_ will be that of the _source function_.\n\
+            \n#### The `version` of the _new function_\n\nWhen the _target_ and _source_\
+            \ name are equal, the `version` query parameters is defaulted to `<sourceVersionRange>`\
+            \ (`~<sourceVersionRange>` when it's an exact version)\n\nThe version\
+            \ of the _new function_ will be:\n* If a `version` is NOT specified (either\
+            \ as query parameter, in an optional manifest asset, or as `<sourceVersionRange>`\
+            \ _default_)\n\n  * a **patch increment** (`<major>.<minor>.<patch>+1`)\
+            \ of the latest **existing version** with the target `name`\n\n  * **`1.0.0`**\
+            \ otherwise\n\n* If a `version` is specified:\n\n  * the **lowest version**\
+            \ in that range **if no existing version** is in that range.\n\n  * an\
+            \ **increment** of the latest existing version, **at the highest level**\
+            \ (_major_,_minor_,_patch_) allowed by that range.\n\n  * otherwise, if\
+            \ all allowed versions already exist, a **`409` _Duplicate_ error** is\
+            \ raised.\n\n#### Deployment overrides\n\nThe new function will use the\
+            \ deployment overrides of the copied function, unless a _manifest_ was\
+            \ specified in the request body."
       additionalProperties: false
+    DeprecatePreviousPolicy:
+      type: string
+      enum:
+      - none
+      - all
+      - patch
+      - minor
+    NamedVersionRange:
+      type: string
+      description: 'A name reference with optional version range: `<name>[@<versionRange>]`.
+
+
+        References (a version range of) a named and versioned entity like _function_
+        or _runtime_.'
+      pattern: ^[^@]*(@.*)?$
+    ExampleReference:
+      type: string
+      description: 'Example reference.
+
+
+        References the example assets from the selected runtime.'
+      enum:
+      - '!example'
     IPublishFunctionQuery:
       type: object
       additionalProperties: false
@@ -2304,6 +1912,9 @@ components:
         comment:
           type: string
           description: An optional user-specified comment corresponding to the operation.
+        author:
+          type: string
+          description: Optionally changes the author metadata when updating a function.
         deprecatePrevious:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
           description: Set the cleanup policy used to automatically deprecate/delete
@@ -2367,6 +1978,9 @@ components:
         comment:
           type: string
           description: An optional user-specified comment corresponding to the operation.
+        author:
+          type: string
+          description: Optionally changes the author metadata when updating a function.
         async:
           type: boolean
           description: Unless this is set to <code>false</code>, the server will start
@@ -3647,6 +3261,21 @@ components:
           type: string
       required:
       - error
+    IRegistryErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+        statusCode:
+          type: number
+        data:
+          type: object
+      required:
+      - code
+      - error
+      - statusCode
     IOperation:
       type: object
       properties:
@@ -5075,65 +4704,7 @@ components:
         entities:
           type: array
           items:
-            type: object
-            properties:
-              _links:
-                $ref: '#/components/schemas/IAltVersionHALLink'
-              createdBy:
-                type: string
-                description: The user that created this entity.
-              createdAt:
-                type: string
-                format: date-time
-                description: The timestamp at which this entity was created.
-              updatedBy:
-                type: string
-                description: The user that last updated this entity.
-              updatedAt:
-                type: string
-                format: date-time
-                description: The timestamp at which this entity was last updated.
-              updates:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IUpdateRecord'
-                description: The audit logs corresponding to the latest modifying
-                  operations on this entity.
-              status:
-                $ref: '#/components/schemas/EStatus'
-                description: The current status of this function entity.
-              failureReason:
-                $ref: '#/components/schemas/FailureReason'
-                description: A description of the last failure related to this function
-                  entity.
-              runtime:
-                $ref: '#/components/schemas/IRuntimeAttributes'
-                description: Information about the current runtime used by this function
-                  deployment.
-              deprecated:
-                type: boolean
-                description: If <code>true</code> this plug is removed from regular
-                  listings, as a result of a <code>DELETE</code> with <code>force=false</code>.
-              draft:
-                type: boolean
-                description: If <code>true</code> this function is a draft function
-                  and it's assets are still mutable.
-              plug:
-                $ref: '#/components/schemas/IPlugManifest'
-                description: The plug specification as provided by the <code>plug.json</code>
-                  asset.
-            required:
-            - _links
-            - createdAt
-            - createdBy
-            - deprecated
-            - draft
-            - plug
-            - runtime
-            - status
-            - updatedAt
-            - updatedBy
-            - updates
+            $ref: '#/components/schemas/EntityWithLinks_IPlugResponseV2_'
           description: The specification and deployment status of the queried functions
       required:
       - count
@@ -5160,6 +4731,84 @@ components:
         limit:
           type: number
           description: The page size used for this query result.
+    EntityWithLinks_IPlugResponseV2_:
+      type: object
+      properties:
+        _embedded:
+          $ref: '#/components/schemas/IAltEmbeddedVersion_IPlugResponseV2_'
+          description: Embedded representations of the _latest_ draft/published versions.
+        _links:
+          $ref: '#/components/schemas/IAltVersionHALLink'
+        createdBy:
+          type: string
+          description: The user that created this entity.
+        createdAt:
+          type: string
+          format: date-time
+          description: The timestamp at which this entity was created.
+        updatedBy:
+          type: string
+          description: The user that last updated this entity.
+        updatedAt:
+          type: string
+          format: date-time
+          description: The timestamp at which this entity was last updated.
+        updates:
+          type: array
+          items:
+            $ref: '#/components/schemas/IUpdateRecord'
+          description: The audit logs corresponding to the latest modifying operations
+            on this entity.
+        status:
+          $ref: '#/components/schemas/EStatus'
+          description: The current status of this function entity.
+        failureReason:
+          $ref: '#/components/schemas/FailureReason'
+          description: A description of the last failure related to this function
+            entity.
+        runtime:
+          $ref: '#/components/schemas/IRuntimeAttributes'
+          description: Information about the current runtime used by this function
+            deployment.
+        deprecated:
+          type: boolean
+          description: If <code>true</code> this plug is removed from regular listings,
+            as a result of a <code>DELETE</code> with <code>force=false</code>.
+        draft:
+          type: boolean
+          description: If <code>true</code> this function is a draft function and
+            it's assets are still mutable.
+        plug:
+          $ref: '#/components/schemas/IPlugManifest'
+          description: The plug specification as provided by the <code>plug.json</code>
+            asset.
+      required:
+      - createdAt
+      - createdBy
+      - deprecated
+      - draft
+      - plug
+      - runtime
+      - status
+      - updatedAt
+      - updatedBy
+      - updates
+    IWithEmbeddedAltVersions_IPlugResponseV2_:
+      type: object
+      properties:
+        _embedded:
+          $ref: '#/components/schemas/IAltEmbeddedVersion_IPlugResponseV2_'
+          description: Embedded representations of the _latest_ draft/published versions.
+    IAltEmbeddedVersion_IPlugResponseV2_:
+      type: object
+      properties:
+        draft:
+          $ref: '#/components/schemas/IPlugResponseV2'
+          description: Embedded representation of the lastest draft version.
+        published:
+          $ref: '#/components/schemas/IPlugResponseV2'
+          description: Embedded representation of the lastest published version.
+      description: Embedded representations of the _latest_ draft/published versions.
     IPlugVersionsResponseV2:
       type: object
       properties:
@@ -5982,70 +5631,90 @@ components:
         entities:
           type: array
           items:
-            type: object
-            properties:
-              _links:
-                $ref: '#/components/schemas/IAltVersionHALLink'
-              createdBy:
-                type: string
-                description: The user that created this entity.
-              createdAt:
-                type: string
-                format: date-time
-                description: The timestamp at which this entity was created.
-              updatedBy:
-                type: string
-                description: The user that last updated this entity.
-              updatedAt:
-                type: string
-                format: date-time
-                description: The timestamp at which this entity was last updated.
-              updates:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IUpdateRecord'
-                description: The audit logs corresponding to the latest modifying
-                  operations on this entity.
-              status:
-                $ref: '#/components/schemas/EStatus'
-                description: The current status of this function entity.
-              failureReason:
-                $ref: '#/components/schemas/FailureReason'
-                description: A description of the last failure related to this function
-                  entity.
-              runtime:
-                $ref: '#/components/schemas/IRuntimeAttributes'
-                description: Information about the current runtime used by this function
-                  deployment.
-              deprecated:
-                type: boolean
-                description: If <code>true</code> this function is deprecated and
-                  removed from regular listings.
-              draft:
-                type: boolean
-                description: If <code>true</code> this function is a draft function
-                  and it's assets are still mutable.
-              model:
-                $ref: '#/components/schemas/IKFServingManifest'
-                description: The model specification as provided by the <code>model.json</code>
-                  asset.
-            required:
-            - _links
-            - createdAt
-            - createdBy
-            - deprecated
-            - draft
-            - model
-            - runtime
-            - status
-            - updatedAt
-            - updatedBy
-            - updates
+            $ref: '#/components/schemas/EntityWithLinks_IKfservingResponseV2_'
           description: The specification and deployment status of the queried functions
       required:
       - count
       - entities
       description: Models Found
+    EntityWithLinks_IKfservingResponseV2_:
+      type: object
+      properties:
+        _embedded:
+          $ref: '#/components/schemas/IAltEmbeddedVersion_IKfservingResponseV2_'
+          description: Embedded representations of the _latest_ draft/published versions.
+        _links:
+          $ref: '#/components/schemas/IAltVersionHALLink'
+        createdBy:
+          type: string
+          description: The user that created this entity.
+        createdAt:
+          type: string
+          format: date-time
+          description: The timestamp at which this entity was created.
+        updatedBy:
+          type: string
+          description: The user that last updated this entity.
+        updatedAt:
+          type: string
+          format: date-time
+          description: The timestamp at which this entity was last updated.
+        updates:
+          type: array
+          items:
+            $ref: '#/components/schemas/IUpdateRecord'
+          description: The audit logs corresponding to the latest modifying operations
+            on this entity.
+        status:
+          $ref: '#/components/schemas/EStatus'
+          description: The current status of this function entity.
+        failureReason:
+          $ref: '#/components/schemas/FailureReason'
+          description: A description of the last failure related to this function
+            entity.
+        runtime:
+          $ref: '#/components/schemas/IRuntimeAttributes'
+          description: Information about the current runtime used by this function
+            deployment.
+        deprecated:
+          type: boolean
+          description: If <code>true</code> this function is deprecated and removed
+            from regular listings.
+        draft:
+          type: boolean
+          description: If <code>true</code> this function is a draft function and
+            it's assets are still mutable.
+        model:
+          $ref: '#/components/schemas/IKFServingManifest'
+          description: The model specification as provided by the <code>model.json</code>
+            asset.
+      required:
+      - createdAt
+      - createdBy
+      - deprecated
+      - draft
+      - model
+      - runtime
+      - status
+      - updatedAt
+      - updatedBy
+      - updates
+    IWithEmbeddedAltVersions_IKfservingResponseV2_:
+      type: object
+      properties:
+        _embedded:
+          $ref: '#/components/schemas/IAltEmbeddedVersion_IKfservingResponseV2_'
+          description: Embedded representations of the _latest_ draft/published versions.
+    IAltEmbeddedVersion_IKfservingResponseV2_:
+      type: object
+      properties:
+        draft:
+          $ref: '#/components/schemas/IKfservingResponseV2'
+          description: Embedded representation of the lastest draft version.
+        published:
+          $ref: '#/components/schemas/IKfservingResponseV2'
+          description: Embedded representation of the lastest published version.
+      description: Embedded representations of the _latest_ draft/published versions.
     IModelVersionsResponseV2:
       type: object
       properties:
@@ -6212,75 +5881,95 @@ components:
         entities:
           type: array
           items:
-            type: object
-            properties:
-              _links:
-                $ref: '#/components/schemas/IInvokeHALLink'
-                description: HAL links to related actions.
-              createdBy:
-                type: string
-                description: The user that created this entity.
-              createdAt:
-                type: string
-                format: date-time
-                description: The timestamp at which this entity was created.
-              updatedBy:
-                type: string
-                description: The user that last updated this entity.
-              updatedAt:
-                type: string
-                format: date-time
-                description: The timestamp at which this entity was last updated.
-              updates:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IUpdateRecord'
-                description: The audit logs corresponding to the latest modifying
-                  operations on this entity.
-              status:
-                $ref: '#/components/schemas/EStatus'
-                description: The current status of this function entity.
-              failureReason:
-                $ref: '#/components/schemas/FailureReason'
-                description: A description of the last failure related to this function
-                  entity.
-              runtime:
-                $ref: '#/components/schemas/IRuntimeAttributes'
-                description: Information about the current runtime used by this function
-                  deployment.
-              deprecated:
-                type: boolean
-                description: If <code>true</code> this function is deprecated and
-                  removed from regular listings.
-              draft:
-                type: boolean
-                description: If <code>true</code> this function is a draft function
-                  and it's assets are still mutable.
-              webscript:
-                $ref: '#/components/schemas/IWebscriptManifest'
-                description: The webscript specification as provided by the <code>webscript.json</code>
-                  asset.
-              secret:
-                type: string
-                description: The secret for this webscript deployment. This is <code>null</code>
-                  when <code>allowHmac=false</code> in the webscript specificaton.
-            required:
-            - _links
-            - createdAt
-            - createdBy
-            - deprecated
-            - draft
-            - runtime
-            - status
-            - updatedAt
-            - updatedBy
-            - updates
-            - webscript
+            $ref: '#/components/schemas/EntityWithLinks_IWebscriptResponseWithInvokeLinkV2_'
           description: The specification and deployment status of the queried functions
       required:
       - count
       - entities
       description: Webscripts Found
+    EntityWithLinks_IWebscriptResponseWithInvokeLinkV2_:
+      type: object
+      properties:
+        _embedded:
+          $ref: '#/components/schemas/IAltEmbeddedVersion_IWebscriptResponseWithInvokeLinkV2_'
+          description: Embedded representations of the _latest_ draft/published versions.
+        _links:
+          $ref: '#/components/schemas/IInvokeHALLink'
+          description: HAL links to related actions.
+        createdBy:
+          type: string
+          description: The user that created this entity.
+        createdAt:
+          type: string
+          format: date-time
+          description: The timestamp at which this entity was created.
+        updatedBy:
+          type: string
+          description: The user that last updated this entity.
+        updatedAt:
+          type: string
+          format: date-time
+          description: The timestamp at which this entity was last updated.
+        updates:
+          type: array
+          items:
+            $ref: '#/components/schemas/IUpdateRecord'
+          description: The audit logs corresponding to the latest modifying operations
+            on this entity.
+        status:
+          $ref: '#/components/schemas/EStatus'
+          description: The current status of this function entity.
+        failureReason:
+          $ref: '#/components/schemas/FailureReason'
+          description: A description of the last failure related to this function
+            entity.
+        runtime:
+          $ref: '#/components/schemas/IRuntimeAttributes'
+          description: Information about the current runtime used by this function
+            deployment.
+        deprecated:
+          type: boolean
+          description: If <code>true</code> this function is deprecated and removed
+            from regular listings.
+        draft:
+          type: boolean
+          description: If <code>true</code> this function is a draft function and
+            it's assets are still mutable.
+        webscript:
+          $ref: '#/components/schemas/IWebscriptManifest'
+          description: The webscript specification as provided by the <code>webscript.json</code>
+            asset.
+        secret:
+          type: string
+          description: The secret for this webscript deployment. This is <code>null</code>
+            when <code>allowHmac=false</code> in the webscript specificaton.
+      required:
+      - createdAt
+      - createdBy
+      - deprecated
+      - draft
+      - runtime
+      - status
+      - updatedAt
+      - updatedBy
+      - updates
+      - webscript
+    IWithEmbeddedAltVersions_IWebscriptResponseWithInvokeLinkV2_:
+      type: object
+      properties:
+        _embedded:
+          $ref: '#/components/schemas/IAltEmbeddedVersion_IWebscriptResponseWithInvokeLinkV2_'
+          description: Embedded representations of the _latest_ draft/published versions.
+    IAltEmbeddedVersion_IWebscriptResponseWithInvokeLinkV2_:
+      type: object
+      properties:
+        draft:
+          $ref: '#/components/schemas/IWebscriptResponseWithInvokeLinkV2'
+          description: Embedded representation of the lastest draft version.
+        published:
+          $ref: '#/components/schemas/IWebscriptResponseWithInvokeLinkV2'
+          description: Embedded representation of the lastest published version.
+      description: Embedded representations of the _latest_ draft/published versions.
     IWebscriptVersionsResponseV2:
       type: object
       properties:
@@ -7498,6 +7187,7 @@ components:
       - $ref: '#/components/schemas/IScaleResult'
       - $ref: '#/components/schemas/IBatchResult'
       - $ref: '#/components/schemas/ICleanupResult'
+      - $ref: '#/components/schemas/INotifyResult'
     ICleanupResult:
       type: object
       properties:
@@ -7505,6 +7195,15 @@ components:
           $ref: '#/components/schemas/JobReference'
       description: The result data for a completed cleanup job.
       title: Cleanup
+    INotifyResult:
+      type: object
+      properties:
+        operation:
+          $ref: '#/components/schemas/ERequestOperation'
+      required:
+      - operation
+      description: The result data for a change notification.
+      title: Notify
     FailedEventSSE:
       type: object
       properties:
@@ -8927,6 +8626,12 @@ paths:
                 description: Runtime example archive
                 type: string
                 format: binary
+            application/tar:
+              schema:
+                title: Archive
+                description: Runtime example archive
+                type: string
+                format: binary
             application/tar+gzip:
               schema:
                 title: Archive
@@ -9009,6 +8714,12 @@ paths:
                 description: Runtime example archive
                 type: string
                 format: binary
+            application/tar:
+              schema:
+                title: Archive
+                description: Runtime example archive
+                type: string
+                format: binary
             application/tar+gzip:
               schema:
                 title: Archive
@@ -9046,183 +8757,102 @@ paths:
       description: "Creates a new <em>webscript</em> function by uploading its assets.\n\
         \  \n  The assets for a <em>webscript</em> function can be provided as either\n\
         \  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed), with\
-        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar+gzip</code>,\
-        \ <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-        \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-        \  </ul>\n  \n  The required <code>webscript.json</code> json file contains\
-        \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-        \ that is one of the supported <em>runtime</em>s \n  (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).\n\
-        \n  For each <em>runtime</em> other files will be required or supported.\n\
-        \n  "
+        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar</code>,\
+        \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
+        \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
+        \ request</li>\n  </ul>\n  \n  The required <code>webscript.json</code> json\
+        \ file contains the function metadata,\n  and must have a <code>runtime</code>\
+        \ attribute that is one of the supported <em>runtime</em>s \n  (see <code>GET\
+        \ /registry/v2/runtimes?functionType=webscripts</code>).\n\n  For each <em>runtime</em>\
+        \ other files will be required or supported.\n\n  "
       requestBody:
         content:
           application/octet-stream:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>webscript.json</code> json file\
-                \ contains the function metadata,\n  and must have a <code>runtime</code>\
-                \ attribute that is one of the supported <em>runtime</em>s \n  (see\
-                \ <code>GET /registry/v2/runtimes?functionType=webscripts</code>).\n\
-                \n  For each <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
+          application/tar:
+            schema:
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/tar+gzip:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>webscript.json</code> json file\
-                \ contains the function metadata,\n  and must have a <code>runtime</code>\
-                \ attribute that is one of the supported <em>runtime</em>s \n  (see\
-                \ <code>GET /registry/v2/runtimes?functionType=webscripts</code>).\n\
-                \n  For each <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-gzip:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>webscript.json</code> json file\
-                \ contains the function metadata,\n  and must have a <code>runtime</code>\
-                \ attribute that is one of the supported <em>runtime</em>s \n  (see\
-                \ <code>GET /registry/v2/runtimes?functionType=webscripts</code>).\n\
-                \n  For each <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-tar:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>webscript.json</code> json file\
-                \ contains the function metadata,\n  and must have a <code>runtime</code>\
-                \ attribute that is one of the supported <em>runtime</em>s \n  (see\
-                \ <code>GET /registry/v2/runtimes?functionType=webscripts</code>).\n\
-                \n  For each <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/gzip:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>webscript.json</code> json file\
-                \ contains the function metadata,\n  and must have a <code>runtime</code>\
-                \ attribute that is one of the supported <em>runtime</em>s \n  (see\
-                \ <code>GET /registry/v2/runtimes?functionType=webscripts</code>).\n\
-                \n  For each <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           multipart/form-data:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>webscript.json</code> json file\
-                \ contains the function metadata,\n  and must have a <code>runtime</code>\
-                \ attribute that is one of the supported <em>runtime</em>s \n  (see\
-                \ <code>GET /registry/v2/runtimes?functionType=webscripts</code>).\n\
-                \n  For each <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: Multipart file upload.
+              description: 'A multi-part upload containing one or more file assets.
+
+                Each part should specify a filename corresponding to the asset path.'
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+          application/json:
+            schema:
+              title: Empty Upload
+              description: Empty object request body, only allowed when using the
+                `copy` query parameter.
+              type: object
+              maxProperties: 0
+          '*/*+json':
+            schema:
+              title: Empty Upload
+              description: Empty object request body, only allowed when using the
+                `copy` query parameter.
+              type: object
+              maxProperties: 0
         description: "The assets for a <em>webscript</em> function can be provided\
           \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed),\
           \ with one of the content types \n    <code>application/octet-stream</code>,\
-          \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
-          \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
-          \ request</li>\n  </ul>\n  \n  The required <code>webscript.json</code>\
-          \ json file contains the function metadata,\n  and must have a <code>runtime</code>\
-          \ attribute that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-          \ /registry/v2/runtimes?functionType=webscripts</code>).\n\n  For each <em>runtime</em>\
-          \ other files will be required or supported.\n"
+          \ <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
+          \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n \
+          \   <li>separate files in a <code>multipart/form-data</code> request</li>\n\
+          \  </ul>\n  \n  The required <code>webscript.json</code> json file contains\
+          \ the function metadata,\n  and must have a <code>runtime</code> attribute\
+          \ that is one of the supported <em>runtime</em>s \n  (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).\n\
+          \n  For each <em>runtime</em> other files will be required or supported.\n"
       parameters:
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
+          type: string
+        in: query
+        name: comment
+        required: false
+        description: An optional user-specified comment corresponding to the operation.
       - schema:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
           default: patch
@@ -9281,6 +8911,53 @@ paths:
         description: If set, the created function will be a draft function and its
           assets are still mutable. A build and deploy is initiated only in the case
           when all necessary assets are present and valid.
+      - schema:
+          $ref: '#/components/schemas/NamedVersionRange'
+        in: query
+        name: runtime
+        required: false
+        description: 'If set, the created function will use the indicated runtime
+          (latest version within specified range).
+
+
+          This takes precedence over the runtime specified in a function manifest
+          (copied or from request body).'
+      - schema:
+          anyOf:
+          - $ref: '#/components/schemas/NamedVersionRange'
+          - $ref: '#/components/schemas/ExampleReference'
+        in: query
+        name: copy
+        required: false
+        description: "Indicates the _source_ of initial assets for a _new function_.\n\
+          \nWhen using this query parameter, the request body does not need to contain\
+          \ assets, but any assets in the request body will overwrite the copied assets.\n\
+          \n#### Selection of _assets_ source\n\n* If set as `<sourceName>[@<sourceVersionRange>]`,\
+          \ the _new function_ will be created with copied assets of the selected\
+          \ _source function_.\n* If set as `!example`, a `runtime` query parameter\
+          \ is required, and the _new function_ will be initialized with assets of\
+          \ the _runtime example_.\n\n#### Selection of the _source function_\n\n\
+          When `<sourceVersionRange>` is a range (or is not given), the latest _published_\
+          \ version (in that range) is used.\n\nIf no _published_ version exists,\
+          \ the latest _draft_ is selected.\n\nIf no versions in the range exist,\
+          \ a `404` _Not Found_ error is returned.\n\n#### The `name` of the _new\
+          \ function_\n\nIf a `name` is NOT specified (either as query parameter,\
+          \ or in an optional manifest asset in the request body), the `name` of the\
+          \ _new function_ will be that of the _source function_.\n\n#### The `version`\
+          \ of the _new function_\n\nWhen the _target_ and _source_ name are equal,\
+          \ the `version` query parameters is defaulted to `<sourceVersionRange>`\
+          \ (`~<sourceVersionRange>` when it's an exact version)\n\nThe version of\
+          \ the _new function_ will be:\n* If a `version` is NOT specified (either\
+          \ as query parameter, in an optional manifest asset, or as `<sourceVersionRange>`\
+          \ _default_)\n\n  * a **patch increment** (`<major>.<minor>.<patch>+1`)\
+          \ of the latest **existing version** with the target `name`\n\n  * **`1.0.0`**\
+          \ otherwise\n\n* If a `version` is specified:\n\n  * the **lowest version**\
+          \ in that range **if no existing version** is in that range.\n\n  * an **increment**\
+          \ of the latest existing version, **at the highest level** (_major_,_minor_,_patch_)\
+          \ allowed by that range.\n\n  * otherwise, if all allowed versions already\
+          \ exist, a **`409` _Duplicate_ error** is raised.\n\n#### Deployment overrides\n\
+          \nThe new function will use the deployment overrides of the copied function,\
+          \ unless a _manifest_ was specified in the request body."
       x-version: v2
       responses:
         '201':
@@ -9313,19 +8990,21 @@ paths:
         \ versions.</li>\n  <li><code>includeDraft=true</code>: do not prefer non-draft\
         \ versions as a latest version: if the latest version is a draft, it will\
         \ be shown, even if there are older non-draft versions.</li>\n  </ul>\n\n\n\
-        As long as no _version filters_ are used, each listed <em>webscript version</em>\
-        \ item will contain a HAL **link to the \nlatest** _draft_ (`entities[]._links.draft`)\
-        \ or latest _published_ (`entities[]._links.publisned`) version (if existing\
-        \ and different).\n\n### List Latest Webscript Versions (with filter)\nWhen\
-        \ any of the _version filter_ query parameters are used, the response contains\n\
-        the _latest_ version per named <em>webscript</em> that satisfy the filters,\
-        \ but **without links**.\n\n### List All Webscript Versions\nWhen using `latest=false`\
-        \ (default when using the `namedVersion` filter), the listing contains _all_\
-        \ \n<em>webscripts</em> versions that satisfy the query, possibly multiple\
-        \ versions per named <em>webscripts</em>.\nNo HAL links are provided.\n\n\
-        #### Filter on _status_\nBy default <em>webscript versions</em> with status\
-        \  `undeployed` are **excluded** in all cases.\nUse the _version filter_ `status`\
-        \ to include/exclude a status from the results.\nBy example, \n> `?status=any&includeDeprecated=true&includeDraft=true&latest=false`\n\
+        As long as no version filters are used, each listed <em>webscript version</em>\
+        \ contains representations of the latest draft (`entities[]._links.draft`)\
+        \ \nor latest published (`entities[]._links.published`) version (if existing\
+        \ and different).  \nUse the query parameter `showRelated` to include only\
+        \ a link (default `showRelated=link`) or a full representation (`showRelated=embed`).\n\
+        \n### List Latest Webscript Versions (with filter)\nWhen any of the _version\
+        \ filter_ query parameters are used, the response contains\nthe _latest_ version\
+        \ per named <em>webscript</em> that satisfy the filters, but **without links**.\n\
+        \n### List All Webscript Versions\nWhen using `latest=false` (default when\
+        \ using the `namedVersion` filter), the listing contains _all_ \n<em>webscripts</em>\
+        \ versions that satisfy the query, possibly multiple versions per named <em>webscripts</em>.\n\
+        No HAL links are provided.\n\n#### Filter on _status_\nBy default <em>webscript\
+        \ versions</em> with status  `undeployed` are **excluded** in all cases.\n\
+        Use the _version filter_ `status` to include/exclude a status from the results.\n\
+        By example, \n> `?status=any&includeDeprecated=true&includeDraft=true&latest=false`\n\
         \nwill list _ALL_ versions known to the function registry.\n\n#### Version\
         \ filter parameters\nThe following query parameters are _version filters_\
         \ for the <em>webscript</em> listing:\n> `version`, `status`, `runtimeVersion`,\
@@ -9487,6 +9166,19 @@ paths:
           If set to `false`, multiple versions per named function can be returned.
           Defaults to `true`, except when specific versions are selected with the
           `nameVersion` filter.
+      - schema:
+          $ref: '#/components/schemas/ShowRelatedType'
+        in: query
+        name: showRelated
+        required: false
+        description: 'Sets the representation of related function versions (like the
+          _latest_ draft and/or published) in the response.
+
+          - `embed`: as full summary representation (in `_embedded`).
+
+          - `link`: as HAL link in (in `_links`).
+
+          - `none`: omitted.'
       x-version: v2
       responses:
         '200':
@@ -10092,6 +9784,12 @@ paths:
                 description: Webscript archive
                 type: string
                 format: binary
+            application/tar:
+              schema:
+                title: Archive
+                description: Webscript archive
+                type: string
+                format: binary
             application/tar+gzip:
               schema:
                 title: Archive
@@ -10128,10 +9826,10 @@ paths:
       description: "Update a draft <em>webscript</em> function by updating its assets.\n\
         \  \n  The assets for a <em>webscript</em> function can be provided as either\n\
         \  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed), with\
-        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar+gzip</code>,\
-        \ <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-        \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-        \  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
+        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar</code>,\
+        \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
+        \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
+        \ request</li>\n  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
         \ function's collection of existing assets,\n  replacing any existing assets\
         \ with the same name.\n\n  Please note that it is not allowed to update the\
         \ webscript.json</code> json file with a changed value for any of the\n  \
@@ -10141,178 +9839,60 @@ paths:
         content:
           application/octet-stream:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the webscript.json</code> json file with a changed value\
-                \ for any of the\n   <code>name</code>, <code>version</code> and/or\
-                \ <code>runtime</code> attributes.\n\n  For each <em>runtime</em>\
-                \ other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
+          application/tar:
+            schema:
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/tar+gzip:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the webscript.json</code> json file with a changed value\
-                \ for any of the\n   <code>name</code>, <code>version</code> and/or\
-                \ <code>runtime</code> attributes.\n\n  For each <em>runtime</em>\
-                \ other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-gzip:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the webscript.json</code> json file with a changed value\
-                \ for any of the\n   <code>name</code>, <code>version</code> and/or\
-                \ <code>runtime</code> attributes.\n\n  For each <em>runtime</em>\
-                \ other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-tar:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the webscript.json</code> json file with a changed value\
-                \ for any of the\n   <code>name</code>, <code>version</code> and/or\
-                \ <code>runtime</code> attributes.\n\n  For each <em>runtime</em>\
-                \ other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/gzip:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the webscript.json</code> json file with a changed value\
-                \ for any of the\n   <code>name</code>, <code>version</code> and/or\
-                \ <code>runtime</code> attributes.\n\n  For each <em>runtime</em>\
-                \ other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           multipart/form-data:
             schema:
-              title: Webscript Function Assets
-              description: "The assets for a <em>webscript</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the webscript.json</code> json file with a changed value\
-                \ for any of the\n   <code>name</code>, <code>version</code> and/or\
-                \ <code>runtime</code> attributes.\n\n  For each <em>runtime</em>\
-                \ other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: Multipart file upload.
+              description: 'A multi-part upload containing one or more file assets.
+
+                Each part should specify a filename corresponding to the asset path.'
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
         description: "The assets for a <em>webscript</em> function can be provided\
           \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed),\
           \ with one of the content types \n    <code>application/octet-stream</code>,\
-          \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
-          \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
-          \ request</li>\n  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
+          \ <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
+          \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n \
+          \   <li>separate files in a <code>multipart/form-data</code> request</li>\n\
+          \  </ul>\n\n  The provided assets will be added to the <em>webscript</em>\
           \ function's collection of existing assets,\n  replacing any existing assets\
           \ with the same name.\n\n  Please note that it is not allowed to update\
           \ the webscript.json</code> json file with a changed value for any of the\n\
@@ -10325,6 +9905,12 @@ paths:
         name: comment
         required: false
         description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
       - schema:
           type: boolean
           default: true
@@ -10369,6 +9955,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IPostWebscriptJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRegistryErrorResponse'
       security: *id001
   /registry/v2/webscripts/{name}/versions/{version}/content/{*}:
     get:
@@ -10416,6 +10008,12 @@ paths:
                 description: Webscript archive
                 type: string
                 format: binary
+            application/tar:
+              schema:
+                title: Archive
+                description: Webscript archive
+                type: string
+                format: binary
             application/tar+gzip:
               schema:
                 title: Archive
@@ -10457,7 +10055,7 @@ paths:
         \ files are supported.\n  "
       requestBody:
         content:
-          application/octet-stream:
+          '*/*':
             schema:
               title: File Upload
               description: A single asset file.
@@ -10475,6 +10073,12 @@ paths:
         required: false
         description: An optional user-specified comment corresponding to the operation.
       - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
           type: boolean
           default: true
         in: query
@@ -10524,6 +10128,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IPostWebscriptJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRegistryErrorResponse'
       security: *id001
     delete:
       operationId: deleteAsset_webscript_functions
@@ -10539,6 +10149,12 @@ paths:
         required: false
         description: An optional user-specified comment corresponding to the operation.
       - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
           type: boolean
           default: true
         in: query
@@ -10588,6 +10204,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IPostWebscriptJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRegistryErrorResponse'
       security: *id001
   /registry/v2/webscripts/{name}/versions/{version}/publish:
     post:
@@ -10608,6 +10230,12 @@ paths:
         name: comment
         required: false
         description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
       - schema:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
           default: patch
@@ -10737,12 +10365,6 @@ paths:
       description: Verify health of webscript deployed on openfaas.
       parameters:
       - schema:
-          type: string
-        in: query
-        name: comment
-        required: false
-        description: An optional user-specified comment corresponding to the operation.
-      - schema:
           type: boolean
           default: true
         in: query
@@ -10852,183 +10474,102 @@ paths:
       description: "Creates a new <em>plug</em> function by uploading its assets.\n\
         \  \n  The assets for a <em>plug</em> function can be provided as either\n\
         \  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed), with\
-        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar+gzip</code>,\
-        \ <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-        \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-        \  </ul>\n  \n  The required <code>plug.json</code> json file contains the\
-        \ function metadata,\n  and must have a <code>runtime</code> attribute that\
-        \ is one of the supported <em>runtime</em>s \n  (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).\n\
-        \n  For each <em>runtime</em> other files will be required or supported.\n\
-        \n  "
+        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar</code>,\
+        \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
+        \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
+        \ request</li>\n  </ul>\n  \n  The required <code>plug.json</code> json file\
+        \ contains the function metadata,\n  and must have a <code>runtime</code>\
+        \ attribute that is one of the supported <em>runtime</em>s \n  (see <code>GET\
+        \ /registry/v2/runtimes?functionType=plugs</code>).\n\n  For each <em>runtime</em>\
+        \ other files will be required or supported.\n\n  "
       requestBody:
         content:
           application/octet-stream:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>plug.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=plugs</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
+          application/tar:
+            schema:
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/tar+gzip:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>plug.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=plugs</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-gzip:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>plug.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=plugs</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-tar:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>plug.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=plugs</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/gzip:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>plug.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=plugs</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           multipart/form-data:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>plug.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=plugs</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: Multipart file upload.
+              description: 'A multi-part upload containing one or more file assets.
+
+                Each part should specify a filename corresponding to the asset path.'
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+          application/json:
+            schema:
+              title: Empty Upload
+              description: Empty object request body, only allowed when using the
+                `copy` query parameter.
+              type: object
+              maxProperties: 0
+          '*/*+json':
+            schema:
+              title: Empty Upload
+              description: Empty object request body, only allowed when using the
+                `copy` query parameter.
+              type: object
+              maxProperties: 0
         description: "The assets for a <em>plug</em> function can be provided as either\n\
           \  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed),\
           \ with one of the content types \n    <code>application/octet-stream</code>,\
-          \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
-          \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
-          \ request</li>\n  </ul>\n  \n  The required <code>plug.json</code> json\
-          \ file contains the function metadata,\n  and must have a <code>runtime</code>\
-          \ attribute that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-          \ /registry/v2/runtimes?functionType=plugs</code>).\n\n  For each <em>runtime</em>\
-          \ other files will be required or supported.\n"
+          \ <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
+          \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n \
+          \   <li>separate files in a <code>multipart/form-data</code> request</li>\n\
+          \  </ul>\n  \n  The required <code>plug.json</code> json file contains the\
+          \ function metadata,\n  and must have a <code>runtime</code> attribute that\
+          \ is one of the supported <em>runtime</em>s \n  (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).\n\
+          \n  For each <em>runtime</em> other files will be required or supported.\n"
       parameters:
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
+          type: string
+        in: query
+        name: comment
+        required: false
+        description: An optional user-specified comment corresponding to the operation.
       - schema:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
           default: patch
@@ -11087,6 +10628,53 @@ paths:
         description: If set, the created function will be a draft function and its
           assets are still mutable. A build and deploy is initiated only in the case
           when all necessary assets are present and valid.
+      - schema:
+          $ref: '#/components/schemas/NamedVersionRange'
+        in: query
+        name: runtime
+        required: false
+        description: 'If set, the created function will use the indicated runtime
+          (latest version within specified range).
+
+
+          This takes precedence over the runtime specified in a function manifest
+          (copied or from request body).'
+      - schema:
+          anyOf:
+          - $ref: '#/components/schemas/NamedVersionRange'
+          - $ref: '#/components/schemas/ExampleReference'
+        in: query
+        name: copy
+        required: false
+        description: "Indicates the _source_ of initial assets for a _new function_.\n\
+          \nWhen using this query parameter, the request body does not need to contain\
+          \ assets, but any assets in the request body will overwrite the copied assets.\n\
+          \n#### Selection of _assets_ source\n\n* If set as `<sourceName>[@<sourceVersionRange>]`,\
+          \ the _new function_ will be created with copied assets of the selected\
+          \ _source function_.\n* If set as `!example`, a `runtime` query parameter\
+          \ is required, and the _new function_ will be initialized with assets of\
+          \ the _runtime example_.\n\n#### Selection of the _source function_\n\n\
+          When `<sourceVersionRange>` is a range (or is not given), the latest _published_\
+          \ version (in that range) is used.\n\nIf no _published_ version exists,\
+          \ the latest _draft_ is selected.\n\nIf no versions in the range exist,\
+          \ a `404` _Not Found_ error is returned.\n\n#### The `name` of the _new\
+          \ function_\n\nIf a `name` is NOT specified (either as query parameter,\
+          \ or in an optional manifest asset in the request body), the `name` of the\
+          \ _new function_ will be that of the _source function_.\n\n#### The `version`\
+          \ of the _new function_\n\nWhen the _target_ and _source_ name are equal,\
+          \ the `version` query parameters is defaulted to `<sourceVersionRange>`\
+          \ (`~<sourceVersionRange>` when it's an exact version)\n\nThe version of\
+          \ the _new function_ will be:\n* If a `version` is NOT specified (either\
+          \ as query parameter, in an optional manifest asset, or as `<sourceVersionRange>`\
+          \ _default_)\n\n  * a **patch increment** (`<major>.<minor>.<patch>+1`)\
+          \ of the latest **existing version** with the target `name`\n\n  * **`1.0.0`**\
+          \ otherwise\n\n* If a `version` is specified:\n\n  * the **lowest version**\
+          \ in that range **if no existing version** is in that range.\n\n  * an **increment**\
+          \ of the latest existing version, **at the highest level** (_major_,_minor_,_patch_)\
+          \ allowed by that range.\n\n  * otherwise, if all allowed versions already\
+          \ exist, a **`409` _Duplicate_ error** is raised.\n\n#### Deployment overrides\n\
+          \nThe new function will use the deployment overrides of the copied function,\
+          \ unless a _manifest_ was specified in the request body."
       x-version: v2
       responses:
         '201':
@@ -11118,19 +10706,21 @@ paths:
         \ versions.</li>\n  <li><code>includeDraft=true</code>: do not prefer non-draft\
         \ versions as a latest version: if the latest version is a draft, it will\
         \ be shown, even if there are older non-draft versions.</li>\n  </ul>\n\n\n\
-        As long as no _version filters_ are used, each listed <em>plug version</em>\
-        \ item will contain a HAL **link to the \nlatest** _draft_ (`entities[]._links.draft`)\
-        \ or latest _published_ (`entities[]._links.publisned`) version (if existing\
-        \ and different).\n\n### List Latest Plug Versions (with filter)\nWhen any\
-        \ of the _version filter_ query parameters are used, the response contains\n\
-        the _latest_ version per named <em>plug</em> that satisfy the filters, but\
-        \ **without links**.\n\n### List All Plug Versions\nWhen using `latest=false`\
-        \ (default when using the `namedVersion` filter), the listing contains _all_\
-        \ \n<em>plugs</em> versions that satisfy the query, possibly multiple versions\
-        \ per named <em>plugs</em>.\nNo HAL links are provided.\n\n#### Filter on\
-        \ _status_\nBy default <em>plug versions</em> with status  `undeployed` are\
-        \ **excluded** in all cases.\nUse the _version filter_ `status` to include/exclude\
-        \ a status from the results.\nBy example, \n> `?status=any&includeDeprecated=true&includeDraft=true&latest=false`\n\
+        As long as no version filters are used, each listed <em>plug version</em>\
+        \ contains representations of the latest draft (`entities[]._links.draft`)\
+        \ \nor latest published (`entities[]._links.published`) version (if existing\
+        \ and different).  \nUse the query parameter `showRelated` to include only\
+        \ a link (default `showRelated=link`) or a full representation (`showRelated=embed`).\n\
+        \n### List Latest Plug Versions (with filter)\nWhen any of the _version filter_\
+        \ query parameters are used, the response contains\nthe _latest_ version per\
+        \ named <em>plug</em> that satisfy the filters, but **without links**.\n\n\
+        ### List All Plug Versions\nWhen using `latest=false` (default when using\
+        \ the `namedVersion` filter), the listing contains _all_ \n<em>plugs</em>\
+        \ versions that satisfy the query, possibly multiple versions per named <em>plugs</em>.\n\
+        No HAL links are provided.\n\n#### Filter on _status_\nBy default <em>plug\
+        \ versions</em> with status  `undeployed` are **excluded** in all cases.\n\
+        Use the _version filter_ `status` to include/exclude a status from the results.\n\
+        By example, \n> `?status=any&includeDeprecated=true&includeDraft=true&latest=false`\n\
         \nwill list _ALL_ versions known to the function registry.\n\n#### Version\
         \ filter parameters\nThe following query parameters are _version filters_\
         \ for the <em>plug</em> listing:\n> `version`, `status`, `runtimeVersion`,\
@@ -11306,6 +10896,19 @@ paths:
           If set to `false`, multiple versions per named function can be returned.
           Defaults to `true`, except when specific versions are selected with the
           `nameVersion` filter.
+      - schema:
+          $ref: '#/components/schemas/ShowRelatedType'
+        in: query
+        name: showRelated
+        required: false
+        description: 'Sets the representation of related function versions (like the
+          _latest_ draft and/or published) in the response.
+
+          - `embed`: as full summary representation (in `_embedded`).
+
+          - `link`: as HAL link in (in `_links`).
+
+          - `none`: omitted.'
       x-version: v2
       responses:
         '200':
@@ -11886,6 +11489,12 @@ paths:
                 description: Plug archive
                 type: string
                 format: binary
+            application/tar:
+              schema:
+                title: Archive
+                description: Plug archive
+                type: string
+                format: binary
             application/tar+gzip:
               schema:
                 title: Archive
@@ -11922,190 +11531,78 @@ paths:
       description: "Update a draft <em>plug</em> function by updating its assets.\n\
         \  \n  The assets for a <em>plug</em> function can be provided as either\n\
         \  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed), with\
-        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar+gzip</code>,\
-        \ <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-        \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-        \  </ul>\n\n  The provided assets will be added to the <em>plug</em> function's\
-        \ collection of existing assets,\n  replacing any existing assets with the\
-        \ same name.\n\n  Please note that it is not allowed to update the plug.json</code>\
-        \ json file with a changed value for any of the\n   <code>name</code>, <code>version</code>\
-        \ and/or <code>runtime</code> attributes.\n\n  For each <em>runtime</em> other\
-        \ files are supported.\n\n  "
+        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar</code>,\
+        \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
+        \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
+        \ request</li>\n  </ul>\n\n  The provided assets will be added to the <em>plug</em>\
+        \ function's collection of existing assets,\n  replacing any existing assets\
+        \ with the same name.\n\n  Please note that it is not allowed to update the\
+        \ plug.json</code> json file with a changed value for any of the\n   <code>name</code>,\
+        \ <code>version</code> and/or <code>runtime</code> attributes.\n\n  For each\
+        \ <em>runtime</em> other files are supported.\n\n  "
       requestBody:
         content:
           application/octet-stream:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>plug</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the plug.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
+          application/tar:
+            schema:
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/tar+gzip:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>plug</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the plug.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-gzip:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>plug</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the plug.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-tar:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>plug</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the plug.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/gzip:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>plug</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the plug.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           multipart/form-data:
             schema:
-              title: Plug Function Assets
-              description: "The assets for a <em>plug</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>plug</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the plug.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: Multipart file upload.
+              description: 'A multi-part upload containing one or more file assets.
+
+                Each part should specify a filename corresponding to the asset path.'
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
         description: "The assets for a <em>plug</em> function can be provided as either\n\
           \  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed),\
           \ with one of the content types \n    <code>application/octet-stream</code>,\
-          \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
-          \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
-          \ request</li>\n  </ul>\n\n  The provided assets will be added to the <em>plug</em>\
-          \ function's collection of existing assets,\n  replacing any existing assets\
-          \ with the same name.\n\n  Please note that it is not allowed to update\
-          \ the plug.json</code> json file with a changed value for any of the\n \
-          \  <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.\n\
-          \n  For each <em>runtime</em> other files are supported.\n"
+          \ <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
+          \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n \
+          \   <li>separate files in a <code>multipart/form-data</code> request</li>\n\
+          \  </ul>\n\n  The provided assets will be added to the <em>plug</em> function's\
+          \ collection of existing assets,\n  replacing any existing assets with the\
+          \ same name.\n\n  Please note that it is not allowed to update the plug.json</code>\
+          \ json file with a changed value for any of the\n   <code>name</code>, <code>version</code>\
+          \ and/or <code>runtime</code> attributes.\n\n  For each <em>runtime</em>\
+          \ other files are supported.\n"
       parameters:
       - schema:
           type: string
@@ -12113,6 +11610,12 @@ paths:
         name: comment
         required: false
         description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
       - schema:
           type: boolean
           default: true
@@ -12157,6 +11660,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IPostPlugJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRegistryErrorResponse'
       security: *id001
   /registry/v2/plugs/{name}/versions/{version}/content/{*}:
     get:
@@ -12204,6 +11713,12 @@ paths:
                 description: Plug archive
                 type: string
                 format: binary
+            application/tar:
+              schema:
+                title: Archive
+                description: Plug archive
+                type: string
+                format: binary
             application/tar+gzip:
               schema:
                 title: Archive
@@ -12245,7 +11760,7 @@ paths:
         \ files are supported.\n  "
       requestBody:
         content:
-          application/octet-stream:
+          '*/*':
             schema:
               title: File Upload
               description: A single asset file.
@@ -12263,6 +11778,12 @@ paths:
         required: false
         description: An optional user-specified comment corresponding to the operation.
       - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
           type: boolean
           default: true
         in: query
@@ -12312,6 +11833,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IPostPlugJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRegistryErrorResponse'
       security: *id001
     delete:
       operationId: deleteAsset_plug_functions
@@ -12327,6 +11854,12 @@ paths:
         required: false
         description: An optional user-specified comment corresponding to the operation.
       - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
           type: boolean
           default: true
         in: query
@@ -12376,6 +11909,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IPostPlugJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRegistryErrorResponse'
       security: *id001
   /registry/v2/plugs/{name}/versions/{version}/publish:
     post:
@@ -12395,6 +11934,12 @@ paths:
         name: comment
         required: false
         description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
       - schema:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
           default: patch
@@ -12604,12 +12149,6 @@ paths:
       description: Verify health of plug deployed on openfaas.
       parameters:
       - schema:
-          type: string
-        in: query
-        name: comment
-        required: false
-        description: An optional user-specified comment corresponding to the operation.
-      - schema:
           type: boolean
           default: true
         in: query
@@ -12664,183 +12203,102 @@ paths:
       description: "Creates a new <em>model</em> function by uploading its assets.\n\
         \  \n  The assets for a <em>model</em> function can be provided as either\n\
         \  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed), with\
-        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar+gzip</code>,\
-        \ <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-        \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-        \  </ul>\n  \n  The required <code>model.json</code> json file contains the\
-        \ function metadata,\n  and must have a <code>runtime</code> attribute that\
-        \ is one of the supported <em>runtime</em>s \n  (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).\n\
-        \n  For each <em>runtime</em> other files will be required or supported.\n\
-        \n  "
+        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar</code>,\
+        \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
+        \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
+        \ request</li>\n  </ul>\n  \n  The required <code>model.json</code> json file\
+        \ contains the function metadata,\n  and must have a <code>runtime</code>\
+        \ attribute that is one of the supported <em>runtime</em>s \n  (see <code>GET\
+        \ /registry/v2/runtimes?functionType=kfserving</code>).\n\n  For each <em>runtime</em>\
+        \ other files will be required or supported.\n\n  "
       requestBody:
         content:
           application/octet-stream:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>model.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=kfserving</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
+          application/tar:
+            schema:
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/tar+gzip:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>model.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=kfserving</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-gzip:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>model.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=kfserving</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-tar:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>model.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=kfserving</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/gzip:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>model.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=kfserving</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           multipart/form-data:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n  \n  The required <code>model.json</code> json file contains\
-                \ the function metadata,\n  and must have a <code>runtime</code> attribute\
-                \ that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-                \ /registry/v2/runtimes?functionType=kfserving</code>).\n\n  For each\
-                \ <em>runtime</em> other files will be required or supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: Multipart file upload.
+              description: 'A multi-part upload containing one or more file assets.
+
+                Each part should specify a filename corresponding to the asset path.'
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+          application/json:
+            schema:
+              title: Empty Upload
+              description: Empty object request body, only allowed when using the
+                `copy` query parameter.
+              type: object
+              maxProperties: 0
+          '*/*+json':
+            schema:
+              title: Empty Upload
+              description: Empty object request body, only allowed when using the
+                `copy` query parameter.
+              type: object
+              maxProperties: 0
         description: "The assets for a <em>model</em> function can be provided as\
           \ either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed),\
           \ with one of the content types \n    <code>application/octet-stream</code>,\
-          \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
-          \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
-          \ request</li>\n  </ul>\n  \n  The required <code>model.json</code> json\
-          \ file contains the function metadata,\n  and must have a <code>runtime</code>\
-          \ attribute that is one of the supported <em>runtime</em>s \n  (see <code>GET\
-          \ /registry/v2/runtimes?functionType=kfserving</code>).\n\n  For each <em>runtime</em>\
-          \ other files will be required or supported.\n"
+          \ <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
+          \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n \
+          \   <li>separate files in a <code>multipart/form-data</code> request</li>\n\
+          \  </ul>\n  \n  The required <code>model.json</code> json file contains\
+          \ the function metadata,\n  and must have a <code>runtime</code> attribute\
+          \ that is one of the supported <em>runtime</em>s \n  (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).\n\
+          \n  For each <em>runtime</em> other files will be required or supported.\n"
       parameters:
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
+          type: string
+        in: query
+        name: comment
+        required: false
+        description: An optional user-specified comment corresponding to the operation.
       - schema:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
           default: patch
@@ -12899,6 +12357,53 @@ paths:
         description: If set, the created function will be a draft function and its
           assets are still mutable. A build and deploy is initiated only in the case
           when all necessary assets are present and valid.
+      - schema:
+          $ref: '#/components/schemas/NamedVersionRange'
+        in: query
+        name: runtime
+        required: false
+        description: 'If set, the created function will use the indicated runtime
+          (latest version within specified range).
+
+
+          This takes precedence over the runtime specified in a function manifest
+          (copied or from request body).'
+      - schema:
+          anyOf:
+          - $ref: '#/components/schemas/NamedVersionRange'
+          - $ref: '#/components/schemas/ExampleReference'
+        in: query
+        name: copy
+        required: false
+        description: "Indicates the _source_ of initial assets for a _new function_.\n\
+          \nWhen using this query parameter, the request body does not need to contain\
+          \ assets, but any assets in the request body will overwrite the copied assets.\n\
+          \n#### Selection of _assets_ source\n\n* If set as `<sourceName>[@<sourceVersionRange>]`,\
+          \ the _new function_ will be created with copied assets of the selected\
+          \ _source function_.\n* If set as `!example`, a `runtime` query parameter\
+          \ is required, and the _new function_ will be initialized with assets of\
+          \ the _runtime example_.\n\n#### Selection of the _source function_\n\n\
+          When `<sourceVersionRange>` is a range (or is not given), the latest _published_\
+          \ version (in that range) is used.\n\nIf no _published_ version exists,\
+          \ the latest _draft_ is selected.\n\nIf no versions in the range exist,\
+          \ a `404` _Not Found_ error is returned.\n\n#### The `name` of the _new\
+          \ function_\n\nIf a `name` is NOT specified (either as query parameter,\
+          \ or in an optional manifest asset in the request body), the `name` of the\
+          \ _new function_ will be that of the _source function_.\n\n#### The `version`\
+          \ of the _new function_\n\nWhen the _target_ and _source_ name are equal,\
+          \ the `version` query parameters is defaulted to `<sourceVersionRange>`\
+          \ (`~<sourceVersionRange>` when it's an exact version)\n\nThe version of\
+          \ the _new function_ will be:\n* If a `version` is NOT specified (either\
+          \ as query parameter, in an optional manifest asset, or as `<sourceVersionRange>`\
+          \ _default_)\n\n  * a **patch increment** (`<major>.<minor>.<patch>+1`)\
+          \ of the latest **existing version** with the target `name`\n\n  * **`1.0.0`**\
+          \ otherwise\n\n* If a `version` is specified:\n\n  * the **lowest version**\
+          \ in that range **if no existing version** is in that range.\n\n  * an **increment**\
+          \ of the latest existing version, **at the highest level** (_major_,_minor_,_patch_)\
+          \ allowed by that range.\n\n  * otherwise, if all allowed versions already\
+          \ exist, a **`409` _Duplicate_ error** is raised.\n\n#### Deployment overrides\n\
+          \nThe new function will use the deployment overrides of the copied function,\
+          \ unless a _manifest_ was specified in the request body."
       x-version: v2
       responses:
         '201':
@@ -12930,19 +12435,21 @@ paths:
         \ versions.</li>\n  <li><code>includeDraft=true</code>: do not prefer non-draft\
         \ versions as a latest version: if the latest version is a draft, it will\
         \ be shown, even if there are older non-draft versions.</li>\n  </ul>\n\n\n\
-        As long as no _version filters_ are used, each listed <em>model version</em>\
-        \ item will contain a HAL **link to the \nlatest** _draft_ (`entities[]._links.draft`)\
-        \ or latest _published_ (`entities[]._links.publisned`) version (if existing\
-        \ and different).\n\n### List Latest Model Versions (with filter)\nWhen any\
-        \ of the _version filter_ query parameters are used, the response contains\n\
-        the _latest_ version per named <em>model</em> that satisfy the filters, but\
-        \ **without links**.\n\n### List All Model Versions\nWhen using `latest=false`\
-        \ (default when using the `namedVersion` filter), the listing contains _all_\
-        \ \n<em>models</em> versions that satisfy the query, possibly multiple versions\
-        \ per named <em>models</em>.\nNo HAL links are provided.\n\n#### Filter on\
-        \ _status_\nBy default <em>model versions</em> with status  `undeployed` are\
-        \ **excluded** in all cases.\nUse the _version filter_ `status` to include/exclude\
-        \ a status from the results.\nBy example, \n> `?status=any&includeDeprecated=true&includeDraft=true&latest=false`\n\
+        As long as no version filters are used, each listed <em>model version</em>\
+        \ contains representations of the latest draft (`entities[]._links.draft`)\
+        \ \nor latest published (`entities[]._links.published`) version (if existing\
+        \ and different).  \nUse the query parameter `showRelated` to include only\
+        \ a link (default `showRelated=link`) or a full representation (`showRelated=embed`).\n\
+        \n### List Latest Model Versions (with filter)\nWhen any of the _version filter_\
+        \ query parameters are used, the response contains\nthe _latest_ version per\
+        \ named <em>model</em> that satisfy the filters, but **without links**.\n\n\
+        ### List All Model Versions\nWhen using `latest=false` (default when using\
+        \ the `namedVersion` filter), the listing contains _all_ \n<em>models</em>\
+        \ versions that satisfy the query, possibly multiple versions per named <em>models</em>.\n\
+        No HAL links are provided.\n\n#### Filter on _status_\nBy default <em>model\
+        \ versions</em> with status  `undeployed` are **excluded** in all cases.\n\
+        Use the _version filter_ `status` to include/exclude a status from the results.\n\
+        By example, \n> `?status=any&includeDeprecated=true&includeDraft=true&latest=false`\n\
         \nwill list _ALL_ versions known to the function registry.\n\n#### Version\
         \ filter parameters\nThe following query parameters are _version filters_\
         \ for the <em>model</em> listing:\n> `version`, `status`, `runtimeVersion`,\
@@ -13104,6 +12611,19 @@ paths:
           If set to `false`, multiple versions per named function can be returned.
           Defaults to `true`, except when specific versions are selected with the
           `nameVersion` filter.
+      - schema:
+          $ref: '#/components/schemas/ShowRelatedType'
+        in: query
+        name: showRelated
+        required: false
+        description: 'Sets the representation of related function versions (like the
+          _latest_ draft and/or published) in the response.
+
+          - `embed`: as full summary representation (in `_embedded`).
+
+          - `link`: as HAL link in (in `_links`).
+
+          - `none`: omitted.'
       x-version: v2
       responses:
         '200':
@@ -13560,6 +13080,12 @@ paths:
                 description: Model archive
                 type: string
                 format: binary
+            application/tar:
+              schema:
+                title: Archive
+                description: Model archive
+                type: string
+                format: binary
             application/tar+gzip:
               schema:
                 title: Archive
@@ -13596,190 +13122,78 @@ paths:
       description: "Update a draft <em>model</em> function by updating its assets.\n\
         \  \n  The assets for a <em>model</em> function can be provided as either\n\
         \  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed), with\
-        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar+gzip</code>,\
-        \ <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-        \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-        \  </ul>\n\n  The provided assets will be added to the <em>model</em> function's\
-        \ collection of existing assets,\n  replacing any existing assets with the\
-        \ same name.\n\n  Please note that it is not allowed to update the model.json</code>\
-        \ json file with a changed value for any of the\n   <code>name</code>, <code>version</code>\
-        \ and/or <code>runtime</code> attributes.\n\n  For each <em>runtime</em> other\
-        \ files are supported.\n\n  "
+        \ one of the content types \n    <code>application/octet-stream</code>, <code>application/tar</code>,\
+        \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
+        \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
+        \ request</li>\n  </ul>\n\n  The provided assets will be added to the <em>model</em>\
+        \ function's collection of existing assets,\n  replacing any existing assets\
+        \ with the same name.\n\n  Please note that it is not allowed to update the\
+        \ model.json</code> json file with a changed value for any of the\n   <code>name</code>,\
+        \ <code>version</code> and/or <code>runtime</code> attributes.\n\n  For each\
+        \ <em>runtime</em> other files are supported.\n\n  "
       requestBody:
         content:
           application/octet-stream:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>model</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the model.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
+          application/tar:
+            schema:
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/tar+gzip:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>model</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the model.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-gzip:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>model</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the model.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/x-tar:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>model</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the model.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           application/gzip:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>model</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the model.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: TAR Archive Upload
+              description: A single file archive containing multiple assets.
+              type: string
+              format: binary
           multipart/form-data:
             schema:
-              title: Model Function Assets
-              description: "The assets for a <em>model</em> function can be provided\
-                \ as either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally\
-                \ compressed), with one of the content types \n    <code>application/octet-stream</code>,\
-                \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
-                \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n\
-                \    <li>separate files in a <code>multipart/form-data</code> request</li>\n\
-                \  </ul>\n\n  The provided assets will be added to the <em>model</em>\
-                \ function's collection of existing assets,\n  replacing any existing\
-                \ assets with the same name.\n\n  Please note that it is not allowed\
-                \ to update the model.json</code> json file with a changed value for\
-                \ any of the\n   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-                \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
-              anyOf:
-              - title: Multipart file upload.
-                description: A multi-part upload containing one or more file assets.
-                type: object
-                properties:
-                  filename:
-                    type: array
-                    items:
-                      type: string
-                      format: binary
-              - title: TAR Achive Upload
-                description: A single file archive containing multiple assets.
+              title: Multipart file upload.
+              description: 'A multi-part upload containing one or more file assets.
+
+                Each part should specify a filename corresponding to the asset path.'
+              type: object
+              properties:
+                assets:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
         description: "The assets for a <em>model</em> function can be provided as\
           \ either\n  <ul>\n    <li>a single <em>tar</em> archive (optionally compressed),\
           \ with one of the content types \n    <code>application/octet-stream</code>,\
-          \ <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>,\
-          \ <code>application/gzip</code></li>\n    <li>separate files in a <code>multipart/form-data</code>\
-          \ request</li>\n  </ul>\n\n  The provided assets will be added to the <em>model</em>\
-          \ function's collection of existing assets,\n  replacing any existing assets\
-          \ with the same name.\n\n  Please note that it is not allowed to update\
-          \ the model.json</code> json file with a changed value for any of the\n\
-          \   <code>name</code>, <code>version</code> and/or <code>runtime</code>\
-          \ attributes.\n\n  For each <em>runtime</em> other files are supported.\n"
+          \ <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>,\
+          \ <code>application/x-tar</code>, <code>application/gzip</code></li>\n \
+          \   <li>separate files in a <code>multipart/form-data</code> request</li>\n\
+          \  </ul>\n\n  The provided assets will be added to the <em>model</em> function's\
+          \ collection of existing assets,\n  replacing any existing assets with the\
+          \ same name.\n\n  Please note that it is not allowed to update the model.json</code>\
+          \ json file with a changed value for any of the\n   <code>name</code>, <code>version</code>\
+          \ and/or <code>runtime</code> attributes.\n\n  For each <em>runtime</em>\
+          \ other files are supported.\n"
       parameters:
       - schema:
           type: string
@@ -13787,6 +13201,12 @@ paths:
         name: comment
         required: false
         description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
       - schema:
           type: boolean
           default: true
@@ -13831,6 +13251,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IPostModelJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRegistryErrorResponse'
       security: *id001
   /registry/v2/models/{name}/versions/{version}/content/{*}:
     get:
@@ -13878,6 +13304,12 @@ paths:
                 description: Model archive
                 type: string
                 format: binary
+            application/tar:
+              schema:
+                title: Archive
+                description: Model archive
+                type: string
+                format: binary
             application/tar+gzip:
               schema:
                 title: Archive
@@ -13919,7 +13351,7 @@ paths:
         \ files are supported.\n  "
       requestBody:
         content:
-          application/octet-stream:
+          '*/*':
             schema:
               title: File Upload
               description: A single asset file.
@@ -13937,6 +13369,12 @@ paths:
         required: false
         description: An optional user-specified comment corresponding to the operation.
       - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
           type: boolean
           default: true
         in: query
@@ -13986,6 +13424,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IPostModelJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRegistryErrorResponse'
       security: *id001
     delete:
       operationId: deleteAsset_model_functions
@@ -14001,6 +13445,12 @@ paths:
         required: false
         description: An optional user-specified comment corresponding to the operation.
       - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
           type: boolean
           default: true
         in: query
@@ -14050,6 +13500,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IPostModelJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRegistryErrorResponse'
       security: *id001
   /registry/v2/models/{name}/versions/{version}/publish:
     post:
@@ -14069,6 +13525,12 @@ paths:
         name: comment
         required: false
         description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
       - schema:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
           default: patch
@@ -14346,12 +13808,6 @@ paths:
       description: Verify health of model deployed on openfaas.
       parameters:
       - schema:
-          type: string
-        in: query
-        name: comment
-        required: false
-        description: An optional user-specified comment corresponding to the operation.
-      - schema:
           type: boolean
           default: true
         in: query
@@ -14405,8 +13861,8 @@ tags:
   description: "Runtimes are the available base infrastructure for functions, and\
     \ define how \n          the plug gets build and deployed."
 externalDocs:
-  url: https://docs.waylay.io/#/api/registry/
+  url: https://docs-staging.waylay.io/#/api/registry/
   description: Waylay Documentation
 servers:
-- url: https://api.waylay.io
-  description: Waylay enterprise gateway
+- url: https://api-aws-dev.waylay.io
+  description: Waylay staging gateway

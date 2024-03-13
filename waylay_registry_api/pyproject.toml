@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waylay_registry_api"
-version = "2.12.3-0"
+version = "2.13.0-beta.0-0"
 description = "Waylay Function Registry"
 authors = [
     { name = "Waylay", email = "dev@waylay.io"}

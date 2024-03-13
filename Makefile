@@ -104,7 +104,7 @@ ${TEST_RUN_FOLDER}: # workaround for JSF schema resolution
 		done
 
 exec-test: ${TEST_RUN_FOLDER} ### Run unit tests
-	cd ${TEST_RUN_FOLDER} && pytest ..
+	pytest
 
 exec-format: ### Format code
 	${CMD_FIX} ${API_FOLDER}

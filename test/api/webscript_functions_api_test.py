@@ -24,6 +24,9 @@ from waylay.services.registry.service import RegistryService
 
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
 
+from ..types.create_webscript_functions_copy_parameter_stub import (
+    CreateWebscriptFunctionsCopyParameterStub,
+)
 
 from ..types.post_webscript_job_sync_response_v2_stub import (
     PostWebscriptJobSyncResponseV2Stub,
@@ -96,7 +99,6 @@ from ..types.post_webscript_job_sync_response_v2_stub import (
     PostWebscriptJobSyncResponseV2Stub,
 )
 
-
 from ..types.post_webscript_job_sync_response_v2_stub import (
     PostWebscriptJobSyncResponseV2Stub,
 )
@@ -165,6 +167,8 @@ async def test_create(
     # set path params
     kwargs = {
         "query": {
+            "author": "author_example",
+            "comment": "comment_example",
             "deprecatePrevious": "none",
             "dryRun": True,
             "async": True,
@@ -172,7 +176,10 @@ async def test_create(
             "version": SemanticVersionRangeStub.create_json(),
             "name": "name_example",
             "draft": False,
+            "runtime": "runtime_example",
+            "copy": CreateWebscriptFunctionsCopyParameterStub.create_json(),
         },
+        "json": None,
         "content": b"some_binary_content",
         "headers": {"content-type": "application/octet-stream"},
         "files": {
@@ -196,6 +203,8 @@ async def test_create_without_types(
     # set path params
     kwargs = {
         "query": {
+            "author": "author_example",
+            "comment": "comment_example",
             "deprecatePrevious": "none",
             "dryRun": True,
             "async": True,
@@ -203,11 +212,14 @@ async def test_create_without_types(
             "version": SemanticVersionRangeStub.create_json(),
             "name": "name_example",
             "draft": False,
+            "runtime": "runtime_example",
+            "copy": CreateWebscriptFunctionsCopyParameterStub.create_json(),
         },
         "files": {
             "myFile1": b"...first file content...",
             "myFile2": b"...second file content...",
         },
+        "json": None,
         "content": b"some_binary_content",
         "headers": {"content-type": "application/octet-stream"},
     }
@@ -249,6 +261,7 @@ async def test_delete_asset(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "author": "author_example",
             "async": True,
             "chown": False,
         },
@@ -284,6 +297,7 @@ async def test_delete_asset_without_types(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "author": "author_example",
             "async": True,
             "chown": False,
         },
@@ -755,6 +769,7 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
             "archiveFormat": [],
             "runtime": [],
             "latest": True,
+            "showRelated": "embed",
         },
     }
     _list_set_mock_response(httpx_mock, gateway_url)
@@ -793,6 +808,7 @@ async def test_list_without_types(
             "archiveFormat": [],
             "runtime": [],
             "latest": True,
+            "showRelated": "embed",
         },
     }
     _list_set_mock_response(httpx_mock, gateway_url)
@@ -898,6 +914,7 @@ async def test_publish(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "author": "author_example",
             "deprecatePrevious": "none",
             "async": True,
         },
@@ -925,6 +942,7 @@ async def test_publish_without_types(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "author": "author_example",
             "deprecatePrevious": "none",
             "async": True,
         },
@@ -1180,6 +1198,7 @@ async def test_update_asset(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "author": "author_example",
             "async": True,
             "chown": False,
         },
@@ -1217,6 +1236,7 @@ async def test_update_asset_without_types(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "author": "author_example",
             "async": True,
             "chown": False,
         },
@@ -1267,6 +1287,7 @@ async def test_update_assets(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "author": "author_example",
             "async": True,
             "chown": False,
         },
@@ -1300,6 +1321,7 @@ async def test_update_assets_without_types(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "author": "author_example",
             "async": True,
             "chown": False,
         },
@@ -1347,7 +1369,6 @@ async def test_verify(
 
     kwargs = {
         "query": {
-            "comment": "comment_example",
             "async": True,
             "scaleToZero": True,
         },
@@ -1374,7 +1395,6 @@ async def test_verify_without_types(
 
     kwargs = {
         "query": {
-            "comment": "comment_example",
             "async": True,
             "scaleToZero": True,
         },
