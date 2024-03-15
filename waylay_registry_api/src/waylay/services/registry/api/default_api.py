@@ -10,7 +10,7 @@ Do not edit the class manually.
 
 from __future__ import annotations  # for Python 3.7–3.9
 
-from pydantic import StrictBool, TypeAdapter, ConfigDict
+from pydantic import StrictBool, TypeAdapter
 from typing import (
     Dict,
     Literal,
@@ -44,9 +44,9 @@ try:
 
     from waylay.services.registry.models import RootPageResponse
 
-    types_available = True
+    MODELS_AVAILABLE = True
 except ImportError:
-    types_available = False
+    MODELS_AVAILABLE = False
 
     if not TYPE_CHECKING:
         GetQuery = dict
@@ -54,9 +54,6 @@ except ImportError:
         RootPageResponse = Model
 
         RootPageResponse = Model
-
-
-StringAdapter = TypeAdapter(str, config=ConfigDict(coerce_numbers_to_str=True))
 
 
 class DefaultApi(WithApiClient):
@@ -90,7 +87,6 @@ class DefaultApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def get(
         self,
         *,
@@ -126,6 +122,10 @@ class DefaultApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -136,6 +136,10 @@ class DefaultApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(GetQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(

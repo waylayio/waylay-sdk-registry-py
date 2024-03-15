@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -23,13 +22,15 @@ try:
 
     LatestFunctionsQueryAdapter = TypeAdapter(LatestFunctionsQuery)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for LatestFunctionsQuery not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 latest_functions_query_model_schema = json.loads(r"""{
   "type" : "object",
   "properties" : {
+    "showRelated" : {
+      "$ref" : "#/components/schemas/ShowRelatedType"
+    },
     "limit" : {
       "minimum" : 0,
       "type" : "number",

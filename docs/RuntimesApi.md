@@ -1,6 +1,6 @@
 # waylay.services.registry.RuntimesApi
 
-All URIs are relative to *https://api.waylay.io*
+All URIs are relative to *https://api-aws-dev.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -64,8 +64,8 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of a &lt;em&gt;runtime&lt;/em&gt; | 
 **version** | [**SemanticVersionRange**](.md) | path parameter `"version"` | A version range for a &lt;em&gt;runtime&lt;/em&gt; | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['ls']** | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
+**query['ls']** (dict) <br> **query.ls** (Query) | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -76,7 +76,7 @@ Name     | Type  | API binding   | Description   | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/octet-stream, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
+ - **Accept**: application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
 
 ### HTTP response details
 
@@ -142,8 +142,8 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | [**SemanticVersionRange**](.md) | path parameter `"version"` | A version range for a &lt;em&gt;runtime&lt;/em&gt; | 
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['ls']** | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
+**query['ls']** (dict) <br> **query.ls** (Query) | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -154,7 +154,7 @@ Name     | Type  | API binding   | Description   | Notes
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/octet-stream, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
+ - **Accept**: application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
 
 ### HTTP response details
 
@@ -219,10 +219,10 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of a &lt;em&gt;runtime&lt;/em&gt; | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['version']** | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
-**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
-**query['archiveFormat']** | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
+**query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -296,7 +296,7 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of a &lt;em&gt;runtime&lt;/em&gt; | 
 **version** | [**SemanticVersionRange**](.md) | path parameter `"version"` | A version range for a &lt;em&gt;runtime&lt;/em&gt; | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -372,12 +372,12 @@ GET /registry/v2/runtimes/
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['version']** | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
-**query['latest']** | [**LatestVersionLevel**](.md) | query parameter `"latest"` | If set, filters on the level of latest versions that will be included in the query. * &#x60;major&#x60;: include at most one latest version per name and major release. * &#x60;minor&#x60;: include at most one latest version per name and minor release. * &#x60;patch&#x60;: include each matching patch version. * &#x60;true&#x60;: include the latest matching version. * &#x60;false&#x60;: include any matching version (same as &#x60;patch&#x60;).  This filter is applied after all other selection criteria. | [optional] 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
-**query['name']** | **str** | query parameter `"name"` | If set, filters on the &lt;code&gt;name&lt;/code&gt; of a runtime. Supports &lt;code&gt;*&lt;/code&gt; and &lt;code&gt;?&lt;/code&gt; wildcards and is case-insensitive. | [optional] 
-**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
-**query['archiveFormat']** | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
+**query['latest']** (dict) <br> **query.latest** (Query) | [**LatestVersionLevel**](.md) | query parameter `"latest"` | If set, filters on the level of latest versions that will be included in the query. * &#x60;major&#x60;: include at most one latest version per name and major release. * &#x60;minor&#x60;: include at most one latest version per name and minor release. * &#x60;patch&#x60;: include each matching patch version. * &#x60;true&#x60;: include the latest matching version. * &#x60;false&#x60;: include any matching version (same as &#x60;patch&#x60;).  This filter is applied after all other selection criteria. | [optional] 
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
+**query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` | If set, filters on the &lt;code&gt;name&lt;/code&gt; of a runtime. Supports &lt;code&gt;*&lt;/code&gt; and &lt;code&gt;?&lt;/code&gt; wildcards and is case-insensitive. | [optional] 
+**query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -455,11 +455,11 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of a &lt;em&gt;runtime&lt;/em&gt; | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['version']** | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
-**query['latest']** | [**LatestVersionLevel**](.md) | query parameter `"latest"` | If set, filters on the level of latest versions that will be included in the query. * &#x60;major&#x60;: include at most one latest version per name and major release. * &#x60;minor&#x60;: include at most one latest version per name and minor release. * &#x60;patch&#x60;: include each matching patch version. * &#x60;true&#x60;: include the latest matching version. * &#x60;false&#x60;: include any matching version (same as &#x60;patch&#x60;).  This filter is applied after all other selection criteria. | [optional] 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
-**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
-**query['archiveFormat']** | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
+**query['latest']** (dict) <br> **query.latest** (Query) | [**LatestVersionLevel**](.md) | query parameter `"latest"` | If set, filters on the level of latest versions that will be included in the query. * &#x60;major&#x60;: include at most one latest version per name and major release. * &#x60;minor&#x60;: include at most one latest version per name and minor release. * &#x60;patch&#x60;: include each matching patch version. * &#x60;true&#x60;: include the latest matching version. * &#x60;false&#x60;: include any matching version (same as &#x60;patch&#x60;).  This filter is applied after all other selection criteria. | [optional] 
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
+**query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type

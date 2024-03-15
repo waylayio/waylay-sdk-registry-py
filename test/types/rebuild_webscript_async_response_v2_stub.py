@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -25,10 +24,7 @@ try:
         RebuildWebscriptAsyncResponseV2
     )
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for RebuildWebscriptAsyncResponseV2 not available: {exc}"
-    )
+except ImportError:
     MODELS_AVAILABLE = False
 
 rebuild_webscript_async_response_v2_model_schema = json.loads(r"""{

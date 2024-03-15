@@ -10,22 +10,13 @@ Do not edit the class manually.
 """
 
 from __future__ import annotations
-import json
 import re  # noqa: F401
 from enum import Enum
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class PlugPropertyDataType(str, Enum):
     """Datatype supported in plug input or output properties.."""
 
-    """
-    allowed enum values
-    """
     STRING = "string"
     INTEGER = "integer"
     LONG = "long"
@@ -34,15 +25,5 @@ class PlugPropertyDataType(str, Enum):
     BOOLEAN = "boolean"
     OBJECT = "object"
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Create an instance of PlugPropertyDataType from a JSON string."""
-        return cls(json.loads(json_str))
-
-    def to_json(self) -> str:
-        """Get the JSON representation of PlugPropertyDataType."""
-        return self.value
-
-    def to_dict(self) -> str:
-        """Get the dict representation of PlugPropertyDataType."""
-        return self.value
+    def __str__(self) -> str:
+        return str(self.value)

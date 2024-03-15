@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -21,14 +20,13 @@ try:
 
     JobTypeAdapter = TypeAdapter(JobType)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for JobType not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 job_type_model_schema = json.loads(r"""{
   "title" : "JobType",
   "type" : "string",
-  "enum" : [ "build", "deploy", "verify", "undeploy", "batch", "scale", "cleanup", "other" ]
+  "enum" : [ "build", "deploy", "verify", "undeploy", "batch", "scale", "cleanup", "notify", "other" ]
 }
 """)
 job_type_model_schema.update({"definitions": MODEL_DEFINITIONS})

@@ -11,7 +11,7 @@ Do not edit the class manually.
 from __future__ import annotations  # for Python 3.7–3.9
 import warnings
 
-from pydantic import Field, StrictStr, StrictBool, TypeAdapter, ConfigDict
+from pydantic import Field, StrictStr, StrictBool, TypeAdapter
 from typing import (
     Dict,
     Literal,
@@ -52,9 +52,9 @@ try:
 
     from waylay.services.registry.queries.schemas_api import GetQuery
 
-    types_available = True
+    MODELS_AVAILABLE = True
 except ImportError:
-    types_available = False
+    MODELS_AVAILABLE = False
 
     if not TYPE_CHECKING:
         FunctionType = str
@@ -64,9 +64,6 @@ except ImportError:
         GetByRoleQuery = dict
 
         GetQuery = dict
-
-
-StringAdapter = TypeAdapter(str, config=ConfigDict(coerce_numbers_to_str=True))
 
 
 class SchemasApi(WithApiClient):
@@ -104,7 +101,6 @@ class SchemasApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def get_by_role(
         self,
         function_type: Annotated[FunctionType, Field(description="Function type")],
@@ -150,6 +146,10 @@ class SchemasApi(WithApiClient):
             "GET /registry/v2/schemas/{functionType}/{role}/schema is deprecated.",
             DeprecationWarning,
         )
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -157,12 +157,16 @@ class SchemasApi(WithApiClient):
                 send_args[key] = kwargs.pop(key)
         # path parameters
         path_params: Dict[str, str] = {
-            "functionType": StringAdapter.validate_python(function_type),
-            "role": StringAdapter.validate_python(role),
+            "functionType": str(function_type),
+            "role": str(role),
         }
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(GetByRoleQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(
@@ -213,7 +217,6 @@ class SchemasApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def get(
         self,
         schema_id: Annotated[StrictStr, Field(description="Schema id")],
@@ -252,6 +255,10 @@ class SchemasApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -259,11 +266,15 @@ class SchemasApi(WithApiClient):
                 send_args[key] = kwargs.pop(key)
         # path parameters
         path_params: Dict[str, str] = {
-            "schemaId": StringAdapter.validate_python(schema_id),
+            "schemaId": str(schema_id),
         }
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(GetQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(

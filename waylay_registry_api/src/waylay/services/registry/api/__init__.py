@@ -2,9 +2,9 @@
 
 # import apis into api package
 from .jobs_api import JobsApi
-from .model_functions_api import ModelFunctionsApi
-from .plug_functions_api import PlugFunctionsApi
+from .models_api import ModelsApi
+from .plugs_api import PlugsApi
 from .runtimes_api import RuntimesApi
 from .schemas_api import SchemasApi
-from .webscript_functions_api import WebscriptFunctionsApi
+from .webscripts_api import WebscriptsApi
 from .default_api import DefaultApi

@@ -10,10 +10,65 @@ Do not edit the class manually.
 
 from __future__ import annotations  # for Python 3.7–3.9
 
+from pydantic import (
+    BaseModel,
+    StrictStr,
+    ConfigDict,
+    SerializationInfo,
+    model_serializer,
+)
+from typing import Dict, Union, Any, Callable
 from typing_extensions import (
-    TypedDict,  # >=3.12
+    Self,  # >=3.11
 )
 
 
-class GetQuery(TypedDict):
-    """get query parameters."""
+def _get_query_alias_for(field_name: str) -> str:
+    return field_name
+
+
+class GetQuery(BaseModel):
+    """Model for `get` query parameters."""
+
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_get_query_alias_for,
+        populate_by_name=True,
+    )
+
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
+
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the GetQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
+
+    def to_json(self) -> str:
+        """Convert the GetQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
+        )
+
+    @classmethod
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a GetQuery instance from a dict."""
+        return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: Union[str, bytes, bytearray]) -> Self:
+        """Create a GetQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)

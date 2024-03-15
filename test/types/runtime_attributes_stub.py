@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -21,8 +20,7 @@ try:
 
     RuntimeAttributesAdapter = TypeAdapter(RuntimeAttributes)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for RuntimeAttributes not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 runtime_attributes_model_schema = json.loads(r"""{

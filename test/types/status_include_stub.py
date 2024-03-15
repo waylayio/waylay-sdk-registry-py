@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -21,8 +20,7 @@ try:
 
     StatusIncludeAdapter = TypeAdapter(StatusInclude)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for StatusInclude not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 status_include_model_schema = json.loads(r"""{

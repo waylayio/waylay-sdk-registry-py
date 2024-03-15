@@ -15,6 +15,7 @@ import re  # noqa: F401
 from ..models.job_type_batch import JobTypeBatch
 from ..models.job_type_build import JobTypeBuild
 from ..models.job_type_deploy import JobTypeDeploy
+from ..models.job_type_notify import JobTypeNotify
 from ..models.job_type_scale import JobTypeScale
 from ..models.job_type_undeploy import JobTypeUndeploy
 from ..models.job_type_verify import JobTypeVerify
@@ -34,5 +35,6 @@ JobTypeSchema = Union[
     Annotated[JobTypeUndeploy, ""],
     Annotated[JobTypeScale, ""],
     Annotated[JobTypeBatch, ""],
+    Annotated[JobTypeNotify, ""],
 ]
 """JobTypeSchema."""

@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -25,10 +24,7 @@ try:
         JobEventResponseWaitingEventData
     )
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for JobEventResponseWaitingEventData not available: {exc}"
-    )
+except ImportError:
     MODELS_AVAILABLE = False
 
 job_event_response_waiting_event_data__model_schema = json.loads(r"""{

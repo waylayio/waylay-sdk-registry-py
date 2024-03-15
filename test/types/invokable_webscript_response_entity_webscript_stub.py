@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -25,10 +24,7 @@ try:
         InvokableWebscriptResponseEntityWebscript
     )
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for InvokableWebscriptResponseEntityWebscript not available: {exc}"
-    )
+except ImportError:
     MODELS_AVAILABLE = False
 
 invokable_webscript_response_entity_webscript_model_schema = json.loads(r"""{

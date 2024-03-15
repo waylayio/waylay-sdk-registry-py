@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -21,8 +20,7 @@ try:
 
     FunctionJobArgsAdapter = TypeAdapter(FunctionJobArgs)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for FunctionJobArgs not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 function_job_args_model_schema = json.loads(r"""{

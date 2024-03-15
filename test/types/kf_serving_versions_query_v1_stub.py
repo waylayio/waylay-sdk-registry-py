@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -23,8 +22,7 @@ try:
 
     KFServingVersionsQueryV1Adapter = TypeAdapter(KFServingVersionsQueryV1)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for KFServingVersionsQueryV1 not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 kf_serving_versions_query_v1_model_schema = json.loads(r"""{

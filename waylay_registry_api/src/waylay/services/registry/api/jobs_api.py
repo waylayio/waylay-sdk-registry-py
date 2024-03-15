@@ -10,7 +10,7 @@ Do not edit the class manually.
 
 from __future__ import annotations  # for Python 3.7–3.9
 
-from pydantic import StrictStr, StrictBool, TypeAdapter, ConfigDict
+from pydantic import StrictStr, StrictBool, TypeAdapter
 from typing import (
     Dict,
     Literal,
@@ -72,9 +72,9 @@ try:
 
     from waylay.services.registry.models import JobsResponse
 
-    types_available = True
+    MODELS_AVAILABLE = True
 except ImportError:
-    types_available = False
+    MODELS_AVAILABLE = False
 
     if not TYPE_CHECKING:
         EventsQuery = dict
@@ -96,9 +96,6 @@ except ImportError:
         JobsResponse = Model
 
         JobsResponse = Model
-
-
-StringAdapter = TypeAdapter(str, config=ConfigDict(coerce_numbers_to_str=True))
 
 
 class JobsApi(WithApiClient):
@@ -132,7 +129,6 @@ class JobsApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def events(
         self,
         *,
@@ -147,11 +143,11 @@ class JobsApi(WithApiClient):
         Get an SSE stream of all job events for the users tenant.  The stream can be filtered on job type or on a specific job id.   When filtering on job id, the server will send a <code>close</code> event  upon completion of the job. The client should handle this event by closing the stream.
         :param query: URL Query parameters.
         :type query: EventsQuery | QueryParamTypes, optional
-        :param query['type']: The type of the job.
+        :param query['type'] (dict) <br> query.type (Query) : The type of the job.
         :type query['type']: JobType
-        :param query['id']: The id of the job.
+        :param query['id'] (dict) <br> query.id (Query) : The id of the job.
         :type query['id']: str
-        :param query['children']: If set to <code>true</code>, the event stream will include events of the job's dependants. E.g., when subscribing to a verify job with `children=true`, you will also receive the events of the underlying build and deploy jobs. Defaults to <code>false</code>.
+        :param query['children'] (dict) <br> query.children (Query) : If set to <code>true</code>, the event stream will include events of the job's dependants. E.g., when subscribing to a verify job with `children=true`, you will also receive the events of the underlying build and deploy jobs. Defaults to <code>false</code>.
         :type query['children']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -174,6 +170,10 @@ class JobsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -184,6 +184,10 @@ class JobsApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(EventsQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(
@@ -236,7 +240,6 @@ class JobsApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def get(
         self,
         type: JobType,
@@ -278,6 +281,10 @@ class JobsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -285,12 +292,16 @@ class JobsApi(WithApiClient):
                 send_args[key] = kwargs.pop(key)
         # path parameters
         path_params: Dict[str, str] = {
-            "type": StringAdapter.validate_python(type),
-            "id": StringAdapter.validate_python(id),
+            "type": str(type),
+            "id": str(id),
         }
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(GetQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(
@@ -339,7 +350,6 @@ class JobsApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def list(
         self,
         *,
@@ -354,17 +364,17 @@ class JobsApi(WithApiClient):
         List all background jobs for the users tenant.
         :param query: URL Query parameters.
         :type query: ListQuery | QueryParamTypes, optional
-        :param query['limit']: The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
+        :param query['limit'] (dict) <br> query.limit (Query) : The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
         :type query['limit']: float
-        :param query['type']: Filter on job type
+        :param query['type'] (dict) <br> query.type (Query) : Filter on job type
         :type query['type']: List[JobTypeSchema]
-        :param query['state']: Filter on job state
+        :param query['state'] (dict) <br> query.state (Query) : Filter on job state
         :type query['state']: List[JobStateResult]
-        :param query['functionType']: Filter on function type
+        :param query['functionType'] (dict) <br> query.function_type (Query) : Filter on function type
         :type query['functionType']: List[FunctionType]
-        :param query['createdBefore']: Filter on jobs that created before the given timestamp or age
+        :param query['createdBefore'] (dict) <br> query.created_before (Query) : Filter on jobs that created before the given timestamp or age
         :type query['createdBefore']: TimestampSpec
-        :param query['createdAfter']: Filter on jobs that created after the given timestamp or age
+        :param query['createdAfter'] (dict) <br> query.created_after (Query) : Filter on jobs that created after the given timestamp or age
         :type query['createdAfter']: TimestampSpec
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -387,6 +397,10 @@ class JobsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -397,6 +411,10 @@ class JobsApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(ListQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(

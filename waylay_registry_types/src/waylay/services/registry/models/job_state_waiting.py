@@ -10,33 +10,14 @@ Do not edit the class manually.
 """
 
 from __future__ import annotations
-import json
 import re  # noqa: F401
 from enum import Enum
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class JobStateWaiting(str, Enum):
     """The job has been queued for execution, but might be waiting because of rate limiting.."""
 
-    """
-    allowed enum values
-    """
     WAITING = "waiting"
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Create an instance of JobStateWaiting from a JSON string."""
-        return cls(json.loads(json_str))
-
-    def to_json(self) -> str:
-        """Get the JSON representation of JobStateWaiting."""
-        return self.value
-
-    def to_dict(self) -> str:
-        """Get the dict representation of JobStateWaiting."""
-        return self.value
+    def __str__(self) -> str:
+        return str(self.value)

@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -23,8 +22,7 @@ try:
 
     PublishFunctionQueryAdapter = TypeAdapter(PublishFunctionQuery)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for PublishFunctionQuery not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 publish_function_query_model_schema = json.loads(r"""{
@@ -33,6 +31,10 @@ publish_function_query_model_schema = json.loads(r"""{
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
+    },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
     },
     "deprecatePrevious" : {
       "$ref" : "#/components/schemas/DeprecatePreviousPolicy"

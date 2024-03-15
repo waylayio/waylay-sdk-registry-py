@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -23,8 +22,7 @@ try:
 
     LatestModelsResponseV2Adapter = TypeAdapter(LatestModelsResponseV2)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for LatestModelsResponseV2 not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 latest_models_response_v2_model_schema = json.loads(r"""{
@@ -47,7 +45,7 @@ latest_models_response_v2_model_schema = json.loads(r"""{
       "type" : "array",
       "description" : "The specification and deployment status of the queried functions",
       "items" : {
-        "$ref" : "#/components/schemas/LatestModelsResponseV2_entities_inner"
+        "$ref" : "#/components/schemas/EntityWithLinks_IKfservingResponseV2_"
       }
     }
   },

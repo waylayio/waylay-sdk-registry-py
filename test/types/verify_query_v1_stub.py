@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -21,8 +20,7 @@ try:
 
     VerifyQueryV1Adapter = TypeAdapter(VerifyQueryV1)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for VerifyQueryV1 not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 verify_query_v1_model_schema = json.loads(r"""{

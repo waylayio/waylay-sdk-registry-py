@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -21,8 +20,7 @@ try:
 
     FailedEventSSEAdapter = TypeAdapter(FailedEventSSE)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for FailedEventSSE not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 failed_event_sse_model_schema = json.loads(r"""{

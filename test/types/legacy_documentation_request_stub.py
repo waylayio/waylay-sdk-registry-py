@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -23,8 +22,7 @@ try:
 
     LegacyDocumentationRequestAdapter = TypeAdapter(LegacyDocumentationRequest)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for LegacyDocumentationRequest not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 legacy_documentation_request_model_schema = json.loads(r"""{

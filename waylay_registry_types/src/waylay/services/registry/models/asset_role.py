@@ -10,22 +10,13 @@ Do not edit the class manually.
 """
 
 from __future__ import annotations
-import json
 import re  # noqa: F401
 from enum import Enum
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class AssetRole(str, Enum):
     """Classification of assets with regard to their role.."""
 
-    """
-    allowed enum values
-    """
     MANIFEST = "manifest"
     PROJECT = "project"
     MAIN = "main"
@@ -33,15 +24,5 @@ class AssetRole(str, Enum):
     SCRIPT = "script"
     OTHER = "other"
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Create an instance of AssetRole from a JSON string."""
-        return cls(json.loads(json_str))
-
-    def to_json(self) -> str:
-        """Get the JSON representation of AssetRole."""
-        return self.value
-
-    def to_dict(self) -> str:
-        """Get the dict representation of AssetRole."""
-        return self.value
+    def __str__(self) -> str:
+        return str(self.value)

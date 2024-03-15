@@ -7,6 +7,7 @@ Latest plug versions listing query with latest links. A request that only uses t
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **type** | [**PlugType**](PlugType.md) |  | [optional] 
+**show_related** | [**ShowRelatedType**](ShowRelatedType.md) |  | [optional] 
 **limit** | **float** | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
 **page** | **float** | The number of pages to skip when returning result to this query. | [optional] 
 **include_draft** | **bool** | Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to &#x60;true&#x60;, draft versions are **included**. If set to &#x60;false&#x60;, draft versions are **excluded**. | [optional] 

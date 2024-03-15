@@ -10,7 +10,7 @@ Do not edit the class manually.
 
 from __future__ import annotations  # for Python 3.7–3.9
 
-from pydantic import Field, StrictStr, StrictBool, TypeAdapter, ConfigDict
+from pydantic import Field, StrictStr, StrictBool, TypeAdapter
 from typing import (
     Dict,
     Literal,
@@ -103,9 +103,9 @@ try:
 
     from waylay.services.registry.models import RuntimeSummaryResponse
 
-    types_available = True
+    MODELS_AVAILABLE = True
 except ImportError:
-    types_available = False
+    MODELS_AVAILABLE = False
 
     if not TYPE_CHECKING:
         SemanticVersionRange = str
@@ -141,9 +141,6 @@ except ImportError:
         RuntimeSummaryResponse = Model
 
         RuntimeSummaryResponse = Model
-
-
-StringAdapter = TypeAdapter(str, config=ConfigDict(coerce_numbers_to_str=True))
 
 
 class RuntimesApi(WithApiClient):
@@ -185,7 +182,6 @@ class RuntimesApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def example_archive(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
@@ -208,9 +204,9 @@ class RuntimesApi(WithApiClient):
         :type version: SemanticVersionRange
         :param query: URL Query parameters.
         :type query: ExampleArchiveQuery | QueryParamTypes, optional
-        :param query['ls']: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
+        :param query['ls'] (dict) <br> query.ls (Query) : If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
         :type query['ls']: bool
-        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -233,6 +229,10 @@ class RuntimesApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -240,12 +240,16 @@ class RuntimesApi(WithApiClient):
                 send_args[key] = kwargs.pop(key)
         # path parameters
         path_params: Dict[str, str] = {
-            "name": StringAdapter.validate_python(name),
-            "version": StringAdapter.validate_python(version),
+            "name": str(name),
+            "version": str(version),
         }
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(ExampleArchiveQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(
@@ -314,7 +318,6 @@ class RuntimesApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def get_example_asset(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
@@ -345,9 +348,9 @@ class RuntimesApi(WithApiClient):
         :type wildcard: str
         :param query: URL Query parameters.
         :type query: GetExampleAssetQuery | QueryParamTypes, optional
-        :param query['ls']: If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
+        :param query['ls'] (dict) <br> query.ls (Query) : If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
         :type query['ls']: bool
-        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -370,6 +373,10 @@ class RuntimesApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -377,13 +384,17 @@ class RuntimesApi(WithApiClient):
                 send_args[key] = kwargs.pop(key)
         # path parameters
         path_params: Dict[str, str] = {
-            "name": StringAdapter.validate_python(name),
-            "version": StringAdapter.validate_python(version),
-            "wildcard": StringAdapter.validate_python(wildcard),
+            "name": str(name),
+            "version": str(version),
+            "wildcard": str(wildcard),
         }
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(GetExampleAssetQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(
@@ -434,7 +445,6 @@ class RuntimesApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def get_latest(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
@@ -452,13 +462,13 @@ class RuntimesApi(WithApiClient):
         :type name: str
         :param query: URL Query parameters.
         :type query: GetLatestQuery | QueryParamTypes, optional
-        :param query['version']: If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
+        :param query['version'] (dict) <br> query.version (Query) : If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
         :type query['version']: SemanticVersionRange
-        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
-        :param query['functionType']: If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
+        :param query['functionType'] (dict) <br> query.function_type (Query) : If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
         :type query['functionType']: List[FunctionType]
-        :param query['archiveFormat']: If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
+        :param query['archiveFormat'] (dict) <br> query.archive_format (Query) : If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
         :type query['archiveFormat']: List[ArchiveFormat]
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -481,6 +491,10 @@ class RuntimesApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -488,11 +502,15 @@ class RuntimesApi(WithApiClient):
                 send_args[key] = kwargs.pop(key)
         # path parameters
         path_params: Dict[str, str] = {
-            "name": StringAdapter.validate_python(name),
+            "name": str(name),
         }
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(GetLatestQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(
@@ -549,7 +567,6 @@ class RuntimesApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def get(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
@@ -572,7 +589,7 @@ class RuntimesApi(WithApiClient):
         :type version: SemanticVersionRange
         :param query: URL Query parameters.
         :type query: GetQuery | QueryParamTypes, optional
-        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -595,6 +612,10 @@ class RuntimesApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -602,12 +623,16 @@ class RuntimesApi(WithApiClient):
                 send_args[key] = kwargs.pop(key)
         # path parameters
         path_params: Dict[str, str] = {
-            "name": StringAdapter.validate_python(name),
-            "version": StringAdapter.validate_python(version),
+            "name": str(name),
+            "version": str(version),
         }
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(GetQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(
@@ -656,7 +681,6 @@ class RuntimesApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def list(
         self,
         *,
@@ -671,17 +695,17 @@ class RuntimesApi(WithApiClient):
         List the runtimes that function registry supports.
         :param query: URL Query parameters.
         :type query: ListQuery | QueryParamTypes, optional
-        :param query['version']: If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
+        :param query['version'] (dict) <br> query.version (Query) : If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
         :type query['version']: SemanticVersionRange
-        :param query['latest']: If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.
+        :param query['latest'] (dict) <br> query.latest (Query) : If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.
         :type query['latest']: LatestVersionLevel
-        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
-        :param query['name']: If set, filters on the <code>name</code> of a runtime. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive.
+        :param query['name'] (dict) <br> query.name (Query) : If set, filters on the <code>name</code> of a runtime. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive.
         :type query['name']: str
-        :param query['functionType']: If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
+        :param query['functionType'] (dict) <br> query.function_type (Query) : If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
         :type query['functionType']: List[FunctionType]
-        :param query['archiveFormat']: If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
+        :param query['archiveFormat'] (dict) <br> query.archive_format (Query) : If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
         :type query['archiveFormat']: List[ArchiveFormat]
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -704,6 +728,10 @@ class RuntimesApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -714,6 +742,10 @@ class RuntimesApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(ListQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(
@@ -764,7 +796,6 @@ class RuntimesApi(WithApiClient):
         **kwargs,
     ) -> Response: ...
 
-    # @validate_call
     async def list_versions(
         self,
         name: Annotated[StrictStr, Field(description="The name of a <em>runtime</em>")],
@@ -782,15 +813,15 @@ class RuntimesApi(WithApiClient):
         :type name: str
         :param query: URL Query parameters.
         :type query: ListVersionsQuery | QueryParamTypes, optional
-        :param query['version']: If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
+        :param query['version'] (dict) <br> query.version (Query) : If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
         :type query['version']: SemanticVersionRange
-        :param query['latest']: If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.
+        :param query['latest'] (dict) <br> query.latest (Query) : If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.
         :type query['latest']: LatestVersionLevel
-        :param query['includeDeprecated']: If set to `true`, deprecated runtimes will be included in the query.
+        :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
-        :param query['functionType']: If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
+        :param query['functionType'] (dict) <br> query.function_type (Query) : If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
         :type query['functionType']: List[FunctionType]
-        :param query['archiveFormat']: If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
+        :param query['archiveFormat'] (dict) <br> query.archive_format (Query) : If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
         :type query['archiveFormat']: List[ArchiveFormat]
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -813,6 +844,10 @@ class RuntimesApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
         # set aside send args
         send_args = {}
         for key in ["stream", "follow_redirects", "auth"]:
@@ -820,11 +855,15 @@ class RuntimesApi(WithApiClient):
                 send_args[key] = kwargs.pop(key)
         # path parameters
         path_params: Dict[str, str] = {
-            "name": StringAdapter.validate_python(name),
+            "name": str(name),
         }
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(ListVersionsQuery).validate_python(query)
 
         ## create httpx.Request
         api_request = self.api_client.build_request(

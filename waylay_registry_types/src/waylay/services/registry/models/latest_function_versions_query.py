@@ -10,16 +10,15 @@ Do not edit the class manually.
 """
 
 from __future__ import annotations
-import pprint
 import re  # noqa: F401
-import json
-from pydantic import ConfigDict
+from pydantic import ConfigDict, SerializationInfo, model_serializer, StrictStr
+from typing import Callable, Union
 from typing_extensions import (
     Self,  # >=3.11
 )
 
 from typing import Any, Dict, List, Optional, Union
-from pydantic import BaseModel, StrictBool, StrictStr
+from pydantic import BaseModel, StrictBool, StrictStr, field_validator
 from pydantic import Field
 from typing_extensions import Annotated
 from ..models.archive_format import ArchiveFormat
@@ -111,6 +110,17 @@ class LatestFunctionVersionsQuery(BaseModel):
         default=None,
         description="When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter.",
     )
+    show_related: Optional[StrictStr] = Field(default=None, alias="showRelated")
+
+    @field_validator("show_related")
+    @classmethod
+    def show_related_validate_enum(cls, value):
+        """Validate the enum."""
+        if value is None:
+            return value
+        if value not in ("none"):
+            raise ValueError("must be one of enum values ('none')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -119,40 +129,37 @@ class LatestFunctionVersionsQuery(BaseModel):
         extra="ignore",
     )
 
-    def to_str(self) -> str:
-        """Get the string representation of the model using alias."""
-        return pprint.pformat(self.model_dump(by_alias=True))
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
+
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the LatestFunctionVersionsQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
 
     def to_json(self) -> str:
-        """Get the JSON representation of the model using alias."""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict(), default=str)
-
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Create an instance of LatestFunctionVersionsQuery from a JSON string."""
-        return cls.from_dict(json.loads(json_str))
-
-    def to_dict(self) -> Dict[str, Any]:
-        """Get the dictionary representation of the model using alias.
-
-        This has the following differences from calling pydantic's
-        `self.model_dump(by_alias=True)`:
-
-        * `None` is only added to the output dict for nullable fields that
-          were set at model initialization. Other fields with value `None`
-          are ignored.
-        """
-        _dict = self.model_dump(
-            by_alias=True,
-            exclude={},
-            exclude_none=True,
+        """Convert the LatestFunctionVersionsQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
         )
-        return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of LatestFunctionVersionsQuery from a dict."""
-        if obj is None:
-            return None
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a LatestFunctionVersionsQuery instance from a dict."""
         return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: Union[str, bytes, bytearray]) -> Self:
+        """Create a LatestFunctionVersionsQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)

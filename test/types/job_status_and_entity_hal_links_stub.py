@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -23,8 +22,7 @@ try:
 
     JobStatusAndEntityHALLinksAdapter = TypeAdapter(JobStatusAndEntityHALLinks)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for JobStatusAndEntityHALLinks not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 job_status_and_entity_hal_links_model_schema = json.loads(r"""{

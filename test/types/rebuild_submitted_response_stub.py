@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -23,8 +22,7 @@ try:
 
     RebuildSubmittedResponseAdapter = TypeAdapter(RebuildSubmittedResponse)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for RebuildSubmittedResponse not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 rebuild_submitted_response_model_schema = json.loads(r"""{

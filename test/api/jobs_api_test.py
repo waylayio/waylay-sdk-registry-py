@@ -36,8 +36,10 @@ from ..types.jobs_response_stub import JobsResponseStub
 
 
 try:
+    from waylay.services.registry.queries.jobs_api import EventsQuery
     from waylay.services.registry.models import EventWithCloseSSE
     from waylay.services.registry.models import JobResponse
+    from waylay.services.registry.queries.jobs_api import ListQuery
     from waylay.services.registry.models import JobsResponse
 
     MODELS_AVAILABLE = find_spec("waylay.services.registry.models") is not None
@@ -80,11 +82,12 @@ async def test_events(
     """
     # set path params
     kwargs = {
-        "query": {
-            "type": "build",
-            "id": "id_example",
-            "children": True,
-        },
+        # optionally use EventsQuery to validate and reuse parameters
+        "query": EventsQuery(
+            type="build",
+            id="id_example",
+            children=True,
+        ),
     }
     _events_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.events(**kwargs)
@@ -178,14 +181,15 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
     """
     # set path params
     kwargs = {
-        "query": {
-            "limit": 3.4,
-            "type": [],
-            "state": [],
-            "functionType": [],
-            "createdBefore": TimestampSpecStub.create_json(),
-            "createdAfter": TimestampSpecStub.create_json(),
-        },
+        # optionally use ListQuery to validate and reuse parameters
+        "query": ListQuery(
+            limit=3.4,
+            type=[],
+            state=[],
+            function_type=[],
+            created_before=TimestampSpecStub.create_json(),
+            created_after=TimestampSpecStub.create_json(),
+        ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.list(**kwargs)

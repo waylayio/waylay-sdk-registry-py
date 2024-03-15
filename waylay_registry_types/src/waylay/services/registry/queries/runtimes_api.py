@@ -10,233 +10,497 @@ Do not edit the class manually.
 
 from __future__ import annotations  # for Python 3.7–3.9
 
-from pydantic import Field, StrictStr
-from typing import (
-    List,
-    Optional,
-    Any,
+from pydantic import (
+    BaseModel,
+    Field,
+    StrictStr,
+    ConfigDict,
+    SerializationInfo,
+    model_serializer,
 )
+from typing import Dict, List, Optional, Union, Any, Callable
 from typing_extensions import (
-    NotRequired,  # >=3.11
-    TypedDict,  # >=3.12
+    Self,  # >=3.11
 )
 
 from pydantic import Field
 from typing_extensions import Annotated
 from pydantic import StrictBool, StrictStr
 
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from ..models.archive_format import ArchiveFormat
 from ..models.function_type import FunctionType
 from ..models.latest_version_level import LatestVersionLevel
 
 
-class ExampleArchiveQuery(TypedDict):
-    """example_archive query parameters."""
-
-    # TODO use ls
-    ls: NotRequired[
-        Annotated[
-            Optional[StrictBool],
-            Field(
-                description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime."
-            ),
-        ]
-    ]
-    # TODO use includeDeprecated
-    include_deprecated: NotRequired[
-        Annotated[
-            Optional[StrictBool],
-            Field(
-                description="If set to `true`, deprecated runtimes will be included in the query."
-            ),
-        ]
-    ]
+def _example_archive_query_alias_for(field_name: str) -> str:
+    if field_name == "ls":
+        return "ls"
+    if field_name == "include_deprecated":
+        return "includeDeprecated"
+    return field_name
 
 
-class GetExampleAssetQuery(TypedDict):
-    """get_example_asset query parameters."""
+class ExampleArchiveQuery(BaseModel):
+    """Model for `example_archive` query parameters."""
 
-    # TODO use ls
-    ls: NotRequired[
-        Annotated[
-            Optional[StrictBool],
-            Field(
-                description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime."
-            ),
-        ]
-    ]
-    # TODO use includeDeprecated
-    include_deprecated: NotRequired[
-        Annotated[
-            Optional[StrictBool],
-            Field(
-                description="If set to `true`, deprecated runtimes will be included in the query."
-            ),
-        ]
-    ]
+    ls: Annotated[
+        Optional[StrictBool],
+        Field(
+            description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime."
+        ),
+    ] = None
+    include_deprecated: Annotated[
+        Optional[StrictBool],
+        Field(
+            description="If set to `true`, deprecated runtimes will be included in the query."
+        ),
+    ] = None
 
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_example_archive_query_alias_for,
+        populate_by_name=True,
+    )
 
-class GetLatestQuery(TypedDict):
-    """get_latest query parameters."""
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
 
-    # TODO use version
-    version: NotRequired[
-        Annotated[
-            Optional[Any],
-            Field(
-                description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver)."
-            ),
-        ]
-    ]
-    # TODO use includeDeprecated
-    include_deprecated: NotRequired[
-        Annotated[
-            Optional[StrictBool],
-            Field(
-                description="If set to `true`, deprecated runtimes will be included in the query."
-            ),
-        ]
-    ]
-    # TODO use functionType
-    function_type: NotRequired[
-        Annotated[
-            Optional[List[FunctionType]],
-            Field(
-                description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
-            ),
-        ]
-    ]
-    # TODO use archiveFormat
-    archive_format: NotRequired[
-        Annotated[
-            Optional[List[ArchiveFormat]],
-            Field(
-                description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
-            ),
-        ]
-    ]
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the ExampleArchiveQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
+
+    def to_json(self) -> str:
+        """Convert the ExampleArchiveQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
+        )
+
+    @classmethod
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a ExampleArchiveQuery instance from a dict."""
+        return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: Union[str, bytes, bytearray]) -> Self:
+        """Create a ExampleArchiveQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)
 
 
-class GetQuery(TypedDict):
-    """get query parameters."""
-
-    # TODO use includeDeprecated
-    include_deprecated: NotRequired[
-        Annotated[
-            Optional[StrictBool],
-            Field(
-                description="If set to `true`, deprecated runtimes will be included in the query."
-            ),
-        ]
-    ]
+def _get_example_asset_query_alias_for(field_name: str) -> str:
+    if field_name == "ls":
+        return "ls"
+    if field_name == "include_deprecated":
+        return "includeDeprecated"
+    return field_name
 
 
-class ListQuery(TypedDict):
-    """list query parameters."""
+class GetExampleAssetQuery(BaseModel):
+    """Model for `get_example_asset` query parameters."""
 
-    # TODO use version
-    version: NotRequired[
-        Annotated[
-            Optional[Any],
-            Field(
-                description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver)."
-            ),
-        ]
-    ]
-    # TODO use latest
-    latest: NotRequired[
-        Annotated[
-            Optional[LatestVersionLevel],
-            Field(
-                description="If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria."
-            ),
-        ]
-    ]
-    # TODO use includeDeprecated
-    include_deprecated: NotRequired[
-        Annotated[
-            Optional[StrictBool],
-            Field(
-                description="If set to `true`, deprecated runtimes will be included in the query."
-            ),
-        ]
-    ]
-    # TODO use name
-    name: NotRequired[
-        Annotated[
-            Optional[StrictStr],
-            Field(
-                description="If set, filters on the <code>name</code> of a runtime. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive."
-            ),
-        ]
-    ]
-    # TODO use functionType
-    function_type: NotRequired[
-        Annotated[
-            Optional[List[FunctionType]],
-            Field(
-                description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
-            ),
-        ]
-    ]
-    # TODO use archiveFormat
-    archive_format: NotRequired[
-        Annotated[
-            Optional[List[ArchiveFormat]],
-            Field(
-                description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
-            ),
-        ]
-    ]
+    ls: Annotated[
+        Optional[StrictBool],
+        Field(
+            description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime."
+        ),
+    ] = None
+    include_deprecated: Annotated[
+        Optional[StrictBool],
+        Field(
+            description="If set to `true`, deprecated runtimes will be included in the query."
+        ),
+    ] = None
+
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_get_example_asset_query_alias_for,
+        populate_by_name=True,
+    )
+
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
+
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the GetExampleAssetQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
+
+    def to_json(self) -> str:
+        """Convert the GetExampleAssetQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
+        )
+
+    @classmethod
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a GetExampleAssetQuery instance from a dict."""
+        return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: Union[str, bytes, bytearray]) -> Self:
+        """Create a GetExampleAssetQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)
 
 
-class ListVersionsQuery(TypedDict):
-    """list_versions query parameters."""
+def _get_latest_query_alias_for(field_name: str) -> str:
+    if field_name == "version":
+        return "version"
+    if field_name == "include_deprecated":
+        return "includeDeprecated"
+    if field_name == "function_type":
+        return "functionType"
+    if field_name == "archive_format":
+        return "archiveFormat"
+    return field_name
 
-    # TODO use version
-    version: NotRequired[
-        Annotated[
-            Optional[Any],
-            Field(
-                description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver)."
-            ),
-        ]
-    ]
-    # TODO use latest
-    latest: NotRequired[
-        Annotated[
-            Optional[LatestVersionLevel],
-            Field(
-                description="If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria."
-            ),
-        ]
-    ]
-    # TODO use includeDeprecated
-    include_deprecated: NotRequired[
-        Annotated[
-            Optional[StrictBool],
-            Field(
-                description="If set to `true`, deprecated runtimes will be included in the query."
-            ),
-        ]
-    ]
-    # TODO use functionType
-    function_type: NotRequired[
-        Annotated[
-            Optional[List[FunctionType]],
-            Field(
-                description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
-            ),
-        ]
-    ]
-    # TODO use archiveFormat
-    archive_format: NotRequired[
-        Annotated[
-            Optional[List[ArchiveFormat]],
-            Field(
-                description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
-            ),
-        ]
-    ]
+
+class GetLatestQuery(BaseModel):
+    """Model for `get_latest` query parameters."""
+
+    version: Annotated[
+        Optional[Any],
+        Field(
+            description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver)."
+        ),
+    ] = None
+    include_deprecated: Annotated[
+        Optional[StrictBool],
+        Field(
+            description="If set to `true`, deprecated runtimes will be included in the query."
+        ),
+    ] = None
+    function_type: Annotated[
+        Optional[List[FunctionType]],
+        Field(
+            description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
+        ),
+    ] = None
+    archive_format: Annotated[
+        Optional[List[ArchiveFormat]],
+        Field(
+            description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
+        ),
+    ] = None
+
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_get_latest_query_alias_for,
+        populate_by_name=True,
+    )
+
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
+
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the GetLatestQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
+
+    def to_json(self) -> str:
+        """Convert the GetLatestQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
+        )
+
+    @classmethod
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a GetLatestQuery instance from a dict."""
+        return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: Union[str, bytes, bytearray]) -> Self:
+        """Create a GetLatestQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)
+
+
+def _get_query_alias_for(field_name: str) -> str:
+    if field_name == "include_deprecated":
+        return "includeDeprecated"
+    return field_name
+
+
+class GetQuery(BaseModel):
+    """Model for `get` query parameters."""
+
+    include_deprecated: Annotated[
+        Optional[StrictBool],
+        Field(
+            description="If set to `true`, deprecated runtimes will be included in the query."
+        ),
+    ] = None
+
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_get_query_alias_for,
+        populate_by_name=True,
+    )
+
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
+
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the GetQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
+
+    def to_json(self) -> str:
+        """Convert the GetQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
+        )
+
+    @classmethod
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a GetQuery instance from a dict."""
+        return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: Union[str, bytes, bytearray]) -> Self:
+        """Create a GetQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)
+
+
+def _list_query_alias_for(field_name: str) -> str:
+    if field_name == "version":
+        return "version"
+    if field_name == "latest":
+        return "latest"
+    if field_name == "include_deprecated":
+        return "includeDeprecated"
+    if field_name == "name":
+        return "name"
+    if field_name == "function_type":
+        return "functionType"
+    if field_name == "archive_format":
+        return "archiveFormat"
+    return field_name
+
+
+class ListQuery(BaseModel):
+    """Model for `list` query parameters."""
+
+    version: Annotated[
+        Optional[Any],
+        Field(
+            description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver)."
+        ),
+    ] = None
+    latest: Annotated[
+        Optional[LatestVersionLevel],
+        Field(
+            description="If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria."
+        ),
+    ] = None
+    include_deprecated: Annotated[
+        Optional[StrictBool],
+        Field(
+            description="If set to `true`, deprecated runtimes will be included in the query."
+        ),
+    ] = None
+    name: Annotated[
+        Optional[StrictStr],
+        Field(
+            description="If set, filters on the <code>name</code> of a runtime. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive."
+        ),
+    ] = None
+    function_type: Annotated[
+        Optional[List[FunctionType]],
+        Field(
+            description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
+        ),
+    ] = None
+    archive_format: Annotated[
+        Optional[List[ArchiveFormat]],
+        Field(
+            description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
+        ),
+    ] = None
+
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_list_query_alias_for,
+        populate_by_name=True,
+    )
+
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
+
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the ListQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
+
+    def to_json(self) -> str:
+        """Convert the ListQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
+        )
+
+    @classmethod
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a ListQuery instance from a dict."""
+        return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: Union[str, bytes, bytearray]) -> Self:
+        """Create a ListQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)
+
+
+def _list_versions_query_alias_for(field_name: str) -> str:
+    if field_name == "version":
+        return "version"
+    if field_name == "latest":
+        return "latest"
+    if field_name == "include_deprecated":
+        return "includeDeprecated"
+    if field_name == "function_type":
+        return "functionType"
+    if field_name == "archive_format":
+        return "archiveFormat"
+    return field_name
+
+
+class ListVersionsQuery(BaseModel):
+    """Model for `list_versions` query parameters."""
+
+    version: Annotated[
+        Optional[Any],
+        Field(
+            description="If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver)."
+        ),
+    ] = None
+    latest: Annotated[
+        Optional[LatestVersionLevel],
+        Field(
+            description="If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria."
+        ),
+    ] = None
+    include_deprecated: Annotated[
+        Optional[StrictBool],
+        Field(
+            description="If set to `true`, deprecated runtimes will be included in the query."
+        ),
+    ] = None
+    function_type: Annotated[
+        Optional[List[FunctionType]],
+        Field(
+            description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
+        ),
+    ] = None
+    archive_format: Annotated[
+        Optional[List[ArchiveFormat]],
+        Field(
+            description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
+        ),
+    ] = None
+
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_list_versions_query_alias_for,
+        populate_by_name=True,
+    )
+
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
+
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the ListVersionsQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
+
+    def to_json(self) -> str:
+        """Convert the ListVersionsQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
+        )
+
+    @classmethod
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a ListVersionsQuery instance from a dict."""
+        return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: Union[str, bytes, bytearray]) -> Self:
+        """Create a ListVersionsQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)

@@ -10,22 +10,13 @@ Do not edit the class manually.
 """
 
 from __future__ import annotations
-import json
 import re  # noqa: F401
 from enum import Enum
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class Status(str, Enum):
     """Status for a deployed function.."""
 
-    """
-    allowed enum values
-    """
     REGISTERED = "registered"
     RUNNING = "running"
     PENDING = "pending"
@@ -36,15 +27,5 @@ class Status(str, Enum):
     UNDEPLOYING = "undeploying"
     UNDEPLOYED = "undeployed"
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Status from a JSON string."""
-        return cls(json.loads(json_str))
-
-    def to_json(self) -> str:
-        """Get the JSON representation of Status."""
-        return self.value
-
-    def to_dict(self) -> str:
-        """Get the dict representation of Status."""
-        return self.value
+    def __str__(self) -> str:
+        return str(self.value)

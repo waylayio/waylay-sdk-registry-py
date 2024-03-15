@@ -10,35 +10,16 @@ Do not edit the class manually.
 """
 
 from __future__ import annotations
-import json
 import re  # noqa: F401
 from enum import Enum
-
-
-from typing_extensions import (
-    Self,  # >=3.11
-)
 
 
 class PlugType(str, Enum):
     """PlugType."""
 
-    """
-    allowed enum values
-    """
     SENSOR = "sensor"
     ACTUATOR = "actuator"
     TRANSFORMER = "transformer"
 
-    @classmethod
-    def from_json(cls, json_str: str) -> Self:
-        """Create an instance of PlugType from a JSON string."""
-        return cls(json.loads(json_str))
-
-    def to_json(self) -> str:
-        """Get the JSON representation of PlugType."""
-        return self.value
-
-    def to_dict(self) -> str:
-        """Get the dict representation of PlugType."""
-        return self.value
+    def __str__(self) -> str:
+        return str(self.value)

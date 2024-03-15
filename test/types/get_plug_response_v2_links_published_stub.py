@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -25,10 +24,7 @@ try:
         GetPlugResponseV2LinksPublished
     )
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for GetPlugResponseV2LinksPublished not available: {exc}"
-    )
+except ImportError:
     MODELS_AVAILABLE = False
 
 get_plug_response_v2__links_published_model_schema = json.loads(r"""{

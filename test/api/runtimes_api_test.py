@@ -48,9 +48,17 @@ from ..types.runtime_summary_response_stub import RuntimeSummaryResponseStub
 
 
 try:
+    from waylay.services.registry.queries.runtimes_api import ExampleArchiveQuery
+
+    from waylay.services.registry.queries.runtimes_api import GetExampleAssetQuery
+
+    from waylay.services.registry.queries.runtimes_api import GetLatestQuery
     from waylay.services.registry.models import RuntimeVersionResponse
+    from waylay.services.registry.queries.runtimes_api import GetQuery
     from waylay.services.registry.models import RuntimeVersionResponse
+    from waylay.services.registry.queries.runtimes_api import ListQuery
     from waylay.services.registry.models import RuntimeSummaryResponse
+    from waylay.services.registry.queries.runtimes_api import ListVersionsQuery
     from waylay.services.registry.models import RuntimeSummaryResponse
 
     MODELS_AVAILABLE = find_spec("waylay.services.registry.models") is not None
@@ -101,10 +109,11 @@ async def test_example_archive(
     version = SemanticVersionRangeStub.create_json()
 
     kwargs = {
-        "query": {
-            "ls": False,
-            "includeDeprecated": True,
-        },
+        # optionally use ExampleArchiveQuery to validate and reuse parameters
+        "query": ExampleArchiveQuery(
+            ls=False,
+            include_deprecated=True,
+        ),
     }
     _example_archive_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
@@ -170,10 +179,11 @@ async def test_get_example_asset(
     wildcard = "wildcard_example"
 
     kwargs = {
-        "query": {
-            "ls": False,
-            "includeDeprecated": True,
-        },
+        # optionally use GetExampleAssetQuery to validate and reuse parameters
+        "query": GetExampleAssetQuery(
+            ls=False,
+            include_deprecated=True,
+        ),
     }
     _get_example_asset_set_mock_response(
         httpx_mock,
@@ -241,12 +251,13 @@ async def test_get_latest(
     name = "name_example"
 
     kwargs = {
-        "query": {
-            "version": SemanticVersionRangeStub.create_json(),
-            "includeDeprecated": False,
-            "functionType": [],
-            "archiveFormat": [],
-        },
+        # optionally use GetLatestQuery to validate and reuse parameters
+        "query": GetLatestQuery(
+            version=SemanticVersionRangeStub.create_json(),
+            include_deprecated=False,
+            function_type=[],
+            archive_format=[],
+        ),
     }
     _get_latest_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.runtimes.get_latest(name, **kwargs)
@@ -304,9 +315,10 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
     version = SemanticVersionRangeStub.create_json()
 
     kwargs = {
-        "query": {
-            "includeDeprecated": True,
-        },
+        # optionally use GetQuery to validate and reuse parameters
+        "query": GetQuery(
+            include_deprecated=True,
+        ),
     }
     _get_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
@@ -359,14 +371,15 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
     """
     # set path params
     kwargs = {
-        "query": {
-            "version": SemanticVersionRangeStub.create_json(),
-            "latest": "major",
-            "includeDeprecated": False,
-            "name": "node*",
-            "functionType": [],
-            "archiveFormat": [],
-        },
+        # optionally use ListQuery to validate and reuse parameters
+        "query": ListQuery(
+            version=SemanticVersionRangeStub.create_json(),
+            latest="major",
+            include_deprecated=False,
+            name="node*",
+            function_type=[],
+            archive_format=[],
+        ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.runtimes.list(**kwargs)
@@ -424,13 +437,14 @@ async def test_list_versions(
     name = "name_example"
 
     kwargs = {
-        "query": {
-            "version": SemanticVersionRangeStub.create_json(),
-            "latest": "major",
-            "includeDeprecated": False,
-            "functionType": [],
-            "archiveFormat": [],
-        },
+        # optionally use ListVersionsQuery to validate and reuse parameters
+        "query": ListVersionsQuery(
+            version=SemanticVersionRangeStub.create_json(),
+            latest="major",
+            include_deprecated=False,
+            function_type=[],
+            archive_format=[],
+        ),
     }
     _list_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.runtimes.list_versions(name, **kwargs)

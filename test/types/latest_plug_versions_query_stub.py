@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -23,8 +22,7 @@ try:
 
     LatestPlugVersionsQueryAdapter = TypeAdapter(LatestPlugVersionsQuery)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for LatestPlugVersionsQuery not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 latest_plug_versions_query_model_schema = json.loads(r"""{
@@ -126,6 +124,10 @@ latest_plug_versions_query_model_schema = json.loads(r"""{
     "latest" : {
       "type" : "boolean",
       "description" : "When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter."
+    },
+    "showRelated" : {
+      "type" : "string",
+      "enum" : [ "none" ]
     }
   },
   "additionalProperties" : false,

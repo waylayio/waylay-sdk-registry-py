@@ -1,6 +1,6 @@
 # waylay.services.registry.JobsApi
 
-All URIs are relative to *https://api.waylay.io*
+All URIs are relative to *https://api-aws-dev.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -58,9 +58,9 @@ GET /registry/v2/jobs/events
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['type']** | [**JobType**](.md) | query parameter `"type"` | The type of the job. | [optional] 
-**query['id']** | **str** | query parameter `"id"` | The id of the job. | [optional] 
-**query['children']** | **bool** | query parameter `"children"` | If set to &lt;code&gt;true&lt;/code&gt;, the event stream will include events of the job&#39;s dependants. E.g., when subscribing to a verify job with &#x60;children&#x3D;true&#x60;, you will also receive the events of the underlying build and deploy jobs. Defaults to &lt;code&gt;false&lt;/code&gt;. | [optional] 
+**query['type']** (dict) <br> **query.type** (Query) | [**JobType**](.md) | query parameter `"type"` | The type of the job. | [optional] 
+**query['id']** (dict) <br> **query.id** (Query) | **str** | query parameter `"id"` | The id of the job. | [optional] 
+**query['children']** (dict) <br> **query.children** (Query) | **bool** | query parameter `"children"` | If set to &lt;code&gt;true&lt;/code&gt;, the event stream will include events of the job&#39;s dependants. E.g., when subscribing to a verify job with &#x60;children&#x3D;true&#x60;, you will also receive the events of the underlying build and deploy jobs. Defaults to &lt;code&gt;false&lt;/code&gt;. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -204,12 +204,12 @@ GET /registry/v2/jobs/
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['limit']** | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
-**query['type']** | [**List[JobTypeSchema]**](JobTypeSchema.md) | query parameter `"type"` | Filter on job type | [optional] 
-**query['state']** | [**List[JobStateResult]**](JobStateResult.md) | query parameter `"state"` | Filter on job state | [optional] 
-**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | Filter on function type | [optional] 
-**query['createdBefore']** | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on jobs that created before the given timestamp or age | [optional] 
-**query['createdAfter']** | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on jobs that created after the given timestamp or age | [optional] 
+**query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
+**query['type']** (dict) <br> **query.type** (Query) | [**List[JobTypeSchema]**](JobTypeSchema.md) | query parameter `"type"` | Filter on job type | [optional] 
+**query['state']** (dict) <br> **query.state** (Query) | [**List[JobStateResult]**](JobStateResult.md) | query parameter `"state"` | Filter on job state | [optional] 
+**query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | Filter on function type | [optional] 
+**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on jobs that created before the given timestamp or age | [optional] 
+**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on jobs that created after the given timestamp or age | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type

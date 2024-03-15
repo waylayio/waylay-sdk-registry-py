@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -21,8 +20,7 @@ try:
 
     Plug1Adapter = TypeAdapter(Plug1)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for Plug1 not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 plug_1_model_schema = json.loads(r"""{

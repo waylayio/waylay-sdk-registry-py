@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -21,8 +20,7 @@ try:
 
     RequestOperationAdapter = TypeAdapter(RequestOperation)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for RequestOperation not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 request_operation_model_schema = json.loads(r"""{

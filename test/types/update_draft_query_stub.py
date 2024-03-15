@@ -9,7 +9,6 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
@@ -21,8 +20,7 @@ try:
 
     UpdateDraftQueryAdapter = TypeAdapter(UpdateDraftQuery)
     MODELS_AVAILABLE = True
-except ImportError as exc:
-    warnings.warn(f"Type adapter for UpdateDraftQuery not available: {exc}")
+except ImportError:
     MODELS_AVAILABLE = False
 
 update_draft_query_model_schema = json.loads(r"""{
@@ -32,6 +30,10 @@ update_draft_query_model_schema = json.loads(r"""{
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
+    },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
     },
     "async" : {
       "type" : "boolean",
