@@ -896,13 +896,13 @@ MODEL_DEFINITIONS.update(
 
 _completed_event_data_model_schema = json.loads(r"""{
   "title" : "CompletedEventData",
-  "required" : [ "returnValue" ],
+  "required" : [ "returnvalue" ],
   "type" : "object",
   "properties" : {
     "prev" : {
       "$ref" : "#/components/schemas/QueueEvents"
     },
-    "returnValue" : {
+    "returnvalue" : {
       "$ref" : "#/components/schemas/AnyJobResult"
     }
   }

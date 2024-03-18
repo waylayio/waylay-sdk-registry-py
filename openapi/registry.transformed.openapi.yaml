@@ -7541,11 +7541,11 @@ components:
         prev:
           $ref: '#/components/schemas/QueueEvents'
           description: The previous state of the job
-        returnValue:
+        returnvalue:
           $ref: '#/components/schemas/AnyJobResult'
           description: The return value of the job
       required:
-        - returnValue
+        - returnvalue
     AnyJobResult:
       anyOf:
         - $ref: '#/components/schemas/BuildResult'
