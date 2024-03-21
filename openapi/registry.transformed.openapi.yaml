@@ -7541,11 +7541,11 @@ components:
         prev:
           $ref: '#/components/schemas/QueueEvents'
           description: The previous state of the job
-        returnvalue:
+        returnValue:
           $ref: '#/components/schemas/AnyJobResult'
           description: The return value of the job
       required:
-        - returnvalue
+        - returnValue
     AnyJobResult:
       anyOf:
         - $ref: '#/components/schemas/BuildResult'
@@ -8586,6 +8586,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -8594,6 +8595,7 @@ paths:
           name: type
           required: false
           description: Filter on job type
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -8602,6 +8604,7 @@ paths:
           name: state
           required: false
           description: Filter on job state
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -8610,18 +8613,21 @@ paths:
           name: functionType
           required: false
           description: Filter on function type
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
           name: createdBefore
           required: false
           description: Filter on jobs that created before the given timestamp or age
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
           name: createdAfter
           required: false
           description: Filter on jobs that created after the given timestamp or age
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -8650,11 +8656,13 @@ paths:
           in: path
           name: type
           required: true
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: id
           required: true
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -8690,12 +8698,14 @@ paths:
           name: type
           required: false
           description: The type of the job.
+          x-showExample: true
         - schema:
             type: string
           in: query
           name: id
           required: false
           description: The id of the job.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -8706,6 +8716,7 @@ paths:
             the job's dependants. E.g., when subscribing to a verify job with
             `children=true`, you will also receive the events of the underlying
             build and deploy jobs. Defaults to <code>false</code>.
+          x-showExample: true
       x-version: v2
       responses:
         '200':
@@ -8738,6 +8749,7 @@ paths:
           description: >-
             If set, filters on the <code>version</code> of a runtime. Supports
             [version ranges](https://devhints.io/semver).
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/LatestVersionLevel'
             default: minor
@@ -8763,6 +8775,8 @@ paths:
 
 
             This filter is applied after all other selection criteria.
+          x-example: '''minor'''
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -8770,6 +8784,7 @@ paths:
           name: includeDeprecated
           required: false
           description: If set to `true`, deprecated runtimes will be included in the query.
+          x-showExample: true
         - schema:
             type: string
           example: node*
@@ -8779,6 +8794,8 @@ paths:
           description: >-
             If set, filters on the <code>name</code> of a runtime. Supports
             <code>*</code> and <code>?</code> wildcards and is case-insensitive.
+          x-example: '''node*'''
+          x-showExample: true
         - schema:
             type: array
             items:
@@ -8790,6 +8807,8 @@ paths:
           description: >-
             If set, filters on the <code>functionType</code> of a runtime. Uses
             an exact match.
+          x-example: '''plugs'''
+          x-showExample: true
         - schema:
             type: array
             items:
@@ -8801,6 +8820,8 @@ paths:
           description: >-
             If set, filters on the <code>archiveFormat</code> of a runtime. Uses
             an exact match.
+          x-example: '''node'''
+          x-showExample: true
       x-version: v2
       responses:
         '200':
@@ -8833,6 +8854,7 @@ paths:
           description: >-
             If set, filters on the <code>version</code> of a runtime. Supports
             [version ranges](https://devhints.io/semver).
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -8840,6 +8862,7 @@ paths:
           name: includeDeprecated
           required: false
           description: If set to `true`, deprecated runtimes will be included in the query.
+          x-showExample: true
         - schema:
             type: array
             items:
@@ -8851,6 +8874,8 @@ paths:
           description: >-
             If set, filters on the <code>functionType</code> of a runtime. Uses
             an exact match.
+          x-example: '''plugs'''
+          x-showExample: true
         - schema:
             type: array
             items:
@@ -8862,12 +8887,15 @@ paths:
           description: >-
             If set, filters on the <code>archiveFormat</code> of a runtime. Uses
             an exact match.
+          x-example: '''node'''
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/Runtime'
           in: path
           name: name
           required: true
           description: The name of a <em>runtime</em>
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -8900,6 +8928,7 @@ paths:
           description: >-
             If set, filters on the <code>version</code> of a runtime. Supports
             [version ranges](https://devhints.io/semver).
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/LatestVersionLevel'
             default: minor
@@ -8925,6 +8954,8 @@ paths:
 
 
             This filter is applied after all other selection criteria.
+          x-example: '''minor'''
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -8932,6 +8963,7 @@ paths:
           name: includeDeprecated
           required: false
           description: If set to `true`, deprecated runtimes will be included in the query.
+          x-showExample: true
         - schema:
             type: array
             items:
@@ -8943,6 +8975,8 @@ paths:
           description: >-
             If set, filters on the <code>functionType</code> of a runtime. Uses
             an exact match.
+          x-example: '''plugs'''
+          x-showExample: true
         - schema:
             type: array
             items:
@@ -8954,12 +8988,15 @@ paths:
           description: >-
             If set, filters on the <code>archiveFormat</code> of a runtime. Uses
             an exact match.
+          x-example: '''node'''
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/Runtime'
           in: path
           name: name
           required: true
           description: The name of a <em>runtime</em>
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -8990,18 +9027,21 @@ paths:
           name: includeDeprecated
           required: false
           description: If set to `true`, deprecated runtimes will be included in the query.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/Runtime'
           in: path
           name: name
           required: true
           description: The name of a <em>runtime</em>
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: path
           name: version
           required: true
           description: A version range for a <em>runtime</em>
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -9035,6 +9075,7 @@ paths:
             If set to `true`, the result will be a listing of the files in the
             asset, annotated with metadata and validation report from the asset
             conditions of the functions runtime.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -9042,18 +9083,21 @@ paths:
           name: includeDeprecated
           required: false
           description: If set to `true`, deprecated runtimes will be included in the query.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/Runtime'
           in: path
           name: name
           required: true
           description: The name of a <em>runtime</em>
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: path
           name: version
           required: true
           description: A version range for a <em>runtime</em>
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -9123,6 +9167,7 @@ paths:
             If set to `true`, the result will be a listing of the files in the
             asset, annotated with metadata and validation report from the asset
             conditions of the functions runtime.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -9130,24 +9175,28 @@ paths:
           name: includeDeprecated
           required: false
           description: If set to `true`, deprecated runtimes will be included in the query.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/Runtime'
           in: path
           name: name
           required: true
           description: The name of a <em>runtime</em>
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: path
           name: version
           required: true
           description: A version range for a <em>runtime</em>
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -9201,21 +9250,20 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/:
     post:
-      operationId: create_webscripts
+      operationId: create_webscript_functions
       summary: Create Webscript Version
       tags:
-        - Webscripts
+        - Webscript Functions
       description: |-
         Creates a new <em>webscript</em> function by uploading its assets.
           
-          The assets for a <em>webscript</em> function can be provided as
+          The assets for a <em>webscript</em> function can be provided as either
           <ul>
-            <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
+            <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
             <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-            <li>Separate files in a <code>multipart/form-data</code> request</li>
-            <li>A reference to the assets of another <em>webscript</em> in the <code>copy</code> argument</li>
+            <li>separate files in a <code>multipart/form-data</code> request</li>
           </ul>
-
+          
           The required <code>webscript.json</code> json file contains the function metadata,
           and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
           (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).
@@ -9293,14 +9341,13 @@ paths:
               type: object
               maxProperties: 0
         description: |
-          The assets for a <em>webscript</em> function can be provided as
+          The assets for a <em>webscript</em> function can be provided as either
             <ul>
-              <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
+              <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
               <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-              <li>Separate files in a <code>multipart/form-data</code> request</li>
-              <li>A reference to the assets of another <em>webscript</em> in the <code>copy</code> argument</li>
+              <li>separate files in a <code>multipart/form-data</code> request</li>
             </ul>
-
+            
             The required <code>webscript.json</code> json file contains the function metadata,
             and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
             (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).
@@ -9313,12 +9360,14 @@ paths:
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/DeprecatePreviousPolicy'
             default: patch
@@ -9328,6 +9377,7 @@ paths:
           description: >-
             Set the cleanup policy used to automatically deprecate/delete
             previous versions.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -9336,6 +9386,7 @@ paths:
           description: >-
             If set to <code>true</code>, validates the deployment conditions,
             but does not change anything.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -9347,6 +9398,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -9357,6 +9409,7 @@ paths:
             If set to <code>true</code>, after successful deployment, the
             deployed function will be scaled to zero. Saves computing resources
             when the function is not to be used immediately.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: query
@@ -9367,6 +9420,7 @@ paths:
             existing version that satisfies the `version` range. Note that this
             increment always takes precedence over an explicit `version` in the
             function manifest.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -9375,6 +9429,7 @@ paths:
           description: >-
             If set, the value will be used as the function name instead of the
             one specified in the manifest.
+          x-showExample: false
         - schema:
             type: boolean
             default: false
@@ -9385,6 +9440,7 @@ paths:
             If set, the created function will be a draft function and its assets
             are still mutable. A build and deploy is initiated only in the case
             when all necessary assets are present and valid.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/NamedVersionRange'
           in: query
@@ -9397,6 +9453,7 @@ paths:
 
             This takes precedence over the runtime specified in a function
             manifest (copied or from request body).
+          x-showExample: false
         - schema:
             anyOf:
               - $ref: '#/components/schemas/NamedVersionRange'
@@ -9477,6 +9534,7 @@ paths:
 
             The new function will use the deployment overrides of the copied
             function, unless a _manifest_ was specified in the request body.
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -9499,10 +9557,10 @@ paths:
       x-consumes-json: true
       x-consumes-other: true
     get:
-      operationId: list_webscripts
+      operationId: list_webscript_functions
       summary: List Webscripts
       tags:
-        - Webscripts
+        - Webscript Functions
       description: >
         List the (latest) versions of available <em>webscripts</em>.
 
@@ -9588,6 +9646,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: number
             minimum: 0
@@ -9595,6 +9654,7 @@ paths:
           name: page
           required: false
           description: The number of pages to skip when returning result to this query.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -9606,6 +9666,7 @@ paths:
             when no other versions are available. If set to `true`, draft
             versions are **included**. If set to `false`, draft versions are
             **excluded**.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -9617,18 +9678,21 @@ paths:
             considered when no other versions are available. If set to `true`,
             deprecated versions are **included**. If set to `false`, deprecated
             versions are **excluded**.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
           name: deprecated
           required: false
           description: Filter on the deprecation status of the function.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
           name: draft
           required: false
           description: Filter on the draft status of the function.
+          x-showExample: true
         - schema:
             type: array
             items:
@@ -9640,6 +9704,7 @@ paths:
             Filter on exact `{name}@{version}` functions. Using this filter
             implies a `latest=false` default, returning multiple versions of the
             same named versions if they are filtered.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -9648,6 +9713,7 @@ paths:
           description: >-
             Filter on the version of the function (case-sensitive, supports
             wildcards).
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -9660,12 +9726,14 @@ paths:
             exclude the status. Use the `any` filter value to include all
             states. When not specified, a default `undeployed-` filter excludes
             _undeployed_ functions.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: query
           name: runtimeVersion
           required: false
           description: Filter on the runtime version.
+          x-showExample: false
         - schema:
             type: string
           example: '@me'
@@ -9675,6 +9743,8 @@ paths:
           description: >-
             Filter on the user that create the plug. You can use the `@me` token
             to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             type: string
           example: '@me'
@@ -9684,6 +9754,8 @@ paths:
           description: >-
             Filter on the user that last updated the plug. You can use the `@me`
             token to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -9692,6 +9764,7 @@ paths:
           description: >-
             Filter on funtions that were created before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -9700,6 +9773,7 @@ paths:
           description: >-
             Filter on funtions that were created after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -9708,6 +9782,7 @@ paths:
           description: >-
             Filter on funtions that were updated before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -9716,6 +9791,7 @@ paths:
           description: >-
             Filter on funtions that were updated after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -9725,6 +9801,7 @@ paths:
             Filter on the name of the function. This is case-insensitive and
             supports wild-cards `?` (any one character) and `*` (any sequence of
             characters).
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -9733,6 +9810,7 @@ paths:
           name: archiveFormat
           required: false
           description: Filter on the archive format of the function.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -9741,6 +9819,7 @@ paths:
           name: runtime
           required: false
           description: Filter on the runtime of the function.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -9751,6 +9830,7 @@ paths:
             If set to `false`, multiple versions per named function can be
             returned. Defaults to `true`, except when specific versions are
             selected with the `nameVersion` filter.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/ShowRelatedType'
           in: query
@@ -9765,6 +9845,7 @@ paths:
             - `link`: as HAL link in (in `_links`).
 
             - `none`: omitted.
+          x-showExample: true
       x-version: v2
       responses:
         '200':
@@ -9782,10 +9863,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions:
     get:
-      operationId: listVersions_webscripts
+      operationId: listVersions_webscript_functions
       summary: List Webscript Versions
       tags:
-        - Webscripts
+        - Webscript Functions
       description: List all deployed versions of a webscript.
       parameters:
         - schema:
@@ -9797,6 +9878,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: number
             minimum: 0
@@ -9804,18 +9886,21 @@ paths:
           name: page
           required: false
           description: The number of pages to skip when returning result to this query.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
           name: deprecated
           required: false
           description: Filter on the deprecation status of the function.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
           name: draft
           required: false
           description: Filter on the draft status of the function.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -9824,6 +9909,7 @@ paths:
           description: >-
             Filter on the version of the function (case-sensitive, supports
             wildcards).
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -9836,12 +9922,14 @@ paths:
             exclude the status. Use the `any` filter value to include all
             states. When not specified, a default `undeployed-` filter excludes
             _undeployed_ functions.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: query
           name: runtimeVersion
           required: false
           description: Filter on the runtime version.
+          x-showExample: false
         - schema:
             type: string
           example: '@me'
@@ -9851,6 +9939,8 @@ paths:
           description: >-
             Filter on the user that create the plug. You can use the `@me` token
             to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             type: string
           example: '@me'
@@ -9860,6 +9950,8 @@ paths:
           description: >-
             Filter on the user that last updated the plug. You can use the `@me`
             token to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -9868,6 +9960,7 @@ paths:
           description: >-
             Filter on funtions that were created before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -9876,6 +9969,7 @@ paths:
           description: >-
             Filter on funtions that were created after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -9884,6 +9978,7 @@ paths:
           description: >-
             Filter on funtions that were updated before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -9892,6 +9987,7 @@ paths:
           description: >-
             Filter on funtions that were updated after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -9900,6 +9996,7 @@ paths:
           name: archiveFormat
           required: false
           description: Filter on the archive format of the function.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -9908,12 +10005,14 @@ paths:
           name: runtime
           required: false
           description: Filter on the runtime of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -9931,10 +10030,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}:
     get:
-      operationId: get_webscripts
+      operationId: get_webscript_functions
       summary: Get Webscript Version
       tags:
-        - Webscripts
+        - Webscript Functions
       description: Get the webscript version.
       parameters:
         - schema:
@@ -9943,12 +10042,14 @@ paths:
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -9965,10 +10066,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersion_webscripts
+      operationId: removeVersion_webscript_functions
       summary: Remove Webscript Version
       tags:
-        - Webscripts
+        - Webscript Functions
       description: |
         Deprecate, undeploy and/or remove a <em>webscript</em> version.
 
@@ -9989,6 +10090,7 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -10000,6 +10102,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -10012,6 +10115,7 @@ paths:
 
             Otherwise, the removal will be delayed to allow current invocations
             to end. During that period, the function is marked _deprecated_.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -10043,18 +10147,21 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -10078,10 +10185,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/rebuild:
     post:
-      operationId: rebuild_webscripts
+      operationId: rebuild_webscript_functions
       summary: Rebuild Webscript
       tags:
-        - Webscripts
+        - Webscript Functions
       description: Rebuild and deploy a webscript with the original or updated base image.
       parameters:
         - schema:
@@ -10090,6 +10197,7 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -10098,6 +10206,7 @@ paths:
           description: >-
             If set to <code>true</code>, checks whether rebuild jobs are needed,
             but do not start any jobs.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -10109,6 +10218,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/RebuildPolicy'
           in: query
@@ -10122,6 +10232,7 @@ paths:
             include an upgrade of e.g. the language runtime and/or provided  
             dependencies that could break compatiblity with the function. .</li>
             </ul>
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: query
@@ -10131,6 +10242,7 @@ paths:
             If set, force a rebuild with the given runtime version (including
             downgrades). This parameter is mutually exclusive to the `upgrade`
             parameter.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -10149,6 +10261,7 @@ paths:
             * running jobs on entity
 
             * the `dryRun` option
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -10158,6 +10271,7 @@ paths:
             Indicates whether the function needs to be scaled down after
             successful (re-)deployment. If not set, the function is scaled to
             zero only if it was not active before this command.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -10166,18 +10280,21 @@ paths:
           description: >-
             If set, the function will not be rebuild. Always uses the current
             runtime version when re-deploying/re-verifying the function.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -10201,10 +10318,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}:
     get:
-      operationId: getLatest_webscripts
+      operationId: getLatest_webscript_functions
       summary: Get Latest Webscript Version
       tags:
-        - Webscripts
+        - Webscript Functions
       description: |-
         Fetch the latest version of a <em>webscript</em>.
 
@@ -10234,6 +10351,7 @@ paths:
             when no other versions are available. If set to `true`, draft
             versions are **included**. If set to `false`, draft versions are
             **excluded**.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -10245,12 +10363,14 @@ paths:
             considered when no other versions are available. If set to `true`,
             deprecated versions are **included**. If set to `false`, deprecated
             versions are **excluded**.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -10267,10 +10387,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersions_webscripts
+      operationId: removeVersions_webscript_functions
       summary: Remove Webscript
       tags:
-        - Webscripts
+        - Webscript Functions
       description: >
         Deprecate, undeploy and/or remove all versions of this named
         <em>webscript</em>.
@@ -10292,6 +10412,7 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -10303,6 +10424,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -10315,6 +10437,7 @@ paths:
 
             Otherwise, the removal will be delayed to allow current invocations
             to end. During that period, the function is marked _deprecated_.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -10346,12 +10469,14 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -10375,10 +10500,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/metadata:
     patch:
-      operationId: patchMetadata_webscripts
+      operationId: patchMetadata_webscript_functions
       summary: Patch Webscript Metadata
       tags:
-        - Webscripts
+        - Webscript Functions
       description: Patch the metadata of a webscript version.
       requestBody:
         content:
@@ -10392,18 +10517,21 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -10421,10 +10549,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/content:
     get:
-      operationId: getArchive_webscripts
+      operationId: getArchive_webscript_functions
       summary: Get Webscript Archive
       tags:
-        - Webscripts
+        - Webscript Functions
       description: Get the specification archive of a webscript.
       parameters:
         - schema:
@@ -10437,18 +10565,21 @@ paths:
             If set to `true`, the result will be a listing of the files in the
             asset, annotated with metadata and validation report from the asset
             conditions of the functions runtime.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -10501,10 +10632,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAssets_webscripts
+      operationId: updateAssets_webscript_functions
       summary: Update Webscript Assets
       tags:
-        - Webscripts
+        - Webscript Functions
       description: |-
         Update a draft <em>webscript</em> function by updating its assets.
           
@@ -10599,12 +10730,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -10616,6 +10749,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -10625,18 +10759,21 @@ paths:
           description: >-
             If set, ownership of the draft function is transferred to the
             current user.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -10666,10 +10803,10 @@ paths:
       x-consumes-other: true
   /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}:
     get:
-      operationId: getAsset_webscripts
+      operationId: getAsset_webscript_functions
       summary: Get File From Webscript Archive
       tags:
-        - Webscripts
+        - Webscript Functions
       description: Get a file from the specification archive of a webscript.
       parameters:
         - schema:
@@ -10682,24 +10819,28 @@ paths:
             If set to `true`, the result will be a listing of the files in the
             asset, annotated with metadata and validation report from the asset
             conditions of the functions runtime.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -10752,10 +10893,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAsset_webscripts
+      operationId: updateAsset_webscript_functions
       summary: Update Webscript Asset
       tags:
-        - Webscripts
+        - Webscript Functions
       description: >-
         The provided asset will be added to the <em>webscript</em> function's
         collection of existing assets,
@@ -10785,12 +10926,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -10802,6 +10945,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -10811,24 +10955,28 @@ paths:
           description: >-
             If set, ownership of the draft function is transferred to the
             current user.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -10857,10 +11005,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: true
     delete:
-      operationId: deleteAsset_webscripts
+      operationId: deleteAsset_webscript_functions
       summary: Delete Webscript Asset
       tags:
-        - Webscripts
+        - Webscript Functions
       description: Delete an asset from the webscript's collection of existing assets.
       parameters:
         - schema:
@@ -10869,12 +11017,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -10886,6 +11036,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -10895,24 +11046,28 @@ paths:
           description: >-
             If set, ownership of the draft function is transferred to the
             current user.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -10942,10 +11097,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/publish:
     post:
-      operationId: publish_webscripts
+      operationId: publish_webscript_functions
       summary: Publish Draft Webscript
       tags:
-        - Webscripts
+        - Webscript Functions
       description: >-
         Mark the <em>webscript</em> to be ready and stable, taking it out of
         draft mode.,
@@ -10961,12 +11116,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/DeprecatePreviousPolicy'
             default: patch
@@ -10976,6 +11133,7 @@ paths:
           description: >-
             Set the cleanup policy used to automatically deprecate/delete
             previous versions.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -10987,18 +11145,21 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -11024,10 +11185,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/jobs:
     get:
-      operationId: jobs_webscripts
+      operationId: jobs_webscript_functions
       summary: List Webscript Jobs
       tags:
-        - Webscripts
+        - Webscript Functions
       description: List the ongoing and completed operations on a specific webscript.
       parameters:
         - schema:
@@ -11039,6 +11200,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -11047,6 +11209,7 @@ paths:
           name: type
           required: false
           description: Filter on job type
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -11055,6 +11218,7 @@ paths:
           name: state
           required: false
           description: Filter on job state
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -11063,30 +11227,35 @@ paths:
           name: functionType
           required: false
           description: Filter on function type
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
           name: createdBefore
           required: false
           description: Filter on jobs that created before the given timestamp or age
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
           name: createdAfter
           required: false
           description: Filter on jobs that created after the given timestamp or age
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -11104,10 +11273,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/verify:
     post:
-      operationId: verify_webscripts
+      operationId: verify_webscript_functions
       summary: Verify Health Of Webscript
       tags:
-        - Webscripts
+        - Webscript Functions
       description: Verify health of webscript deployed on openfaas.
       parameters:
         - schema:
@@ -11121,6 +11290,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -11130,18 +11300,21 @@ paths:
             Indicates whether the function needs to be scaled down after
             successful verification. If not set, the function is scaled to zero
             only if it was not active before this command.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -11178,12 +11351,14 @@ paths:
           name: functionType
           required: true
           description: Function type
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/AssetRole'
           in: path
           name: role
           required: true
           description: Asset role
+          x-showExample: true
       deprecated: true
       x-version: v2
       responses:
@@ -11215,6 +11390,7 @@ paths:
           name: schemaId
           required: true
           description: Schema id
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -11233,21 +11409,20 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/:
     post:
-      operationId: create_plugs
+      operationId: create_plug_functions
       summary: Create Plug
       tags:
-        - Plugs
+        - Plug Functions
       description: |-
         Creates a new <em>plug</em> function by uploading its assets.
           
-          The assets for a <em>plug</em> function can be provided as
+          The assets for a <em>plug</em> function can be provided as either
           <ul>
-            <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
+            <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
             <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-            <li>Separate files in a <code>multipart/form-data</code> request</li>
-            <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>
+            <li>separate files in a <code>multipart/form-data</code> request</li>
           </ul>
-
+          
           The required <code>plug.json</code> json file contains the function metadata,
           and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
           (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).
@@ -11325,14 +11500,13 @@ paths:
               type: object
               maxProperties: 0
         description: |
-          The assets for a <em>plug</em> function can be provided as
+          The assets for a <em>plug</em> function can be provided as either
             <ul>
-              <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
+              <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
               <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-              <li>Separate files in a <code>multipart/form-data</code> request</li>
-              <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>
+              <li>separate files in a <code>multipart/form-data</code> request</li>
             </ul>
-
+            
             The required <code>plug.json</code> json file contains the function metadata,
             and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
             (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).
@@ -11345,12 +11519,14 @@ paths:
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/DeprecatePreviousPolicy'
             default: patch
@@ -11360,6 +11536,7 @@ paths:
           description: >-
             Set the cleanup policy used to automatically deprecate/delete
             previous versions.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -11368,6 +11545,7 @@ paths:
           description: >-
             If set to <code>true</code>, validates the deployment conditions,
             but does not change anything.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -11379,6 +11557,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -11389,6 +11568,7 @@ paths:
             If set to <code>true</code>, after successful deployment, the
             deployed function will be scaled to zero. Saves computing resources
             when the function is not to be used immediately.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: query
@@ -11399,6 +11579,7 @@ paths:
             existing version that satisfies the `version` range. Note that this
             increment always takes precedence over an explicit `version` in the
             function manifest.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -11407,6 +11588,7 @@ paths:
           description: >-
             If set, the value will be used as the function name instead of the
             one specified in the manifest.
+          x-showExample: false
         - schema:
             type: boolean
             default: false
@@ -11417,6 +11599,7 @@ paths:
             If set, the created function will be a draft function and its assets
             are still mutable. A build and deploy is initiated only in the case
             when all necessary assets are present and valid.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/NamedVersionRange'
           in: query
@@ -11429,6 +11612,7 @@ paths:
 
             This takes precedence over the runtime specified in a function
             manifest (copied or from request body).
+          x-showExample: false
         - schema:
             anyOf:
               - $ref: '#/components/schemas/NamedVersionRange'
@@ -11509,6 +11693,7 @@ paths:
 
             The new function will use the deployment overrides of the copied
             function, unless a _manifest_ was specified in the request body.
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -11531,10 +11716,10 @@ paths:
       x-consumes-json: true
       x-consumes-other: true
     get:
-      operationId: list_plugs
+      operationId: list_plug_functions
       summary: List Plugs
       tags:
-        - Plugs
+        - Plug Functions
       description: >
         List the (latest) versions of available <em>plugs</em>.
 
@@ -11620,12 +11805,14 @@ paths:
             Filter on the tags of the item. Can be a single tag, or a list of
             tags. When multiple tags are specified, an item must have all of the
             tags to be selected.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/PlugType'
           in: query
           name: type
           required: false
           description: If set, filters on the type of plug.
+          x-showExample: true
         - schema:
             type: number
             minimum: 0
@@ -11635,6 +11822,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: number
             minimum: 0
@@ -11642,6 +11830,7 @@ paths:
           name: page
           required: false
           description: The number of pages to skip when returning result to this query.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -11653,6 +11842,7 @@ paths:
             when no other versions are available. If set to `true`, draft
             versions are **included**. If set to `false`, draft versions are
             **excluded**.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -11664,18 +11854,21 @@ paths:
             considered when no other versions are available. If set to `true`,
             deprecated versions are **included**. If set to `false`, deprecated
             versions are **excluded**.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
           name: deprecated
           required: false
           description: Filter on the deprecation status of the function.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
           name: draft
           required: false
           description: Filter on the draft status of the function.
+          x-showExample: true
         - schema:
             type: array
             items:
@@ -11687,6 +11880,7 @@ paths:
             Filter on exact `{name}@{version}` functions. Using this filter
             implies a `latest=false` default, returning multiple versions of the
             same named versions if they are filtered.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -11695,6 +11889,7 @@ paths:
           description: >-
             Filter on the version of the function (case-sensitive, supports
             wildcards).
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -11707,12 +11902,14 @@ paths:
             exclude the status. Use the `any` filter value to include all
             states. When not specified, a default `undeployed-` filter excludes
             _undeployed_ functions.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: query
           name: runtimeVersion
           required: false
           description: Filter on the runtime version.
+          x-showExample: false
         - schema:
             type: string
           example: '@me'
@@ -11722,6 +11919,8 @@ paths:
           description: >-
             Filter on the user that create the plug. You can use the `@me` token
             to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             type: string
           example: '@me'
@@ -11731,6 +11930,8 @@ paths:
           description: >-
             Filter on the user that last updated the plug. You can use the `@me`
             token to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -11739,6 +11940,7 @@ paths:
           description: >-
             Filter on funtions that were created before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -11747,6 +11949,7 @@ paths:
           description: >-
             Filter on funtions that were created after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -11755,6 +11958,7 @@ paths:
           description: >-
             Filter on funtions that were updated before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -11763,6 +11967,7 @@ paths:
           description: >-
             Filter on funtions that were updated after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -11772,6 +11977,7 @@ paths:
             Filter on the name of the function. This is case-insensitive and
             supports wild-cards `?` (any one character) and `*` (any sequence of
             characters).
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -11780,6 +11986,7 @@ paths:
           name: archiveFormat
           required: false
           description: Filter on the archive format of the function.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -11788,6 +11995,7 @@ paths:
           name: runtime
           required: false
           description: Filter on the runtime of the function.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -11798,6 +12006,7 @@ paths:
             If set to `false`, multiple versions per named function can be
             returned. Defaults to `true`, except when specific versions are
             selected with the `nameVersion` filter.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/ShowRelatedType'
           in: query
@@ -11812,6 +12021,7 @@ paths:
             - `link`: as HAL link in (in `_links`).
 
             - `none`: omitted.
+          x-showExample: true
       x-version: v2
       responses:
         '200':
@@ -11829,10 +12039,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}:
     get:
-      operationId: getLatest_plugs
+      operationId: getLatest_plug_functions
       summary: Get Latest Plug Version
       tags:
-        - Plugs
+        - Plug Functions
       description: |-
         Fetch the latest version of a <em>plug</em>.
 
@@ -11857,6 +12067,7 @@ paths:
           name: type
           required: false
           description: If set, filters on the type of plug.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -11868,6 +12079,7 @@ paths:
             when no other versions are available. If set to `true`, draft
             versions are **included**. If set to `false`, draft versions are
             **excluded**.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -11879,12 +12091,14 @@ paths:
             considered when no other versions are available. If set to `true`,
             deprecated versions are **included**. If set to `false`, deprecated
             versions are **excluded**.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -11904,10 +12118,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersions_plugs
+      operationId: removeVersions_plug_functions
       summary: Remove Plug
       tags:
-        - Plugs
+        - Plug Functions
       description: >
         Deprecate, undeploy and/or remove all versions of this named
         <em>plug</em>.
@@ -11943,6 +12157,7 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -11954,6 +12169,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -11963,6 +12179,7 @@ paths:
             If <code>true</code>, the plug version(s) will be undeployed and
             removed. Otherwise, the plug version(s) will only be
             <code>deprecated</code>, i.e removed from regular listings.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -11994,12 +12211,14 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -12023,10 +12242,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions:
     get:
-      operationId: listVersions_plugs
+      operationId: listVersions_plug_functions
       summary: List Plug Versions
       tags:
-        - Plugs
+        - Plug Functions
       description: List all versions of a plug, including deprecated versions or not.
       parameters:
         - schema:
@@ -12038,6 +12257,7 @@ paths:
             Filter on the tags of the item. Can be a single tag, or a list of
             tags. When multiple tags are specified, an item must have all of the
             tags to be selected.
+          x-showExample: false
         - schema:
             type: number
             minimum: 0
@@ -12047,6 +12267,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: number
             minimum: 0
@@ -12054,18 +12275,21 @@ paths:
           name: page
           required: false
           description: The number of pages to skip when returning result to this query.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
           name: deprecated
           required: false
           description: Filter on the deprecation status of the function.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
           name: draft
           required: false
           description: Filter on the draft status of the function.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -12074,6 +12298,7 @@ paths:
           description: >-
             Filter on the version of the function (case-sensitive, supports
             wildcards).
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -12086,12 +12311,14 @@ paths:
             exclude the status. Use the `any` filter value to include all
             states. When not specified, a default `undeployed-` filter excludes
             _undeployed_ functions.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: query
           name: runtimeVersion
           required: false
           description: Filter on the runtime version.
+          x-showExample: false
         - schema:
             type: string
           example: '@me'
@@ -12101,6 +12328,8 @@ paths:
           description: >-
             Filter on the user that create the plug. You can use the `@me` token
             to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             type: string
           example: '@me'
@@ -12110,6 +12339,8 @@ paths:
           description: >-
             Filter on the user that last updated the plug. You can use the `@me`
             token to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -12118,6 +12349,7 @@ paths:
           description: >-
             Filter on funtions that were created before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -12126,6 +12358,7 @@ paths:
           description: >-
             Filter on funtions that were created after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -12134,6 +12367,7 @@ paths:
           description: >-
             Filter on funtions that were updated before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -12142,6 +12376,7 @@ paths:
           description: >-
             Filter on funtions that were updated after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -12150,6 +12385,7 @@ paths:
           name: archiveFormat
           required: false
           description: Filter on the archive format of the function.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -12158,12 +12394,14 @@ paths:
           name: runtime
           required: false
           description: Filter on the runtime of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -12181,10 +12419,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}:
     get:
-      operationId: get_plugs
+      operationId: get_plug_functions
       summary: Get Plug Version
       tags:
-        - Plugs
+        - Plug Functions
       description: Get a specific version of a plug.
       parameters:
         - schema:
@@ -12193,12 +12431,14 @@ paths:
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -12218,10 +12458,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersion_plugs
+      operationId: removeVersion_plug_functions
       summary: Remove Plug Version
       tags:
-        - Plugs
+        - Plug Functions
       description: >
         Deprecate, undeploy and/or remove a <em>plug</em> version.
 
@@ -12256,6 +12496,7 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -12267,6 +12508,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -12276,6 +12518,7 @@ paths:
             If <code>true</code>, the plug version(s) will be undeployed and
             removed. Otherwise, the plug version(s) will only be
             <code>deprecated</code>, i.e removed from regular listings.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -12307,18 +12550,21 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -12342,10 +12588,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/rebuild:
     post:
-      operationId: rebuild_plugs
+      operationId: rebuild_plug_functions
       summary: Rebuild Plug
       tags:
-        - Plugs
+        - Plug Functions
       description: Rebuild and deploy a plug with the original or updated base image.
       parameters:
         - schema:
@@ -12354,6 +12600,7 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -12362,6 +12609,7 @@ paths:
           description: >-
             If set to <code>true</code>, checks whether rebuild jobs are needed,
             but do not start any jobs.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -12373,6 +12621,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/RebuildPolicy'
           in: query
@@ -12386,6 +12635,7 @@ paths:
             include an upgrade of e.g. the language runtime and/or provided  
             dependencies that could break compatiblity with the function. .</li>
             </ul>
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: query
@@ -12395,6 +12645,7 @@ paths:
             If set, force a rebuild with the given runtime version (including
             downgrades). This parameter is mutually exclusive to the `upgrade`
             parameter.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -12413,6 +12664,7 @@ paths:
             * running jobs on entity
 
             * the `dryRun` option
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -12422,6 +12674,7 @@ paths:
             Indicates whether the function needs to be scaled down after
             successful (re-)deployment. If not set, the function is scaled to
             zero only if it was not active before this command.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -12430,18 +12683,21 @@ paths:
           description: >-
             If set, the function will not be rebuild. Always uses the current
             runtime version when re-deploying/re-verifying the function.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -12465,10 +12721,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/content:
     get:
-      operationId: getArchive_plugs
+      operationId: getArchive_plug_functions
       summary: Get Plug Archive
       tags:
-        - Plugs
+        - Plug Functions
       description: Get the specification archive of a plug.
       parameters:
         - schema:
@@ -12481,18 +12737,21 @@ paths:
             If set to `true`, the result will be a listing of the files in the
             asset, annotated with metadata and validation report from the asset
             conditions of the functions runtime.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -12545,10 +12804,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAssets_plugs
+      operationId: updateAssets_plug_functions
       summary: Update Plug Assets
       tags:
-        - Plugs
+        - Plug Functions
       description: |-
         Update a draft <em>plug</em> function by updating its assets.
           
@@ -12643,12 +12902,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -12660,6 +12921,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -12669,18 +12931,21 @@ paths:
           description: >-
             If set, ownership of the draft function is transferred to the
             current user.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -12710,10 +12975,10 @@ paths:
       x-consumes-other: true
   /registry/v2/plugs/{name}/versions/{version}/content/{wildcard}:
     get:
-      operationId: getAsset_plugs
+      operationId: getAsset_plug_functions
       summary: Get File From Plug Archive
       tags:
-        - Plugs
+        - Plug Functions
       description: Get a file from the specification archive of a plug.
       parameters:
         - schema:
@@ -12726,24 +12991,28 @@ paths:
             If set to `true`, the result will be a listing of the files in the
             asset, annotated with metadata and validation report from the asset
             conditions of the functions runtime.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -12796,10 +13065,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAsset_plugs
+      operationId: updateAsset_plug_functions
       summary: Update Plug Asset
       tags:
-        - Plugs
+        - Plug Functions
       description: >-
         The provided asset will be added to the <em>plug</em> function's
         collection of existing assets,
@@ -12829,12 +13098,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -12846,6 +13117,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -12855,24 +13127,28 @@ paths:
           description: >-
             If set, ownership of the draft function is transferred to the
             current user.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -12901,10 +13177,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: true
     delete:
-      operationId: deleteAsset_plugs
+      operationId: deleteAsset_plug_functions
       summary: Delete Plug Asset
       tags:
-        - Plugs
+        - Plug Functions
       description: Delete an asset from the plug's collection of existing assets.
       parameters:
         - schema:
@@ -12913,12 +13189,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -12930,6 +13208,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -12939,24 +13218,28 @@ paths:
           description: >-
             If set, ownership of the draft function is transferred to the
             current user.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -12986,10 +13269,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/publish:
     post:
-      operationId: publish_plugs
+      operationId: publish_plug_functions
       summary: Publish Draft Plug
       tags:
-        - Plugs
+        - Plug Functions
       description: >-
         Mark the <em>plug</em> to be ready and stable, taking it out of draft
         mode.,
@@ -13005,12 +13288,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/DeprecatePreviousPolicy'
             default: patch
@@ -13020,6 +13305,7 @@ paths:
           description: >-
             Set the cleanup policy used to automatically deprecate/delete
             previous versions.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -13031,18 +13317,21 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -13068,10 +13357,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/interface:
     patch:
-      operationId: patchInterface_plugs
+      operationId: patchInterface_plug_functions
       summary: Patch Plug Interface
       tags:
-        - Plugs
+        - Plug Functions
       description: Patch the interface documentation of a plug version.
       requestBody:
         content:
@@ -13085,18 +13374,21 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -13114,10 +13406,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/metadata:
     patch:
-      operationId: patchMetadata_plugs
+      operationId: patchMetadata_plug_functions
       summary: Patch Plug Metadata
       tags:
-        - Plugs
+        - Plug Functions
       description: Patch the metadata of a plug version.
       requestBody:
         content:
@@ -13131,18 +13423,21 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -13160,10 +13455,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/jobs:
     get:
-      operationId: jobs_plugs
+      operationId: jobs_plug_functions
       summary: List Plug Jobs
       tags:
-        - Plugs
+        - Plug Functions
       description: List the ongoing and completed operations on a specific plug.
       parameters:
         - schema:
@@ -13175,6 +13470,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -13183,6 +13479,7 @@ paths:
           name: type
           required: false
           description: Filter on job type
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -13191,6 +13488,7 @@ paths:
           name: state
           required: false
           description: Filter on job state
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -13199,30 +13497,35 @@ paths:
           name: functionType
           required: false
           description: Filter on function type
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
           name: createdBefore
           required: false
           description: Filter on jobs that created before the given timestamp or age
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
           name: createdAfter
           required: false
           description: Filter on jobs that created after the given timestamp or age
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -13240,10 +13543,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/verify:
     post:
-      operationId: verify_plugs
+      operationId: verify_plug_functions
       summary: Verify Health Of Plug
       tags:
-        - Plugs
+        - Plug Functions
       description: Verify health of plug deployed on openfaas.
       parameters:
         - schema:
@@ -13257,6 +13560,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -13266,18 +13570,21 @@ paths:
             Indicates whether the function needs to be scaled down after
             successful verification. If not set, the function is scaled to zero
             only if it was not active before this command.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -13302,21 +13609,20 @@ paths:
       x-consumes-other: false
   /registry/v2/models/:
     post:
-      operationId: create_models
+      operationId: create_model_functions
       summary: Create Model
       tags:
-        - Models
+        - Model Functions
       description: |-
         Creates a new <em>model</em> function by uploading its assets.
           
-          The assets for a <em>model</em> function can be provided as
+          The assets for a <em>model</em> function can be provided as either
           <ul>
-            <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
+            <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
             <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-            <li>Separate files in a <code>multipart/form-data</code> request</li>
-            <li>A reference to the assets of another <em>model</em> in the <code>copy</code> argument</li>
+            <li>separate files in a <code>multipart/form-data</code> request</li>
           </ul>
-
+          
           The required <code>model.json</code> json file contains the function metadata,
           and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
           (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).
@@ -13394,14 +13700,13 @@ paths:
               type: object
               maxProperties: 0
         description: |
-          The assets for a <em>model</em> function can be provided as
+          The assets for a <em>model</em> function can be provided as either
             <ul>
-              <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
+              <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
               <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-              <li>Separate files in a <code>multipart/form-data</code> request</li>
-              <li>A reference to the assets of another <em>model</em> in the <code>copy</code> argument</li>
+              <li>separate files in a <code>multipart/form-data</code> request</li>
             </ul>
-
+            
             The required <code>model.json</code> json file contains the function metadata,
             and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
             (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).
@@ -13414,12 +13719,14 @@ paths:
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/DeprecatePreviousPolicy'
             default: patch
@@ -13429,6 +13736,7 @@ paths:
           description: >-
             Set the cleanup policy used to automatically deprecate/delete
             previous versions.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -13437,6 +13745,7 @@ paths:
           description: >-
             If set to <code>true</code>, validates the deployment conditions,
             but does not change anything.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -13448,6 +13757,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -13458,6 +13768,7 @@ paths:
             If set to <code>true</code>, after successful deployment, the
             deployed function will be scaled to zero. Saves computing resources
             when the function is not to be used immediately.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: query
@@ -13468,6 +13779,7 @@ paths:
             existing version that satisfies the `version` range. Note that this
             increment always takes precedence over an explicit `version` in the
             function manifest.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -13476,6 +13788,7 @@ paths:
           description: >-
             If set, the value will be used as the function name instead of the
             one specified in the manifest.
+          x-showExample: false
         - schema:
             type: boolean
             default: false
@@ -13486,6 +13799,7 @@ paths:
             If set, the created function will be a draft function and its assets
             are still mutable. A build and deploy is initiated only in the case
             when all necessary assets are present and valid.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/NamedVersionRange'
           in: query
@@ -13498,6 +13812,7 @@ paths:
 
             This takes precedence over the runtime specified in a function
             manifest (copied or from request body).
+          x-showExample: false
         - schema:
             anyOf:
               - $ref: '#/components/schemas/NamedVersionRange'
@@ -13578,6 +13893,7 @@ paths:
 
             The new function will use the deployment overrides of the copied
             function, unless a _manifest_ was specified in the request body.
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -13600,10 +13916,10 @@ paths:
       x-consumes-json: true
       x-consumes-other: true
     get:
-      operationId: list_models
+      operationId: list_model_functions
       summary: List Models
       tags:
-        - Models
+        - Model Functions
       description: >
         List the (latest) versions of available <em>models</em>.
 
@@ -13689,6 +14005,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: number
             minimum: 0
@@ -13696,6 +14013,7 @@ paths:
           name: page
           required: false
           description: The number of pages to skip when returning result to this query.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -13707,6 +14025,7 @@ paths:
             when no other versions are available. If set to `true`, draft
             versions are **included**. If set to `false`, draft versions are
             **excluded**.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -13718,18 +14037,21 @@ paths:
             considered when no other versions are available. If set to `true`,
             deprecated versions are **included**. If set to `false`, deprecated
             versions are **excluded**.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
           name: deprecated
           required: false
           description: Filter on the deprecation status of the function.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
           name: draft
           required: false
           description: Filter on the draft status of the function.
+          x-showExample: true
         - schema:
             type: array
             items:
@@ -13741,6 +14063,7 @@ paths:
             Filter on exact `{name}@{version}` functions. Using this filter
             implies a `latest=false` default, returning multiple versions of the
             same named versions if they are filtered.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -13749,6 +14072,7 @@ paths:
           description: >-
             Filter on the version of the function (case-sensitive, supports
             wildcards).
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -13761,12 +14085,14 @@ paths:
             exclude the status. Use the `any` filter value to include all
             states. When not specified, a default `undeployed-` filter excludes
             _undeployed_ functions.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: query
           name: runtimeVersion
           required: false
           description: Filter on the runtime version.
+          x-showExample: false
         - schema:
             type: string
           example: '@me'
@@ -13776,6 +14102,8 @@ paths:
           description: >-
             Filter on the user that create the plug. You can use the `@me` token
             to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             type: string
           example: '@me'
@@ -13785,6 +14113,8 @@ paths:
           description: >-
             Filter on the user that last updated the plug. You can use the `@me`
             token to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -13793,6 +14123,7 @@ paths:
           description: >-
             Filter on funtions that were created before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -13801,6 +14132,7 @@ paths:
           description: >-
             Filter on funtions that were created after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -13809,6 +14141,7 @@ paths:
           description: >-
             Filter on funtions that were updated before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -13817,6 +14150,7 @@ paths:
           description: >-
             Filter on funtions that were updated after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -13826,6 +14160,7 @@ paths:
             Filter on the name of the function. This is case-insensitive and
             supports wild-cards `?` (any one character) and `*` (any sequence of
             characters).
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -13834,6 +14169,7 @@ paths:
           name: archiveFormat
           required: false
           description: Filter on the archive format of the function.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -13842,6 +14178,7 @@ paths:
           name: runtime
           required: false
           description: Filter on the runtime of the function.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -13852,6 +14189,7 @@ paths:
             If set to `false`, multiple versions per named function can be
             returned. Defaults to `true`, except when specific versions are
             selected with the `nameVersion` filter.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/ShowRelatedType'
           in: query
@@ -13866,6 +14204,7 @@ paths:
             - `link`: as HAL link in (in `_links`).
 
             - `none`: omitted.
+          x-showExample: true
       x-version: v2
       responses:
         '200':
@@ -13883,10 +14222,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}:
     get:
-      operationId: getLatest_models
+      operationId: getLatest_model_functions
       summary: Get Latest Model Version
       tags:
-        - Models
+        - Model Functions
       description: |-
         Fetch the latest version of a <em>model</em>.
 
@@ -13916,6 +14255,7 @@ paths:
             when no other versions are available. If set to `true`, draft
             versions are **included**. If set to `false`, draft versions are
             **excluded**.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -13927,12 +14267,14 @@ paths:
             considered when no other versions are available. If set to `true`,
             deprecated versions are **included**. If set to `false`, deprecated
             versions are **excluded**.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -13949,10 +14291,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersions_models
+      operationId: removeVersions_model_functions
       summary: Remove Model
       tags:
-        - Models
+        - Model Functions
       description: >
         Deprecate, undeploy and/or remove all versions of this named
         <em>model</em>.
@@ -13974,6 +14316,7 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -13986,6 +14329,7 @@ paths:
 
             Otherwise, the removal will be delayed to allow current invocations
             to end. During that period, the function is marked _deprecated_.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -14017,6 +14361,7 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -14028,12 +14373,14 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -14057,10 +14404,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions:
     get:
-      operationId: listVersions_models
+      operationId: listVersions_model_functions
       summary: List Model Versions
       tags:
-        - Models
+        - Model Functions
       description: List all deployed versions of a model.
       parameters:
         - schema:
@@ -14072,6 +14419,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: number
             minimum: 0
@@ -14079,18 +14427,21 @@ paths:
           name: page
           required: false
           description: The number of pages to skip when returning result to this query.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
           name: deprecated
           required: false
           description: Filter on the deprecation status of the function.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
           name: draft
           required: false
           description: Filter on the draft status of the function.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -14099,6 +14450,7 @@ paths:
           description: >-
             Filter on the version of the function (case-sensitive, supports
             wildcards).
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -14111,12 +14463,14 @@ paths:
             exclude the status. Use the `any` filter value to include all
             states. When not specified, a default `undeployed-` filter excludes
             _undeployed_ functions.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
           in: query
           name: runtimeVersion
           required: false
           description: Filter on the runtime version.
+          x-showExample: false
         - schema:
             type: string
           example: '@me'
@@ -14126,6 +14480,8 @@ paths:
           description: >-
             Filter on the user that create the plug. You can use the `@me` token
             to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             type: string
           example: '@me'
@@ -14135,6 +14491,8 @@ paths:
           description: >-
             Filter on the user that last updated the plug. You can use the `@me`
             token to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -14143,6 +14501,7 @@ paths:
           description: >-
             Filter on funtions that were created before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -14151,6 +14510,7 @@ paths:
           description: >-
             Filter on funtions that were created after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -14159,6 +14519,7 @@ paths:
           description: >-
             Filter on funtions that were updated before the given timestamp or
             age.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
@@ -14167,6 +14528,7 @@ paths:
           description: >-
             Filter on funtions that were updated after the given timestamp or
             age.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -14175,6 +14537,7 @@ paths:
           name: archiveFormat
           required: false
           description: Filter on the archive format of the function.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -14183,12 +14546,14 @@ paths:
           name: runtime
           required: false
           description: Filter on the runtime of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -14206,10 +14571,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}:
     get:
-      operationId: get_models
+      operationId: get_model_functions
       summary: Get Model Version
       tags:
-        - Models
+        - Model Functions
       description: Get a model by name and version.
       parameters:
         - schema:
@@ -14218,12 +14583,14 @@ paths:
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -14240,10 +14607,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersion_models
+      operationId: removeVersion_model_functions
       summary: Remove Model Version
       tags:
-        - Models
+        - Model Functions
       description: |
         Deprecate, undeploy and/or remove a <em>model</em> version.
 
@@ -14264,6 +14631,7 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -14275,6 +14643,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -14287,6 +14656,7 @@ paths:
 
             Otherwise, the removal will be delayed to allow current invocations
             to end. During that period, the function is marked _deprecated_.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -14318,18 +14688,21 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -14353,10 +14726,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/content:
     get:
-      operationId: getArchive_models
+      operationId: getArchive_model_functions
       summary: Get Model Archive
       tags:
-        - Models
+        - Model Functions
       description: Get the specification archive of a model.
       parameters:
         - schema:
@@ -14369,18 +14742,21 @@ paths:
             If set to `true`, the result will be a listing of the files in the
             asset, annotated with metadata and validation report from the asset
             conditions of the functions runtime.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -14433,10 +14809,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAssets_models
+      operationId: updateAssets_model_functions
       summary: Update Model Assets
       tags:
-        - Models
+        - Model Functions
       description: |-
         Update a draft <em>model</em> function by updating its assets.
           
@@ -14531,12 +14907,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -14548,6 +14926,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -14557,18 +14936,21 @@ paths:
           description: >-
             If set, ownership of the draft function is transferred to the
             current user.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -14598,10 +14980,10 @@ paths:
       x-consumes-other: true
   /registry/v2/models/{name}/versions/{version}/content/{wildcard}:
     get:
-      operationId: getAsset_models
+      operationId: getAsset_model_functions
       summary: Get File From Model Archive
       tags:
-        - Models
+        - Model Functions
       description: Get a file from the specification archive of a model.
       parameters:
         - schema:
@@ -14614,24 +14996,28 @@ paths:
             If set to `true`, the result will be a listing of the files in the
             asset, annotated with metadata and validation report from the asset
             conditions of the functions runtime.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -14684,10 +15070,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAsset_models
+      operationId: updateAsset_model_functions
       summary: Update Model Asset
       tags:
-        - Models
+        - Model Functions
       description: >-
         The provided asset will be added to the <em>model</em> function's
         collection of existing assets,
@@ -14717,12 +15103,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -14734,6 +15122,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -14743,24 +15132,28 @@ paths:
           description: >-
             If set, ownership of the draft function is transferred to the
             current user.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -14789,10 +15182,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: true
     delete:
-      operationId: deleteAsset_models
+      operationId: deleteAsset_model_functions
       summary: Delete Model Asset
       tags:
-        - Models
+        - Model Functions
       description: Delete an asset from the model's collection of existing assets.
       parameters:
         - schema:
@@ -14801,12 +15194,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             type: boolean
             default: true
@@ -14818,6 +15213,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
             default: false
@@ -14827,24 +15223,28 @@ paths:
           description: >-
             If set, ownership of the draft function is transferred to the
             current user.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: wildcard
           required: true
           description: Full path or path prefix of the asset within the archive
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -14874,10 +15274,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/publish:
     post:
-      operationId: publish_models
+      operationId: publish_model_functions
       summary: Publish Draft Model
       tags:
-        - Models
+        - Model Functions
       description: >-
         Mark the <em>model</em> to be ready and stable, taking it out of draft
         mode.,
@@ -14893,12 +15293,14 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: query
           name: author
           required: false
           description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/DeprecatePreviousPolicy'
             default: patch
@@ -14908,6 +15310,7 @@ paths:
           description: >-
             Set the cleanup policy used to automatically deprecate/delete
             previous versions.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -14919,18 +15322,21 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '201':
@@ -14956,10 +15362,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/metadata:
     patch:
-      operationId: patchMetadata_models
+      operationId: patchMetadata_model_functions
       summary: Patch Model Metadata
       tags:
-        - Models
+        - Model Functions
       description: Patch the metadata of a model version.
       requestBody:
         content:
@@ -14973,18 +15379,21 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -15002,10 +15411,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/jobs:
     get:
-      operationId: jobs_models
+      operationId: jobs_model_functions
       summary: List Model Jobs
       tags:
-        - Models
+        - Model Functions
       description: List the ongoing and completed operations on a model.
       parameters:
         - schema:
@@ -15017,6 +15426,7 @@ paths:
           description: >-
             The maximum number of items to be return from this query. Has a
             deployment-defined default and maximum value.
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -15025,6 +15435,7 @@ paths:
           name: type
           required: false
           description: Filter on job type
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -15033,6 +15444,7 @@ paths:
           name: state
           required: false
           description: Filter on job state
+          x-showExample: false
         - schema:
             type: array
             items:
@@ -15041,30 +15453,35 @@ paths:
           name: functionType
           required: false
           description: Filter on function type
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
           name: createdBefore
           required: false
           description: Filter on jobs that created before the given timestamp or age
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/TimestampSpec'
           in: query
           name: createdAfter
           required: false
           description: Filter on jobs that created after the given timestamp or age
+          x-showExample: false
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -15082,10 +15499,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/rebuild:
     post:
-      operationId: rebuild_models
+      operationId: rebuild_model_functions
       summary: Rebuild Model
       tags:
-        - Models
+        - Model Functions
       description: Rebuild and deploy a model with the original or updated base image.
       parameters:
         - schema:
@@ -15094,6 +15511,7 @@ paths:
           name: comment
           required: false
           description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -15102,6 +15520,7 @@ paths:
           description: >-
             If set to <code>true</code>, checks whether rebuild jobs are needed,
             but do not start any jobs.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -15113,6 +15532,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/RebuildPolicy'
           in: query
@@ -15126,6 +15546,7 @@ paths:
             include an upgrade of e.g. the language runtime and/or provided  
             dependencies that could break compatiblity with the function. .</li>
             </ul>
+          x-showExample: true
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: query
@@ -15135,6 +15556,7 @@ paths:
             If set, force a rebuild with the given runtime version (including
             downgrades). This parameter is mutually exclusive to the `upgrade`
             parameter.
+          x-showExample: false
         - schema:
             type: boolean
           in: query
@@ -15153,6 +15575,7 @@ paths:
             * running jobs on entity
 
             * the `dryRun` option
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -15162,6 +15585,7 @@ paths:
             Indicates whether the function needs to be scaled down after
             successful (re-)deployment. If not set, the function is scaled to
             zero only if it was not active before this command.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -15170,18 +15594,21 @@ paths:
           description: >-
             If set, the function will not be rebuild. Always uses the current
             runtime version when re-deploying/re-verifying the function.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -15205,10 +15632,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/verify:
     post:
-      operationId: verify_models
+      operationId: verify_model_functions
       summary: Verify Health Of Model
       tags:
-        - Models
+        - Model Functions
       description: Verify health of model deployed on openfaas.
       parameters:
         - schema:
@@ -15222,6 +15649,7 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
         - schema:
             type: boolean
           in: query
@@ -15231,18 +15659,21 @@ paths:
             Indicates whether the function needs to be scaled down after
             successful verification. If not set, the function is scaled to zero
             only if it was not active before this command.
+          x-showExample: true
         - schema:
             type: string
           in: path
           name: name
           required: true
           description: The name of the function.
+          x-showExample: false
         - schema:
             $ref: '#/components/schemas/SemanticVersion'
           in: path
           name: version
           required: true
           description: The version of the function.
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -15266,15 +15697,6 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
 tags:
-  - name: Models
-    description: BYOML Models are functions that wrap a machine learning model.
-    externalDocs:
-      url: https://docs-staging.waylay.io/#/features/byoml/
-      description: Waylay Documentation
-  - name: Plugs
-    description: Plugs are functions that can be used in the rule engine.
-  - name: Webscripts
-    description: Webscripts are functions that are securely exposed to an http endpoint.
   - name: Jobs
     description: >-
       Jobs represent the ongoing asynchronous operations in the function
@@ -15284,8 +15706,6 @@ tags:
       Runtimes are the available base infrastructure for functions, and define
       how 
                 the plug gets build and deployed.
-  - name: Schemas
-    description: Schemas referenced in the API.
 externalDocs:
   url: https://docs-staging.waylay.io/#/api/registry/
   description: Waylay Documentation

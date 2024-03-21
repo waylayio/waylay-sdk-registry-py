@@ -9,7 +9,7 @@ Method | HTTP request | Description
 # **get**
 > get(
 > headers
-> ) -> RootPageResponse 
+> ) -> RootPageResponse
 
 Version
 
@@ -50,8 +50,11 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-
-[**RootPageResponse**](RootPageResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RootPageResponse`** |  | [RootPageResponse](RootPageResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 

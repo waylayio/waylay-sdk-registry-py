@@ -17,7 +17,7 @@ Method | HTTP request | Description
 > version: SemanticVersionRange,
 > query: ExampleArchiveQuery,
 > headers
-> ) -> bytearray 
+> ) -> bytearray
 
 Get Runtime Example Archive
 
@@ -70,8 +70,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-**bytearray**
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`bytearray`** |  | 
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -93,7 +96,7 @@ Name     | Type  | API binding   | Description   | Notes
 > wildcard: str,
 > query: GetExampleAssetQuery,
 > headers
-> ) -> bytearray 
+> ) -> bytearray
 
 Get File From Runtime Example Archive
 
@@ -148,8 +151,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-**bytearray**
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`bytearray`** |  | 
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -169,7 +175,7 @@ Name     | Type  | API binding   | Description   | Notes
 > name: str,
 > query: GetLatestQuery,
 > headers
-> ) -> RuntimeVersionResponse 
+> ) -> RuntimeVersionResponse
 
 Get Latest Runtime Version
 
@@ -199,8 +205,8 @@ try:
         query = {
             'version': waylay.services.registry.SemanticVersionRange()
             'includeDeprecated': False
-            'functionType': [waylay.services.registry.FunctionType()]
-            'archiveFormat': [waylay.services.registry.ArchiveFormat()]
+            'functionType': []
+            'archiveFormat': []
         },
     )
     print("The response of registry.runtimes.get_latest:\n")
@@ -227,8 +233,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-[**RuntimeVersionResponse**](RuntimeVersionResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RuntimeVersionResponse`** |  | [RuntimeVersionResponse](RuntimeVersionResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -249,7 +258,7 @@ Name     | Type  | API binding   | Description   | Notes
 > version: SemanticVersionRange,
 > query: GetQuery,
 > headers
-> ) -> RuntimeVersionResponse 
+> ) -> RuntimeVersionResponse
 
 Get Runtime Version
 
@@ -301,8 +310,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-[**RuntimeVersionResponse**](RuntimeVersionResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RuntimeVersionResponse`** |  | [RuntimeVersionResponse](RuntimeVersionResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -321,7 +333,7 @@ Name     | Type  | API binding   | Description   | Notes
 > list(
 > query: ListQuery,
 > headers
-> ) -> RuntimeSummaryResponse 
+> ) -> RuntimeSummaryResponse
 
 List Runtimes
 
@@ -350,11 +362,11 @@ try:
         # query parameters:
         query = {
             'version': waylay.services.registry.SemanticVersionRange()
-            'latest': waylay.services.registry.LatestVersionLevel()
+            'latest': 'major'
             'includeDeprecated': False
             'name': 'node*'
-            'functionType': [waylay.services.registry.FunctionType()]
-            'archiveFormat': [waylay.services.registry.ArchiveFormat()]
+            'functionType': []
+            'archiveFormat': []
         },
     )
     print("The response of registry.runtimes.list:\n")
@@ -382,8 +394,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-[**RuntimeSummaryResponse**](RuntimeSummaryResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RuntimeSummaryResponse`** |  | [RuntimeSummaryResponse](RuntimeSummaryResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -403,7 +418,7 @@ Name     | Type  | API binding   | Description   | Notes
 > name: str,
 > query: ListVersionsQuery,
 > headers
-> ) -> RuntimeSummaryResponse 
+> ) -> RuntimeSummaryResponse
 
 List Runtime Versions
 
@@ -433,10 +448,10 @@ try:
         # query parameters:
         query = {
             'version': waylay.services.registry.SemanticVersionRange()
-            'latest': waylay.services.registry.LatestVersionLevel()
+            'latest': 'major'
             'includeDeprecated': False
-            'functionType': [waylay.services.registry.FunctionType()]
-            'archiveFormat': [waylay.services.registry.ArchiveFormat()]
+            'functionType': []
+            'archiveFormat': []
         },
     )
     print("The response of registry.runtimes.list_versions:\n")
@@ -464,8 +479,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-[**RuntimeSummaryResponse**](RuntimeSummaryResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RuntimeSummaryResponse`** |  | [RuntimeSummaryResponse](RuntimeSummaryResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 

@@ -12,7 +12,7 @@ Method | HTTP request | Description
 > events(
 > query: EventsQuery,
 > headers
-> ) -> EventWithCloseSSE 
+> ) -> EventWithCloseSSE
 
 Stream Events
 
@@ -38,8 +38,7 @@ try:
     api_response = await waylay_client.registry.jobs.events(
         # query parameters:
         query = {
-            'type': waylay.services.registry.JobType()
-            'id': 'id_example'
+            'type': 'build'
             'children': True
         },
     )
@@ -65,8 +64,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-[**EventWithCloseSSE**](EventWithCloseSSE.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`EventWithCloseSSE`** |  | [EventWithCloseSSE](EventWithCloseSSE.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -86,7 +88,7 @@ Name     | Type  | API binding   | Description   | Notes
 > type: JobType,
 > id: str,
 > headers
-> ) -> JobResponse 
+> ) -> JobResponse
 
 Get Job
 
@@ -110,7 +112,7 @@ try:
     # Get Job
     # calls `GET /registry/v2/jobs/{type}/{id}`
     api_response = await waylay_client.registry.jobs.get(
-        waylay.services.registry.JobType(), # type | path param "type"
+        'build', # type | path param "type"
         'id_example', # id | path param "id"
     )
     print("The response of registry.jobs.get:\n")
@@ -133,8 +135,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-[**JobResponse**](JobResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`JobResponse`** |  | [JobResponse](JobResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -153,7 +158,7 @@ Name     | Type  | API binding   | Description   | Notes
 > list(
 > query: ListQuery,
 > headers
-> ) -> JobsResponse 
+> ) -> JobsResponse
 
 List Jobs
 
@@ -181,12 +186,6 @@ try:
     api_response = await waylay_client.registry.jobs.list(
         # query parameters:
         query = {
-            'limit': 3.4
-            'type': [waylay.services.registry.JobTypeSchema()]
-            'state': [waylay.services.registry.JobStateResult()]
-            'functionType': [waylay.services.registry.FunctionType()]
-            'createdBefore': waylay.services.registry.TimestampSpec()
-            'createdAfter': waylay.services.registry.TimestampSpec()
         },
     )
     print("The response of registry.jobs.list:\n")
@@ -214,8 +213,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-[**JobsResponse**](JobsResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`JobsResponse`** |  | [JobsResponse](JobsResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 

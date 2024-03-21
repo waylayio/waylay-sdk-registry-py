@@ -33,6 +33,7 @@ response = await waylay_client.demo.gadgets.combatulate_trinket(
     # optional named arguments that specify how the response should be rendered (named)
     raw_response=False,
     select_path=None,
+    response_type=None,
     # optional named arguments passed to the http client  (named)
     timeout=10.0,
 )
@@ -54,6 +55,7 @@ Each _operation method_ of this SDK uses the following arguments:
 * [response rendering](#req_arg_render) arguments that specify how the response is presented
   * [`raw_response: bool`](#req_arg_raw): if `True` returns a http `Response` object
   * [`select_path: str`](#req_arg_select): used on a `json` `dict` response to select the relevant part of the response.
+  * [`response_type: Type | None`](#req_arg_response_type): parse the response as an instance of specified type.
 * [http client](#req_arg_client) arguments that influence the handling of the http call.
 
 ## Typing of arguments
@@ -324,6 +326,8 @@ TODO
 ### <a id='req_arg_select'></a> Select a part of the response: `select_path`
 TODO
 
+### <a id='req_arg_response_type'></a> Parse the 2XX response as an instance of type: `response_type`
+TODO
 
 ## <a id='req_arg_http'></a> Http client arguments
 

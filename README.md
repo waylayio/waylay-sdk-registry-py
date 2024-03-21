@@ -5,18 +5,18 @@ This Python package is automatically generated based on the
 Waylay Registry OpenAPI specification (API version: 2.13.0-beta.0)
 
 It consists of two sub-packages that are both plugins for the  package.
-- The `waylay_registry_api` sub-package contains the Registry api methods.
-- The `waylay_registry_types` sub-package is an extension that contains the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay_registry_api`.
+- The `waylay-sdk-registry` sub-package contains the Registry api methods.
+- The `waylay-sdk-registry-types` sub-package is an extension that contains the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay-sdk-registry`.
 
 ## Requirements.
 This package requires Python 3.11+.
 
 ## Installation
-Typically this package is installed when installing the [waylay-sdk](https://github.com/waylayio/waylay-py-core) package to enable the service's functionality.
-When the service api methods are required, waylay_registry_api is included in:
+Typically this package is installed when installing the [waylay-sdk](https://github.com/waylayio/waylay-sdk-py) package to enable the service's functionality.
+When the service api methods are required, waylay-sdk-registry is included in:
 - ```pip install waylay-sdk[registry]``` to install `waylay-sdk` along with only this service, or
 - ```pip install waylay-sdk[services]``` to install `waylay-sdk` along with all services.
-When the typed models are required, both waylay_registry_api and waylay_registry_types are included in:
+When the typed models are required, both waylay-sdk-registry and waylay-sdk-registry-types are included in:
 - ```pip install waylay-sdk[registry,registry-types]``` to install `waylay-sdk` along with only this service including the typed models, or
 - ```pip install waylay-sdk[registry]``` to install `waylay-sdk` along with all services along with the typed models.
 
@@ -43,12 +43,6 @@ try:
     api_response = await waylay_client.registry.jobs.list(
         # query parameters:
         query = {
-            'limit': 3.4
-            'type': [waylay.services.registry.JobTypeSchema()]
-            'state': [waylay.services.registry.JobStateResult()]
-            'functionType': [waylay.services.registry.FunctionType()]
-            'createdBefore': waylay.services.registry.TimestampSpec()
-            'createdAfter': waylay.services.registry.TimestampSpec()
         },
     )
     print("The response of registry.jobs.list:\n")
@@ -67,41 +61,41 @@ Class | Method | HTTP request | Description
 *JobsApi* | [**events**](docs/JobsApi.md#events) | **GET** /registry/v2/jobs/events | Stream Events
 *JobsApi* | [**get**](docs/JobsApi.md#get) | **GET** /registry/v2/jobs/{type}/{id} | Get Job
 *JobsApi* | [**list**](docs/JobsApi.md#list) | **GET** /registry/v2/jobs/ | List Jobs
-*ModelsApi* | [**create**](docs/ModelsApi.md#create) | **POST** /registry/v2/models/ | Create Model
-*ModelsApi* | [**delete_asset**](docs/ModelsApi.md#delete_asset) | **DELETE** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Delete Model Asset
-*ModelsApi* | [**get_archive**](docs/ModelsApi.md#get_archive) | **GET** /registry/v2/models/{name}/versions/{version}/content | Get Model Archive
-*ModelsApi* | [**get_asset**](docs/ModelsApi.md#get_asset) | **GET** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Get File From Model Archive
-*ModelsApi* | [**get_latest**](docs/ModelsApi.md#get_latest) | **GET** /registry/v2/models/{name} | Get Latest Model Version
-*ModelsApi* | [**get**](docs/ModelsApi.md#get) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
-*ModelsApi* | [**jobs**](docs/ModelsApi.md#jobs) | **GET** /registry/v2/models/{name}/versions/{version}/jobs | List Model Jobs
-*ModelsApi* | [**list**](docs/ModelsApi.md#list) | **GET** /registry/v2/models/ | List Models
-*ModelsApi* | [**list_versions**](docs/ModelsApi.md#list_versions) | **GET** /registry/v2/models/{name}/versions | List Model Versions
-*ModelsApi* | [**patch_metadata**](docs/ModelsApi.md#patch_metadata) | **PATCH** /registry/v2/models/{name}/versions/{version}/metadata | Patch Model Metadata
-*ModelsApi* | [**publish**](docs/ModelsApi.md#publish) | **POST** /registry/v2/models/{name}/versions/{version}/publish | Publish Draft Model
-*ModelsApi* | [**rebuild**](docs/ModelsApi.md#rebuild) | **POST** /registry/v2/models/{name}/versions/{version}/rebuild | Rebuild Model
-*ModelsApi* | [**remove_version**](docs/ModelsApi.md#remove_version) | **DELETE** /registry/v2/models/{name}/versions/{version} | Remove Model Version
-*ModelsApi* | [**remove_versions**](docs/ModelsApi.md#remove_versions) | **DELETE** /registry/v2/models/{name} | Remove Model
-*ModelsApi* | [**update_asset**](docs/ModelsApi.md#update_asset) | **PUT** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Update Model Asset
-*ModelsApi* | [**update_assets**](docs/ModelsApi.md#update_assets) | **PUT** /registry/v2/models/{name}/versions/{version}/content | Update Model Assets
-*ModelsApi* | [**verify**](docs/ModelsApi.md#verify) | **POST** /registry/v2/models/{name}/versions/{version}/verify | Verify Health Of Model
-*PlugsApi* | [**create**](docs/PlugsApi.md#create) | **POST** /registry/v2/plugs/ | Create Plug
-*PlugsApi* | [**delete_asset**](docs/PlugsApi.md#delete_asset) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Delete Plug Asset
-*PlugsApi* | [**get_archive**](docs/PlugsApi.md#get_archive) | **GET** /registry/v2/plugs/{name}/versions/{version}/content | Get Plug Archive
-*PlugsApi* | [**get_asset**](docs/PlugsApi.md#get_asset) | **GET** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Get File From Plug Archive
-*PlugsApi* | [**get_latest**](docs/PlugsApi.md#get_latest) | **GET** /registry/v2/plugs/{name} | Get Latest Plug Version
-*PlugsApi* | [**get**](docs/PlugsApi.md#get) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Plug Version
-*PlugsApi* | [**jobs**](docs/PlugsApi.md#jobs) | **GET** /registry/v2/plugs/{name}/versions/{version}/jobs | List Plug Jobs
-*PlugsApi* | [**list**](docs/PlugsApi.md#list) | **GET** /registry/v2/plugs/ | List Plugs
-*PlugsApi* | [**list_versions**](docs/PlugsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Plug Versions
-*PlugsApi* | [**patch_interface**](docs/PlugsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Plug Interface
-*PlugsApi* | [**patch_metadata**](docs/PlugsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Plug Metadata
-*PlugsApi* | [**publish**](docs/PlugsApi.md#publish) | **POST** /registry/v2/plugs/{name}/versions/{version}/publish | Publish Draft Plug
-*PlugsApi* | [**rebuild**](docs/PlugsApi.md#rebuild) | **POST** /registry/v2/plugs/{name}/versions/{version}/rebuild | Rebuild Plug
-*PlugsApi* | [**remove_version**](docs/PlugsApi.md#remove_version) | **DELETE** /registry/v2/plugs/{name}/versions/{version} | Remove Plug Version
-*PlugsApi* | [**remove_versions**](docs/PlugsApi.md#remove_versions) | **DELETE** /registry/v2/plugs/{name} | Remove Plug
-*PlugsApi* | [**update_asset**](docs/PlugsApi.md#update_asset) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Update Plug Asset
-*PlugsApi* | [**update_assets**](docs/PlugsApi.md#update_assets) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content | Update Plug Assets
-*PlugsApi* | [**verify**](docs/PlugsApi.md#verify) | **POST** /registry/v2/plugs/{name}/versions/{version}/verify | Verify Health Of Plug
+*ModelFunctionsApi* | [**create**](docs/ModelFunctionsApi.md#create) | **POST** /registry/v2/models/ | Create Model
+*ModelFunctionsApi* | [**delete_asset**](docs/ModelFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Delete Model Asset
+*ModelFunctionsApi* | [**get_archive**](docs/ModelFunctionsApi.md#get_archive) | **GET** /registry/v2/models/{name}/versions/{version}/content | Get Model Archive
+*ModelFunctionsApi* | [**get_asset**](docs/ModelFunctionsApi.md#get_asset) | **GET** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Get File From Model Archive
+*ModelFunctionsApi* | [**get_latest**](docs/ModelFunctionsApi.md#get_latest) | **GET** /registry/v2/models/{name} | Get Latest Model Version
+*ModelFunctionsApi* | [**get**](docs/ModelFunctionsApi.md#get) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
+*ModelFunctionsApi* | [**jobs**](docs/ModelFunctionsApi.md#jobs) | **GET** /registry/v2/models/{name}/versions/{version}/jobs | List Model Jobs
+*ModelFunctionsApi* | [**list**](docs/ModelFunctionsApi.md#list) | **GET** /registry/v2/models/ | List Models
+*ModelFunctionsApi* | [**list_versions**](docs/ModelFunctionsApi.md#list_versions) | **GET** /registry/v2/models/{name}/versions | List Model Versions
+*ModelFunctionsApi* | [**patch_metadata**](docs/ModelFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/models/{name}/versions/{version}/metadata | Patch Model Metadata
+*ModelFunctionsApi* | [**publish**](docs/ModelFunctionsApi.md#publish) | **POST** /registry/v2/models/{name}/versions/{version}/publish | Publish Draft Model
+*ModelFunctionsApi* | [**rebuild**](docs/ModelFunctionsApi.md#rebuild) | **POST** /registry/v2/models/{name}/versions/{version}/rebuild | Rebuild Model
+*ModelFunctionsApi* | [**remove_version**](docs/ModelFunctionsApi.md#remove_version) | **DELETE** /registry/v2/models/{name}/versions/{version} | Remove Model Version
+*ModelFunctionsApi* | [**remove_versions**](docs/ModelFunctionsApi.md#remove_versions) | **DELETE** /registry/v2/models/{name} | Remove Model
+*ModelFunctionsApi* | [**update_asset**](docs/ModelFunctionsApi.md#update_asset) | **PUT** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Update Model Asset
+*ModelFunctionsApi* | [**update_assets**](docs/ModelFunctionsApi.md#update_assets) | **PUT** /registry/v2/models/{name}/versions/{version}/content | Update Model Assets
+*ModelFunctionsApi* | [**verify**](docs/ModelFunctionsApi.md#verify) | **POST** /registry/v2/models/{name}/versions/{version}/verify | Verify Health Of Model
+*PlugFunctionsApi* | [**create**](docs/PlugFunctionsApi.md#create) | **POST** /registry/v2/plugs/ | Create Plug
+*PlugFunctionsApi* | [**delete_asset**](docs/PlugFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Delete Plug Asset
+*PlugFunctionsApi* | [**get_archive**](docs/PlugFunctionsApi.md#get_archive) | **GET** /registry/v2/plugs/{name}/versions/{version}/content | Get Plug Archive
+*PlugFunctionsApi* | [**get_asset**](docs/PlugFunctionsApi.md#get_asset) | **GET** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Get File From Plug Archive
+*PlugFunctionsApi* | [**get_latest**](docs/PlugFunctionsApi.md#get_latest) | **GET** /registry/v2/plugs/{name} | Get Latest Plug Version
+*PlugFunctionsApi* | [**get**](docs/PlugFunctionsApi.md#get) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Plug Version
+*PlugFunctionsApi* | [**jobs**](docs/PlugFunctionsApi.md#jobs) | **GET** /registry/v2/plugs/{name}/versions/{version}/jobs | List Plug Jobs
+*PlugFunctionsApi* | [**list**](docs/PlugFunctionsApi.md#list) | **GET** /registry/v2/plugs/ | List Plugs
+*PlugFunctionsApi* | [**list_versions**](docs/PlugFunctionsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Plug Versions
+*PlugFunctionsApi* | [**patch_interface**](docs/PlugFunctionsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Plug Interface
+*PlugFunctionsApi* | [**patch_metadata**](docs/PlugFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Plug Metadata
+*PlugFunctionsApi* | [**publish**](docs/PlugFunctionsApi.md#publish) | **POST** /registry/v2/plugs/{name}/versions/{version}/publish | Publish Draft Plug
+*PlugFunctionsApi* | [**rebuild**](docs/PlugFunctionsApi.md#rebuild) | **POST** /registry/v2/plugs/{name}/versions/{version}/rebuild | Rebuild Plug
+*PlugFunctionsApi* | [**remove_version**](docs/PlugFunctionsApi.md#remove_version) | **DELETE** /registry/v2/plugs/{name}/versions/{version} | Remove Plug Version
+*PlugFunctionsApi* | [**remove_versions**](docs/PlugFunctionsApi.md#remove_versions) | **DELETE** /registry/v2/plugs/{name} | Remove Plug
+*PlugFunctionsApi* | [**update_asset**](docs/PlugFunctionsApi.md#update_asset) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Update Plug Asset
+*PlugFunctionsApi* | [**update_assets**](docs/PlugFunctionsApi.md#update_assets) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content | Update Plug Assets
+*PlugFunctionsApi* | [**verify**](docs/PlugFunctionsApi.md#verify) | **POST** /registry/v2/plugs/{name}/versions/{version}/verify | Verify Health Of Plug
 *RuntimesApi* | [**example_archive**](docs/RuntimesApi.md#example_archive) | **GET** /registry/v2/runtimes/{name}/versions/{version}/example | Get Runtime Example Archive
 *RuntimesApi* | [**get_example_asset**](docs/RuntimesApi.md#get_example_asset) | **GET** /registry/v2/runtimes/{name}/versions/{version}/example/{wildcard} | Get File From Runtime Example Archive
 *RuntimesApi* | [**get_latest**](docs/RuntimesApi.md#get_latest) | **GET** /registry/v2/runtimes/{name} | Get Latest Runtime Version
@@ -110,23 +104,23 @@ Class | Method | HTTP request | Description
 *RuntimesApi* | [**list_versions**](docs/RuntimesApi.md#list_versions) | **GET** /registry/v2/runtimes/{name}/versions | List Runtime Versions
 *SchemasApi* | [**get_by_role**](docs/SchemasApi.md#get_by_role) | **GET** /registry/v2/schemas/{functionType}/{role}/schema | Get Asset Schema
 *SchemasApi* | [**get**](docs/SchemasApi.md#get) | **GET** /registry/v2/schemas/{schemaId} | Get Asset Schema
-*WebscriptsApi* | [**create**](docs/WebscriptsApi.md#create) | **POST** /registry/v2/webscripts/ | Create Webscript Version
-*WebscriptsApi* | [**delete_asset**](docs/WebscriptsApi.md#delete_asset) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Delete Webscript Asset
-*WebscriptsApi* | [**get_archive**](docs/WebscriptsApi.md#get_archive) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content | Get Webscript Archive
-*WebscriptsApi* | [**get_asset**](docs/WebscriptsApi.md#get_asset) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Get File From Webscript Archive
-*WebscriptsApi* | [**get_latest**](docs/WebscriptsApi.md#get_latest) | **GET** /registry/v2/webscripts/{name} | Get Latest Webscript Version
-*WebscriptsApi* | [**get**](docs/WebscriptsApi.md#get) | **GET** /registry/v2/webscripts/{name}/versions/{version} | Get Webscript Version
-*WebscriptsApi* | [**jobs**](docs/WebscriptsApi.md#jobs) | **GET** /registry/v2/webscripts/{name}/versions/{version}/jobs | List Webscript Jobs
-*WebscriptsApi* | [**list_versions**](docs/WebscriptsApi.md#list_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Webscript Versions
-*WebscriptsApi* | [**list**](docs/WebscriptsApi.md#list) | **GET** /registry/v2/webscripts/ | List Webscripts
-*WebscriptsApi* | [**patch_metadata**](docs/WebscriptsApi.md#patch_metadata) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/metadata | Patch Webscript Metadata
-*WebscriptsApi* | [**publish**](docs/WebscriptsApi.md#publish) | **POST** /registry/v2/webscripts/{name}/versions/{version}/publish | Publish Draft Webscript
-*WebscriptsApi* | [**rebuild**](docs/WebscriptsApi.md#rebuild) | **POST** /registry/v2/webscripts/{name}/versions/{version}/rebuild | Rebuild Webscript
-*WebscriptsApi* | [**remove_version**](docs/WebscriptsApi.md#remove_version) | **DELETE** /registry/v2/webscripts/{name}/versions/{version} | Remove Webscript Version
-*WebscriptsApi* | [**remove_versions**](docs/WebscriptsApi.md#remove_versions) | **DELETE** /registry/v2/webscripts/{name} | Remove Webscript
-*WebscriptsApi* | [**update_asset**](docs/WebscriptsApi.md#update_asset) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Update Webscript Asset
-*WebscriptsApi* | [**update_assets**](docs/WebscriptsApi.md#update_assets) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content | Update Webscript Assets
-*WebscriptsApi* | [**verify**](docs/WebscriptsApi.md#verify) | **POST** /registry/v2/webscripts/{name}/versions/{version}/verify | Verify Health Of Webscript
+*WebscriptFunctionsApi* | [**create**](docs/WebscriptFunctionsApi.md#create) | **POST** /registry/v2/webscripts/ | Create Webscript Version
+*WebscriptFunctionsApi* | [**delete_asset**](docs/WebscriptFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Delete Webscript Asset
+*WebscriptFunctionsApi* | [**get_archive**](docs/WebscriptFunctionsApi.md#get_archive) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content | Get Webscript Archive
+*WebscriptFunctionsApi* | [**get_asset**](docs/WebscriptFunctionsApi.md#get_asset) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Get File From Webscript Archive
+*WebscriptFunctionsApi* | [**get_latest**](docs/WebscriptFunctionsApi.md#get_latest) | **GET** /registry/v2/webscripts/{name} | Get Latest Webscript Version
+*WebscriptFunctionsApi* | [**get**](docs/WebscriptFunctionsApi.md#get) | **GET** /registry/v2/webscripts/{name}/versions/{version} | Get Webscript Version
+*WebscriptFunctionsApi* | [**jobs**](docs/WebscriptFunctionsApi.md#jobs) | **GET** /registry/v2/webscripts/{name}/versions/{version}/jobs | List Webscript Jobs
+*WebscriptFunctionsApi* | [**list_versions**](docs/WebscriptFunctionsApi.md#list_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Webscript Versions
+*WebscriptFunctionsApi* | [**list**](docs/WebscriptFunctionsApi.md#list) | **GET** /registry/v2/webscripts/ | List Webscripts
+*WebscriptFunctionsApi* | [**patch_metadata**](docs/WebscriptFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/metadata | Patch Webscript Metadata
+*WebscriptFunctionsApi* | [**publish**](docs/WebscriptFunctionsApi.md#publish) | **POST** /registry/v2/webscripts/{name}/versions/{version}/publish | Publish Draft Webscript
+*WebscriptFunctionsApi* | [**rebuild**](docs/WebscriptFunctionsApi.md#rebuild) | **POST** /registry/v2/webscripts/{name}/versions/{version}/rebuild | Rebuild Webscript
+*WebscriptFunctionsApi* | [**remove_version**](docs/WebscriptFunctionsApi.md#remove_version) | **DELETE** /registry/v2/webscripts/{name}/versions/{version} | Remove Webscript Version
+*WebscriptFunctionsApi* | [**remove_versions**](docs/WebscriptFunctionsApi.md#remove_versions) | **DELETE** /registry/v2/webscripts/{name} | Remove Webscript
+*WebscriptFunctionsApi* | [**update_asset**](docs/WebscriptFunctionsApi.md#update_asset) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Update Webscript Asset
+*WebscriptFunctionsApi* | [**update_assets**](docs/WebscriptFunctionsApi.md#update_assets) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content | Update Webscript Assets
+*WebscriptFunctionsApi* | [**verify**](docs/WebscriptFunctionsApi.md#verify) | **POST** /registry/v2/webscripts/{name}/versions/{version}/verify | Verify Health Of Webscript
 *DefaultApi* | [**get**](docs/DefaultApi.md#get) | **GET** /registry/v2/ | Version
 
 
@@ -177,7 +171,7 @@ Class | Method | HTTP request | Description
  - [CreateKFServingAsyncResponse](docs/CreateKFServingAsyncResponse.md)
  - [CreatePlugAsyncResponse](docs/CreatePlugAsyncResponse.md)
  - [CreateWebscriptAsyncResponse](docs/CreateWebscriptAsyncResponse.md)
- - [CreateWebscriptsCopyParameter](docs/CreateWebscriptsCopyParameter.md)
+ - [CreateWebscriptFunctionsCopyParameter](docs/CreateWebscriptFunctionsCopyParameter.md)
  - [DelayedEventData](docs/DelayedEventData.md)
  - [DelayedEventSSE](docs/DelayedEventSSE.md)
  - [Deploy](docs/Deploy.md)

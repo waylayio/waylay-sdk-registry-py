@@ -9,10 +9,14 @@ Do not edit the class manually.
 """
 
 import pytest
+from typing import Dict, List, get_args, Union
 from typeguard import check_type
 from pytest_httpx import HTTPXMock
 import json
+import sys
 import re
+from unittest.mock import patch
+from importlib import reload
 from importlib.util import find_spec
 from urllib.parse import quote
 
@@ -21,11 +25,21 @@ from waylay.sdk.api._models import Model
 from waylay.services.registry.api import JobsApi
 from waylay.services.registry.service import RegistryService
 
+from ..types.job_type_stub import JobTypeStub
 
 from ..types.event_with_close_sse_stub import EventWithCloseSSEStub
 
+from ..types.job_type_stub import JobTypeStub
 
 from ..types.job_response_stub import JobResponseStub
+
+from ..types.job_type_schema_stub import JobTypeSchemaStub
+
+
+from ..types.job_state_result_stub import JobStateResultStub
+
+
+from ..types.function_type_stub import FunctionTypeStub
 
 
 from ..types.timestamp_spec_stub import TimestampSpecStub
@@ -38,7 +52,9 @@ from ..types.jobs_response_stub import JobsResponseStub
 try:
     from waylay.services.registry.queries.jobs_api import EventsQuery
     from waylay.services.registry.models import EventWithCloseSSE
+
     from waylay.services.registry.models import JobResponse
+
     from waylay.services.registry.queries.jobs_api import ListQuery
     from waylay.services.registry.models import JobsResponse
 
@@ -91,7 +107,7 @@ async def test_events(
     }
     _events_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.events(**kwargs)
-    check_type(resp, EventWithCloseSSE)
+    check_type(resp, Union[EventWithCloseSSE,])
 
 
 @pytest.mark.asyncio
@@ -140,7 +156,7 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
     kwargs = {}
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(type)), quote(str(id)))
     resp = await service.jobs.get(type, id, **kwargs)
-    check_type(resp, JobResponse)
+    check_type(resp, Union[JobResponse,])
 
 
 @pytest.mark.asyncio
@@ -193,7 +209,7 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.list(**kwargs)
-    check_type(resp, JobsResponse)
+    check_type(resp, Union[JobsResponse,])
 
 
 @pytest.mark.asyncio

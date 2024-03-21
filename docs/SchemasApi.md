@@ -12,7 +12,7 @@ Method | HTTP request | Description
 > function_type: FunctionType,
 > role: AssetRole,
 > headers
-> ) -> Dict[str, object] 
+> ) -> Dict[str, object]
 
 Get Asset Schema
 
@@ -36,8 +36,8 @@ try:
     # Get Asset Schema
     # calls `GET /registry/v2/schemas/{functionType}/{role}/schema`
     api_response = await waylay_client.registry.schemas.get_by_role(
-        waylay.services.registry.FunctionType(), # function_type | path param "functionType"
-        waylay.services.registry.AssetRole(), # role | path param "role"
+        'plugs', # function_type | path param "functionType"
+        'manifest', # role | path param "role"
     )
     print("The response of registry.schemas.get_by_role:\n")
     pprint(api_response)
@@ -59,8 +59,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-**Dict[str, object]**
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`Dict[str, object]`** |  | 
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -79,7 +82,7 @@ Name     | Type  | API binding   | Description   | Notes
 > get(
 > schema_id: str,
 > headers
-> ) -> Dict[str, object] 
+> ) -> Dict[str, object]
 
 Get Asset Schema
 
@@ -122,8 +125,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-**Dict[str, object]**
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`Dict[str, object]`** |  | 
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 

@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **prev** | [**QueueEvents**](QueueEvents.md) |  | [optional] 
-**returnvalue** | [**AnyJobResult**](AnyJobResult.md) |  | 
+**return_value** | [**AnyJobResult**](AnyJobResult.md) |  | 
 
 ## Example
 

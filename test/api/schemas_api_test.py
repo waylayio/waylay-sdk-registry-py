@@ -9,11 +9,14 @@ Do not edit the class manually.
 """
 
 import pytest
-from typing import Dict
+from typing import Dict, List, get_args, Union
 from typeguard import check_type
 from pytest_httpx import HTTPXMock
 import json
+import sys
 import re
+from unittest.mock import patch
+from importlib import reload
 from importlib.util import find_spec
 from urllib.parse import quote
 
@@ -21,6 +24,10 @@ from waylay.sdk import ApiClient, WaylayClient
 from waylay.sdk.api._models import Model
 from waylay.services.registry.api import SchemasApi
 from waylay.services.registry.service import RegistryService
+
+from ..types.function_type_stub import FunctionTypeStub
+
+from ..types.asset_role_stub import AssetRoleStub
 
 
 try:
@@ -76,7 +83,7 @@ async def test_get_by_role(
         httpx_mock, gateway_url, quote(str(functionType)), quote(str(role))
     )
     resp = await service.schemas.get_by_role(functionType, role, **kwargs)
-    check_type(resp, Dict[str, object])
+    check_type(resp, Union[Dict[str, object],])
 
 
 @pytest.mark.asyncio
@@ -123,7 +130,7 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
     kwargs = {}
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(schemaId)))
     resp = await service.schemas.get(schemaId, **kwargs)
-    check_type(resp, Dict[str, object])
+    check_type(resp, Union[Dict[str, object],])
 
 
 @pytest.mark.asyncio

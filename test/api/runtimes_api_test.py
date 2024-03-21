@@ -9,10 +9,14 @@ Do not edit the class manually.
 """
 
 import pytest
+from typing import Dict, List, get_args, Union
 from typeguard import check_type
 from pytest_httpx import HTTPXMock
 import json
+import sys
 import re
+from unittest.mock import patch
+from importlib import reload
 from importlib.util import find_spec
 from urllib.parse import quote
 
@@ -29,6 +33,11 @@ from ..types.semantic_version_range_stub import SemanticVersionRangeStub
 
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
 
+from ..types.function_type_stub import FunctionTypeStub
+
+
+from ..types.archive_format_stub import ArchiveFormatStub
+
 
 from ..types.runtime_version_response_stub import RuntimeVersionResponseStub
 
@@ -37,11 +46,25 @@ from ..types.semantic_version_range_stub import SemanticVersionRangeStub
 from ..types.runtime_version_response_stub import RuntimeVersionResponseStub
 
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
+
+from ..types.latest_version_level_stub import LatestVersionLevelStub
+
+from ..types.function_type_stub import FunctionTypeStub
+
+
+from ..types.archive_format_stub import ArchiveFormatStub
 
 
 from ..types.runtime_summary_response_stub import RuntimeSummaryResponseStub
 
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
+
+from ..types.latest_version_level_stub import LatestVersionLevelStub
+
+from ..types.function_type_stub import FunctionTypeStub
+
+
+from ..types.archive_format_stub import ArchiveFormatStub
 
 
 from ..types.runtime_summary_response_stub import RuntimeSummaryResponseStub
@@ -54,10 +77,13 @@ try:
 
     from waylay.services.registry.queries.runtimes_api import GetLatestQuery
     from waylay.services.registry.models import RuntimeVersionResponse
+
     from waylay.services.registry.queries.runtimes_api import GetQuery
     from waylay.services.registry.models import RuntimeVersionResponse
+
     from waylay.services.registry.queries.runtimes_api import ListQuery
     from waylay.services.registry.models import RuntimeSummaryResponse
+
     from waylay.services.registry.queries.runtimes_api import ListVersionsQuery
     from waylay.services.registry.models import RuntimeSummaryResponse
 
@@ -261,7 +287,7 @@ async def test_get_latest(
     }
     _get_latest_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.runtimes.get_latest(name, **kwargs)
-    check_type(resp, RuntimeVersionResponse)
+    check_type(resp, Union[RuntimeVersionResponse,])
 
 
 @pytest.mark.asyncio
@@ -324,7 +350,7 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.runtimes.get(name, version, **kwargs)
-    check_type(resp, RuntimeVersionResponse)
+    check_type(resp, Union[RuntimeVersionResponse,])
 
 
 @pytest.mark.asyncio
@@ -383,7 +409,7 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.runtimes.list(**kwargs)
-    check_type(resp, RuntimeSummaryResponse)
+    check_type(resp, Union[RuntimeSummaryResponse,])
 
 
 @pytest.mark.asyncio
@@ -448,7 +474,7 @@ async def test_list_versions(
     }
     _list_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.runtimes.list_versions(name, **kwargs)
-    check_type(resp, RuntimeSummaryResponse)
+    check_type(resp, Union[RuntimeSummaryResponse,])
 
 
 @pytest.mark.asyncio
