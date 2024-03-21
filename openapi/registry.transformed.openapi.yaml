@@ -2069,6 +2069,12 @@ components:
       type: object
       additionalProperties: false
       properties:
+        chown:
+          type: boolean
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          default: false
         comment:
           type: string
           description: An optional user-specified comment corresponding to the operation.
@@ -2136,7 +2142,14 @@ components:
       additionalProperties: false
     UpdateDraftQuery:
       type: object
+      additionalProperties: false
       properties:
+        chown:
+          type: boolean
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          default: false
         comment:
           type: string
           description: An optional user-specified comment corresponding to the operation.
@@ -2151,15 +2164,6 @@ components:
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
           default: true
-        chown:
-          type: boolean
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
-          default: false
-      required:
-        - chown
-      additionalProperties: false
     LatestPlugQuery:
       type: object
       properties:
@@ -3521,6 +3525,8 @@ components:
           type: number
         data:
           type: object
+          additionalProperties:
+            type: string
       required:
         - code
         - error
@@ -7541,11 +7547,11 @@ components:
         prev:
           $ref: '#/components/schemas/QueueEvents'
           description: The previous state of the job
-        returnValue:
+        returnvalue:
           $ref: '#/components/schemas/AnyJobResult'
           description: The return value of the job
       required:
-        - returnValue
+        - returnvalue
     AnyJobResult:
       anyOf:
         - $ref: '#/components/schemas/BuildResult'
@@ -9250,20 +9256,21 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/:
     post:
-      operationId: create_webscript_functions
+      operationId: create_webscripts
       summary: Create Webscript Version
       tags:
-        - Webscript Functions
+        - Webscripts
       description: |-
         Creates a new <em>webscript</em> function by uploading its assets.
           
-          The assets for a <em>webscript</em> function can be provided as either
+          The assets for a <em>webscript</em> function can be provided as
           <ul>
-            <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
+            <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
             <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-            <li>separate files in a <code>multipart/form-data</code> request</li>
+            <li>Separate files in a <code>multipart/form-data</code> request</li>
+            <li>A reference to the assets of another <em>webscript</em> in the <code>copy</code> argument</li>
           </ul>
-          
+
           The required <code>webscript.json</code> json file contains the function metadata,
           and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
           (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).
@@ -9341,13 +9348,14 @@ paths:
               type: object
               maxProperties: 0
         description: |
-          The assets for a <em>webscript</em> function can be provided as either
+          The assets for a <em>webscript</em> function can be provided as
             <ul>
-              <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
+              <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
               <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-              <li>separate files in a <code>multipart/form-data</code> request</li>
+              <li>Separate files in a <code>multipart/form-data</code> request</li>
+              <li>A reference to the assets of another <em>webscript</em> in the <code>copy</code> argument</li>
             </ul>
-            
+
             The required <code>webscript.json</code> json file contains the function metadata,
             and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
             (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).
@@ -9557,10 +9565,10 @@ paths:
       x-consumes-json: true
       x-consumes-other: true
     get:
-      operationId: list_webscript_functions
+      operationId: list_webscripts
       summary: List Webscripts
       tags:
-        - Webscript Functions
+        - Webscripts
       description: >
         List the (latest) versions of available <em>webscripts</em>.
 
@@ -9863,10 +9871,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions:
     get:
-      operationId: listVersions_webscript_functions
+      operationId: listVersions_webscripts
       summary: List Webscript Versions
       tags:
-        - Webscript Functions
+        - Webscripts
       description: List all deployed versions of a webscript.
       parameters:
         - schema:
@@ -10030,10 +10038,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}:
     get:
-      operationId: get_webscript_functions
+      operationId: get_webscripts
       summary: Get Webscript Version
       tags:
-        - Webscript Functions
+        - Webscripts
       description: Get the webscript version.
       parameters:
         - schema:
@@ -10066,10 +10074,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersion_webscript_functions
+      operationId: removeVersion_webscripts
       summary: Remove Webscript Version
       tags:
-        - Webscript Functions
+        - Webscripts
       description: |
         Deprecate, undeploy and/or remove a <em>webscript</em> version.
 
@@ -10185,10 +10193,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/rebuild:
     post:
-      operationId: rebuild_webscript_functions
+      operationId: rebuild_webscripts
       summary: Rebuild Webscript
       tags:
-        - Webscript Functions
+        - Webscripts
       description: Rebuild and deploy a webscript with the original or updated base image.
       parameters:
         - schema:
@@ -10318,10 +10326,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}:
     get:
-      operationId: getLatest_webscript_functions
+      operationId: getLatest_webscripts
       summary: Get Latest Webscript Version
       tags:
-        - Webscript Functions
+        - Webscripts
       description: |-
         Fetch the latest version of a <em>webscript</em>.
 
@@ -10387,10 +10395,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersions_webscript_functions
+      operationId: removeVersions_webscripts
       summary: Remove Webscript
       tags:
-        - Webscript Functions
+        - Webscripts
       description: >
         Deprecate, undeploy and/or remove all versions of this named
         <em>webscript</em>.
@@ -10500,10 +10508,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/metadata:
     patch:
-      operationId: patchMetadata_webscript_functions
+      operationId: patchMetadata_webscripts
       summary: Patch Webscript Metadata
       tags:
-        - Webscript Functions
+        - Webscripts
       description: Patch the metadata of a webscript version.
       requestBody:
         content:
@@ -10549,10 +10557,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/content:
     get:
-      operationId: getArchive_webscript_functions
+      operationId: getArchive_webscripts
       summary: Get Webscript Archive
       tags:
-        - Webscript Functions
+        - Webscripts
       description: Get the specification archive of a webscript.
       parameters:
         - schema:
@@ -10632,10 +10640,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAssets_webscript_functions
+      operationId: updateAssets_webscripts
       summary: Update Webscript Assets
       tags:
-        - Webscript Functions
+        - Webscripts
       description: |-
         Update a draft <em>webscript</em> function by updating its assets.
           
@@ -10725,6 +10733,16 @@ paths:
             For each <em>runtime</em> other files are supported.
       parameters:
         - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
+        - schema:
             type: string
           in: query
           name: comment
@@ -10749,16 +10767,6 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: true
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
           x-showExample: true
         - schema:
             type: string
@@ -10803,10 +10811,10 @@ paths:
       x-consumes-other: true
   /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}:
     get:
-      operationId: getAsset_webscript_functions
+      operationId: getAsset_webscripts
       summary: Get File From Webscript Archive
       tags:
-        - Webscript Functions
+        - Webscripts
       description: Get a file from the specification archive of a webscript.
       parameters:
         - schema:
@@ -10893,10 +10901,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAsset_webscript_functions
+      operationId: updateAsset_webscripts
       summary: Update Webscript Asset
       tags:
-        - Webscript Functions
+        - Webscripts
       description: >-
         The provided asset will be added to the <em>webscript</em> function's
         collection of existing assets,
@@ -10920,6 +10928,16 @@ paths:
                   format: binary
         description: A single asset file.
       parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -10945,16 +10963,6 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: true
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
           x-showExample: true
         - schema:
             type: string
@@ -11005,12 +11013,22 @@ paths:
       x-consumes-json: false
       x-consumes-other: true
     delete:
-      operationId: deleteAsset_webscript_functions
+      operationId: deleteAsset_webscripts
       summary: Delete Webscript Asset
       tags:
-        - Webscript Functions
+        - Webscripts
       description: Delete an asset from the webscript's collection of existing assets.
       parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -11036,16 +11054,6 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: true
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
           x-showExample: true
         - schema:
             type: string
@@ -11097,10 +11105,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/publish:
     post:
-      operationId: publish_webscript_functions
+      operationId: publish_webscripts
       summary: Publish Draft Webscript
       tags:
-        - Webscript Functions
+        - Webscripts
       description: >-
         Mark the <em>webscript</em> to be ready and stable, taking it out of
         draft mode.,
@@ -11110,6 +11118,16 @@ paths:
           In other statuses, plug-registry may need to initiate a new build and deployment procedure.
           
       parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -11185,10 +11203,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/jobs:
     get:
-      operationId: jobs_webscript_functions
+      operationId: jobs_webscripts
       summary: List Webscript Jobs
       tags:
-        - Webscript Functions
+        - Webscripts
       description: List the ongoing and completed operations on a specific webscript.
       parameters:
         - schema:
@@ -11273,10 +11291,10 @@ paths:
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/verify:
     post:
-      operationId: verify_webscript_functions
+      operationId: verify_webscripts
       summary: Verify Health Of Webscript
       tags:
-        - Webscript Functions
+        - Webscripts
       description: Verify health of webscript deployed on openfaas.
       parameters:
         - schema:
@@ -11409,20 +11427,21 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/:
     post:
-      operationId: create_plug_functions
+      operationId: create_plugs
       summary: Create Plug
       tags:
-        - Plug Functions
+        - Plugs
       description: |-
         Creates a new <em>plug</em> function by uploading its assets.
           
-          The assets for a <em>plug</em> function can be provided as either
+          The assets for a <em>plug</em> function can be provided as
           <ul>
-            <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
+            <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
             <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-            <li>separate files in a <code>multipart/form-data</code> request</li>
+            <li>Separate files in a <code>multipart/form-data</code> request</li>
+            <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>
           </ul>
-          
+
           The required <code>plug.json</code> json file contains the function metadata,
           and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
           (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).
@@ -11500,13 +11519,14 @@ paths:
               type: object
               maxProperties: 0
         description: |
-          The assets for a <em>plug</em> function can be provided as either
+          The assets for a <em>plug</em> function can be provided as
             <ul>
-              <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
+              <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
               <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-              <li>separate files in a <code>multipart/form-data</code> request</li>
+              <li>Separate files in a <code>multipart/form-data</code> request</li>
+              <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>
             </ul>
-            
+
             The required <code>plug.json</code> json file contains the function metadata,
             and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
             (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).
@@ -11716,10 +11736,10 @@ paths:
       x-consumes-json: true
       x-consumes-other: true
     get:
-      operationId: list_plug_functions
+      operationId: list_plugs
       summary: List Plugs
       tags:
-        - Plug Functions
+        - Plugs
       description: >
         List the (latest) versions of available <em>plugs</em>.
 
@@ -12039,10 +12059,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}:
     get:
-      operationId: getLatest_plug_functions
+      operationId: getLatest_plugs
       summary: Get Latest Plug Version
       tags:
-        - Plug Functions
+        - Plugs
       description: |-
         Fetch the latest version of a <em>plug</em>.
 
@@ -12118,10 +12138,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersions_plug_functions
+      operationId: removeVersions_plugs
       summary: Remove Plug
       tags:
-        - Plug Functions
+        - Plugs
       description: >
         Deprecate, undeploy and/or remove all versions of this named
         <em>plug</em>.
@@ -12242,10 +12262,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions:
     get:
-      operationId: listVersions_plug_functions
+      operationId: listVersions_plugs
       summary: List Plug Versions
       tags:
-        - Plug Functions
+        - Plugs
       description: List all versions of a plug, including deprecated versions or not.
       parameters:
         - schema:
@@ -12419,10 +12439,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}:
     get:
-      operationId: get_plug_functions
+      operationId: get_plugs
       summary: Get Plug Version
       tags:
-        - Plug Functions
+        - Plugs
       description: Get a specific version of a plug.
       parameters:
         - schema:
@@ -12458,10 +12478,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersion_plug_functions
+      operationId: removeVersion_plugs
       summary: Remove Plug Version
       tags:
-        - Plug Functions
+        - Plugs
       description: >
         Deprecate, undeploy and/or remove a <em>plug</em> version.
 
@@ -12588,10 +12608,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/rebuild:
     post:
-      operationId: rebuild_plug_functions
+      operationId: rebuild_plugs
       summary: Rebuild Plug
       tags:
-        - Plug Functions
+        - Plugs
       description: Rebuild and deploy a plug with the original or updated base image.
       parameters:
         - schema:
@@ -12721,10 +12741,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/content:
     get:
-      operationId: getArchive_plug_functions
+      operationId: getArchive_plugs
       summary: Get Plug Archive
       tags:
-        - Plug Functions
+        - Plugs
       description: Get the specification archive of a plug.
       parameters:
         - schema:
@@ -12804,10 +12824,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAssets_plug_functions
+      operationId: updateAssets_plugs
       summary: Update Plug Assets
       tags:
-        - Plug Functions
+        - Plugs
       description: |-
         Update a draft <em>plug</em> function by updating its assets.
           
@@ -12897,6 +12917,16 @@ paths:
             For each <em>runtime</em> other files are supported.
       parameters:
         - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
+        - schema:
             type: string
           in: query
           name: comment
@@ -12921,16 +12951,6 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: true
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
           x-showExample: true
         - schema:
             type: string
@@ -12975,10 +12995,10 @@ paths:
       x-consumes-other: true
   /registry/v2/plugs/{name}/versions/{version}/content/{wildcard}:
     get:
-      operationId: getAsset_plug_functions
+      operationId: getAsset_plugs
       summary: Get File From Plug Archive
       tags:
-        - Plug Functions
+        - Plugs
       description: Get a file from the specification archive of a plug.
       parameters:
         - schema:
@@ -13065,10 +13085,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAsset_plug_functions
+      operationId: updateAsset_plugs
       summary: Update Plug Asset
       tags:
-        - Plug Functions
+        - Plugs
       description: >-
         The provided asset will be added to the <em>plug</em> function's
         collection of existing assets,
@@ -13092,6 +13112,16 @@ paths:
                   format: binary
         description: A single asset file.
       parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -13117,16 +13147,6 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: true
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
           x-showExample: true
         - schema:
             type: string
@@ -13177,12 +13197,22 @@ paths:
       x-consumes-json: false
       x-consumes-other: true
     delete:
-      operationId: deleteAsset_plug_functions
+      operationId: deleteAsset_plugs
       summary: Delete Plug Asset
       tags:
-        - Plug Functions
+        - Plugs
       description: Delete an asset from the plug's collection of existing assets.
       parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -13208,16 +13238,6 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: true
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
           x-showExample: true
         - schema:
             type: string
@@ -13269,10 +13289,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/publish:
     post:
-      operationId: publish_plug_functions
+      operationId: publish_plugs
       summary: Publish Draft Plug
       tags:
-        - Plug Functions
+        - Plugs
       description: >-
         Mark the <em>plug</em> to be ready and stable, taking it out of draft
         mode.,
@@ -13282,6 +13302,16 @@ paths:
           In other statuses, plug-registry may need to initiate a new build and deployment procedure.
           
       parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -13357,10 +13387,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/interface:
     patch:
-      operationId: patchInterface_plug_functions
+      operationId: patchInterface_plugs
       summary: Patch Plug Interface
       tags:
-        - Plug Functions
+        - Plugs
       description: Patch the interface documentation of a plug version.
       requestBody:
         content:
@@ -13406,10 +13436,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/metadata:
     patch:
-      operationId: patchMetadata_plug_functions
+      operationId: patchMetadata_plugs
       summary: Patch Plug Metadata
       tags:
-        - Plug Functions
+        - Plugs
       description: Patch the metadata of a plug version.
       requestBody:
         content:
@@ -13455,10 +13485,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/jobs:
     get:
-      operationId: jobs_plug_functions
+      operationId: jobs_plugs
       summary: List Plug Jobs
       tags:
-        - Plug Functions
+        - Plugs
       description: List the ongoing and completed operations on a specific plug.
       parameters:
         - schema:
@@ -13543,10 +13573,10 @@ paths:
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/verify:
     post:
-      operationId: verify_plug_functions
+      operationId: verify_plugs
       summary: Verify Health Of Plug
       tags:
-        - Plug Functions
+        - Plugs
       description: Verify health of plug deployed on openfaas.
       parameters:
         - schema:
@@ -13609,20 +13639,21 @@ paths:
       x-consumes-other: false
   /registry/v2/models/:
     post:
-      operationId: create_model_functions
+      operationId: create_models
       summary: Create Model
       tags:
-        - Model Functions
+        - Models
       description: |-
         Creates a new <em>model</em> function by uploading its assets.
           
-          The assets for a <em>model</em> function can be provided as either
+          The assets for a <em>model</em> function can be provided as
           <ul>
-            <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
+            <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
             <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-            <li>separate files in a <code>multipart/form-data</code> request</li>
+            <li>Separate files in a <code>multipart/form-data</code> request</li>
+            <li>A reference to the assets of another <em>model</em> in the <code>copy</code> argument</li>
           </ul>
-          
+
           The required <code>model.json</code> json file contains the function metadata,
           and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
           (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).
@@ -13700,13 +13731,14 @@ paths:
               type: object
               maxProperties: 0
         description: |
-          The assets for a <em>model</em> function can be provided as either
+          The assets for a <em>model</em> function can be provided as
             <ul>
-              <li>a single <em>tar</em> archive (optionally compressed), with one of the content types 
+              <li>A single <em>tar</em> archive (optionally compressed), with one of the content types 
               <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>
-              <li>separate files in a <code>multipart/form-data</code> request</li>
+              <li>Separate files in a <code>multipart/form-data</code> request</li>
+              <li>A reference to the assets of another <em>model</em> in the <code>copy</code> argument</li>
             </ul>
-            
+
             The required <code>model.json</code> json file contains the function metadata,
             and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s 
             (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).
@@ -13916,10 +13948,10 @@ paths:
       x-consumes-json: true
       x-consumes-other: true
     get:
-      operationId: list_model_functions
+      operationId: list_models
       summary: List Models
       tags:
-        - Model Functions
+        - Models
       description: >
         List the (latest) versions of available <em>models</em>.
 
@@ -14222,10 +14254,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}:
     get:
-      operationId: getLatest_model_functions
+      operationId: getLatest_models
       summary: Get Latest Model Version
       tags:
-        - Model Functions
+        - Models
       description: |-
         Fetch the latest version of a <em>model</em>.
 
@@ -14291,10 +14323,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersions_model_functions
+      operationId: removeVersions_models
       summary: Remove Model
       tags:
-        - Model Functions
+        - Models
       description: >
         Deprecate, undeploy and/or remove all versions of this named
         <em>model</em>.
@@ -14404,10 +14436,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions:
     get:
-      operationId: listVersions_model_functions
+      operationId: listVersions_models
       summary: List Model Versions
       tags:
-        - Model Functions
+        - Models
       description: List all deployed versions of a model.
       parameters:
         - schema:
@@ -14571,10 +14603,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}:
     get:
-      operationId: get_model_functions
+      operationId: get_models
       summary: Get Model Version
       tags:
-        - Model Functions
+        - Models
       description: Get a model by name and version.
       parameters:
         - schema:
@@ -14607,10 +14639,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     delete:
-      operationId: removeVersion_model_functions
+      operationId: removeVersion_models
       summary: Remove Model Version
       tags:
-        - Model Functions
+        - Models
       description: |
         Deprecate, undeploy and/or remove a <em>model</em> version.
 
@@ -14726,10 +14758,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/content:
     get:
-      operationId: getArchive_model_functions
+      operationId: getArchive_models
       summary: Get Model Archive
       tags:
-        - Model Functions
+        - Models
       description: Get the specification archive of a model.
       parameters:
         - schema:
@@ -14809,10 +14841,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAssets_model_functions
+      operationId: updateAssets_models
       summary: Update Model Assets
       tags:
-        - Model Functions
+        - Models
       description: |-
         Update a draft <em>model</em> function by updating its assets.
           
@@ -14902,6 +14934,16 @@ paths:
             For each <em>runtime</em> other files are supported.
       parameters:
         - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
+        - schema:
             type: string
           in: query
           name: comment
@@ -14926,16 +14968,6 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: true
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
           x-showExample: true
         - schema:
             type: string
@@ -14980,10 +15012,10 @@ paths:
       x-consumes-other: true
   /registry/v2/models/{name}/versions/{version}/content/{wildcard}:
     get:
-      operationId: getAsset_model_functions
+      operationId: getAsset_models
       summary: Get File From Model Archive
       tags:
-        - Model Functions
+        - Models
       description: Get a file from the specification archive of a model.
       parameters:
         - schema:
@@ -15070,10 +15102,10 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
     put:
-      operationId: updateAsset_model_functions
+      operationId: updateAsset_models
       summary: Update Model Asset
       tags:
-        - Model Functions
+        - Models
       description: >-
         The provided asset will be added to the <em>model</em> function's
         collection of existing assets,
@@ -15097,6 +15129,16 @@ paths:
                   format: binary
         description: A single asset file.
       parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -15122,16 +15164,6 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: true
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
           x-showExample: true
         - schema:
             type: string
@@ -15182,12 +15214,22 @@ paths:
       x-consumes-json: false
       x-consumes-other: true
     delete:
-      operationId: deleteAsset_model_functions
+      operationId: deleteAsset_models
       summary: Delete Model Asset
       tags:
-        - Model Functions
+        - Models
       description: Delete an asset from the model's collection of existing assets.
       parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -15213,16 +15255,6 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: true
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
           x-showExample: true
         - schema:
             type: string
@@ -15274,10 +15306,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/publish:
     post:
-      operationId: publish_model_functions
+      operationId: publish_models
       summary: Publish Draft Model
       tags:
-        - Model Functions
+        - Models
       description: >-
         Mark the <em>model</em> to be ready and stable, taking it out of draft
         mode.,
@@ -15287,6 +15319,16 @@ paths:
           In other statuses, plug-registry may need to initiate a new build and deployment procedure.
           
       parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
         - schema:
             type: string
           in: query
@@ -15362,10 +15404,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/metadata:
     patch:
-      operationId: patchMetadata_model_functions
+      operationId: patchMetadata_models
       summary: Patch Model Metadata
       tags:
-        - Model Functions
+        - Models
       description: Patch the metadata of a model version.
       requestBody:
         content:
@@ -15411,10 +15453,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/jobs:
     get:
-      operationId: jobs_model_functions
+      operationId: jobs_models
       summary: List Model Jobs
       tags:
-        - Model Functions
+        - Models
       description: List the ongoing and completed operations on a model.
       parameters:
         - schema:
@@ -15499,10 +15541,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/rebuild:
     post:
-      operationId: rebuild_model_functions
+      operationId: rebuild_models
       summary: Rebuild Model
       tags:
-        - Model Functions
+        - Models
       description: Rebuild and deploy a model with the original or updated base image.
       parameters:
         - schema:
@@ -15632,10 +15674,10 @@ paths:
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/verify:
     post:
-      operationId: verify_model_functions
+      operationId: verify_models
       summary: Verify Health Of Model
       tags:
-        - Model Functions
+        - Models
       description: Verify health of model deployed on openfaas.
       parameters:
         - schema:
@@ -15697,6 +15739,15 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
 tags:
+  - name: Models
+    description: BYOML Models are functions that wrap a machine learning model.
+    externalDocs:
+      url: https://docs-staging.waylay.io/#/features/byoml/
+      description: Waylay Documentation
+  - name: Plugs
+    description: Plugs are functions that can be used in the rule engine.
+  - name: Webscripts
+    description: Webscripts are functions that are securely exposed to an http endpoint.
   - name: Jobs
     description: >-
       Jobs represent the ongoing asynchronous operations in the function
@@ -15706,6 +15757,8 @@ tags:
       Runtimes are the available base infrastructure for functions, and define
       how 
                 the plug gets build and deployed.
+  - name: Schemas
+    description: Schemas referenced in the API.
 externalDocs:
   url: https://docs-staging.waylay.io/#/api/registry/
   description: Waylay Documentation

@@ -48,7 +48,10 @@ registry_error_response_model_schema = json.loads(
       "type" : "number"
     },
     "data" : {
-      "type" : "object"
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
     }
   }
 }

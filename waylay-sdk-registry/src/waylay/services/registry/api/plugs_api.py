@@ -57,83 +57,91 @@ from waylay.sdk.api import (
 from waylay.sdk.api._models import Model
 
 if TYPE_CHECKING:
-    from waylay.services.registry.queries.model_functions_api import CreateQuery
+    from waylay.services.registry.queries.plugs_api import CreateQuery
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import DeleteAssetQuery
+    from waylay.services.registry.queries.plugs_api import DeleteAssetQuery
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
     from waylay.services.registry.models import RegistryErrorResponse
 
-    from waylay.services.registry.queries.model_functions_api import GetArchiveQuery
+    from waylay.services.registry.queries.plugs_api import GetArchiveQuery
 
-    from waylay.services.registry.queries.model_functions_api import GetAssetQuery
+    from waylay.services.registry.queries.plugs_api import GetAssetQuery
 
-    from waylay.services.registry.queries.model_functions_api import GetLatestQuery
+    from waylay.services.registry.queries.plugs_api import GetLatestQuery
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import GetQuery
+    from waylay.services.registry.queries.plugs_api import GetQuery
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import JobsQuery
+    from waylay.services.registry.queries.plugs_api import JobsQuery
 
-    from waylay.services.registry.models import JobsForModelResponseV2
+    from waylay.services.registry.models import JobsForPlugResponseV2
 
-    from waylay.services.registry.models import JobsForModelResponseV2
+    from waylay.services.registry.models import JobsForPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import ListQuery
+    from waylay.services.registry.queries.plugs_api import ListQuery
 
-    from waylay.services.registry.models import LatestModelsResponseV2
+    from waylay.services.registry.models import LatestPlugsResponseV2
 
-    from waylay.services.registry.models import LatestModelsResponseV2
+    from waylay.services.registry.models import LatestPlugsResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import ListVersionsQuery
+    from waylay.services.registry.queries.plugs_api import ListVersionsQuery
 
-    from waylay.services.registry.models import ModelVersionsResponseV2
+    from waylay.services.registry.models import PlugVersionsResponseV2
 
-    from waylay.services.registry.models import ModelVersionsResponseV2
+    from waylay.services.registry.models import PlugVersionsResponseV2
 
-    from waylay.services.registry.models import FunctionMeta
+    from waylay.services.registry.models import Documentation
 
-    from waylay.services.registry.queries.model_functions_api import PatchMetadataQuery
+    from waylay.services.registry.queries.plugs_api import PatchInterfaceQuery
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import PublishQuery
+    from waylay.services.registry.models import UpdateMetadataRequestV2
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.queries.plugs_api import PatchMetadataQuery
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import RebuildQuery
+    from waylay.services.registry.queries.plugs_api import PublishQuery
 
-    from waylay.services.registry.models import RebuildModelSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import RebuildModelSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import RebuildModelAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import RemoveVersionQuery
+    from waylay.services.registry.queries.plugs_api import RebuildQuery
+
+    from waylay.services.registry.models import RebuildPlugSyncResponseV2
+
+    from waylay.services.registry.models import RebuildPlugSyncResponseV2
+
+    from waylay.services.registry.models import RebuildPlugAsyncResponseV2
+
+    from waylay.services.registry.queries.plugs_api import RemoveVersionQuery
 
     from waylay.services.registry.models import UndeployedResponseV2
 
@@ -141,7 +149,7 @@ if TYPE_CHECKING:
 
     from waylay.services.registry.models import UndeploySubmittedResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import RemoveVersionsQuery
+    from waylay.services.registry.queries.plugs_api import RemoveVersionsQuery
 
     from waylay.services.registry.models import UndeployedResponseV2
 
@@ -151,113 +159,121 @@ if TYPE_CHECKING:
 
     from waylay.services.registry.models import FileUpload
 
-    from waylay.services.registry.queries.model_functions_api import UpdateAssetQuery
+    from waylay.services.registry.queries.plugs_api import UpdateAssetQuery
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
-
-    from waylay.services.registry.models import RegistryErrorResponse
-
-    from waylay.services.registry.queries.model_functions_api import UpdateAssetsQuery
-
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
-
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
-
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
     from waylay.services.registry.models import RegistryErrorResponse
 
-    from waylay.services.registry.queries.model_functions_api import VerifyQuery
+    from waylay.services.registry.queries.plugs_api import UpdateAssetsQuery
 
-    from waylay.services.registry.models import VerifyModelSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import VerifyModelSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
+
+    from waylay.services.registry.models import RegistryErrorResponse
+
+    from waylay.services.registry.queries.plugs_api import VerifyQuery
+
+    from waylay.services.registry.models import VerifyPlugSyncResponseV2
+
+    from waylay.services.registry.models import VerifyPlugSyncResponseV2
+
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
 
 try:
-    from waylay.services.registry.queries.model_functions_api import CreateQuery
+    from waylay.services.registry.queries.plugs_api import CreateQuery
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import DeleteAssetQuery
+    from waylay.services.registry.queries.plugs_api import DeleteAssetQuery
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
     from waylay.services.registry.models import RegistryErrorResponse
 
-    from waylay.services.registry.queries.model_functions_api import GetArchiveQuery
+    from waylay.services.registry.queries.plugs_api import GetArchiveQuery
 
-    from waylay.services.registry.queries.model_functions_api import GetAssetQuery
+    from waylay.services.registry.queries.plugs_api import GetAssetQuery
 
-    from waylay.services.registry.queries.model_functions_api import GetLatestQuery
+    from waylay.services.registry.queries.plugs_api import GetLatestQuery
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import GetQuery
+    from waylay.services.registry.queries.plugs_api import GetQuery
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import JobsQuery
+    from waylay.services.registry.queries.plugs_api import JobsQuery
 
-    from waylay.services.registry.models import JobsForModelResponseV2
+    from waylay.services.registry.models import JobsForPlugResponseV2
 
-    from waylay.services.registry.models import JobsForModelResponseV2
+    from waylay.services.registry.models import JobsForPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import ListQuery
+    from waylay.services.registry.queries.plugs_api import ListQuery
 
-    from waylay.services.registry.models import LatestModelsResponseV2
+    from waylay.services.registry.models import LatestPlugsResponseV2
 
-    from waylay.services.registry.models import LatestModelsResponseV2
+    from waylay.services.registry.models import LatestPlugsResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import ListVersionsQuery
+    from waylay.services.registry.queries.plugs_api import ListVersionsQuery
 
-    from waylay.services.registry.models import ModelVersionsResponseV2
+    from waylay.services.registry.models import PlugVersionsResponseV2
 
-    from waylay.services.registry.models import ModelVersionsResponseV2
+    from waylay.services.registry.models import PlugVersionsResponseV2
 
-    from waylay.services.registry.models import FunctionMeta
+    from waylay.services.registry.models import Documentation
 
-    from waylay.services.registry.queries.model_functions_api import PatchMetadataQuery
+    from waylay.services.registry.queries.plugs_api import PatchInterfaceQuery
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.models import GetModelResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import PublishQuery
+    from waylay.services.registry.models import UpdateMetadataRequestV2
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.queries.plugs_api import PatchMetadataQuery
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import GetPlugResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import RebuildQuery
+    from waylay.services.registry.queries.plugs_api import PublishQuery
 
-    from waylay.services.registry.models import RebuildModelSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import RebuildModelSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import RebuildModelAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import RemoveVersionQuery
+    from waylay.services.registry.queries.plugs_api import RebuildQuery
+
+    from waylay.services.registry.models import RebuildPlugSyncResponseV2
+
+    from waylay.services.registry.models import RebuildPlugSyncResponseV2
+
+    from waylay.services.registry.models import RebuildPlugAsyncResponseV2
+
+    from waylay.services.registry.queries.plugs_api import RemoveVersionQuery
 
     from waylay.services.registry.models import UndeployedResponseV2
 
@@ -265,7 +281,7 @@ try:
 
     from waylay.services.registry.models import UndeploySubmittedResponseV2
 
-    from waylay.services.registry.queries.model_functions_api import RemoveVersionsQuery
+    from waylay.services.registry.queries.plugs_api import RemoveVersionsQuery
 
     from waylay.services.registry.models import UndeployedResponseV2
 
@@ -275,33 +291,33 @@ try:
 
     from waylay.services.registry.models import FileUpload
 
-    from waylay.services.registry.queries.model_functions_api import UpdateAssetQuery
+    from waylay.services.registry.queries.plugs_api import UpdateAssetQuery
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
-
-    from waylay.services.registry.models import RegistryErrorResponse
-
-    from waylay.services.registry.queries.model_functions_api import UpdateAssetsQuery
-
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
-
-    from waylay.services.registry.models import PostModelJobSyncResponseV2
-
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
     from waylay.services.registry.models import RegistryErrorResponse
 
-    from waylay.services.registry.queries.model_functions_api import VerifyQuery
+    from waylay.services.registry.queries.plugs_api import UpdateAssetsQuery
 
-    from waylay.services.registry.models import VerifyModelSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import VerifyModelSyncResponseV2
+    from waylay.services.registry.models import PostPlugJobSyncResponseV2
 
-    from waylay.services.registry.models import PostModelJobAsyncResponseV2
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
+
+    from waylay.services.registry.models import RegistryErrorResponse
+
+    from waylay.services.registry.queries.plugs_api import VerifyQuery
+
+    from waylay.services.registry.models import VerifyPlugSyncResponseV2
+
+    from waylay.services.registry.models import VerifyPlugSyncResponseV2
+
+    from waylay.services.registry.models import PostPlugJobAsyncResponseV2
 
     MODELS_AVAILABLE = True
 except ImportError:
@@ -310,15 +326,15 @@ except ImportError:
     if not TYPE_CHECKING:
         CreateQuery = dict
 
-        PostModelJobSyncResponseV2 = Model
+        PostPlugJobSyncResponseV2 = Model
 
-        PostModelJobAsyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
         DeleteAssetQuery = dict
 
-        PostModelJobSyncResponseV2 = Model
+        PostPlugJobSyncResponseV2 = Model
 
-        PostModelJobAsyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
         RegistryErrorResponse = Model
 
@@ -328,41 +344,47 @@ except ImportError:
 
         GetLatestQuery = dict
 
-        GetModelResponseV2 = Model
+        GetPlugResponseV2 = Model
 
         GetQuery = dict
 
-        GetModelResponseV2 = Model
+        GetPlugResponseV2 = Model
 
         JobsQuery = dict
 
-        JobsForModelResponseV2 = Model
+        JobsForPlugResponseV2 = Model
 
         ListQuery = dict
 
-        LatestModelsResponseV2 = Model
+        LatestPlugsResponseV2 = Model
 
         ListVersionsQuery = dict
 
-        ModelVersionsResponseV2 = Model
+        PlugVersionsResponseV2 = Model
 
-        FunctionMeta = Model
+        Documentation = Model
+
+        PatchInterfaceQuery = dict
+
+        GetPlugResponseV2 = Model
+
+        UpdateMetadataRequestV2 = Model
 
         PatchMetadataQuery = dict
 
-        GetModelResponseV2 = Model
+        GetPlugResponseV2 = Model
 
         PublishQuery = dict
 
-        PostModelJobSyncResponseV2 = Model
+        PostPlugJobSyncResponseV2 = Model
 
-        PostModelJobAsyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
         RebuildQuery = dict
 
-        RebuildModelSyncResponseV2 = Model
+        RebuildPlugSyncResponseV2 = Model
 
-        RebuildModelAsyncResponseV2 = Model
+        RebuildPlugAsyncResponseV2 = Model
 
         RemoveVersionQuery = dict
 
@@ -380,25 +402,25 @@ except ImportError:
 
         UpdateAssetQuery = dict
 
-        PostModelJobSyncResponseV2 = Model
+        PostPlugJobSyncResponseV2 = Model
 
-        PostModelJobAsyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
         RegistryErrorResponse = Model
 
         UpdateAssetsQuery = dict
 
-        PostModelJobSyncResponseV2 = Model
+        PostPlugJobSyncResponseV2 = Model
 
-        PostModelJobAsyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
         RegistryErrorResponse = Model
 
         VerifyQuery = dict
 
-        VerifyModelSyncResponseV2 = Model
+        VerifyPlugSyncResponseV2 = Model
 
-        PostModelJobAsyncResponseV2 = Model
+        PostPlugJobAsyncResponseV2 = Model
 
 
 from waylay.sdk.api import ApiClient, RESTTimeout
@@ -406,8 +428,8 @@ from waylay.sdk.api import ApiClient, RESTTimeout
 T = TypeVar("T")
 
 
-class ModelFunctionsApi(WithApiClient):
-    """ModelFunctionsApi service methods.
+class PlugsApi(WithApiClient):
+    """PlugsApi service methods.
 
     NOTE: This class is auto generated by OpenAPI Generator
     Ref: https://openapi-generator.tech
@@ -422,13 +444,13 @@ class ModelFunctionsApi(WithApiClient):
         json: Annotated[
             StrictBytes | StrictStr | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         files: Annotated[
@@ -440,7 +462,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2: ...
 
     @overload
     async def create(
@@ -449,13 +471,13 @@ class ModelFunctionsApi(WithApiClient):
         json: Annotated[
             StrictBytes | StrictStr | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         files: Annotated[
@@ -476,13 +498,13 @@ class ModelFunctionsApi(WithApiClient):
         json: Annotated[
             StrictBytes | StrictStr | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         files: Annotated[
@@ -503,13 +525,13 @@ class ModelFunctionsApi(WithApiClient):
         json: Annotated[
             StrictBytes | StrictStr | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         files: Annotated[
@@ -530,13 +552,13 @@ class ModelFunctionsApi(WithApiClient):
         json: Annotated[
             StrictBytes | StrictStr | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         files: Annotated[
@@ -556,13 +578,13 @@ class ModelFunctionsApi(WithApiClient):
         json: Annotated[
             StrictBytes | StrictStr | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
             ),
         ] = None,
         files: Annotated[
@@ -574,15 +596,13 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> (
-        PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2 | T | Response | Model
-    ):
-        """Create Model.
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2 | T | Response | Model:
+        """Create Plug.
 
-        Creates a new <em>model</em> function by uploading its assets.      The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported.
-        :param json: The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported.
+        Creates a new <em>plug</em> function by uploading its assets.      The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.
+        :param json: The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.
         :type json: bytearray, optional
-        :param content: The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported.
+        :param content: The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.
         :type content: ContentRequest, optional
         :param files: The files of a `content-type: multipart/form-data` request.
         :type files: FilesRequest, optional
@@ -609,7 +629,7 @@ class ModelFunctionsApi(WithApiClient):
         :param query['runtime'] (dict) <br> query.runtime (Query) : If set, the created function will use the indicated runtime (latest version within specified range).  This takes precedence over the runtime specified in a function manifest (copied or from request body).
         :type query['runtime']: str
         :param query['copy'] (dict) <br> query.copy_from (Query) : Indicates the _source_ of initial assets for a _new function_.  When using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.  #### Selection of _assets_ source  * If set as `<sourceName>[@<sourceVersionRange>]`, the _new function_ will be created with copied assets of the selected _source function_. * If set as `!example`, a `runtime` query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.  #### Selection of the _source function_  When `<sourceVersionRange>` is a range (or is not given), the latest _published_ version (in that range) is used.  If no _published_ version exists, the latest _draft_ is selected.  If no versions in the range exist, a `404` _Not Found_ error is returned.  #### The `name` of the _new function_  If a `name` is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the `name` of the _new function_ will be that of the _source function_.  #### The `version` of the _new function_  When the _target_ and _source_ name are equal, the `version` query parameters is defaulted to `<sourceVersionRange>` (`~<sourceVersionRange>` when it's an exact version)  The version of the _new function_ will be: * If a `version` is NOT specified (either as query parameter, in an optional manifest asset, or as `<sourceVersionRange>` _default_)    * a **patch increment** (`<major>.<minor>.<patch>+1`) of the latest **existing version** with the target `name`    * **`1.0.0`** otherwise  * If a `version` is specified:    * the **lowest version** in that range **if no existing version** is in that range.    * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.    * otherwise, if all allowed versions already exist, a **`409` _Duplicate_ error** is raised.  #### Deployment overrides  The new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body.
-        :type query['copy']: CreateWebscriptFunctionsCopyParameter
+        :type query['copy']: CreateWebscriptsCopyParameter
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -646,7 +666,7 @@ class ModelFunctionsApi(WithApiClient):
                 Annotated[
                     Optional[Union[StrictBytes, StrictStr]],
                     Field(
-                        description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported. "
+                        description="The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported. "
                     ),
                 ]
             )
@@ -663,8 +683,8 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "201": PostModelJobSyncResponseV2 if not select_path else Model,
-                "202": PostModelJobAsyncResponseV2 if not select_path else Model,
+                "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+                "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -673,7 +693,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="POST",
-            resource_path="/registry/v2/models/",
+            resource_path="/registry/v2/plugs/",
             path_params=path_params,
             params=query,
             **body_args,
@@ -704,7 +724,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2: ...
 
     @overload
     async def delete_asset(
@@ -813,12 +833,10 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> (
-        PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2 | T | Response | Model
-    ):
-        """Delete Model Asset.
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2 | T | Response | Model:
+        """Delete Plug Asset.
 
-        Delete an asset from the model's collection of existing assets.
+        Delete an asset from the plug's collection of existing assets.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
@@ -827,14 +845,14 @@ class ModelFunctionsApi(WithApiClient):
         :type wildcard: str
         :param query: URL Query parameters.
         :type query: DeleteAssetQuery | QueryParamTypes, optional
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user.
+        :type query['chown']: bool
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
         :param query['author'] (dict) <br> query.author (Query) : Optionally changes the author metadata when updating a function.
         :type query['author']: str
         :param query['async'] (dict) <br> query.var_async (Query) : Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
-        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user. (required)
-        :type query['chown']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -879,8 +897,8 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "201": PostModelJobSyncResponseV2 if not select_path else Model,
-                "202": PostModelJobAsyncResponseV2 if not select_path else Model,
+                "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+                "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {
@@ -891,7 +909,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="DELETE",
-            resource_path="/registry/v2/models/{name}/versions/{version}/content/{wildcard}",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -996,9 +1014,9 @@ class ModelFunctionsApi(WithApiClient):
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> bytearray | T | Response | Model:
-        """Get Model Archive.
+        """Get Plug Archive.
 
-        Get the specification archive of a model.
+        Get the specification archive of a plug.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
@@ -1059,7 +1077,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/registry/v2/models/{name}/versions/{version}/content",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content",
             path_params=path_params,
             params=query,
             **body_args,
@@ -1200,9 +1218,9 @@ class ModelFunctionsApi(WithApiClient):
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> bytearray | T | Response | Model:
-        """Get File From Model Archive.
+        """Get File From Plug Archive.
 
-        Get a file from the specification archive of a model.
+        Get a file from the specification archive of a plug.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
@@ -1266,7 +1284,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/registry/v2/models/{name}/versions/{version}/content/{wildcard}",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -1288,7 +1306,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> GetModelResponseV2: ...
+    ) -> GetPlugResponseV2: ...
 
     @overload
     async def get_latest(
@@ -1352,14 +1370,16 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> GetModelResponseV2 | T | Response | Model:
-        """Get Latest Model Version.
+    ) -> GetPlugResponseV2 | T | Response | Model:
+        """Get Latest Plug Version.
 
-        Fetch the latest version of a <em>model</em>.    By default, the result shows the latest non-deprecated, non-draft version.   If there is no such version, the latest deprecated or the latest draft version is returned, with the former taking precedence.       Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>     The returned <em>model version</em> will contain a link to its   latest _draft_ or latest _published_ version (if existing and different).
+        Fetch the latest version of a <em>plug</em>.    By default, the result shows the latest non-deprecated, non-draft version.   If there is no such version, the latest deprecated or the latest draft version is returned, with the former taking precedence.       Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>     The returned <em>plug version</em> will contain a link to its   latest _draft_ or latest _published_ version (if existing and different).
         :param name: The name of the function. (required)
         :type name: str
         :param query: URL Query parameters.
         :type query: GetLatestQuery | QueryParamTypes, optional
+        :param query['type'] (dict) <br> query.type (Query) : If set, filters on the type of plug.
+        :type query['type']: PlugType
         :param query['includeDraft'] (dict) <br> query.include_draft (Query) : Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.
         :type query['includeDraft']: bool
         :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.
@@ -1406,7 +1426,7 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": GetModelResponseV2 if not select_path else Model,
+                "200": GetPlugResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -1415,7 +1435,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/registry/v2/models/{name}",
+            resource_path="/registry/v2/plugs/{name}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -1440,7 +1460,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> GetModelResponseV2: ...
+    ) -> GetPlugResponseV2: ...
 
     @overload
     async def get(
@@ -1519,10 +1539,10 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> GetModelResponseV2 | T | Response | Model:
-        """Get Model Version.
+    ) -> GetPlugResponseV2 | T | Response | Model:
+        """Get Plug Version.
 
-        Get a model by name and version.
+        Get a specific version of a plug.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
@@ -1572,7 +1592,7 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": GetModelResponseV2 if not select_path else Model,
+                "200": GetPlugResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -1581,7 +1601,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/registry/v2/models/{name}/versions/{version}",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -1606,7 +1626,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> JobsForModelResponseV2: ...
+    ) -> JobsForPlugResponseV2: ...
 
     @overload
     async def jobs(
@@ -1685,10 +1705,10 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> JobsForModelResponseV2 | T | Response | Model:
-        """List Model Jobs.
+    ) -> JobsForPlugResponseV2 | T | Response | Model:
+        """List Plug Jobs.
 
-        List the ongoing and completed operations on a model.
+        List the ongoing and completed operations on a specific plug.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
@@ -1750,7 +1770,7 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": JobsForModelResponseV2 if not select_path else Model,
+                "200": JobsForPlugResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -1759,7 +1779,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/registry/v2/models/{name}/versions/{version}/jobs",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/jobs",
             path_params=path_params,
             params=query,
             **body_args,
@@ -1780,7 +1800,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> LatestModelsResponseV2: ...
+    ) -> LatestPlugsResponseV2: ...
 
     @overload
     async def list(
@@ -1839,12 +1859,16 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> LatestModelsResponseV2 | T | Response | Model:
-        """List Models.
+    ) -> LatestPlugsResponseV2 | T | Response | Model:
+        """List Plugs.
 
-        List the (latest) versions of available <em>models</em>.  ### List Latest Model Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>model</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no version filters are used, each listed <em>model version</em> contains representations of the latest draft (`entities[]._links.draft`)  or latest published (`entities[]._links.published`) version (if existing and different).   Use the query parameter `showRelated` to include only a link (default `showRelated=link`) or a full representation (`showRelated=embed`).  ### List Latest Model Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>model</em> that satisfy the filters, but **without links**.  ### List All Model Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>models</em> versions that satisfy the query, possibly multiple versions per named <em>models</em>. No HAL links are provided.  #### Filter on _status_ By default <em>model versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>model</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`
+        List the (latest) versions of available <em>plugs</em>.  ### List Latest Plug Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>plug</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no version filters are used, each listed <em>plug version</em> contains representations of the latest draft (`entities[]._links.draft`)  or latest published (`entities[]._links.published`) version (if existing and different).   Use the query parameter `showRelated` to include only a link (default `showRelated=link`) or a full representation (`showRelated=embed`).  ### List Latest Plug Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>plug</em> that satisfy the filters, but **without links**.  ### List All Plug Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>plugs</em> versions that satisfy the query, possibly multiple versions per named <em>plugs</em>. No HAL links are provided.  #### Filter on _status_ By default <em>plug versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>plug</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags`
         :param query: URL Query parameters.
         :type query: ListQuery | QueryParamTypes, optional
+        :param query['tags'] (dict) <br> query.tags (Query) : Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected.
+        :type query['tags']: TagsFilter
+        :param query['type'] (dict) <br> query.type (Query) : If set, filters on the type of plug.
+        :type query['type']: PlugType
         :param query['limit'] (dict) <br> query.limit (Query) : The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
         :type query['limit']: float
         :param query['page'] (dict) <br> query.page (Query) : The number of pages to skip when returning result to this query.
@@ -1927,7 +1951,7 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": LatestModelsResponseV2 if not select_path else Model,
+                "200": LatestPlugsResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -1936,7 +1960,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/registry/v2/models/",
+            resource_path="/registry/v2/plugs/",
             path_params=path_params,
             params=query,
             **body_args,
@@ -1958,7 +1982,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> ModelVersionsResponseV2: ...
+    ) -> PlugVersionsResponseV2: ...
 
     @overload
     async def list_versions(
@@ -2022,14 +2046,16 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> ModelVersionsResponseV2 | T | Response | Model:
-        """List Model Versions.
+    ) -> PlugVersionsResponseV2 | T | Response | Model:
+        """List Plug Versions.
 
-        List all deployed versions of a model.
+        List all versions of a plug, including deprecated versions or not.
         :param name: The name of the function. (required)
         :type name: str
         :param query: URL Query parameters.
         :type query: ListVersionsQuery | QueryParamTypes, optional
+        :param query['tags'] (dict) <br> query.tags (Query) : Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected.
+        :type query['tags']: TagsFilter
         :param query['limit'] (dict) <br> query.limit (Query) : The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
         :type query['limit']: float
         :param query['page'] (dict) <br> query.page (Query) : The number of pages to skip when returning result to this query.
@@ -2102,7 +2128,7 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": ModelVersionsResponseV2 if not select_path else Model,
+                "200": PlugVersionsResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -2111,7 +2137,187 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/registry/v2/models/{name}/versions",
+            resource_path="/registry/v2/plugs/{name}/versions",
+            path_params=path_params,
+            params=query,
+            **body_args,
+            headers=headers,
+            **kwargs,
+            response_types_map=response_types_map,
+            select_path=select_path,
+            raw_response=raw_response,
+        )
+
+    @overload
+    async def patch_interface(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        json: Documentation | None = None,
+        query: PatchInterfaceQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: Literal[None] = None,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> GetPlugResponseV2: ...
+
+    @overload
+    async def patch_interface(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        json: Documentation | None = None,
+        query: PatchInterfaceQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: T,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    @overload
+    async def patch_interface(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        json: Documentation | None = None,
+        query: PatchInterfaceQuery | QueryParamTypes | None = None,
+        raw_response: Literal[True],
+        select_path: Literal["_not_used_"] = "_not_used_",
+        response_type: Literal[None] = None,  # not used
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Response: ...
+
+    @overload
+    async def patch_interface(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        json: Documentation | None = None,
+        query: PatchInterfaceQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: Literal[None] = None,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Model: ...
+
+    @overload
+    async def patch_interface(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        json: Documentation | None = None,
+        query: PatchInterfaceQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: T,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    async def patch_interface(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        json: Documentation | None = None,
+        query: PatchInterfaceQuery | QueryParamTypes | None = None,
+        raw_response: StrictBool = False,
+        select_path: str = "",
+        response_type: T | None = None,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> GetPlugResponseV2 | T | Response | Model:
+        """Patch Plug Interface.
+
+        Patch the interface documentation of a plug version.
+        :param name: The name of the function. (required)
+        :type name: str
+        :param version: The version of the function. (required)
+        :type version: str
+        :param json: The json request body.
+        :type json: Documentation, optional
+        :param query: URL Query parameters.
+        :type query: PatchInterfaceQuery | QueryParamTypes, optional
+        :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
+                Set it to the empty string `""` to receive the full response object.
+        :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param headers: Header parameters for this request
+        :type headers: dict, optional
+        :param `**kwargs`: Additional parameters passed on to the http client.
+            See below.
+        :Keyword Arguments:
+            * timeout: a single numeric timeout in seconds,
+                or a tuple of _connect_, _read_, _write_ and _pool_ timeouts.
+            * stream: if true, the response will be in streaming mode
+            * cookies
+            * extensions
+            * auth
+            * follow_redirects: bool
+
+        :return: Returns the result object if the http request succeeded with status code '2XX'.
+        :raises APIError: If the http request has a status code different from `2XX`. This
+            object wraps both the http Response and any parsed data.
+        """
+
+        should_validate = (
+            MODELS_AVAILABLE and self.api_client.config.client_side_validation
+        )
+
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": str(name),
+            "version": str(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+        if json is not None and should_validate:
+            body_adapter = TypeAdapter(Optional[Documentation])
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
+
+        # query parameters
+        if query is not None and should_validate:
+            query = TypeAdapter(PatchInterfaceQuery).validate_python(query)
+
+        response_types_map: Dict[str, Any] = (
+            {"2XX": response_type}
+            if response_type is not None
+            else {
+                "200": GetPlugResponseV2 if not select_path else Model,
+            }
+        )
+        non_200_response_types_map: Dict[str, Any] = {}
+        response_types_map.update(non_200_response_types_map)
+
+        ## peform request
+        return await self.api_client.request(
+            method="PATCH",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/interface",
             path_params=path_params,
             params=query,
             **body_args,
@@ -2130,14 +2336,14 @@ class ModelFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> GetModelResponseV2: ...
+    ) -> GetPlugResponseV2: ...
 
     @overload
     async def patch_metadata(
@@ -2147,7 +2353,7 @@ class ModelFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
@@ -2164,7 +2370,7 @@ class ModelFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
@@ -2181,7 +2387,7 @@ class ModelFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
@@ -2198,7 +2404,7 @@ class ModelFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
@@ -2214,23 +2420,23 @@ class ModelFunctionsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> GetModelResponseV2 | T | Response | Model:
-        """Patch Model Metadata.
+    ) -> GetPlugResponseV2 | T | Response | Model:
+        """Patch Plug Metadata.
 
-        Patch the metadata of a model version.
+        Patch the metadata of a plug version.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
         :param json: The json request body.
-        :type json: FunctionMeta, optional
+        :type json: UpdateMetadataRequestV2, optional
         :param query: URL Query parameters.
         :type query: PatchMetadataQuery | QueryParamTypes, optional
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
@@ -2270,7 +2476,7 @@ class ModelFunctionsApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and should_validate:
-            body_adapter = TypeAdapter(Optional[FunctionMeta])
+            body_adapter = TypeAdapter(Optional[UpdateMetadataRequestV2])
             json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
         body_args["json"] = json
 
@@ -2282,7 +2488,7 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": GetModelResponseV2 if not select_path else Model,
+                "200": GetPlugResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -2291,7 +2497,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="PATCH",
-            resource_path="/registry/v2/models/{name}/versions/{version}/metadata",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/metadata",
             path_params=path_params,
             params=query,
             **body_args,
@@ -2316,7 +2522,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2: ...
 
     @overload
     async def publish(
@@ -2395,18 +2601,18 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> (
-        PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2 | T | Response | Model
-    ):
-        """Publish Draft Model.
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2 | T | Response | Model:
+        """Publish Draft Plug.
 
-        Mark the <em>model</em> to be ready and stable, taking it out of draft mode.,    Typically, the <em>model</em> should be in the <code>running</code> status,    such that publishing becomes a simple operation where the existing deployment can be re-used.   In other statuses, plug-registry may need to initiate a new build and deployment procedure.
+        Mark the <em>plug</em> to be ready and stable, taking it out of draft mode.,    Typically, the <em>plug</em> should be in the <code>running</code> status,    such that publishing becomes a simple operation where the existing deployment can be re-used.   In other statuses, plug-registry may need to initiate a new build and deployment procedure.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
         :param query: URL Query parameters.
         :type query: PublishQuery | QueryParamTypes, optional
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user.
+        :type query['chown']: bool
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
         :param query['author'] (dict) <br> query.author (Query) : Optionally changes the author metadata when updating a function.
@@ -2458,8 +2664,8 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "201": PostModelJobSyncResponseV2 if not select_path else Model,
-                "202": PostModelJobAsyncResponseV2 if not select_path else Model,
+                "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+                "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -2468,7 +2674,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="POST",
-            resource_path="/registry/v2/models/{name}/versions/{version}/publish",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/publish",
             path_params=path_params,
             params=query,
             **body_args,
@@ -2493,7 +2699,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> RebuildModelSyncResponseV2 | RebuildModelAsyncResponseV2: ...
+    ) -> RebuildPlugSyncResponseV2 | RebuildPlugAsyncResponseV2: ...
 
     @overload
     async def rebuild(
@@ -2572,12 +2778,10 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> (
-        RebuildModelSyncResponseV2 | RebuildModelAsyncResponseV2 | T | Response | Model
-    ):
-        """Rebuild Model.
+    ) -> RebuildPlugSyncResponseV2 | RebuildPlugAsyncResponseV2 | T | Response | Model:
+        """Rebuild Plug.
 
-        Rebuild and deploy a model with the original or updated base image.
+        Rebuild and deploy a plug with the original or updated base image.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
@@ -2643,8 +2847,8 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": RebuildModelSyncResponseV2 if not select_path else Model,
-                "202": RebuildModelAsyncResponseV2 if not select_path else Model,
+                "200": RebuildPlugSyncResponseV2 if not select_path else Model,
+                "202": RebuildPlugAsyncResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -2653,7 +2857,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="POST",
-            resource_path="/registry/v2/models/{name}/versions/{version}/rebuild",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/rebuild",
             path_params=path_params,
             params=query,
             **body_args,
@@ -2758,9 +2962,9 @@ class ModelFunctionsApi(WithApiClient):
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> UndeployedResponseV2 | UndeploySubmittedResponseV2 | T | Response | Model:
-        """Remove Model Version.
+        """Remove Plug Version.
 
-        Deprecate, undeploy and/or remove a <em>model</em> version.    By default, a `DELETE`    * _deprecates_ the model version(s): they are no longer included in listings by default.   * _undeploys_ the model version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the model version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action.
+        Deprecate, undeploy and/or remove a <em>plug</em> version.  By default, a `DELETE`  * marks _published_ version(s) _deprecated_: they remain active, but are no longer included in listings by default. * completely removes any _draft_ version(s) (_deprecate_, _undeploy_ and _remove_)  A _deprecated_ plug version will eventually be _undeployed_ (but not _removed_) by an external background task,  once proven that no waylay rule template or task references it.  Use `?force=true` to skip the deprecation and immediately remove the version(s).  Use `?undeploy=true` to undeploy the plug version(s), but keep it registered in a `undeployed` state. An `undeployed` version can later be restored by a _rebuild_ action.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
@@ -2771,9 +2975,9 @@ class ModelFunctionsApi(WithApiClient):
         :type query['comment']: str
         :param query['async'] (dict) <br> query.var_async (Query) : Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
-        :param query['force'] (dict) <br> query.force (Query) : If <code>true</code>, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_.
+        :param query['force'] (dict) <br> query.force (Query) : If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.
         :type query['force']: bool
-        :param query['undeploy'] (dict) <br> query.undeploy (Query) : If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
+        :param query['undeploy'] (dict) <br> query.undeploy (Query) : If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
         :type query['undeploy']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -2828,7 +3032,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="DELETE",
-            resource_path="/registry/v2/models/{name}/versions/{version}",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -2915,21 +3119,21 @@ class ModelFunctionsApi(WithApiClient):
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> UndeployedResponseV2 | UndeploySubmittedResponseV2 | T | Response | Model:
-        """Remove Model.
+        """Remove Plug.
 
-        Deprecate, undeploy and/or remove all versions of this named <em>model</em>.    By default, a `DELETE`    * _deprecates_ the model version(s): they are no longer included in listings by default.   * _undeploys_ the model version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the model version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action.
+        Deprecate, undeploy and/or remove all versions of this named <em>plug</em>.  By default, a `DELETE`  * marks _published_ version(s) _deprecated_: they remain active, but are no longer included in listings by default. * completely removes any _draft_ version(s) (_deprecate_, _undeploy_ and _remove_)  A _deprecated_ plug version will eventually be _undeployed_ (but not _removed_) by an external background task,  once proven that no waylay rule template or task references it.  Use `?force=true` to skip the deprecation and immediately remove the version(s).  Use `?undeploy=true` to undeploy the plug version(s), but keep it registered in a `undeployed` state. An `undeployed` version can later be restored by a _rebuild_ action.
         :param name: The name of the function. (required)
         :type name: str
         :param query: URL Query parameters.
         :type query: RemoveVersionsQuery | QueryParamTypes, optional
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
-        :param query['force'] (dict) <br> query.force (Query) : If <code>true</code>, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_.
-        :type query['force']: bool
-        :param query['undeploy'] (dict) <br> query.undeploy (Query) : If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
-        :type query['undeploy']: bool
         :param query['async'] (dict) <br> query.var_async (Query) : Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
+        :param query['force'] (dict) <br> query.force (Query) : If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings.
+        :type query['force']: bool
+        :param query['undeploy'] (dict) <br> query.undeploy (Query) : If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
+        :type query['undeploy']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -2982,7 +3186,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="DELETE",
-            resource_path="/registry/v2/models/{name}",
+            resource_path="/registry/v2/plugs/{name}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -3016,7 +3220,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2: ...
 
     @overload
     async def update_asset(
@@ -3140,12 +3344,10 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> (
-        PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2 | T | Response | Model
-    ):
-        """Update Model Asset.
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2 | T | Response | Model:
+        """Update Plug Asset.
 
-        The provided asset will be added to the <em>model</em> function's collection of existing assets,   replacing any existing asset with the same name.    Please note that it is not allowed to update the model.json json file with a changed value for any of the     <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
+        The provided asset will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing asset with the same name.    Please note that it is not allowed to update the plug.json json file with a changed value for any of the     <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
@@ -3156,14 +3358,14 @@ class ModelFunctionsApi(WithApiClient):
         :type content: ContentRequest, optional
         :param query: URL Query parameters.
         :type query: UpdateAssetQuery | QueryParamTypes, optional
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user.
+        :type query['chown']: bool
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
         :param query['author'] (dict) <br> query.author (Query) : Optionally changes the author metadata when updating a function.
         :type query['author']: str
         :param query['async'] (dict) <br> query.var_async (Query) : Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
-        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user. (required)
-        :type query['chown']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -3209,8 +3411,8 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "201": PostModelJobSyncResponseV2 if not select_path else Model,
-                "202": PostModelJobAsyncResponseV2 if not select_path else Model,
+                "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+                "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {
@@ -3221,7 +3423,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="PUT",
-            resource_path="/registry/v2/models/{name}/versions/{version}/content/{wildcard}",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content/{wildcard}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -3243,7 +3445,7 @@ class ModelFunctionsApi(WithApiClient):
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
             ),
         ] = None,
         files: Annotated[
@@ -3255,7 +3457,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2: ...
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2: ...
 
     @overload
     async def update_assets(
@@ -3268,7 +3470,7 @@ class ModelFunctionsApi(WithApiClient):
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
             ),
         ] = None,
         files: Annotated[
@@ -3293,7 +3495,7 @@ class ModelFunctionsApi(WithApiClient):
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
             ),
         ] = None,
         files: Annotated[
@@ -3318,7 +3520,7 @@ class ModelFunctionsApi(WithApiClient):
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
             ),
         ] = None,
         files: Annotated[
@@ -3343,7 +3545,7 @@ class ModelFunctionsApi(WithApiClient):
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
             ),
         ] = None,
         files: Annotated[
@@ -3367,7 +3569,7 @@ class ModelFunctionsApi(WithApiClient):
         content: Annotated[
             RequestContent | None,
             Field(
-                description="The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
+                description="The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported. "
             ),
         ] = None,
         files: Annotated[
@@ -3379,30 +3581,28 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> (
-        PostModelJobSyncResponseV2 | PostModelJobAsyncResponseV2 | T | Response | Model
-    ):
-        """Update Model Assets.
+    ) -> PostPlugJobSyncResponseV2 | PostPlugJobAsyncResponseV2 | T | Response | Model:
+        """Update Plug Assets.
 
-        Update a draft <em>model</em> function by updating its assets.      The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
+        Update a draft <em>plug</em> function by updating its assets.      The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
-        :param content: The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
+        :param content: The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>plug</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.
         :type content: ContentRequest, optional
         :param files: The files of a `content-type: multipart/form-data` request.
         :type files: FilesRequest, optional
         :param query: URL Query parameters.
         :type query: UpdateAssetsQuery | QueryParamTypes, optional
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user.
+        :type query['chown']: bool
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
         :param query['author'] (dict) <br> query.author (Query) : Optionally changes the author metadata when updating a function.
         :type query['author']: str
         :param query['async'] (dict) <br> query.var_async (Query) : Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
-        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user. (required)
-        :type query['chown']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -3448,8 +3648,8 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "201": PostModelJobSyncResponseV2 if not select_path else Model,
-                "202": PostModelJobAsyncResponseV2 if not select_path else Model,
+                "201": PostPlugJobSyncResponseV2 if not select_path else Model,
+                "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {
@@ -3460,7 +3660,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="PUT",
-            resource_path="/registry/v2/models/{name}/versions/{version}/content",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/content",
             path_params=path_params,
             params=query,
             **body_args,
@@ -3485,7 +3685,7 @@ class ModelFunctionsApi(WithApiClient):
         response_type: Literal[None] = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> VerifyModelSyncResponseV2 | PostModelJobAsyncResponseV2: ...
+    ) -> VerifyPlugSyncResponseV2 | PostPlugJobAsyncResponseV2: ...
 
     @overload
     async def verify(
@@ -3564,10 +3764,10 @@ class ModelFunctionsApi(WithApiClient):
         response_type: T | None = None,
         headers: HeaderTypes | None = None,
         **kwargs,
-    ) -> VerifyModelSyncResponseV2 | PostModelJobAsyncResponseV2 | T | Response | Model:
-        """Verify Health Of Model.
+    ) -> VerifyPlugSyncResponseV2 | PostPlugJobAsyncResponseV2 | T | Response | Model:
+        """Verify Health Of Plug.
 
-        Verify health of model deployed on openfaas.
+        Verify health of plug deployed on openfaas.
         :param name: The name of the function. (required)
         :type name: str
         :param version: The version of the function. (required)
@@ -3621,8 +3821,8 @@ class ModelFunctionsApi(WithApiClient):
             {"2XX": response_type}
             if response_type is not None
             else {
-                "200": VerifyModelSyncResponseV2 if not select_path else Model,
-                "202": PostModelJobAsyncResponseV2 if not select_path else Model,
+                "200": VerifyPlugSyncResponseV2 if not select_path else Model,
+                "202": PostPlugJobAsyncResponseV2 if not select_path else Model,
             }
         )
         non_200_response_types_map: Dict[str, Any] = {}
@@ -3631,7 +3831,7 @@ class ModelFunctionsApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="POST",
-            resource_path="/registry/v2/models/{name}/versions/{version}/verify",
+            resource_path="/registry/v2/plugs/{name}/versions/{version}/verify",
             path_params=path_params,
             params=query,
             **body_args,

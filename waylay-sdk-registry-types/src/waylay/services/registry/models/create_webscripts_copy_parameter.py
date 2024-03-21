@@ -36,11 +36,11 @@ from typing_extensions import (
 
 from pydantic import StrictStr, Field, ConfigDict
 
-CreateWebscriptFunctionsCopyParameter = Union[
+CreateWebscriptsCopyParameter = Union[
     Annotated[
         str,
         "A name reference with optional version range: `<name>[@<versionRange>]`.  References (a version range of) a named and versioned entity like _function_ or _runtime_.",
     ],
     Annotated[ExampleReference, ""],
 ]
-"""CreateWebscriptFunctionsCopyParameter."""
+"""CreateWebscriptsCopyParameter."""

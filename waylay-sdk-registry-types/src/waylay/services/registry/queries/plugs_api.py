@@ -37,22 +37,24 @@ from typing import Any, List, Optional, Union
 
 from ..models.archive_format import ArchiveFormat
 from ..models.deprecate_previous_policy import DeprecatePreviousPolicy
+from ..models.documentation import Documentation
 from ..models.file_upload import FileUpload
-from ..models.function_meta import FunctionMeta
 from ..models.function_type import FunctionType
-from ..models.get_webscript_response_v2 import GetWebscriptResponseV2
+from ..models.get_plug_response_v2 import GetPlugResponseV2
 from ..models.job_state_result import JobStateResult
 from ..models.job_type_schema import JobTypeSchema
-from ..models.jobs_for_webscript_response_v2 import JobsForWebscriptResponseV2
-from ..models.latest_webscripts_response_v2 import LatestWebscriptsResponseV2
-from ..models.post_webscript_job_sync_response_v2 import PostWebscriptJobSyncResponseV2
+from ..models.jobs_for_plug_response_v2 import JobsForPlugResponseV2
+from ..models.latest_plugs_response_v2 import LatestPlugsResponseV2
+from ..models.plug_type import PlugType
+from ..models.plug_versions_response_v2 import PlugVersionsResponseV2
+from ..models.post_plug_job_sync_response_v2 import PostPlugJobSyncResponseV2
+from ..models.rebuild_plug_sync_response_v2 import RebuildPlugSyncResponseV2
 from ..models.rebuild_policy import RebuildPolicy
-from ..models.rebuild_webscript_sync_response_v2 import RebuildWebscriptSyncResponseV2
 from ..models.show_related_type import ShowRelatedType
 from ..models.status_filter import StatusFilter
 from ..models.undeployed_response_v2 import UndeployedResponseV2
-from ..models.verify_webscript_sync_response_v2 import VerifyWebscriptSyncResponseV2
-from ..models.webscript_versions_response_v2 import WebscriptVersionsResponseV2
+from ..models.update_metadata_request_v2 import UpdateMetadataRequestV2
+from ..models.verify_plug_sync_response_v2 import VerifyPlugSyncResponseV2
 
 
 def _create_query_alias_for(field_name: str) -> str:
@@ -196,14 +198,14 @@ class CreateQuery(BaseModel):
 
 
 def _delete_asset_query_alias_for(field_name: str) -> str:
+    if field_name == "chown":
+        return "chown"
     if field_name == "comment":
         return "comment"
     if field_name == "author":
         return "author"
     if field_name == "var_async":
         return "async"
-    if field_name == "chown":
-        return "chown"
     return field_name
 
 
@@ -211,11 +213,11 @@ class DeleteAssetQuery(BaseModel):
     """Model for `delete_asset` query parameters."""
 
     chown: Annotated[
-        StrictBool,
+        StrictBool | None,
         Field(
             description="If set, ownership of the draft function is transferred to the current user."
         ),
-    ]
+    ] = None
     comment: Annotated[
         StrictStr | None,
         Field(
@@ -400,6 +402,8 @@ class GetAssetQuery(BaseModel):
 
 
 def _get_latest_query_alias_for(field_name: str) -> str:
+    if field_name == "type":
+        return "type"
     if field_name == "include_draft":
         return "includeDraft"
     if field_name == "include_deprecated":
@@ -410,6 +414,9 @@ def _get_latest_query_alias_for(field_name: str) -> str:
 class GetLatestQuery(BaseModel):
     """Model for `get_latest` query parameters."""
 
+    type: Annotated[
+        PlugType | None, Field(description="If set, filters on the type of plug.")
+    ] = None
     include_draft: Annotated[
         StrictBool | None,
         Field(
@@ -611,172 +618,11 @@ class JobsQuery(BaseModel):
         return cls.model_validate_json(json_data)
 
 
-def _list_versions_query_alias_for(field_name: str) -> str:
-    if field_name == "limit":
-        return "limit"
-    if field_name == "page":
-        return "page"
-    if field_name == "deprecated":
-        return "deprecated"
-    if field_name == "draft":
-        return "draft"
-    if field_name == "version":
-        return "version"
-    if field_name == "status":
-        return "status"
-    if field_name == "runtime_version":
-        return "runtimeVersion"
-    if field_name == "created_by":
-        return "createdBy"
-    if field_name == "updated_by":
-        return "updatedBy"
-    if field_name == "created_before":
-        return "createdBefore"
-    if field_name == "created_after":
-        return "createdAfter"
-    if field_name == "updated_before":
-        return "updatedBefore"
-    if field_name == "updated_after":
-        return "updatedAfter"
-    if field_name == "archive_format":
-        return "archiveFormat"
-    if field_name == "runtime":
-        return "runtime"
-    return field_name
-
-
-class ListVersionsQuery(BaseModel):
-    """Model for `list_versions` query parameters."""
-
-    limit: Annotated[
-        Annotated[float, Field(strict=True, ge=0)]
-        | Annotated[int, Field(strict=True, ge=0)]
-        | None,
-        Field(
-            description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value."
-        ),
-    ] = None
-    page: Annotated[
-        Annotated[float, Field(strict=True, ge=0)]
-        | Annotated[int, Field(strict=True, ge=0)]
-        | None,
-        Field(
-            description="The number of pages to skip when returning result to this query."
-        ),
-    ] = None
-    deprecated: Annotated[
-        StrictBool | None,
-        Field(description="Filter on the deprecation status of the function."),
-    ] = None
-    draft: Annotated[
-        StrictBool | None,
-        Field(description="Filter on the draft status of the function."),
-    ] = None
-    version: Annotated[
-        StrictStr | None,
-        Field(
-            description="Filter on the version of the function (case-sensitive, supports wildcards)."
-        ),
-    ] = None
-    status: Annotated[
-        List[StatusFilter] | None,
-        Field(
-            description="Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions."
-        ),
-    ] = None
-    runtime_version: Annotated[
-        Any | None, Field(description="Filter on the runtime version.")
-    ] = None
-    created_by: Annotated[
-        StrictStr | None,
-        Field(
-            description="Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs."
-        ),
-    ] = None
-    updated_by: Annotated[
-        StrictStr | None,
-        Field(
-            description="Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs."
-        ),
-    ] = None
-    created_before: Annotated[
-        Any | None,
-        Field(
-            description="Filter on funtions that were created before the given timestamp or age."
-        ),
-    ] = None
-    created_after: Annotated[
-        Any | None,
-        Field(
-            description="Filter on funtions that were created after the given timestamp or age."
-        ),
-    ] = None
-    updated_before: Annotated[
-        Any | None,
-        Field(
-            description="Filter on funtions that were updated before the given timestamp or age."
-        ),
-    ] = None
-    updated_after: Annotated[
-        Any | None,
-        Field(
-            description="Filter on funtions that were updated after the given timestamp or age."
-        ),
-    ] = None
-    archive_format: Annotated[
-        List[ArchiveFormat] | None,
-        Field(description="Filter on the archive format of the function."),
-    ] = None
-    runtime: Annotated[
-        List[StrictStr] | None,
-        Field(description="Filter on the runtime of the function."),
-    ] = None
-
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-        extra="allow",
-        alias_generator=_list_versions_query_alias_for,
-        populate_by_name=True,
-    )
-
-    @model_serializer(mode="wrap")
-    def serializer(
-        self, handler: Callable, info: SerializationInfo
-    ) -> Dict[StrictStr, Any]:
-        """The default serializer of the model.
-
-        * Excludes `None` fields that were not set at model initialization.
-        """
-        model_dict = handler(self, info)
-        return {
-            k: v
-            for k, v in model_dict.items()
-            if v is not None or k in self.model_fields_set
-        }
-
-    def to_dict(self) -> dict[str, Any]:
-        """Convert the ListVersionsQuery instance to dict."""
-        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
-
-    def to_json(self) -> str:
-        """Convert the ListVersionsQuery instance to a JSON-encoded string."""
-        return self.model_dump_json(
-            by_alias=True, exclude_unset=True, exclude_none=True
-        )
-
-    @classmethod
-    def from_dict(cls, obj: dict) -> Self:
-        """Create a ListVersionsQuery instance from a dict."""
-        return cls.model_validate(obj)
-
-    @classmethod
-    def from_json(cls, json_data: str | bytes | bytearray) -> Self:
-        """Create a ListVersionsQuery instance from a JSON-encoded string."""
-        return cls.model_validate_json(json_data)
-
-
 def _list_query_alias_for(field_name: str) -> str:
+    if field_name == "tags":
+        return "tags"
+    if field_name == "type":
+        return "type"
     if field_name == "limit":
         return "limit"
     if field_name == "page":
@@ -825,6 +671,15 @@ def _list_query_alias_for(field_name: str) -> str:
 class ListQuery(BaseModel):
     """Model for `list` query parameters."""
 
+    tags: Annotated[
+        Any | None,
+        Field(
+            description="Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected."
+        ),
+    ] = None
+    type: Annotated[
+        PlugType | None, Field(description="If set, filters on the type of plug.")
+    ] = None
     limit: Annotated[
         Annotated[float, Field(strict=True, ge=0)]
         | Annotated[int, Field(strict=True, ge=0)]
@@ -989,6 +844,239 @@ class ListQuery(BaseModel):
         return cls.model_validate_json(json_data)
 
 
+def _list_versions_query_alias_for(field_name: str) -> str:
+    if field_name == "tags":
+        return "tags"
+    if field_name == "limit":
+        return "limit"
+    if field_name == "page":
+        return "page"
+    if field_name == "deprecated":
+        return "deprecated"
+    if field_name == "draft":
+        return "draft"
+    if field_name == "version":
+        return "version"
+    if field_name == "status":
+        return "status"
+    if field_name == "runtime_version":
+        return "runtimeVersion"
+    if field_name == "created_by":
+        return "createdBy"
+    if field_name == "updated_by":
+        return "updatedBy"
+    if field_name == "created_before":
+        return "createdBefore"
+    if field_name == "created_after":
+        return "createdAfter"
+    if field_name == "updated_before":
+        return "updatedBefore"
+    if field_name == "updated_after":
+        return "updatedAfter"
+    if field_name == "archive_format":
+        return "archiveFormat"
+    if field_name == "runtime":
+        return "runtime"
+    return field_name
+
+
+class ListVersionsQuery(BaseModel):
+    """Model for `list_versions` query parameters."""
+
+    tags: Annotated[
+        Any | None,
+        Field(
+            description="Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected."
+        ),
+    ] = None
+    limit: Annotated[
+        Annotated[float, Field(strict=True, ge=0)]
+        | Annotated[int, Field(strict=True, ge=0)]
+        | None,
+        Field(
+            description="The maximum number of items to be return from this query. Has a deployment-defined default and maximum value."
+        ),
+    ] = None
+    page: Annotated[
+        Annotated[float, Field(strict=True, ge=0)]
+        | Annotated[int, Field(strict=True, ge=0)]
+        | None,
+        Field(
+            description="The number of pages to skip when returning result to this query."
+        ),
+    ] = None
+    deprecated: Annotated[
+        StrictBool | None,
+        Field(description="Filter on the deprecation status of the function."),
+    ] = None
+    draft: Annotated[
+        StrictBool | None,
+        Field(description="Filter on the draft status of the function."),
+    ] = None
+    version: Annotated[
+        StrictStr | None,
+        Field(
+            description="Filter on the version of the function (case-sensitive, supports wildcards)."
+        ),
+    ] = None
+    status: Annotated[
+        List[StatusFilter] | None,
+        Field(
+            description="Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions."
+        ),
+    ] = None
+    runtime_version: Annotated[
+        Any | None, Field(description="Filter on the runtime version.")
+    ] = None
+    created_by: Annotated[
+        StrictStr | None,
+        Field(
+            description="Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs."
+        ),
+    ] = None
+    updated_by: Annotated[
+        StrictStr | None,
+        Field(
+            description="Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs."
+        ),
+    ] = None
+    created_before: Annotated[
+        Any | None,
+        Field(
+            description="Filter on funtions that were created before the given timestamp or age."
+        ),
+    ] = None
+    created_after: Annotated[
+        Any | None,
+        Field(
+            description="Filter on funtions that were created after the given timestamp or age."
+        ),
+    ] = None
+    updated_before: Annotated[
+        Any | None,
+        Field(
+            description="Filter on funtions that were updated before the given timestamp or age."
+        ),
+    ] = None
+    updated_after: Annotated[
+        Any | None,
+        Field(
+            description="Filter on funtions that were updated after the given timestamp or age."
+        ),
+    ] = None
+    archive_format: Annotated[
+        List[ArchiveFormat] | None,
+        Field(description="Filter on the archive format of the function."),
+    ] = None
+    runtime: Annotated[
+        List[StrictStr] | None,
+        Field(description="Filter on the runtime of the function."),
+    ] = None
+
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_list_versions_query_alias_for,
+        populate_by_name=True,
+    )
+
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
+
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the ListVersionsQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
+
+    def to_json(self) -> str:
+        """Convert the ListVersionsQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
+        )
+
+    @classmethod
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a ListVersionsQuery instance from a dict."""
+        return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: str | bytes | bytearray) -> Self:
+        """Create a ListVersionsQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)
+
+
+def _patch_interface_query_alias_for(field_name: str) -> str:
+    if field_name == "comment":
+        return "comment"
+    return field_name
+
+
+class PatchInterfaceQuery(BaseModel):
+    """Model for `patch_interface` query parameters."""
+
+    comment: Annotated[
+        StrictStr | None,
+        Field(
+            description="An optional user-specified comment corresponding to the operation."
+        ),
+    ] = None
+
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_patch_interface_query_alias_for,
+        populate_by_name=True,
+    )
+
+    @model_serializer(mode="wrap")
+    def serializer(
+        self, handler: Callable, info: SerializationInfo
+    ) -> Dict[StrictStr, Any]:
+        """The default serializer of the model.
+
+        * Excludes `None` fields that were not set at model initialization.
+        """
+        model_dict = handler(self, info)
+        return {
+            k: v
+            for k, v in model_dict.items()
+            if v is not None or k in self.model_fields_set
+        }
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert the PatchInterfaceQuery instance to dict."""
+        return self.model_dump(by_alias=True, exclude_unset=True, exclude_none=True)
+
+    def to_json(self) -> str:
+        """Convert the PatchInterfaceQuery instance to a JSON-encoded string."""
+        return self.model_dump_json(
+            by_alias=True, exclude_unset=True, exclude_none=True
+        )
+
+    @classmethod
+    def from_dict(cls, obj: dict) -> Self:
+        """Create a PatchInterfaceQuery instance from a dict."""
+        return cls.model_validate(obj)
+
+    @classmethod
+    def from_json(cls, json_data: str | bytes | bytearray) -> Self:
+        """Create a PatchInterfaceQuery instance from a JSON-encoded string."""
+        return cls.model_validate_json(json_data)
+
+
 def _patch_metadata_query_alias_for(field_name: str) -> str:
     if field_name == "comment":
         return "comment"
@@ -1050,6 +1138,8 @@ class PatchMetadataQuery(BaseModel):
 
 
 def _publish_query_alias_for(field_name: str) -> str:
+    if field_name == "chown":
+        return "chown"
     if field_name == "comment":
         return "comment"
     if field_name == "author":
@@ -1064,6 +1154,12 @@ def _publish_query_alias_for(field_name: str) -> str:
 class PublishQuery(BaseModel):
     """Model for `publish` query parameters."""
 
+    chown: Annotated[
+        StrictBool | None,
+        Field(
+            description="If set, ownership of the draft function is transferred to the current user."
+        ),
+    ] = None
     comment: Annotated[
         StrictStr | None,
         Field(
@@ -1279,13 +1375,13 @@ class RemoveVersionQuery(BaseModel):
     force: Annotated[
         StrictBool | None,
         Field(
-            description="If <code>true</code>, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_."
+            description="If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings."
         ),
     ] = None
     undeploy: Annotated[
         StrictBool | None,
         Field(
-            description="If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only."
+            description="If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only."
         ),
     ] = None
 
@@ -1363,13 +1459,13 @@ class RemoveVersionsQuery(BaseModel):
     force: Annotated[
         StrictBool | None,
         Field(
-            description="If <code>true</code>, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_."
+            description="If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings."
         ),
     ] = None
     undeploy: Annotated[
         StrictBool | None,
         Field(
-            description="If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only."
+            description="If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only."
         ),
     ] = None
 
@@ -1418,14 +1514,14 @@ class RemoveVersionsQuery(BaseModel):
 
 
 def _update_asset_query_alias_for(field_name: str) -> str:
+    if field_name == "chown":
+        return "chown"
     if field_name == "comment":
         return "comment"
     if field_name == "author":
         return "author"
     if field_name == "var_async":
         return "async"
-    if field_name == "chown":
-        return "chown"
     return field_name
 
 
@@ -1433,11 +1529,11 @@ class UpdateAssetQuery(BaseModel):
     """Model for `update_asset` query parameters."""
 
     chown: Annotated[
-        StrictBool,
+        StrictBool | None,
         Field(
             description="If set, ownership of the draft function is transferred to the current user."
         ),
-    ]
+    ] = None
     comment: Annotated[
         StrictStr | None,
         Field(
@@ -1502,14 +1598,14 @@ class UpdateAssetQuery(BaseModel):
 
 
 def _update_assets_query_alias_for(field_name: str) -> str:
+    if field_name == "chown":
+        return "chown"
     if field_name == "comment":
         return "comment"
     if field_name == "author":
         return "author"
     if field_name == "var_async":
         return "async"
-    if field_name == "chown":
-        return "chown"
     return field_name
 
 
@@ -1517,11 +1613,11 @@ class UpdateAssetsQuery(BaseModel):
     """Model for `update_assets` query parameters."""
 
     chown: Annotated[
-        StrictBool,
+        StrictBool | None,
         Field(
             description="If set, ownership of the draft function is transferred to the current user."
         ),
-    ]
+    ] = None
     comment: Annotated[
         StrictStr | None,
         Field(

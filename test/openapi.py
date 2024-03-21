@@ -1027,13 +1027,13 @@ MODEL_DEFINITIONS.update(
 _completed_event_data_model_schema = json.loads(
     r"""{
   "title" : "CompletedEventData",
-  "required" : [ "returnValue" ],
+  "required" : [ "returnvalue" ],
   "type" : "object",
   "properties" : {
     "prev" : {
       "$ref" : "#/components/schemas/QueueEvents"
     },
-    "returnValue" : {
+    "returnvalue" : {
       "$ref" : "#/components/schemas/AnyJobResult"
     }
   }
@@ -1248,7 +1248,7 @@ MODEL_DEFINITIONS.update(
     {"CreateWebscriptAsyncResponse": _create_webscript_async_response_model_schema}
 )
 
-_create_webscript_functions_copy_parameter_model_schema = json.loads(
+_create_webscripts_copy_parameter_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
     "$ref" : "#/components/schemas/NamedVersionRange"
@@ -1260,9 +1260,7 @@ _create_webscript_functions_copy_parameter_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update(
-    {
-        "create_webscript_functions_copy_parameter": _create_webscript_functions_copy_parameter_model_schema
-    }
+    {"create_webscripts_copy_parameter": _create_webscripts_copy_parameter_model_schema}
 )
 
 _delayed_event_data_model_schema = json.loads(
@@ -8007,6 +8005,11 @@ _publish_function_query_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
+    "chown" : {
+      "type" : "boolean",
+      "description" : "If set, ownership of the draft function is transferred to the current user.",
+      "default" : false
+    },
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
@@ -8311,7 +8314,10 @@ _registry_error_response_model_schema = json.loads(
       "type" : "number"
     },
     "data" : {
-      "type" : "object"
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
     }
   }
 }
@@ -9732,9 +9738,13 @@ MODEL_DEFINITIONS.update(
 
 _update_draft_query_model_schema = json.loads(
     r"""{
-  "required" : [ "chown" ],
   "type" : "object",
   "properties" : {
+    "chown" : {
+      "type" : "boolean",
+      "description" : "If set, ownership of the draft function is transferred to the current user.",
+      "default" : false
+    },
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
@@ -9747,11 +9757,6 @@ _update_draft_query_model_schema = json.loads(
       "type" : "boolean",
       "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
       "default" : true
-    },
-    "chown" : {
-      "type" : "boolean",
-      "description" : "If set, ownership of the draft function is transferred to the current user.",
-      "default" : false
     }
   },
   "additionalProperties" : false

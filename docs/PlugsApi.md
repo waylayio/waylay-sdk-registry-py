@@ -1,27 +1,27 @@
-# waylay.services.registry.PlugFunctionsApi
+# waylay.services.registry.PlugsApi
 
 All URIs are relative to *https://api-aws-dev.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create**](PlugFunctionsApi.md#create) | **POST** /registry/v2/plugs/ | Create Plug
-[**delete_asset**](PlugFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Delete Plug Asset
-[**get_archive**](PlugFunctionsApi.md#get_archive) | **GET** /registry/v2/plugs/{name}/versions/{version}/content | Get Plug Archive
-[**get_asset**](PlugFunctionsApi.md#get_asset) | **GET** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Get File From Plug Archive
-[**get_latest**](PlugFunctionsApi.md#get_latest) | **GET** /registry/v2/plugs/{name} | Get Latest Plug Version
-[**get**](PlugFunctionsApi.md#get) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Plug Version
-[**jobs**](PlugFunctionsApi.md#jobs) | **GET** /registry/v2/plugs/{name}/versions/{version}/jobs | List Plug Jobs
-[**list**](PlugFunctionsApi.md#list) | **GET** /registry/v2/plugs/ | List Plugs
-[**list_versions**](PlugFunctionsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Plug Versions
-[**patch_interface**](PlugFunctionsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Plug Interface
-[**patch_metadata**](PlugFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Plug Metadata
-[**publish**](PlugFunctionsApi.md#publish) | **POST** /registry/v2/plugs/{name}/versions/{version}/publish | Publish Draft Plug
-[**rebuild**](PlugFunctionsApi.md#rebuild) | **POST** /registry/v2/plugs/{name}/versions/{version}/rebuild | Rebuild Plug
-[**remove_version**](PlugFunctionsApi.md#remove_version) | **DELETE** /registry/v2/plugs/{name}/versions/{version} | Remove Plug Version
-[**remove_versions**](PlugFunctionsApi.md#remove_versions) | **DELETE** /registry/v2/plugs/{name} | Remove Plug
-[**update_asset**](PlugFunctionsApi.md#update_asset) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Update Plug Asset
-[**update_assets**](PlugFunctionsApi.md#update_assets) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content | Update Plug Assets
-[**verify**](PlugFunctionsApi.md#verify) | **POST** /registry/v2/plugs/{name}/versions/{version}/verify | Verify Health Of Plug
+[**create**](PlugsApi.md#create) | **POST** /registry/v2/plugs/ | Create Plug
+[**delete_asset**](PlugsApi.md#delete_asset) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Delete Plug Asset
+[**get_archive**](PlugsApi.md#get_archive) | **GET** /registry/v2/plugs/{name}/versions/{version}/content | Get Plug Archive
+[**get_asset**](PlugsApi.md#get_asset) | **GET** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Get File From Plug Archive
+[**get_latest**](PlugsApi.md#get_latest) | **GET** /registry/v2/plugs/{name} | Get Latest Plug Version
+[**get**](PlugsApi.md#get) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Plug Version
+[**jobs**](PlugsApi.md#jobs) | **GET** /registry/v2/plugs/{name}/versions/{version}/jobs | List Plug Jobs
+[**list**](PlugsApi.md#list) | **GET** /registry/v2/plugs/ | List Plugs
+[**list_versions**](PlugsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Plug Versions
+[**patch_interface**](PlugsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Plug Interface
+[**patch_metadata**](PlugsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Plug Metadata
+[**publish**](PlugsApi.md#publish) | **POST** /registry/v2/plugs/{name}/versions/{version}/publish | Publish Draft Plug
+[**rebuild**](PlugsApi.md#rebuild) | **POST** /registry/v2/plugs/{name}/versions/{version}/rebuild | Rebuild Plug
+[**remove_version**](PlugsApi.md#remove_version) | **DELETE** /registry/v2/plugs/{name}/versions/{version} | Remove Plug Version
+[**remove_versions**](PlugsApi.md#remove_versions) | **DELETE** /registry/v2/plugs/{name} | Remove Plug
+[**update_asset**](PlugsApi.md#update_asset) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Update Plug Asset
+[**update_assets**](PlugsApi.md#update_assets) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content | Update Plug Assets
+[**verify**](PlugsApi.md#verify) | **POST** /registry/v2/plugs/{name}/versions/{version}/verify | Verify Health Of Plug
 
 # **create**
 > create(
@@ -32,7 +32,7 @@ Method | HTTP request | Description
 
 Create Plug
 
-Creates a new <em>plug</em> function by uploading its assets.      The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.    
+Creates a new <em>plug</em> function by uploading its assets.      The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.    
 
 ### Example
 
@@ -51,7 +51,7 @@ from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostP
 try:
     # Create Plug
     # calls `POST /registry/v2/plugs/`
-    api_response = await waylay_client.registry.plug_functions.create(
+    api_response = await waylay_client.registry.plugs.create(
         # query parameters:
         query = {
             'deprecatePrevious': 'none'
@@ -61,7 +61,7 @@ try:
             'draft': False
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = None # bytearray | The assets for a <em>plug</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.  (optional)
+        json = None # bytearray | The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.  (optional)
         # non-json binary data: use a byte array or a generator of bytearray chuncks
         content=b'my-binary-data',
         # this operation supports multiple request content types: use `headers` to specify the one used
@@ -70,10 +70,10 @@ try:
             'content-type': 'application/octet-stream'
         },
     )
-    print("The response of registry.plug_functions.create:\n")
+    print("The response of registry.plugs.create:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.create: %s\n" % e)
+    print("Exception when calling registry.plugs.create: %s\n" % e)
 ```
 
 ### Endpoint
@@ -84,8 +84,8 @@ POST /registry/v2/plugs/
 
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
-**json** | **bytearray** | json request body | The assets for a &lt;em&gt;plug&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;      The required &lt;code&gt;plug.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;plugs&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
-**content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;plug&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;      The required &lt;code&gt;plug.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;plugs&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
+**json** | **bytearray** | json request body | The assets for a &lt;em&gt;plug&lt;/em&gt; function can be provided as   &lt;ul&gt;     &lt;li&gt;A single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;Separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;     &lt;li&gt;A reference to the assets of another &lt;em&gt;plug&lt;/em&gt; in the &lt;code&gt;copy&lt;/code&gt; argument&lt;/li&gt;   &lt;/ul&gt;    The required &lt;code&gt;plug.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;plugs&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
+**content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;plug&lt;/em&gt; function can be provided as   &lt;ul&gt;     &lt;li&gt;A single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;Separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;     &lt;li&gt;A reference to the assets of another &lt;em&gt;plug&lt;/em&gt; in the &lt;code&gt;copy&lt;/code&gt; argument&lt;/li&gt;   &lt;/ul&gt;    The required &lt;code&gt;plug.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;plugs&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
 **files** | **[FileTypes](Operation.md#req_arg_files)** | request body files |   |
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
@@ -98,7 +98,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` | If set, the value will be used as the function name instead of the one specified in the manifest. | [optional] 
 **query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid. | [optional] [default False]
 **query['runtime']** (dict) <br> **query.runtime** (Query) | **str** | query parameter `"runtime"` | If set, the created function will use the indicated runtime (latest version within specified range).  This takes precedence over the runtime specified in a function manifest (copied or from request body). | [optional] 
-**query['copy']** (dict) <br> **query.copy_from** (Query) | [**CreateWebscriptFunctionsCopyParameter**](.md) | query parameter `"copy"` | Indicates the _source_ of initial assets for a _new function_.  When using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.  #### Selection of _assets_ source  * If set as &#x60;&lt;sourceName&gt;[@&lt;sourceVersionRange&gt;]&#x60;, the _new function_ will be created with copied assets of the selected _source function_. * If set as &#x60;!example&#x60;, a &#x60;runtime&#x60; query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.  #### Selection of the _source function_  When &#x60;&lt;sourceVersionRange&gt;&#x60; is a range (or is not given), the latest _published_ version (in that range) is used.  If no _published_ version exists, the latest _draft_ is selected.  If no versions in the range exist, a &#x60;404&#x60; _Not Found_ error is returned.  #### The &#x60;name&#x60; of the _new function_  If a &#x60;name&#x60; is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the &#x60;name&#x60; of the _new function_ will be that of the _source function_.  #### The &#x60;version&#x60; of the _new function_  When the _target_ and _source_ name are equal, the &#x60;version&#x60; query parameters is defaulted to &#x60;&lt;sourceVersionRange&gt;&#x60; (&#x60;~&lt;sourceVersionRange&gt;&#x60; when it&#39;s an exact version)  The version of the _new function_ will be: * If a &#x60;version&#x60; is NOT specified (either as query parameter, in an optional manifest asset, or as &#x60;&lt;sourceVersionRange&gt;&#x60; _default_)    * a **patch increment** (&#x60;&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;+1&#x60;) of the latest **existing version** with the target &#x60;name&#x60;    * **&#x60;1.0.0&#x60;** otherwise  * If a &#x60;version&#x60; is specified:    * the **lowest version** in that range **if no existing version** is in that range.    * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.    * otherwise, if all allowed versions already exist, a **&#x60;409&#x60; _Duplicate_ error** is raised.  #### Deployment overrides  The new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body. | [optional] 
+**query['copy']** (dict) <br> **query.copy_from** (Query) | [**CreateWebscriptsCopyParameter**](.md) | query parameter `"copy"` | Indicates the _source_ of initial assets for a _new function_.  When using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.  #### Selection of _assets_ source  * If set as &#x60;&lt;sourceName&gt;[@&lt;sourceVersionRange&gt;]&#x60;, the _new function_ will be created with copied assets of the selected _source function_. * If set as &#x60;!example&#x60;, a &#x60;runtime&#x60; query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.  #### Selection of the _source function_  When &#x60;&lt;sourceVersionRange&gt;&#x60; is a range (or is not given), the latest _published_ version (in that range) is used.  If no _published_ version exists, the latest _draft_ is selected.  If no versions in the range exist, a &#x60;404&#x60; _Not Found_ error is returned.  #### The &#x60;name&#x60; of the _new function_  If a &#x60;name&#x60; is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the &#x60;name&#x60; of the _new function_ will be that of the _source function_.  #### The &#x60;version&#x60; of the _new function_  When the _target_ and _source_ name are equal, the &#x60;version&#x60; query parameters is defaulted to &#x60;&lt;sourceVersionRange&gt;&#x60; (&#x60;~&lt;sourceVersionRange&gt;&#x60; when it&#39;s an exact version)  The version of the _new function_ will be: * If a &#x60;version&#x60; is NOT specified (either as query parameter, in an optional manifest asset, or as &#x60;&lt;sourceVersionRange&gt;&#x60; _default_)    * a **patch increment** (&#x60;&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;+1&#x60;) of the latest **existing version** with the target &#x60;name&#x60;    * **&#x60;1.0.0&#x60;** otherwise  * If a &#x60;version&#x60; is specified:    * the **lowest version** in that range **if no existing version** is in that range.    * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.    * otherwise, if all allowed versions already exist, a **&#x60;409&#x60; _Duplicate_ error** is raised.  #### Deployment overrides  The new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType `application/octet-stream`, `application/tar`, `application/tar+gzip`, `application/x-gzip`, `application/x-tar`, `application/gzip`, `multipart/form-data`, `application/json`, `*/*+json`
 
@@ -153,20 +153,20 @@ from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostP
 try:
     # Delete Plug Asset
     # calls `DELETE /registry/v2/plugs/{name}/versions/{version}/content/{wildcard}`
-    api_response = await waylay_client.registry.plug_functions.delete_asset(
+    api_response = await waylay_client.registry.plugs.delete_asset(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         'wildcard_example', # wildcard | path param "wildcard"
         # query parameters:
         query = {
-            'async': True
             'chown': False
+            'async': True
         },
     )
-    print("The response of registry.plug_functions.delete_asset:\n")
+    print("The response of registry.plugs.delete_asset:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.delete_asset: %s\n" % e)
+    print("Exception when calling registry.plugs.delete_asset: %s\n" % e)
 ```
 
 ### Endpoint
@@ -181,10 +181,10 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -237,7 +237,7 @@ waylay_client = WaylayClient.from_profile()
 try:
     # Get Plug Archive
     # calls `GET /registry/v2/plugs/{name}/versions/{version}/content`
-    api_response = await waylay_client.registry.plug_functions.get_archive(
+    api_response = await waylay_client.registry.plugs.get_archive(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -245,10 +245,10 @@ try:
             'ls': False
         },
     )
-    print("The response of registry.plug_functions.get_archive:\n")
+    print("The response of registry.plugs.get_archive:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.get_archive: %s\n" % e)
+    print("Exception when calling registry.plugs.get_archive: %s\n" % e)
 ```
 
 ### Endpoint
@@ -314,7 +314,7 @@ waylay_client = WaylayClient.from_profile()
 try:
     # Get File From Plug Archive
     # calls `GET /registry/v2/plugs/{name}/versions/{version}/content/{wildcard}`
-    api_response = await waylay_client.registry.plug_functions.get_asset(
+    api_response = await waylay_client.registry.plugs.get_asset(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         'wildcard_example', # wildcard | path param "wildcard"
@@ -323,10 +323,10 @@ try:
             'ls': False
         },
     )
-    print("The response of registry.plug_functions.get_asset:\n")
+    print("The response of registry.plugs.get_asset:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.get_asset: %s\n" % e)
+    print("Exception when calling registry.plugs.get_asset: %s\n" % e)
 ```
 
 ### Endpoint
@@ -393,7 +393,7 @@ from waylay.services.registry.models.plug_type import PlugType
 try:
     # Get Latest Plug Version
     # calls `GET /registry/v2/plugs/{name}`
-    api_response = await waylay_client.registry.plug_functions.get_latest(
+    api_response = await waylay_client.registry.plugs.get_latest(
         'name_example', # name | path param "name"
         # query parameters:
         query = {
@@ -402,10 +402,10 @@ try:
             'includeDeprecated': True
         },
     )
-    print("The response of registry.plug_functions.get_latest:\n")
+    print("The response of registry.plugs.get_latest:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.get_latest: %s\n" % e)
+    print("Exception when calling registry.plugs.get_latest: %s\n" % e)
 ```
 
 ### Endpoint
@@ -471,14 +471,14 @@ from waylay.services.registry.models.get_plug_response_v2 import GetPlugResponse
 try:
     # Get Plug Version
     # calls `GET /registry/v2/plugs/{name}/versions/{version}`
-    api_response = await waylay_client.registry.plug_functions.get(
+    api_response = await waylay_client.registry.plugs.get(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
     )
-    print("The response of registry.plug_functions.get:\n")
+    print("The response of registry.plugs.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.get: %s\n" % e)
+    print("Exception when calling registry.plugs.get: %s\n" % e)
 ```
 
 ### Endpoint
@@ -545,17 +545,17 @@ from waylay.services.registry.models.jobs_for_plug_response_v2 import JobsForPlu
 try:
     # List Plug Jobs
     # calls `GET /registry/v2/plugs/{name}/versions/{version}/jobs`
-    api_response = await waylay_client.registry.plug_functions.jobs(
+    api_response = await waylay_client.registry.plugs.jobs(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
         query = {
         },
     )
-    print("The response of registry.plug_functions.jobs:\n")
+    print("The response of registry.plugs.jobs:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.jobs: %s\n" % e)
+    print("Exception when calling registry.plugs.jobs: %s\n" % e)
 ```
 
 ### Endpoint
@@ -628,7 +628,7 @@ from waylay.services.registry.models.status_filter import StatusFilter
 try:
     # List Plugs
     # calls `GET /registry/v2/plugs/`
-    api_response = await waylay_client.registry.plug_functions.list(
+    api_response = await waylay_client.registry.plugs.list(
         # query parameters:
         query = {
             'type': 'sensor'
@@ -642,10 +642,10 @@ try:
             'showRelated': 'embed'
         },
     )
-    print("The response of registry.plug_functions.list:\n")
+    print("The response of registry.plugs.list:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.list: %s\n" % e)
+    print("Exception when calling registry.plugs.list: %s\n" % e)
 ```
 
 ### Endpoint
@@ -732,7 +732,7 @@ from waylay.services.registry.models.status_filter import StatusFilter
 try:
     # List Plug Versions
     # calls `GET /registry/v2/plugs/{name}/versions`
-    api_response = await waylay_client.registry.plug_functions.list_versions(
+    api_response = await waylay_client.registry.plugs.list_versions(
         'name_example', # name | path param "name"
         # query parameters:
         query = {
@@ -742,10 +742,10 @@ try:
             'updatedBy': '@me'
         },
     )
-    print("The response of registry.plug_functions.list_versions:\n")
+    print("The response of registry.plugs.list_versions:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.list_versions: %s\n" % e)
+    print("Exception when calling registry.plugs.list_versions: %s\n" % e)
 ```
 
 ### Endpoint
@@ -826,7 +826,7 @@ from waylay.services.registry.models.get_plug_response_v2 import GetPlugResponse
 try:
     # Patch Plug Interface
     # calls `PATCH /registry/v2/plugs/{name}/versions/{version}/interface`
-    api_response = await waylay_client.registry.plug_functions.patch_interface(
+    api_response = await waylay_client.registry.plugs.patch_interface(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -835,10 +835,10 @@ try:
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json = waylay.services.registry.Documentation() # Documentation |  (optional)
     )
-    print("The response of registry.plug_functions.patch_interface:\n")
+    print("The response of registry.plugs.patch_interface:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.patch_interface: %s\n" % e)
+    print("Exception when calling registry.plugs.patch_interface: %s\n" % e)
 ```
 
 ### Endpoint
@@ -906,7 +906,7 @@ from waylay.services.registry.models.update_metadata_request_v2 import UpdateMet
 try:
     # Patch Plug Metadata
     # calls `PATCH /registry/v2/plugs/{name}/versions/{version}/metadata`
-    api_response = await waylay_client.registry.plug_functions.patch_metadata(
+    api_response = await waylay_client.registry.plugs.patch_metadata(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -915,10 +915,10 @@ try:
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json = waylay.services.registry.UpdateMetadataRequestV2() # UpdateMetadataRequestV2 |  (optional)
     )
-    print("The response of registry.plug_functions.patch_metadata:\n")
+    print("The response of registry.plugs.patch_metadata:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.patch_metadata: %s\n" % e)
+    print("Exception when calling registry.plugs.patch_metadata: %s\n" % e)
 ```
 
 ### Endpoint
@@ -986,19 +986,20 @@ from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostP
 try:
     # Publish Draft Plug
     # calls `POST /registry/v2/plugs/{name}/versions/{version}/publish`
-    api_response = await waylay_client.registry.plug_functions.publish(
+    api_response = await waylay_client.registry.plugs.publish(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
         query = {
+            'chown': False
             'deprecatePrevious': 'none'
             'async': True
         },
     )
-    print("The response of registry.plug_functions.publish:\n")
+    print("The response of registry.plugs.publish:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.publish: %s\n" % e)
+    print("Exception when calling registry.plugs.publish: %s\n" % e)
 ```
 
 ### Endpoint
@@ -1012,6 +1013,7 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['deprecatePrevious']** (dict) <br> **query.deprecate_previous** (Query) | [**DeprecatePreviousPolicy**](.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions. | [optional] 
@@ -1069,7 +1071,7 @@ from waylay.services.registry.models.rebuild_policy import RebuildPolicy
 try:
     # Rebuild Plug
     # calls `POST /registry/v2/plugs/{name}/versions/{version}/rebuild`
-    api_response = await waylay_client.registry.plug_functions.rebuild(
+    api_response = await waylay_client.registry.plugs.rebuild(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -1082,10 +1084,10 @@ try:
             'skipRebuild': True
         },
     )
-    print("The response of registry.plug_functions.rebuild:\n")
+    print("The response of registry.plugs.rebuild:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.rebuild: %s\n" % e)
+    print("Exception when calling registry.plugs.rebuild: %s\n" % e)
 ```
 
 ### Endpoint
@@ -1159,7 +1161,7 @@ from waylay.services.registry.models.undeployed_response_v2 import UndeployedRes
 try:
     # Remove Plug Version
     # calls `DELETE /registry/v2/plugs/{name}/versions/{version}`
-    api_response = await waylay_client.registry.plug_functions.remove_version(
+    api_response = await waylay_client.registry.plugs.remove_version(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -1169,10 +1171,10 @@ try:
             'undeploy': True
         },
     )
-    print("The response of registry.plug_functions.remove_version:\n")
+    print("The response of registry.plugs.remove_version:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.remove_version: %s\n" % e)
+    print("Exception when calling registry.plugs.remove_version: %s\n" % e)
 ```
 
 ### Endpoint
@@ -1241,7 +1243,7 @@ from waylay.services.registry.models.undeployed_response_v2 import UndeployedRes
 try:
     # Remove Plug
     # calls `DELETE /registry/v2/plugs/{name}`
-    api_response = await waylay_client.registry.plug_functions.remove_versions(
+    api_response = await waylay_client.registry.plugs.remove_versions(
         'name_example', # name | path param "name"
         # query parameters:
         query = {
@@ -1250,10 +1252,10 @@ try:
             'undeploy': True
         },
     )
-    print("The response of registry.plug_functions.remove_versions:\n")
+    print("The response of registry.plugs.remove_versions:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.remove_versions: %s\n" % e)
+    print("Exception when calling registry.plugs.remove_versions: %s\n" % e)
 ```
 
 ### Endpoint
@@ -1324,14 +1326,14 @@ from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostP
 try:
     # Update Plug Asset
     # calls `PUT /registry/v2/plugs/{name}/versions/{version}/content/{wildcard}`
-    api_response = await waylay_client.registry.plug_functions.update_asset(
+    api_response = await waylay_client.registry.plugs.update_asset(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         'wildcard_example', # wildcard | path param "wildcard"
         # query parameters:
         query = {
-            'async': True
             'chown': False
+            'async': True
         },
         # non-json binary data: use a byte array or a generator of bytearray chuncks
         content=b'my-binary-data',
@@ -1341,10 +1343,10 @@ try:
             'content-type': 'application/octet-stream'
         },
     )
-    print("The response of registry.plug_functions.update_asset:\n")
+    print("The response of registry.plugs.update_asset:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.update_asset: %s\n" % e)
+    print("Exception when calling registry.plugs.update_asset: %s\n" % e)
 ```
 
 ### Endpoint
@@ -1360,10 +1362,10 @@ Name     | Type  | API binding   | Description   | Notes
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | A single asset file. | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType 
 
@@ -1419,13 +1421,13 @@ from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostP
 try:
     # Update Plug Assets
     # calls `PUT /registry/v2/plugs/{name}/versions/{version}/content`
-    api_response = await waylay_client.registry.plug_functions.update_assets(
+    api_response = await waylay_client.registry.plugs.update_assets(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
         query = {
-            'async': True
             'chown': False
+            'async': True
         },
         # non-json binary data: use a byte array or a generator of bytearray chuncks
         content=b'my-binary-data',
@@ -1435,10 +1437,10 @@ try:
             'content-type': 'application/octet-stream'
         },
     )
-    print("The response of registry.plug_functions.update_assets:\n")
+    print("The response of registry.plugs.update_assets:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.update_assets: %s\n" % e)
+    print("Exception when calling registry.plugs.update_assets: %s\n" % e)
 ```
 
 ### Endpoint
@@ -1454,10 +1456,10 @@ Name     | Type  | API binding   | Description   | Notes
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;plug&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;    The provided assets will be added to the &lt;em&gt;plug&lt;/em&gt; function&#39;s collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json&lt;/code&gt; json file with a changed value for any of the    &lt;code&gt;name&lt;/code&gt;, &lt;code&gt;version&lt;/code&gt; and/or &lt;code&gt;runtime&lt;/code&gt; attributes.    For each &lt;em&gt;runtime&lt;/em&gt; other files are supported.  | [optional] 
 **files** | **[FileTypes](Operation.md#req_arg_files)** | request body files |   |
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType `application/octet-stream`, `application/tar`, `application/tar+gzip`, `application/x-gzip`, `application/x-tar`, `application/gzip`, `multipart/form-data`
 
@@ -1512,7 +1514,7 @@ from waylay.services.registry.models.verify_plug_sync_response_v2 import VerifyP
 try:
     # Verify Health Of Plug
     # calls `POST /registry/v2/plugs/{name}/versions/{version}/verify`
-    api_response = await waylay_client.registry.plug_functions.verify(
+    api_response = await waylay_client.registry.plugs.verify(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -1521,10 +1523,10 @@ try:
             'scaleToZero': True
         },
     )
-    print("The response of registry.plug_functions.verify:\n")
+    print("The response of registry.plugs.verify:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.plug_functions.verify: %s\n" % e)
+    print("Exception when calling registry.plugs.verify: %s\n" % e)
 ```
 
 ### Endpoint

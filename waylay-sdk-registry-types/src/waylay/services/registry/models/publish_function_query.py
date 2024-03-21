@@ -30,6 +30,10 @@ from ..models.deprecate_previous_policy import DeprecatePreviousPolicy
 class PublishFunctionQuery(BaseModel):
     """PublishFunctionQuery."""
 
+    chown: StrictBool | None = Field(
+        default=False,
+        description="If set, ownership of the draft function is transferred to the current user.",
+    )
     comment: StrictStr | None = Field(
         default=None,
         description="An optional user-specified comment corresponding to the operation.",

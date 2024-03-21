@@ -47,7 +47,7 @@ docs/CreateFunctionQueryV2Copy.md
 docs/CreateKFServingAsyncResponse.md
 docs/CreatePlugAsyncResponse.md
 docs/CreateWebscriptAsyncResponse.md
-docs/CreateWebscriptFunctionsCopyParameter.md
+docs/CreateWebscriptsCopyParameter.md
 docs/DefaultApi.md
 docs/DelayedEventData.md
 docs/DelayedEventSSE.md
@@ -225,8 +225,8 @@ docs/MessageResponse.md
 docs/Model.md
 docs/Model1.md
 docs/Model2.md
-docs/ModelFunctionsApi.md
 docs/ModelVersionsResponseV2.md
+docs/ModelsApi.md
 docs/Name.md
 docs/NameAndVersion.md
 docs/NamedKFServingVersionsQueryV2.md
@@ -253,7 +253,6 @@ docs/Plug.md
 docs/Plug1.md
 docs/Plug2.md
 docs/PlugDeleteForceQuery.md
-docs/PlugFunctionsApi.md
 docs/PlugInterface.md
 docs/PlugListingAndQueryResponse.md
 docs/PlugListingResponse.md
@@ -267,6 +266,7 @@ docs/PlugResponse.md
 docs/PlugResponseV2.md
 docs/PlugType.md
 docs/PlugVersionsResponseV2.md
+docs/PlugsApi.md
 docs/PostModelJobAsyncResponseV2.md
 docs/PostModelJobSyncResponseV2.md
 docs/PostPlugJobAsyncResponseV2.md
@@ -365,7 +365,6 @@ docs/WaitingEventSSE.md
 docs/Webscript.md
 docs/Webscript1.md
 docs/Webscript2.md
-docs/WebscriptFunctionsApi.md
 docs/WebscriptLatestVersionQueryV2.md
 docs/WebscriptLatestVersionsQueryV1.md
 docs/WebscriptLatestVersionsQueryV2.md
@@ -374,6 +373,7 @@ docs/WebscriptResponse.md
 docs/WebscriptResponseV2.md
 docs/WebscriptResponseWithInvokeLinkV2.md
 docs/WebscriptVersionsResponseV2.md
+docs/WebscriptsApi.md
 docs/WithAssetHALLink.md
 docs/WithEmbeddedAltVersionsIKfservingResponseV2.md
 docs/WithEmbeddedAltVersionsIPlugResponseV2.md
@@ -387,11 +387,11 @@ test/__init__.py
 test/api/__init__.py
 test/api/default_api_test.py
 test/api/jobs_api_test.py
-test/api/model_functions_api_test.py
-test/api/plug_functions_api_test.py
+test/api/models_api_test.py
+test/api/plugs_api_test.py
 test/api/runtimes_api_test.py
 test/api/schemas_api_test.py
-test/api/webscript_functions_api_test.py
+test/api/webscripts_api_test.py
 test/conftest.py
 test/openapi.py
 test/types/__init__.py
@@ -440,7 +440,7 @@ test/types/create_function_query_v2_stub.py
 test/types/create_kf_serving_async_response_stub.py
 test/types/create_plug_async_response_stub.py
 test/types/create_webscript_async_response_stub.py
-test/types/create_webscript_functions_copy_parameter_stub.py
+test/types/create_webscripts_copy_parameter_stub.py
 test/types/delayed_event_data_stub.py
 test/types/delayed_event_sse_stub.py
 test/types/deploy1_stub.py

@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**chown** | **bool** | If set, ownership of the draft function is transferred to the current user. | [optional] [default to False]
 **comment** | **str** | An optional user-specified comment corresponding to the operation. | [optional] 
 **author** | **str** | Optionally changes the author metadata when updating a function. | [optional] 
 **var_async** | **bool** | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default to True]
-**chown** | **bool** | If set, ownership of the draft function is transferred to the current user. | [default to False]
 
 ## Example
 

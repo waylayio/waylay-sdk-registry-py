@@ -1,37 +1,37 @@
-# waylay.services.registry.WebscriptFunctionsApi
+# waylay.services.registry.ModelsApi
 
 All URIs are relative to *https://api-aws-dev.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create**](WebscriptFunctionsApi.md#create) | **POST** /registry/v2/webscripts/ | Create Webscript Version
-[**delete_asset**](WebscriptFunctionsApi.md#delete_asset) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Delete Webscript Asset
-[**get_archive**](WebscriptFunctionsApi.md#get_archive) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content | Get Webscript Archive
-[**get_asset**](WebscriptFunctionsApi.md#get_asset) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Get File From Webscript Archive
-[**get_latest**](WebscriptFunctionsApi.md#get_latest) | **GET** /registry/v2/webscripts/{name} | Get Latest Webscript Version
-[**get**](WebscriptFunctionsApi.md#get) | **GET** /registry/v2/webscripts/{name}/versions/{version} | Get Webscript Version
-[**jobs**](WebscriptFunctionsApi.md#jobs) | **GET** /registry/v2/webscripts/{name}/versions/{version}/jobs | List Webscript Jobs
-[**list_versions**](WebscriptFunctionsApi.md#list_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Webscript Versions
-[**list**](WebscriptFunctionsApi.md#list) | **GET** /registry/v2/webscripts/ | List Webscripts
-[**patch_metadata**](WebscriptFunctionsApi.md#patch_metadata) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/metadata | Patch Webscript Metadata
-[**publish**](WebscriptFunctionsApi.md#publish) | **POST** /registry/v2/webscripts/{name}/versions/{version}/publish | Publish Draft Webscript
-[**rebuild**](WebscriptFunctionsApi.md#rebuild) | **POST** /registry/v2/webscripts/{name}/versions/{version}/rebuild | Rebuild Webscript
-[**remove_version**](WebscriptFunctionsApi.md#remove_version) | **DELETE** /registry/v2/webscripts/{name}/versions/{version} | Remove Webscript Version
-[**remove_versions**](WebscriptFunctionsApi.md#remove_versions) | **DELETE** /registry/v2/webscripts/{name} | Remove Webscript
-[**update_asset**](WebscriptFunctionsApi.md#update_asset) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Update Webscript Asset
-[**update_assets**](WebscriptFunctionsApi.md#update_assets) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content | Update Webscript Assets
-[**verify**](WebscriptFunctionsApi.md#verify) | **POST** /registry/v2/webscripts/{name}/versions/{version}/verify | Verify Health Of Webscript
+[**create**](ModelsApi.md#create) | **POST** /registry/v2/models/ | Create Model
+[**delete_asset**](ModelsApi.md#delete_asset) | **DELETE** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Delete Model Asset
+[**get_archive**](ModelsApi.md#get_archive) | **GET** /registry/v2/models/{name}/versions/{version}/content | Get Model Archive
+[**get_asset**](ModelsApi.md#get_asset) | **GET** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Get File From Model Archive
+[**get_latest**](ModelsApi.md#get_latest) | **GET** /registry/v2/models/{name} | Get Latest Model Version
+[**get**](ModelsApi.md#get) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
+[**jobs**](ModelsApi.md#jobs) | **GET** /registry/v2/models/{name}/versions/{version}/jobs | List Model Jobs
+[**list**](ModelsApi.md#list) | **GET** /registry/v2/models/ | List Models
+[**list_versions**](ModelsApi.md#list_versions) | **GET** /registry/v2/models/{name}/versions | List Model Versions
+[**patch_metadata**](ModelsApi.md#patch_metadata) | **PATCH** /registry/v2/models/{name}/versions/{version}/metadata | Patch Model Metadata
+[**publish**](ModelsApi.md#publish) | **POST** /registry/v2/models/{name}/versions/{version}/publish | Publish Draft Model
+[**rebuild**](ModelsApi.md#rebuild) | **POST** /registry/v2/models/{name}/versions/{version}/rebuild | Rebuild Model
+[**remove_version**](ModelsApi.md#remove_version) | **DELETE** /registry/v2/models/{name}/versions/{version} | Remove Model Version
+[**remove_versions**](ModelsApi.md#remove_versions) | **DELETE** /registry/v2/models/{name} | Remove Model
+[**update_asset**](ModelsApi.md#update_asset) | **PUT** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Update Model Asset
+[**update_assets**](ModelsApi.md#update_assets) | **PUT** /registry/v2/models/{name}/versions/{version}/content | Update Model Assets
+[**verify**](ModelsApi.md#verify) | **POST** /registry/v2/models/{name}/versions/{version}/verify | Verify Health Of Model
 
 # **create**
 > create(
 > query: CreateQuery,
 > files,
 > headers
-> ) -> PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
-Create Webscript Version
+Create Model
 
-Creates a new <em>webscript</em> function by uploading its assets.      The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported.    
+Creates a new <em>model</em> function by uploading its assets.      The assets for a <em>model</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>model</em> in the <code>copy</code> argument</li>   </ul>    The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported.    
 
 ### Example
 
@@ -46,11 +46,11 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.deprecate_previous_policy import DeprecatePreviousPolicy
-from waylay.services.registry.models.post_webscript_job_sync_response_v2 import PostWebscriptJobSyncResponseV2
+from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
-    # Create Webscript Version
-    # calls `POST /registry/v2/webscripts/`
-    api_response = await waylay_client.registry.webscript_functions.create(
+    # Create Model
+    # calls `POST /registry/v2/models/`
+    api_response = await waylay_client.registry.models.create(
         # query parameters:
         query = {
             'deprecatePrevious': 'none'
@@ -60,7 +60,7 @@ try:
             'draft': False
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = None # bytearray | The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>      The required <code>webscript.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=webscripts</code>).    For each <em>runtime</em> other files will be required or supported.  (optional)
+        json = None # bytearray | The assets for a <em>model</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>model</em> in the <code>copy</code> argument</li>   </ul>    The required <code>model.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=kfserving</code>).    For each <em>runtime</em> other files will be required or supported.  (optional)
         # non-json binary data: use a byte array or a generator of bytearray chuncks
         content=b'my-binary-data',
         # this operation supports multiple request content types: use `headers` to specify the one used
@@ -69,22 +69,22 @@ try:
             'content-type': 'application/octet-stream'
         },
     )
-    print("The response of registry.webscript_functions.create:\n")
+    print("The response of registry.models.create:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.create: %s\n" % e)
+    print("Exception when calling registry.models.create: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-POST /registry/v2/webscripts/
+POST /registry/v2/models/
 ```
 ### Parameters
 
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
-**json** | **bytearray** | json request body | The assets for a &lt;em&gt;webscript&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;      The required &lt;code&gt;webscript.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;webscripts&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
-**content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;webscript&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;      The required &lt;code&gt;webscript.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;webscripts&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
+**json** | **bytearray** | json request body | The assets for a &lt;em&gt;model&lt;/em&gt; function can be provided as   &lt;ul&gt;     &lt;li&gt;A single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;Separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;     &lt;li&gt;A reference to the assets of another &lt;em&gt;model&lt;/em&gt; in the &lt;code&gt;copy&lt;/code&gt; argument&lt;/li&gt;   &lt;/ul&gt;    The required &lt;code&gt;model.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;kfserving&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
+**content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;model&lt;/em&gt; function can be provided as   &lt;ul&gt;     &lt;li&gt;A single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;Separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;     &lt;li&gt;A reference to the assets of another &lt;em&gt;model&lt;/em&gt; in the &lt;code&gt;copy&lt;/code&gt; argument&lt;/li&gt;   &lt;/ul&gt;    The required &lt;code&gt;model.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;kfserving&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
 **files** | **[FileTypes](Operation.md#req_arg_files)** | request body files |   |
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
@@ -97,7 +97,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` | If set, the value will be used as the function name instead of the one specified in the manifest. | [optional] 
 **query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid. | [optional] [default False]
 **query['runtime']** (dict) <br> **query.runtime** (Query) | **str** | query parameter `"runtime"` | If set, the created function will use the indicated runtime (latest version within specified range).  This takes precedence over the runtime specified in a function manifest (copied or from request body). | [optional] 
-**query['copy']** (dict) <br> **query.copy_from** (Query) | [**CreateWebscriptFunctionsCopyParameter**](.md) | query parameter `"copy"` | Indicates the _source_ of initial assets for a _new function_.  When using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.  #### Selection of _assets_ source  * If set as &#x60;&lt;sourceName&gt;[@&lt;sourceVersionRange&gt;]&#x60;, the _new function_ will be created with copied assets of the selected _source function_. * If set as &#x60;!example&#x60;, a &#x60;runtime&#x60; query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.  #### Selection of the _source function_  When &#x60;&lt;sourceVersionRange&gt;&#x60; is a range (or is not given), the latest _published_ version (in that range) is used.  If no _published_ version exists, the latest _draft_ is selected.  If no versions in the range exist, a &#x60;404&#x60; _Not Found_ error is returned.  #### The &#x60;name&#x60; of the _new function_  If a &#x60;name&#x60; is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the &#x60;name&#x60; of the _new function_ will be that of the _source function_.  #### The &#x60;version&#x60; of the _new function_  When the _target_ and _source_ name are equal, the &#x60;version&#x60; query parameters is defaulted to &#x60;&lt;sourceVersionRange&gt;&#x60; (&#x60;~&lt;sourceVersionRange&gt;&#x60; when it&#39;s an exact version)  The version of the _new function_ will be: * If a &#x60;version&#x60; is NOT specified (either as query parameter, in an optional manifest asset, or as &#x60;&lt;sourceVersionRange&gt;&#x60; _default_)    * a **patch increment** (&#x60;&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;+1&#x60;) of the latest **existing version** with the target &#x60;name&#x60;    * **&#x60;1.0.0&#x60;** otherwise  * If a &#x60;version&#x60; is specified:    * the **lowest version** in that range **if no existing version** is in that range.    * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.    * otherwise, if all allowed versions already exist, a **&#x60;409&#x60; _Duplicate_ error** is raised.  #### Deployment overrides  The new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body. | [optional] 
+**query['copy']** (dict) <br> **query.copy_from** (Query) | [**CreateWebscriptsCopyParameter**](.md) | query parameter `"copy"` | Indicates the _source_ of initial assets for a _new function_.  When using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.  #### Selection of _assets_ source  * If set as &#x60;&lt;sourceName&gt;[@&lt;sourceVersionRange&gt;]&#x60;, the _new function_ will be created with copied assets of the selected _source function_. * If set as &#x60;!example&#x60;, a &#x60;runtime&#x60; query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.  #### Selection of the _source function_  When &#x60;&lt;sourceVersionRange&gt;&#x60; is a range (or is not given), the latest _published_ version (in that range) is used.  If no _published_ version exists, the latest _draft_ is selected.  If no versions in the range exist, a &#x60;404&#x60; _Not Found_ error is returned.  #### The &#x60;name&#x60; of the _new function_  If a &#x60;name&#x60; is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the &#x60;name&#x60; of the _new function_ will be that of the _source function_.  #### The &#x60;version&#x60; of the _new function_  When the _target_ and _source_ name are equal, the &#x60;version&#x60; query parameters is defaulted to &#x60;&lt;sourceVersionRange&gt;&#x60; (&#x60;~&lt;sourceVersionRange&gt;&#x60; when it&#39;s an exact version)  The version of the _new function_ will be: * If a &#x60;version&#x60; is NOT specified (either as query parameter, in an optional manifest asset, or as &#x60;&lt;sourceVersionRange&gt;&#x60; _default_)    * a **patch increment** (&#x60;&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;+1&#x60;) of the latest **existing version** with the target &#x60;name&#x60;    * **&#x60;1.0.0&#x60;** otherwise  * If a &#x60;version&#x60; is specified:    * the **lowest version** in that range **if no existing version** is in that range.    * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.    * otherwise, if all allowed versions already exist, a **&#x60;409&#x60; _Duplicate_ error** is raised.  #### Deployment overrides  The new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType `application/octet-stream`, `application/tar`, `application/tar+gzip`, `application/x-gzip`, `application/x-tar`, `application/gzip`, `multipart/form-data`, `application/json`, `*/*+json`
 
@@ -105,7 +105,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2`** |  | [PostWebscriptJobSyncResponseV2](PostWebscriptJobSyncResponseV2.md) <br> [PostWebscriptJobAsyncResponseV2](PostWebscriptJobAsyncResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -130,11 +130,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > wildcard: str,
 > query: DeleteAssetQuery,
 > headers
-> ) -> PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
-Delete Webscript Asset
+Delete Model Asset
 
-Delete an asset from the webscript's collection of existing assets.
+Delete an asset from the model's collection of existing assets.
 
 ### Example
 
@@ -148,29 +148,29 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
-from waylay.services.registry.models.post_webscript_job_sync_response_v2 import PostWebscriptJobSyncResponseV2
+from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
-    # Delete Webscript Asset
-    # calls `DELETE /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}`
-    api_response = await waylay_client.registry.webscript_functions.delete_asset(
+    # Delete Model Asset
+    # calls `DELETE /registry/v2/models/{name}/versions/{version}/content/{wildcard}`
+    api_response = await waylay_client.registry.models.delete_asset(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         'wildcard_example', # wildcard | path param "wildcard"
         # query parameters:
         query = {
-            'async': True
             'chown': False
+            'async': True
         },
     )
-    print("The response of registry.webscript_functions.delete_asset:\n")
+    print("The response of registry.models.delete_asset:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.delete_asset: %s\n" % e)
+    print("Exception when calling registry.models.delete_asset: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-DELETE /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}
+DELETE /registry/v2/models/{name}/versions/{version}/content/{wildcard}
 ```
 ### Parameters
 
@@ -180,17 +180,17 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2`** |  | [PostWebscriptJobSyncResponseV2](PostWebscriptJobSyncResponseV2.md) <br> [PostWebscriptJobAsyncResponseV2](PostWebscriptJobAsyncResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -217,9 +217,9 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > headers
 > ) -> bytearray
 
-Get Webscript Archive
+Get Model Archive
 
-Get the specification archive of a webscript.
+Get the specification archive of a model.
 
 ### Example
 
@@ -234,9 +234,9 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 try:
-    # Get Webscript Archive
-    # calls `GET /registry/v2/webscripts/{name}/versions/{version}/content`
-    api_response = await waylay_client.registry.webscript_functions.get_archive(
+    # Get Model Archive
+    # calls `GET /registry/v2/models/{name}/versions/{version}/content`
+    api_response = await waylay_client.registry.models.get_archive(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -244,15 +244,15 @@ try:
             'ls': False
         },
     )
-    print("The response of registry.webscript_functions.get_archive:\n")
+    print("The response of registry.models.get_archive:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.get_archive: %s\n" % e)
+    print("Exception when calling registry.models.get_archive: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-GET /registry/v2/webscripts/{name}/versions/{version}/content
+GET /registry/v2/models/{name}/versions/{version}/content
 ```
 ### Parameters
 
@@ -294,9 +294,9 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > headers
 > ) -> bytearray
 
-Get File From Webscript Archive
+Get File From Model Archive
 
-Get a file from the specification archive of a webscript.
+Get a file from the specification archive of a model.
 
 ### Example
 
@@ -311,9 +311,9 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 try:
-    # Get File From Webscript Archive
-    # calls `GET /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}`
-    api_response = await waylay_client.registry.webscript_functions.get_asset(
+    # Get File From Model Archive
+    # calls `GET /registry/v2/models/{name}/versions/{version}/content/{wildcard}`
+    api_response = await waylay_client.registry.models.get_asset(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         'wildcard_example', # wildcard | path param "wildcard"
@@ -322,15 +322,15 @@ try:
             'ls': False
         },
     )
-    print("The response of registry.webscript_functions.get_asset:\n")
+    print("The response of registry.models.get_asset:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.get_asset: %s\n" % e)
+    print("Exception when calling registry.models.get_asset: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-GET /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}
+GET /registry/v2/models/{name}/versions/{version}/content/{wildcard}
 ```
 ### Parameters
 
@@ -369,11 +369,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > name: str,
 > query: GetLatestQuery,
 > headers
-> ) -> GetWebscriptResponseV2
+> ) -> GetModelResponseV2
 
-Get Latest Webscript Version
+Get Latest Model Version
 
-Fetch the latest version of a <em>webscript</em>.    By default, the result shows the latest non-deprecated, non-draft version.   If there is no such version, the latest deprecated or the latest draft version is returned, with the former taking precedence.       Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>     The returned <em>webscript version</em> will contain a link to its   latest _draft_ or latest _published_ version (if existing and different).   
+Fetch the latest version of a <em>model</em>.    By default, the result shows the latest non-deprecated, non-draft version.   If there is no such version, the latest deprecated or the latest draft version is returned, with the former taking precedence.       Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>     The returned <em>model version</em> will contain a link to its   latest _draft_ or latest _published_ version (if existing and different).   
 
 ### Example
 
@@ -387,11 +387,11 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
-from waylay.services.registry.models.get_webscript_response_v2 import GetWebscriptResponseV2
+from waylay.services.registry.models.get_model_response_v2 import GetModelResponseV2
 try:
-    # Get Latest Webscript Version
-    # calls `GET /registry/v2/webscripts/{name}`
-    api_response = await waylay_client.registry.webscript_functions.get_latest(
+    # Get Latest Model Version
+    # calls `GET /registry/v2/models/{name}`
+    api_response = await waylay_client.registry.models.get_latest(
         'name_example', # name | path param "name"
         # query parameters:
         query = {
@@ -399,15 +399,15 @@ try:
             'includeDeprecated': True
         },
     )
-    print("The response of registry.webscript_functions.get_latest:\n")
+    print("The response of registry.models.get_latest:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.get_latest: %s\n" % e)
+    print("Exception when calling registry.models.get_latest: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-GET /registry/v2/webscripts/{name}
+GET /registry/v2/models/{name}
 ```
 ### Parameters
 
@@ -423,7 +423,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`GetWebscriptResponseV2`** |  | [GetWebscriptResponseV2](GetWebscriptResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`GetModelResponseV2`** |  | [GetModelResponseV2](GetModelResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -445,11 +445,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > name: str,
 > version: str,
 > headers
-> ) -> GetWebscriptResponseV2
+> ) -> GetModelResponseV2
 
-Get Webscript Version
+Get Model Version
 
-Get the webscript version.
+Get a model by name and version.
 
 ### Example
 
@@ -463,23 +463,23 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
-from waylay.services.registry.models.get_webscript_response_v2 import GetWebscriptResponseV2
+from waylay.services.registry.models.get_model_response_v2 import GetModelResponseV2
 try:
-    # Get Webscript Version
-    # calls `GET /registry/v2/webscripts/{name}/versions/{version}`
-    api_response = await waylay_client.registry.webscript_functions.get(
+    # Get Model Version
+    # calls `GET /registry/v2/models/{name}/versions/{version}`
+    api_response = await waylay_client.registry.models.get(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
     )
-    print("The response of registry.webscript_functions.get:\n")
+    print("The response of registry.models.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.get: %s\n" % e)
+    print("Exception when calling registry.models.get: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-GET /registry/v2/webscripts/{name}/versions/{version}
+GET /registry/v2/models/{name}/versions/{version}
 ```
 ### Parameters
 
@@ -493,7 +493,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`GetWebscriptResponseV2`** |  | [GetWebscriptResponseV2](GetWebscriptResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`GetModelResponseV2`** |  | [GetModelResponseV2](GetModelResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -516,11 +516,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > version: str,
 > query: JobsQuery,
 > headers
-> ) -> JobsForWebscriptResponseV2
+> ) -> JobsForModelResponseV2
 
-List Webscript Jobs
+List Model Jobs
 
-List the ongoing and completed operations on a specific webscript.
+List the ongoing and completed operations on a model.
 
 ### Example
 
@@ -537,26 +537,26 @@ waylay_client = WaylayClient.from_profile()
 from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.job_state_result import JobStateResult
 from waylay.services.registry.models.job_type_schema import JobTypeSchema
-from waylay.services.registry.models.jobs_for_webscript_response_v2 import JobsForWebscriptResponseV2
+from waylay.services.registry.models.jobs_for_model_response_v2 import JobsForModelResponseV2
 try:
-    # List Webscript Jobs
-    # calls `GET /registry/v2/webscripts/{name}/versions/{version}/jobs`
-    api_response = await waylay_client.registry.webscript_functions.jobs(
+    # List Model Jobs
+    # calls `GET /registry/v2/models/{name}/versions/{version}/jobs`
+    api_response = await waylay_client.registry.models.jobs(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
         query = {
         },
     )
-    print("The response of registry.webscript_functions.jobs:\n")
+    print("The response of registry.models.jobs:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.jobs: %s\n" % e)
+    print("Exception when calling registry.models.jobs: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-GET /registry/v2/webscripts/{name}/versions/{version}/jobs
+GET /registry/v2/models/{name}/versions/{version}/jobs
 ```
 ### Parameters
 
@@ -577,100 +577,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`JobsForWebscriptResponseV2`** |  | [JobsForWebscriptResponseV2](JobsForWebscriptResponseV2.md)
-str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
-/ | True | `Response` | The raw http response object.
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Default Response |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **list_versions**
-> list_versions(
-> name: str,
-> query: ListVersionsQuery,
-> headers
-> ) -> WebscriptVersionsResponseV2
-
-List Webscript Versions
-
-List all deployed versions of a webscript.
-
-### Example
-
-```python
-from pprint import pprint
-
-# Import the waylay-client from the waylay-sdk package
-from waylay.sdk.client import WaylayClient
-from waylay.sdk.api.api_exceptions import ApiError
-
-# Intialize a waylay client instance
-waylay_client = WaylayClient.from_profile()
-
-from waylay.services.registry.models.archive_format import ArchiveFormat
-from waylay.services.registry.models.status_filter import StatusFilter
-from waylay.services.registry.models.webscript_versions_response_v2 import WebscriptVersionsResponseV2
-try:
-    # List Webscript Versions
-    # calls `GET /registry/v2/webscripts/{name}/versions`
-    api_response = await waylay_client.registry.webscript_functions.list_versions(
-        'name_example', # name | path param "name"
-        # query parameters:
-        query = {
-            'deprecated': True
-            'draft': True
-            'createdBy': '@me'
-            'updatedBy': '@me'
-        },
-    )
-    print("The response of registry.webscript_functions.list_versions:\n")
-    pprint(api_response)
-except ApiError as e:
-    print("Exception when calling registry.webscript_functions.list_versions: %s\n" % e)
-```
-
-### Endpoint
-```
-GET /registry/v2/webscripts/{name}/versions
-```
-### Parameters
-
-Name     | Type  | API binding   | Description   | Notes
--------- | ----- | ------------- | ------------- | -------------
-**name** | **str** | path parameter `"name"` | The name of the function. | 
-**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
-**query['page']** (dict) <br> **query.page** (Query) | **float** | query parameter `"page"` | The number of pages to skip when returning result to this query. | [optional] 
-**query['deprecated']** (dict) <br> **query.deprecated** (Query) | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
-**query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
-**query['version']** (dict) <br> **query.version** (Query) | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
-**query['status']** (dict) <br> **query.status** (Query) | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
-**query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
-**query['createdBy']** (dict) <br> **query.created_by** (Query) | **str** | query parameter `"createdBy"` | Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
-**query['updatedBy']** (dict) <br> **query.updated_by** (Query) | **str** | query parameter `"updatedBy"` | Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
-**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
-**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
-**query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
-**query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
-**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
-**query['runtime']** (dict) <br> **query.runtime** (Query) | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
-**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
-
-### Return type
-
-Selected path param | Raw response param | Return Type  | Description | Links
-------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`WebscriptVersionsResponseV2`** |  | [WebscriptVersionsResponseV2](WebscriptVersionsResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`JobsForModelResponseV2`** |  | [JobsForModelResponseV2](JobsForModelResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -691,11 +598,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > list(
 > query: ListQuery,
 > headers
-> ) -> LatestWebscriptsResponseV2
+> ) -> LatestModelsResponseV2
 
-List Webscripts
+List Models
 
-List the (latest) versions of available <em>webscripts</em>.  ### List Latest Webscript Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>webscript</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no version filters are used, each listed <em>webscript version</em> contains representations of the latest draft (`entities[]._links.draft`)  or latest published (`entities[]._links.published`) version (if existing and different).   Use the query parameter `showRelated` to include only a link (default `showRelated=link`) or a full representation (`showRelated=embed`).  ### List Latest Webscript Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>webscript</em> that satisfy the filters, but **without links**.  ### List All Webscript Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>webscripts</em> versions that satisfy the query, possibly multiple versions per named <em>webscripts</em>. No HAL links are provided.  #### Filter on _status_ By default <em>webscript versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>webscript</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft` 
+List the (latest) versions of available <em>models</em>.  ### List Latest Model Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>model</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no version filters are used, each listed <em>model version</em> contains representations of the latest draft (`entities[]._links.draft`)  or latest published (`entities[]._links.published`) version (if existing and different).   Use the query parameter `showRelated` to include only a link (default `showRelated=link`) or a full representation (`showRelated=embed`).  ### List Latest Model Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>model</em> that satisfy the filters, but **without links**.  ### List All Model Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>models</em> versions that satisfy the query, possibly multiple versions per named <em>models</em>. No HAL links are provided.  #### Filter on _status_ By default <em>model versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>model</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft` 
 
 ### Example
 
@@ -710,13 +617,13 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.archive_format import ArchiveFormat
-from waylay.services.registry.models.latest_webscripts_response_v2 import LatestWebscriptsResponseV2
+from waylay.services.registry.models.latest_models_response_v2 import LatestModelsResponseV2
 from waylay.services.registry.models.show_related_type import ShowRelatedType
 from waylay.services.registry.models.status_filter import StatusFilter
 try:
-    # List Webscripts
-    # calls `GET /registry/v2/webscripts/`
-    api_response = await waylay_client.registry.webscript_functions.list(
+    # List Models
+    # calls `GET /registry/v2/models/`
+    api_response = await waylay_client.registry.models.list(
         # query parameters:
         query = {
             'includeDraft': True
@@ -729,15 +636,15 @@ try:
             'showRelated': 'embed'
         },
     )
-    print("The response of registry.webscript_functions.list:\n")
+    print("The response of registry.models.list:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.list: %s\n" % e)
+    print("Exception when calling registry.models.list: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-GET /registry/v2/webscripts/
+GET /registry/v2/models/
 ```
 ### Parameters
 
@@ -771,7 +678,100 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`LatestWebscriptsResponseV2`** |  | [LatestWebscriptsResponseV2](LatestWebscriptsResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`LatestModelsResponseV2`** |  | [LatestModelsResponseV2](LatestModelsResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Default Response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **list_versions**
+> list_versions(
+> name: str,
+> query: ListVersionsQuery,
+> headers
+> ) -> ModelVersionsResponseV2
+
+List Model Versions
+
+List all deployed versions of a model.
+
+### Example
+
+```python
+from pprint import pprint
+
+# Import the waylay-client from the waylay-sdk package
+from waylay.sdk.client import WaylayClient
+from waylay.sdk.api.api_exceptions import ApiError
+
+# Intialize a waylay client instance
+waylay_client = WaylayClient.from_profile()
+
+from waylay.services.registry.models.archive_format import ArchiveFormat
+from waylay.services.registry.models.model_versions_response_v2 import ModelVersionsResponseV2
+from waylay.services.registry.models.status_filter import StatusFilter
+try:
+    # List Model Versions
+    # calls `GET /registry/v2/models/{name}/versions`
+    api_response = await waylay_client.registry.models.list_versions(
+        'name_example', # name | path param "name"
+        # query parameters:
+        query = {
+            'deprecated': True
+            'draft': True
+            'createdBy': '@me'
+            'updatedBy': '@me'
+        },
+    )
+    print("The response of registry.models.list_versions:\n")
+    pprint(api_response)
+except ApiError as e:
+    print("Exception when calling registry.models.list_versions: %s\n" % e)
+```
+
+### Endpoint
+```
+GET /registry/v2/models/{name}/versions
+```
+### Parameters
+
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**name** | **str** | path parameter `"name"` | The name of the function. | 
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
+**query['page']** (dict) <br> **query.page** (Query) | **float** | query parameter `"page"` | The number of pages to skip when returning result to this query. | [optional] 
+**query['deprecated']** (dict) <br> **query.deprecated** (Query) | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
+**query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
+**query['status']** (dict) <br> **query.status** (Query) | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
+**query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
+**query['createdBy']** (dict) <br> **query.created_by** (Query) | **str** | query parameter `"createdBy"` | Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
+**query['updatedBy']** (dict) <br> **query.updated_by** (Query) | **str** | query parameter `"updatedBy"` | Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
+**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
+**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
+**query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
+**query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
+**query['runtime']** (dict) <br> **query.runtime** (Query) | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
+
+### Return type
+
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`ModelVersionsResponseV2`** |  | [ModelVersionsResponseV2](ModelVersionsResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -794,11 +794,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > version: str,
 > query: PatchMetadataQuery,
 > headers
-> ) -> GetWebscriptResponseV2
+> ) -> GetModelResponseV2
 
-Patch Webscript Metadata
+Patch Model Metadata
 
-Patch the metadata of a webscript version.
+Patch the metadata of a model version.
 
 ### Example
 
@@ -813,11 +813,11 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.function_meta import FunctionMeta
-from waylay.services.registry.models.get_webscript_response_v2 import GetWebscriptResponseV2
+from waylay.services.registry.models.get_model_response_v2 import GetModelResponseV2
 try:
-    # Patch Webscript Metadata
-    # calls `PATCH /registry/v2/webscripts/{name}/versions/{version}/metadata`
-    api_response = await waylay_client.registry.webscript_functions.patch_metadata(
+    # Patch Model Metadata
+    # calls `PATCH /registry/v2/models/{name}/versions/{version}/metadata`
+    api_response = await waylay_client.registry.models.patch_metadata(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -826,15 +826,15 @@ try:
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json = waylay.services.registry.FunctionMeta() # FunctionMeta |  (optional)
     )
-    print("The response of registry.webscript_functions.patch_metadata:\n")
+    print("The response of registry.models.patch_metadata:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.patch_metadata: %s\n" % e)
+    print("Exception when calling registry.models.patch_metadata: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-PATCH /registry/v2/webscripts/{name}/versions/{version}/metadata
+PATCH /registry/v2/models/{name}/versions/{version}/metadata
 ```
 ### Parameters
 
@@ -851,7 +851,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`GetWebscriptResponseV2`** |  | [GetWebscriptResponseV2](GetWebscriptResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`GetModelResponseV2`** |  | [GetModelResponseV2](GetModelResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -874,11 +874,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > version: str,
 > query: PublishQuery,
 > headers
-> ) -> PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
-Publish Draft Webscript
+Publish Draft Model
 
-Mark the <em>webscript</em> to be ready and stable, taking it out of draft mode.,    Typically, the <em>webscript</em> should be in the <code>running</code> status,    such that publishing becomes a simple operation where the existing deployment can be re-used.   In other statuses, plug-registry may need to initiate a new build and deployment procedure.   
+Mark the <em>model</em> to be ready and stable, taking it out of draft mode.,    Typically, the <em>model</em> should be in the <code>running</code> status,    such that publishing becomes a simple operation where the existing deployment can be re-used.   In other statuses, plug-registry may need to initiate a new build and deployment procedure.   
 
 ### Example
 
@@ -893,28 +893,29 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.deprecate_previous_policy import DeprecatePreviousPolicy
-from waylay.services.registry.models.post_webscript_job_sync_response_v2 import PostWebscriptJobSyncResponseV2
+from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
-    # Publish Draft Webscript
-    # calls `POST /registry/v2/webscripts/{name}/versions/{version}/publish`
-    api_response = await waylay_client.registry.webscript_functions.publish(
+    # Publish Draft Model
+    # calls `POST /registry/v2/models/{name}/versions/{version}/publish`
+    api_response = await waylay_client.registry.models.publish(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
         query = {
+            'chown': False
             'deprecatePrevious': 'none'
             'async': True
         },
     )
-    print("The response of registry.webscript_functions.publish:\n")
+    print("The response of registry.models.publish:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.publish: %s\n" % e)
+    print("Exception when calling registry.models.publish: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-POST /registry/v2/webscripts/{name}/versions/{version}/publish
+POST /registry/v2/models/{name}/versions/{version}/publish
 ```
 ### Parameters
 
@@ -923,6 +924,7 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['deprecatePrevious']** (dict) <br> **query.deprecate_previous** (Query) | [**DeprecatePreviousPolicy**](.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions. | [optional] 
@@ -933,7 +935,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2`** |  | [PostWebscriptJobSyncResponseV2](PostWebscriptJobSyncResponseV2.md) <br> [PostWebscriptJobAsyncResponseV2](PostWebscriptJobAsyncResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -946,8 +948,8 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**201** | Webscript Published |  -  |
-**202** | Webscript Published And Deploy Initiated |  -  |
+**201** | Model Published |  -  |
+**202** | Model Published And Deploy Initiated |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -957,11 +959,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > version: str,
 > query: RebuildQuery,
 > headers
-> ) -> RebuildWebscriptSyncResponseV2 \| RebuildWebscriptAsyncResponseV2
+> ) -> RebuildModelSyncResponseV2 \| RebuildModelAsyncResponseV2
 
-Rebuild Webscript
+Rebuild Model
 
-Rebuild and deploy a webscript with the original or updated base image.
+Rebuild and deploy a model with the original or updated base image.
 
 ### Example
 
@@ -975,12 +977,12 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+from waylay.services.registry.models.rebuild_model_sync_response_v2 import RebuildModelSyncResponseV2
 from waylay.services.registry.models.rebuild_policy import RebuildPolicy
-from waylay.services.registry.models.rebuild_webscript_sync_response_v2 import RebuildWebscriptSyncResponseV2
 try:
-    # Rebuild Webscript
-    # calls `POST /registry/v2/webscripts/{name}/versions/{version}/rebuild`
-    api_response = await waylay_client.registry.webscript_functions.rebuild(
+    # Rebuild Model
+    # calls `POST /registry/v2/models/{name}/versions/{version}/rebuild`
+    api_response = await waylay_client.registry.models.rebuild(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -993,15 +995,15 @@ try:
             'skipRebuild': True
         },
     )
-    print("The response of registry.webscript_functions.rebuild:\n")
+    print("The response of registry.models.rebuild:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.rebuild: %s\n" % e)
+    print("Exception when calling registry.models.rebuild: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-POST /registry/v2/webscripts/{name}/versions/{version}/rebuild
+POST /registry/v2/models/{name}/versions/{version}/rebuild
 ```
 ### Parameters
 
@@ -1024,7 +1026,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`RebuildWebscriptSyncResponseV2 \| RebuildWebscriptAsyncResponseV2`** |  | [RebuildWebscriptSyncResponseV2](RebuildWebscriptSyncResponseV2.md) <br> [RebuildWebscriptAsyncResponseV2](RebuildWebscriptAsyncResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`RebuildModelSyncResponseV2 \| RebuildModelAsyncResponseV2`** |  | [RebuildModelSyncResponseV2](RebuildModelSyncResponseV2.md) <br> [RebuildModelAsyncResponseV2](RebuildModelAsyncResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -1050,9 +1052,9 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > headers
 > ) -> UndeployedResponseV2 \| UndeploySubmittedResponseV2
 
-Remove Webscript Version
+Remove Model Version
 
-Deprecate, undeploy and/or remove a <em>webscript</em> version.    By default, a `DELETE`    * _deprecates_ the webscript version(s): they are no longer included in listings by default.   * _undeploys_ the webscript version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the webscript version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action. 
+Deprecate, undeploy and/or remove a <em>model</em> version.    By default, a `DELETE`    * _deprecates_ the model version(s): they are no longer included in listings by default.   * _undeploys_ the model version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the model version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action. 
 
 ### Example
 
@@ -1068,9 +1070,9 @@ waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.undeployed_response_v2 import UndeployedResponseV2
 try:
-    # Remove Webscript Version
-    # calls `DELETE /registry/v2/webscripts/{name}/versions/{version}`
-    api_response = await waylay_client.registry.webscript_functions.remove_version(
+    # Remove Model Version
+    # calls `DELETE /registry/v2/models/{name}/versions/{version}`
+    api_response = await waylay_client.registry.models.remove_version(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -1080,15 +1082,15 @@ try:
             'undeploy': True
         },
     )
-    print("The response of registry.webscript_functions.remove_version:\n")
+    print("The response of registry.models.remove_version:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.remove_version: %s\n" % e)
+    print("Exception when calling registry.models.remove_version: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-DELETE /registry/v2/webscripts/{name}/versions/{version}
+DELETE /registry/v2/models/{name}/versions/{version}
 ```
 ### Parameters
 
@@ -1132,9 +1134,9 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > headers
 > ) -> UndeployedResponseV2 \| UndeploySubmittedResponseV2
 
-Remove Webscript
+Remove Model
 
-Deprecate, undeploy and/or remove all versions of this named <em>webscript</em>.    By default, a `DELETE`    * _deprecates_ the webscript version(s): they are no longer included in listings by default.   * _undeploys_ the webscript version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the webscript version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action. 
+Deprecate, undeploy and/or remove all versions of this named <em>model</em>.    By default, a `DELETE`    * _deprecates_ the model version(s): they are no longer included in listings by default.   * _undeploys_ the model version(s) with delay: the function can no longer be invoked, the small delay allows     other services to discover the removal.   * _removes_ the version(s) from the plug registry.    Use `?force=true` to immediately _undeploy_ and _remove_ without delay.    Use `?undeploy=true` to undeploy, but keep the model version registered in a `undeployed` state.   An `undeployed` version can later be restored by a _rebuild_ action. 
 
 ### Example
 
@@ -1150,26 +1152,26 @@ waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.undeployed_response_v2 import UndeployedResponseV2
 try:
-    # Remove Webscript
-    # calls `DELETE /registry/v2/webscripts/{name}`
-    api_response = await waylay_client.registry.webscript_functions.remove_versions(
+    # Remove Model
+    # calls `DELETE /registry/v2/models/{name}`
+    api_response = await waylay_client.registry.models.remove_versions(
         'name_example', # name | path param "name"
         # query parameters:
         query = {
-            'async': True
             'force': True
             'undeploy': True
+            'async': True
         },
     )
-    print("The response of registry.webscript_functions.remove_versions:\n")
+    print("The response of registry.models.remove_versions:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.remove_versions: %s\n" % e)
+    print("Exception when calling registry.models.remove_versions: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-DELETE /registry/v2/webscripts/{name}
+DELETE /registry/v2/models/{name}
 ```
 ### Parameters
 
@@ -1178,9 +1180,9 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
 **query['force']** (dict) <br> **query.force** (Query) | **bool** | query parameter `"force"` | If &lt;code&gt;true&lt;/code&gt;, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_. | [optional] 
 **query['undeploy']** (dict) <br> **query.undeploy** (Query) | **bool** | query parameter `"undeploy"` | If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -1212,11 +1214,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > wildcard: str,
 > query: UpdateAssetQuery,
 > headers
-> ) -> PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
-Update Webscript Asset
+Update Model Asset
 
-The provided asset will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing asset with the same name.    Please note that it is not allowed to update the webscript.json json file with a changed value for any of the     <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.   
+The provided asset will be added to the <em>model</em> function's collection of existing assets,   replacing any existing asset with the same name.    Please note that it is not allowed to update the model.json json file with a changed value for any of the     <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.   
 
 ### Example
 
@@ -1231,18 +1233,18 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 from waylay.services.registry.models.file_upload import FileUpload
-from waylay.services.registry.models.post_webscript_job_sync_response_v2 import PostWebscriptJobSyncResponseV2
+from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
-    # Update Webscript Asset
-    # calls `PUT /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}`
-    api_response = await waylay_client.registry.webscript_functions.update_asset(
+    # Update Model Asset
+    # calls `PUT /registry/v2/models/{name}/versions/{version}/content/{wildcard}`
+    api_response = await waylay_client.registry.models.update_asset(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         'wildcard_example', # wildcard | path param "wildcard"
         # query parameters:
         query = {
-            'async': True
             'chown': False
+            'async': True
         },
         # non-json binary data: use a byte array or a generator of bytearray chuncks
         content=b'my-binary-data',
@@ -1252,15 +1254,15 @@ try:
             'content-type': 'application/octet-stream'
         },
     )
-    print("The response of registry.webscript_functions.update_asset:\n")
+    print("The response of registry.models.update_asset:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.update_asset: %s\n" % e)
+    print("Exception when calling registry.models.update_asset: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-PUT /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard}
+PUT /registry/v2/models/{name}/versions/{version}/content/{wildcard}
 ```
 ### Parameters
 
@@ -1271,10 +1273,10 @@ Name     | Type  | API binding   | Description   | Notes
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | A single asset file. | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType 
 
@@ -1282,7 +1284,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2`** |  | [PostWebscriptJobSyncResponseV2](PostWebscriptJobSyncResponseV2.md) <br> [PostWebscriptJobAsyncResponseV2](PostWebscriptJobAsyncResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -1308,11 +1310,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > query: UpdateAssetsQuery,
 > files,
 > headers
-> ) -> PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
-Update Webscript Assets
+Update Model Assets
 
-Update a draft <em>webscript</em> function by updating its assets.      The assets for a <em>webscript</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>webscript</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.    
+Update a draft <em>model</em> function by updating its assets.      The assets for a <em>model</em> function can be provided as either   <ul>     <li>a single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>separate files in a <code>multipart/form-data</code> request</li>   </ul>    The provided assets will be added to the <em>model</em> function's collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json</code> json file with a changed value for any of the    <code>name</code>, <code>version</code> and/or <code>runtime</code> attributes.    For each <em>runtime</em> other files are supported.    
 
 ### Example
 
@@ -1326,17 +1328,17 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
-from waylay.services.registry.models.post_webscript_job_sync_response_v2 import PostWebscriptJobSyncResponseV2
+from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
-    # Update Webscript Assets
-    # calls `PUT /registry/v2/webscripts/{name}/versions/{version}/content`
-    api_response = await waylay_client.registry.webscript_functions.update_assets(
+    # Update Model Assets
+    # calls `PUT /registry/v2/models/{name}/versions/{version}/content`
+    api_response = await waylay_client.registry.models.update_assets(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
         query = {
-            'async': True
             'chown': False
+            'async': True
         },
         # non-json binary data: use a byte array or a generator of bytearray chuncks
         content=b'my-binary-data',
@@ -1346,15 +1348,15 @@ try:
             'content-type': 'application/octet-stream'
         },
     )
-    print("The response of registry.webscript_functions.update_assets:\n")
+    print("The response of registry.models.update_assets:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.update_assets: %s\n" % e)
+    print("Exception when calling registry.models.update_assets: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-PUT /registry/v2/webscripts/{name}/versions/{version}/content
+PUT /registry/v2/models/{name}/versions/{version}/content
 ```
 ### Parameters
 
@@ -1362,13 +1364,13 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
-**content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;webscript&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;    The provided assets will be added to the &lt;em&gt;webscript&lt;/em&gt; function&#39;s collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the webscript.json&lt;/code&gt; json file with a changed value for any of the    &lt;code&gt;name&lt;/code&gt;, &lt;code&gt;version&lt;/code&gt; and/or &lt;code&gt;runtime&lt;/code&gt; attributes.    For each &lt;em&gt;runtime&lt;/em&gt; other files are supported.  | [optional] 
+**content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;model&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;    The provided assets will be added to the &lt;em&gt;model&lt;/em&gt; function&#39;s collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json&lt;/code&gt; json file with a changed value for any of the    &lt;code&gt;name&lt;/code&gt;, &lt;code&gt;version&lt;/code&gt; and/or &lt;code&gt;runtime&lt;/code&gt; attributes.    For each &lt;em&gt;runtime&lt;/em&gt; other files are supported.  | [optional] 
 **files** | **[FileTypes](Operation.md#req_arg_files)** | request body files |   |
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType `application/octet-stream`, `application/tar`, `application/tar+gzip`, `application/x-gzip`, `application/x-tar`, `application/gzip`, `multipart/form-data`
 
@@ -1376,7 +1378,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`PostWebscriptJobSyncResponseV2 \| PostWebscriptJobAsyncResponseV2`** |  | [PostWebscriptJobSyncResponseV2](PostWebscriptJobSyncResponseV2.md) <br> [PostWebscriptJobAsyncResponseV2](PostWebscriptJobAsyncResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -1401,11 +1403,11 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > version: str,
 > query: VerifyQuery,
 > headers
-> ) -> VerifyWebscriptSyncResponseV2 \| PostWebscriptJobAsyncResponseV2
+> ) -> VerifyModelSyncResponseV2 \| PostModelJobAsyncResponseV2
 
-Verify Health Of Webscript
+Verify Health Of Model
 
-Verify health of webscript deployed on openfaas.
+Verify health of model deployed on openfaas.
 
 ### Example
 
@@ -1419,11 +1421,11 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
-from waylay.services.registry.models.verify_webscript_sync_response_v2 import VerifyWebscriptSyncResponseV2
+from waylay.services.registry.models.verify_model_sync_response_v2 import VerifyModelSyncResponseV2
 try:
-    # Verify Health Of Webscript
-    # calls `POST /registry/v2/webscripts/{name}/versions/{version}/verify`
-    api_response = await waylay_client.registry.webscript_functions.verify(
+    # Verify Health Of Model
+    # calls `POST /registry/v2/models/{name}/versions/{version}/verify`
+    api_response = await waylay_client.registry.models.verify(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
         # query parameters:
@@ -1432,15 +1434,15 @@ try:
             'scaleToZero': True
         },
     )
-    print("The response of registry.webscript_functions.verify:\n")
+    print("The response of registry.models.verify:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.webscript_functions.verify: %s\n" % e)
+    print("Exception when calling registry.models.verify: %s\n" % e)
 ```
 
 ### Endpoint
 ```
-POST /registry/v2/webscripts/{name}/versions/{version}/verify
+POST /registry/v2/models/{name}/versions/{version}/verify
 ```
 ### Parameters
 
@@ -1457,7 +1459,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`VerifyWebscriptSyncResponseV2 \| PostWebscriptJobAsyncResponseV2`** |  | [VerifyWebscriptSyncResponseV2](VerifyWebscriptSyncResponseV2.md) <br> [PostWebscriptJobAsyncResponseV2](PostWebscriptJobAsyncResponseV2.md)
+Literal[""] _(default)_  | False _(default)_ | **`VerifyModelSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [VerifyModelSyncResponseV2](VerifyModelSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
@@ -1471,7 +1473,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Default Response |  -  |
-**202** | Webscript Verification Initiated |  -  |
+**202** | Model Verification Initiated |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

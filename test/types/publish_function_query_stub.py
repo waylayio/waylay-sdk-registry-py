@@ -37,6 +37,11 @@ publish_function_query_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
+    "chown" : {
+      "type" : "boolean",
+      "description" : "If set, ownership of the draft function is transferred to the current user.",
+      "default" : false
+    },
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."

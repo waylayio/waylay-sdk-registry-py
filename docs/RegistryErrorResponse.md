@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **error** | **str** |  | 
 **code** | **str** |  | 
 **status_code** | **float** |  | 
-**data** | **object** |  | [optional] 
+**data** | **Dict[str, str]** |  | [optional] 
 
 ## Example
 

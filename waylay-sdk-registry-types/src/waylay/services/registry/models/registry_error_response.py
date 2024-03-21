@@ -32,7 +32,7 @@ class RegistryErrorResponse(BaseModel):
     error: StrictStr
     code: StrictStr
     status_code: StrictFloat | StrictInt = Field(alias="statusCode")
-    data: Dict[str, Any] | None = None
+    data: Dict[str, StrictStr] | None = None
 
     model_config = ConfigDict(
         populate_by_name=True,

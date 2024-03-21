@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**chown** | **bool** | If set, ownership of the draft function is transferred to the current user. | [optional] [default to False]
 **comment** | **str** | An optional user-specified comment corresponding to the operation. | [optional] 
 **author** | **str** | Optionally changes the author metadata when updating a function. | [optional] 
 **deprecate_previous** | [**DeprecatePreviousPolicy**](DeprecatePreviousPolicy.md) |  | [optional] 

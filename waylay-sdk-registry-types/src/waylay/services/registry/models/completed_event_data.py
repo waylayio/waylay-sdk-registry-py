@@ -23,7 +23,6 @@ from typing_extensions import (
 
 from typing import Any, ClassVar, Dict, List, Optional
 from pydantic import BaseModel
-from pydantic import Field
 from ..models.any_job_result import AnyJobResult
 from ..models.queue_events import QueueEvents
 
@@ -32,7 +31,7 @@ class CompletedEventData(BaseModel):
     """CompletedEventData."""
 
     prev: QueueEvents | None = None
-    return_value: AnyJobResult = Field(alias="returnValue")
+    returnvalue: AnyJobResult
 
     model_config = ConfigDict(
         populate_by_name=True,

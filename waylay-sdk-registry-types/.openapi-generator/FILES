@@ -45,7 +45,7 @@ src/waylay/services/registry/models/create_function_query_v2_copy.py
 src/waylay/services/registry/models/create_kf_serving_async_response.py
 src/waylay/services/registry/models/create_plug_async_response.py
 src/waylay/services/registry/models/create_webscript_async_response.py
-src/waylay/services/registry/models/create_webscript_functions_copy_parameter.py
+src/waylay/services/registry/models/create_webscripts_copy_parameter.py
 src/waylay/services/registry/models/delayed_event_data.py
 src/waylay/services/registry/models/delayed_event_sse.py
 src/waylay/services/registry/models/deploy.py
@@ -376,9 +376,9 @@ src/waylay/services/registry/models/with_paging.py
 src/waylay/services/registry/queries/__init__.py
 src/waylay/services/registry/queries/default_api.py
 src/waylay/services/registry/queries/jobs_api.py
-src/waylay/services/registry/queries/model_functions_api.py
-src/waylay/services/registry/queries/plug_functions_api.py
+src/waylay/services/registry/queries/models_api.py
+src/waylay/services/registry/queries/plugs_api.py
 src/waylay/services/registry/queries/py.typed
 src/waylay/services/registry/queries/runtimes_api.py
 src/waylay/services/registry/queries/schemas_api.py
-src/waylay/services/registry/queries/webscript_functions_api.py
+src/waylay/services/registry/queries/webscripts_api.py

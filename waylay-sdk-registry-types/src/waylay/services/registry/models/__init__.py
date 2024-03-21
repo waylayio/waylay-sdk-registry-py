@@ -62,9 +62,7 @@ from .create_function_query_v2_copy import CreateFunctionQueryV2Copy
 from .create_kf_serving_async_response import CreateKFServingAsyncResponse
 from .create_plug_async_response import CreatePlugAsyncResponse
 from .create_webscript_async_response import CreateWebscriptAsyncResponse
-from .create_webscript_functions_copy_parameter import (
-    CreateWebscriptFunctionsCopyParameter,
-)
+from .create_webscripts_copy_parameter import CreateWebscriptsCopyParameter
 from .delayed_event_data import DelayedEventData
 from .delayed_event_sse import DelayedEventSSE
 from .deploy import Deploy
@@ -467,7 +465,7 @@ __all__ = [
     "CreateKFServingAsyncResponse",
     "CreatePlugAsyncResponse",
     "CreateWebscriptAsyncResponse",
-    "CreateWebscriptFunctionsCopyParameter",
+    "CreateWebscriptsCopyParameter",
     "DelayedEventData",
     "DelayedEventSSE",
     "Deploy",
