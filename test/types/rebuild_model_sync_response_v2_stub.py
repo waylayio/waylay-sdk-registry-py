@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.rebuild_model_sync_response_v2 import (
@@ -24,10 +23,10 @@ try:
     RebuildModelSyncResponseV2Adapter = TypeAdapter(RebuildModelSyncResponseV2)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for RebuildModelSyncResponseV2 not available: {exc}")
     MODELS_AVAILABLE = False
 
-rebuild_model_sync_response_v2_model_schema = json.loads(r"""{
+rebuild_model_sync_response_v2_model_schema = json.loads(
+    r"""{
   "required" : [ "causes", "entity", "message" ],
   "type" : "object",
   "properties" : {
@@ -43,7 +42,9 @@ rebuild_model_sync_response_v2_model_schema = json.loads(r"""{
   },
   "description" : "Model Rebuild Ignored"
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 rebuild_model_sync_response_v2_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 rebuild_model_sync_response_v2_faker = JSF(

@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **links** | [**JobHALLinks**](JobHALLinks.md) |  | [optional] 
-**type** | **str** | The type of the background task. | 
+**type** | [**BuildType**](BuildType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**BuildArgs**](BuildArgs.md) |  | [optional] 
 **result** | [**BuildResult**](BuildResult.md) |  | [optional] 

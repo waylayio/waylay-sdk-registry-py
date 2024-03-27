@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.supported_events import SupportedEvents
@@ -22,15 +21,17 @@ try:
     SupportedEventsAdapter = TypeAdapter(SupportedEvents)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for SupportedEvents not available: {exc}")
     MODELS_AVAILABLE = False
 
-supported_events_model_schema = json.loads(r"""{
+supported_events_model_schema = json.loads(
+    r"""{
   "title" : "SupportedEvents",
   "type" : "string",
   "enum" : [ "completed", "failed", "active", "delayed", "waiting", "waiting-children" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 supported_events_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 supported_events_faker = JSF(supported_events_model_schema, allow_none_optionals=1)

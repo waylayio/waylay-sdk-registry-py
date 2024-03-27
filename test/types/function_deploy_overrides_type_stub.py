@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.function_deploy_overrides_type import (
@@ -24,10 +23,10 @@ try:
     FunctionDeployOverridesTypeAdapter = TypeAdapter(FunctionDeployOverridesType)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for FunctionDeployOverridesType not available: {exc}")
     MODELS_AVAILABLE = False
 
-function_deploy_overrides_type_model_schema = json.loads(r"""{
+function_deploy_overrides_type_model_schema = json.loads(
+    r"""{
   "title" : "FunctionDeployOverridesType",
   "type" : "object",
   "properties" : {
@@ -60,7 +59,9 @@ function_deploy_overrides_type_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 function_deploy_overrides_type_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 function_deploy_overrides_type_faker = JSF(

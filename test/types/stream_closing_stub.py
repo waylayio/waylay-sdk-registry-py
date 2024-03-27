@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.stream_closing import StreamClosing
@@ -22,10 +21,10 @@ try:
     StreamClosingAdapter = TypeAdapter(StreamClosing)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for StreamClosing not available: {exc}")
     MODELS_AVAILABLE = False
 
-stream_closing_model_schema = json.loads(r"""{
+stream_closing_model_schema = json.loads(
+    r"""{
   "title" : "Stream Closing",
   "required" : [ "data", "event" ],
   "type" : "object",
@@ -41,7 +40,9 @@ stream_closing_model_schema = json.loads(r"""{
   },
   "description" : "A message that notifies that the server will not send more events, and that the client should close."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 stream_closing_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 stream_closing_faker = JSF(stream_closing_model_schema, allow_none_optionals=1)

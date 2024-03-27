@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.job_state_waiting_children import (
@@ -24,16 +23,18 @@ try:
     JobStateWaitingChildrenAdapter = TypeAdapter(JobStateWaitingChildren)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for JobStateWaitingChildren not available: {exc}")
     MODELS_AVAILABLE = False
 
-job_state_waiting_children_model_schema = json.loads(r"""{
+job_state_waiting_children_model_schema = json.loads(
+    r"""{
   "title" : "JobStateWaitingChildren",
   "type" : "string",
   "description" : "The job is waiting for child jobs to be completed.",
   "enum" : [ "waiting-children" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 job_state_waiting_children_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 job_state_waiting_children_faker = JSF(

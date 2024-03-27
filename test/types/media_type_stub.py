@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.media_type import MediaType
@@ -22,15 +21,17 @@ try:
     MediaTypeAdapter = TypeAdapter(MediaType)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for MediaType not available: {exc}")
     MODELS_AVAILABLE = False
 
-media_type_model_schema = json.loads(r"""{
+media_type_model_schema = json.loads(
+    r"""{
   "title" : "MediaType",
   "type" : "string",
   "enum" : [ "application/javascript", "application/java-vm", "text/x-python", "text/x-golang" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 media_type_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 media_type_faker = JSF(media_type_model_schema, allow_none_optionals=1)

@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.status import Status
@@ -22,16 +21,18 @@ try:
     StatusAdapter = TypeAdapter(Status)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for Status not available: {exc}")
     MODELS_AVAILABLE = False
 
-status_model_schema = json.loads(r"""{
+status_model_schema = json.loads(
+    r"""{
   "title" : "Status",
   "type" : "string",
   "description" : "Status for a deployed function.",
   "enum" : [ "registered", "running", "pending", "deployed", "unhealthy", "killed", "failed", "undeploying", "undeployed" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 status_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 status_faker = JSF(status_model_schema, allow_none_optionals=1)

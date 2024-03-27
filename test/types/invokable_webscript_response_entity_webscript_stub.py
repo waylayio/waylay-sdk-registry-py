@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.invokable_webscript_response_entity_webscript import (
@@ -26,12 +25,10 @@ try:
     )
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for InvokableWebscriptResponseEntityWebscript not available: {exc}"
-    )
     MODELS_AVAILABLE = False
 
-invokable_webscript_response_entity_webscript_model_schema = json.loads(r"""{
+invokable_webscript_response_entity_webscript_model_schema = json.loads(
+    r"""{
   "title" : "InvokableWebscriptResponse_entity_webscript",
   "required" : [ "allowHmac", "name", "private", "version" ],
   "type" : "object",
@@ -53,10 +50,12 @@ invokable_webscript_response_entity_webscript_model_schema = json.loads(r"""{
     }
   }
 }
-""")
-invokable_webscript_response_entity_webscript_model_schema.update(
-    {"definitions": MODEL_DEFINITIONS}
+""",
+    object_hook=with_example_provider,
 )
+invokable_webscript_response_entity_webscript_model_schema.update({
+    "definitions": MODEL_DEFINITIONS
+})
 
 invokable_webscript_response_entity_webscript_faker = JSF(
     invokable_webscript_response_entity_webscript_model_schema, allow_none_optionals=1

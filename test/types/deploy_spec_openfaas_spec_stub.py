@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.deploy_spec_openfaas_spec import (
@@ -24,10 +23,10 @@ try:
     DeploySpecOpenfaasSpecAdapter = TypeAdapter(DeploySpecOpenfaasSpec)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for DeploySpecOpenfaasSpec not available: {exc}")
     MODELS_AVAILABLE = False
 
-deploy_spec_openfaas_spec_model_schema = json.loads(r"""{
+deploy_spec_openfaas_spec_model_schema = json.loads(
+    r"""{
   "title" : "DeploySpec_openfaasSpec",
   "type" : "object",
   "properties" : {
@@ -103,7 +102,9 @@ deploy_spec_openfaas_spec_model_schema = json.loads(r"""{
   },
   "description" : "If specified, it overrides the properties in `default`. Non-specified properties are taken from `default`"
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 deploy_spec_openfaas_spec_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 deploy_spec_openfaas_spec_faker = JSF(

@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.function_type import FunctionType
@@ -22,15 +21,17 @@ try:
     FunctionTypeAdapter = TypeAdapter(FunctionType)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for FunctionType not available: {exc}")
     MODELS_AVAILABLE = False
 
-function_type_model_schema = json.loads(r"""{
+function_type_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Type of functions supported by the registry service.",
   "enum" : [ "plugs", "webscripts", "kfserving" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 function_type_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 function_type_faker = JSF(function_type_model_schema, allow_none_optionals=1)

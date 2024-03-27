@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.function_job_args import FunctionJobArgs
@@ -22,10 +21,10 @@ try:
     FunctionJobArgsAdapter = TypeAdapter(FunctionJobArgs)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for FunctionJobArgs not available: {exc}")
     MODELS_AVAILABLE = False
 
-function_job_args_model_schema = json.loads(r"""{
+function_job_args_model_schema = json.loads(
+    r"""{
   "required" : [ "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
@@ -42,7 +41,9 @@ function_job_args_model_schema = json.loads(r"""{
   },
   "description" : "Job arguments shared by all function jobs"
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 function_job_args_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 function_job_args_faker = JSF(function_job_args_model_schema, allow_none_optionals=1)

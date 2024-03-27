@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**event** | **str** | The job queue event that trigged this message | 
+**event** | [**WaitingChildrenEventSSEEvent**](WaitingChildrenEventSSEEvent.md) |  | 
 **data** | [**JobEventResponseWaitingChildrenEventData**](JobEventResponseWaitingChildrenEventData.md) |  | 
 
 ## Example

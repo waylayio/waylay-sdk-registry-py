@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.event_sse import EventSSE
@@ -22,10 +21,10 @@ try:
     EventSSEAdapter = TypeAdapter(EventSSE)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for EventSSE not available: {exc}")
     MODELS_AVAILABLE = False
 
-event_sse_model_schema = json.loads(r"""{
+event_sse_model_schema = json.loads(
+    r"""{
   "description" : "SSE stream events without closing protocol",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/Stream_Ready"
@@ -35,7 +34,9 @@ event_sse_model_schema = json.loads(r"""{
     "$ref" : "#/components/schemas/KeepAliveEventSSE"
   } ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 event_sse_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 event_sse_faker = JSF(event_sse_model_schema, allow_none_optionals=1)

@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** | The type of the background task. | 
+**type** | [**VerifyType**](VerifyType.md) |  | 
 **operation** | **str** | The operation name for the background task. | 
 **id** | **str** | The id of the background job, or the constant &#x60;_unknown_&#x60; | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 

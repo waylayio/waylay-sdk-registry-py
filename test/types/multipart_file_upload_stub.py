@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.multipart_file_upload import (
@@ -24,10 +23,10 @@ try:
     MultipartFileUploadAdapter = TypeAdapter(MultipartFileUpload)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for MultipartFileUpload not available: {exc}")
     MODELS_AVAILABLE = False
 
-multipart_file_upload__model_schema = json.loads(r"""{
+multipart_file_upload__model_schema = json.loads(
+    r"""{
   "title" : "Multipart file upload.",
   "type" : "object",
   "properties" : {
@@ -42,7 +41,9 @@ multipart_file_upload__model_schema = json.loads(r"""{
   "description" : "A multi-part upload containing one or more file assets.",
   "nullable" : true
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 multipart_file_upload__model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 multipart_file_upload__faker = JSF(

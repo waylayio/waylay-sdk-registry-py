@@ -4,21 +4,21 @@ V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 This Python package is automatically generated based on the 
 Waylay Registry OpenAPI specification (API version: 2.12.3)
 
-It consists of two sub-packages that are both plugins for the  package.
-- The `waylay_registry_api` sub-package contains the Registry api methods.
-- The `waylay_registry_types` sub-package is an extension that contains the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay_registry_api`.
+It consists of two sub-packages that are both plugins for the waylay-sdk package.
+- The `waylay-sdk-registry` sub-package contains the Registry api methods.
+- The `waylay-sdk-registry-types` sub-package is an extension that contains the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay-sdk-registry`.
 
 ## Requirements.
-This package requires Python 3.11+.
+This package requires Python 3.9+.
 
 ## Installation
-Typically this package is installed when installing the [waylay-sdk](https://github.com/waylayio/waylay-py-core) package to enable the service's functionality.
-When the service api methods are required, waylay_registry_api is included in:
+Typically this package is installed when installing the [waylay-sdk](https://github.com/waylayio/waylay-sdk-py) package to enable the service's functionality.
+When the service api methods are required, waylay-sdk-registry is included in:
 - ```pip install waylay-sdk[registry]``` to install `waylay-sdk` along with only this service, or
 - ```pip install waylay-sdk[services]``` to install `waylay-sdk` along with all services.
-When the typed models are required, both waylay_registry_api and waylay_registry_types are included in:
+When the typed models are required, both waylay-sdk-registry and waylay-sdk-registry-types are included in:
 - ```pip install waylay-sdk[registry,registry-types]``` to install `waylay-sdk` along with only this service including the typed models, or
-- ```pip install waylay-sdk[registry]``` to install `waylay-sdk` along with all services along with the typed models.
+- ```pip install waylay-sdk[services,services-types]``` to install `waylay-sdk` along with all services along with the typed models.
 
 ## Usage
 
@@ -33,6 +33,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.job_state_result import JobStateResult
 from waylay.services.registry.models.job_type_schema import JobTypeSchema
@@ -43,12 +44,6 @@ try:
     api_response = await waylay_client.registry.jobs.list(
         # query parameters:
         query = {
-            'limit': 3.4
-            'type': [waylay.services.registry.JobTypeSchema()]
-            'state': [waylay.services.registry.JobStateResult()]
-            'functionType': [waylay.services.registry.FunctionType()]
-            'createdBefore': waylay.services.registry.TimestampSpec()
-            'createdAfter': waylay.services.registry.TimestampSpec()
         },
     )
     print("The response of registry.jobs.list:\n")
@@ -134,6 +129,7 @@ Class | Method | HTTP request | Description
 
  - [ActiveEventData](docs/ActiveEventData.md)
  - [ActiveEventSSE](docs/ActiveEventSSE.md)
+ - [ActiveEventSSEEvent](docs/ActiveEventSSEEvent.md)
  - [AltVersionHALLink](docs/AltVersionHALLink.md)
  - [AnyFunctionResponse](docs/AnyFunctionResponse.md)
  - [AnyJobForFunction](docs/AnyJobForFunction.md)
@@ -158,6 +154,7 @@ Class | Method | HTTP request | Description
  - [Batch](docs/Batch.md)
  - [BatchArgs](docs/BatchArgs.md)
  - [BatchJobStatus](docs/BatchJobStatus.md)
+ - [BatchJobStatusType](docs/BatchJobStatusType.md)
  - [BatchResult](docs/BatchResult.md)
  - [Build](docs/Build.md)
  - [Build1](docs/Build1.md)
@@ -165,10 +162,12 @@ Class | Method | HTTP request | Description
  - [BuildJobStatus](docs/BuildJobStatus.md)
  - [BuildResult](docs/BuildResult.md)
  - [BuildSpec](docs/BuildSpec.md)
+ - [BuildType](docs/BuildType.md)
  - [CleanupResult](docs/CleanupResult.md)
  - [CompiledRuntimeVersion](docs/CompiledRuntimeVersion.md)
  - [CompletedEventData](docs/CompletedEventData.md)
  - [CompletedEventSSE](docs/CompletedEventSSE.md)
+ - [CompletedEventSSEEvent](docs/CompletedEventSSEEvent.md)
  - [ContentQueryV2](docs/ContentQueryV2.md)
  - [ContentValidationListing](docs/ContentValidationListing.md)
  - [CreateFunctionQueryV2](docs/CreateFunctionQueryV2.md)
@@ -177,6 +176,7 @@ Class | Method | HTTP request | Description
  - [CreateWebscriptAsyncResponse](docs/CreateWebscriptAsyncResponse.md)
  - [DelayedEventData](docs/DelayedEventData.md)
  - [DelayedEventSSE](docs/DelayedEventSSE.md)
+ - [DelayedEventSSEEvent](docs/DelayedEventSSEEvent.md)
  - [Deploy](docs/Deploy.md)
  - [Deploy1](docs/Deploy1.md)
  - [DeployArgs](docs/DeployArgs.md)
@@ -186,6 +186,7 @@ Class | Method | HTTP request | Description
  - [DeployResult](docs/DeployResult.md)
  - [DeploySpec](docs/DeploySpec.md)
  - [DeploySpecOpenfaasSpec](docs/DeploySpecOpenfaasSpec.md)
+ - [DeployType](docs/DeployType.md)
  - [DeprecatePreviousPolicy](docs/DeprecatePreviousPolicy.md)
  - [DeprecatePreviousQuery](docs/DeprecatePreviousQuery.md)
  - [DeprecatedDraftFilter](docs/DeprecatedDraftFilter.md)
@@ -204,6 +205,7 @@ Class | Method | HTTP request | Description
  - [ExposedOpenfaasDeploySpec](docs/ExposedOpenfaasDeploySpec.md)
  - [FailedEventData](docs/FailedEventData.md)
  - [FailedEventSSE](docs/FailedEventSSE.md)
+ - [FailedEventSSEEvent](docs/FailedEventSSEEvent.md)
  - [FailureReason](docs/FailureReason.md)
  - [FileUpload](docs/FileUpload.md)
  - [ForceDeleteQueryV1](docs/ForceDeleteQueryV1.md)
@@ -447,6 +449,7 @@ Class | Method | HTTP request | Description
  - [Scale1](docs/Scale1.md)
  - [ScaleArgs](docs/ScaleArgs.md)
  - [ScaleJobStatus](docs/ScaleJobStatus.md)
+ - [ScaleType](docs/ScaleType.md)
  - [SchemaByIdParams](docs/SchemaByIdParams.md)
  - [SchemaParams](docs/SchemaParams.md)
  - [SemanticVersionRange](docs/SemanticVersionRange.md)
@@ -471,6 +474,7 @@ Class | Method | HTTP request | Description
  - [UndeployJobStatus](docs/UndeployJobStatus.md)
  - [UndeployResult](docs/UndeployResult.md)
  - [UndeploySubmittedResponseV2](docs/UndeploySubmittedResponseV2.md)
+ - [UndeployType](docs/UndeployType.md)
  - [UndeployedResponseV2](docs/UndeployedResponseV2.md)
  - [UnhealthyInvokableWebscriptError](docs/UnhealthyInvokableWebscriptError.md)
  - [UpdateComment](docs/UpdateComment.md)
@@ -487,14 +491,17 @@ Class | Method | HTTP request | Description
  - [VerifyPlugSyncResponseV2](docs/VerifyPlugSyncResponseV2.md)
  - [VerifyQueryV1](docs/VerifyQueryV1.md)
  - [VerifyResult](docs/VerifyResult.md)
+ - [VerifyType](docs/VerifyType.md)
  - [VerifyWebscriptSyncResponseV2](docs/VerifyWebscriptSyncResponseV2.md)
  - [VersionIncludes](docs/VersionIncludes.md)
  - [VersionsQuery](docs/VersionsQuery.md)
  - [VersionsQueryV2](docs/VersionsQueryV2.md)
  - [VersionsResponseV2](docs/VersionsResponseV2.md)
  - [WaitingChildrenEventSSE](docs/WaitingChildrenEventSSE.md)
+ - [WaitingChildrenEventSSEEvent](docs/WaitingChildrenEventSSEEvent.md)
  - [WaitingEventData](docs/WaitingEventData.md)
  - [WaitingEventSSE](docs/WaitingEventSSE.md)
+ - [WaitingEventSSEEvent](docs/WaitingEventSSEEvent.md)
  - [Webscript](docs/Webscript.md)
  - [Webscript1](docs/Webscript1.md)
  - [Webscript2](docs/Webscript2.md)

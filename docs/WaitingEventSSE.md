@@ -6,7 +6,7 @@ A message that notifies a state change in a background job.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**event** | **str** | The job queue event that trigged this message | 
+**event** | [**WaitingEventSSEEvent**](WaitingEventSSEEvent.md) |  | 
 **data** | [**JobEventResponseWaitingEventData**](JobEventResponseWaitingEventData.md) |  | 
 
 ## Example

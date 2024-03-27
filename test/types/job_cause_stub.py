@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.job_cause import JobCause
@@ -22,10 +21,10 @@ try:
     JobCauseAdapter = TypeAdapter(JobCause)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for JobCause not available: {exc}")
     MODELS_AVAILABLE = False
 
-job_cause_model_schema = json.loads(r"""{
+job_cause_model_schema = json.loads(
+    r"""{
   "title" : "JobCause",
   "required" : [ "changed", "reason" ],
   "type" : "object",
@@ -58,7 +57,9 @@ job_cause_model_schema = json.loads(r"""{
   },
   "description" : "The motivation for including or excluding a job (<em>build</em>, <em>deploy</em>, <em>verify</em>, ...) in response to a <em>rebuild</em> request."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 job_cause_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 job_cause_faker = JSF(job_cause_model_schema, allow_none_optionals=1)

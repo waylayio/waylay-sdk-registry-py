@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.job_query import JobQuery
@@ -22,10 +21,10 @@ try:
     JobQueryAdapter = TypeAdapter(JobQuery)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for JobQuery not available: {exc}")
     MODELS_AVAILABLE = False
 
-job_query_model_schema = json.loads(r"""{
+job_query_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "limit" : {
@@ -63,7 +62,9 @@ job_query_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 job_query_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 job_query_faker = JSF(job_query_model_schema, allow_none_optionals=1)

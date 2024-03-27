@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.legacy_plug_request_metadata_documentation import (
@@ -26,12 +25,10 @@ try:
     )
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for LegacyPlugRequestMetadataDocumentation not available: {exc}"
-    )
     MODELS_AVAILABLE = False
 
-legacy_plug_request_metadata_documentation_model_schema = json.loads(r"""{
+legacy_plug_request_metadata_documentation_model_schema = json.loads(
+    r"""{
   "title" : "LegacyPlugRequest_metadata_documentation",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/LegacyPlugRequest_metadata_documentation_anyOf"
@@ -39,10 +36,12 @@ legacy_plug_request_metadata_documentation_model_schema = json.loads(r"""{
     "$ref" : "#/components/schemas/Documentation"
   } ]
 }
-""")
-legacy_plug_request_metadata_documentation_model_schema.update(
-    {"definitions": MODEL_DEFINITIONS}
+""",
+    object_hook=with_example_provider,
 )
+legacy_plug_request_metadata_documentation_model_schema.update({
+    "definitions": MODEL_DEFINITIONS
+})
 
 legacy_plug_request_metadata_documentation_faker = JSF(
     legacy_plug_request_metadata_documentation_model_schema, allow_none_optionals=1

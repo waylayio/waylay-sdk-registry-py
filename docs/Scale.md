@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **links** | [**JobHALLinks**](JobHALLinks.md) |  | [optional] 
-**type** | **str** | The type of the background task. | 
+**type** | [**ScaleType**](ScaleType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**ScaleArgs**](ScaleArgs.md) |  | [optional] 
 **result** | **object** | The result data for a completed scale job. | [optional] 

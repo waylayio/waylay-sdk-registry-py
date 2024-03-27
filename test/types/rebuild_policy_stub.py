@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.rebuild_policy import RebuildPolicy
@@ -22,15 +21,17 @@ try:
     RebuildPolicyAdapter = TypeAdapter(RebuildPolicy)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for RebuildPolicy not available: {exc}")
     MODELS_AVAILABLE = False
 
-rebuild_policy_model_schema = json.loads(r"""{
+rebuild_policy_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "The policy to select a new <em>runtime</em> version when a rebuild is issued.",
   "enum" : [ "patch", "minor", "major", "same" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 rebuild_policy_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 rebuild_policy_faker = JSF(rebuild_policy_model_schema, allow_none_optionals=1)

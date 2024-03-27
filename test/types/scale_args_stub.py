@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.scale_args import ScaleArgs
@@ -22,10 +21,10 @@ try:
     ScaleArgsAdapter = TypeAdapter(ScaleArgs)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for ScaleArgs not available: {exc}")
     MODELS_AVAILABLE = False
 
-scale_args_model_schema = json.loads(r"""{
+scale_args_model_schema = json.loads(
+    r"""{
   "title" : "ScaleArgs",
   "required" : [ "endpoint", "namespace", "replicas", "runtimeName", "runtimeVersion" ],
   "type" : "object",
@@ -59,7 +58,9 @@ scale_args_model_schema = json.loads(r"""{
   },
   "description" : "Input argument to an (openfaas) scale job for a function."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 scale_args_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 scale_args_faker = JSF(scale_args_model_schema, allow_none_optionals=1)

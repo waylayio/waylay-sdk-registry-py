@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.remove_plug_query_v2 import RemovePlugQueryV2
@@ -22,10 +21,10 @@ try:
     RemovePlugQueryV2Adapter = TypeAdapter(RemovePlugQueryV2)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for RemovePlugQueryV2 not available: {exc}")
     MODELS_AVAILABLE = False
 
-remove_plug_query_v2_model_schema = json.loads(r"""{
+remove_plug_query_v2_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "comment" : {
@@ -48,7 +47,9 @@ remove_plug_query_v2_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 remove_plug_query_v2_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 remove_plug_query_v2_faker = JSF(

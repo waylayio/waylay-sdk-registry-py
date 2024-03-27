@@ -9,16 +9,16 @@ help:
 
 SERVICE_NAME=registry
 
-API_FOLDER=waylay_${SERVICE_NAME}_api
+API_FOLDER=waylay-sdk-${SERVICE_NAME}
 API_SRC=${API_FOLDER}/src
-TYPES_FOLDER=waylay_${SERVICE_NAME}_types
+TYPES_FOLDER=waylay-sdk-${SERVICE_NAME}-types
 TYPES_SRC=${TYPES_FOLDER}/src
 TEST_FOLDER=test
 TEST_RUN_FOLDER=${TEST_FOLDER}/_run
 
-CMD_FORMAT=ruff format
-CMD_FIX=ruff check --fix
-CMD_CHECK=ruff check
+CMD_FORMAT=ruff format --no-respect-gitignore --preview
+CMD_FIX=ruff check --fix --unsafe-fixes --no-respect-gitignore --preview
+CMD_CHECK=ruff check --no-respect-gitignore --preview
 
 # disables test QA unless set to empty string
 TEST_QA_PREFIX?=echo DISABLED

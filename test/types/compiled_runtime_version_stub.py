@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.compiled_runtime_version import (
@@ -24,10 +23,10 @@ try:
     CompiledRuntimeVersionAdapter = TypeAdapter(CompiledRuntimeVersion)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for CompiledRuntimeVersion not available: {exc}")
     MODELS_AVAILABLE = False
 
-compiled_runtime_version_model_schema = json.loads(r"""{
+compiled_runtime_version_model_schema = json.loads(
+    r"""{
   "title" : "CompiledRuntimeVersion",
   "required" : [ "archiveFormat", "deprecated", "functionType", "name", "title", "upgradable", "version" ],
   "type" : "object",
@@ -86,7 +85,9 @@ compiled_runtime_version_model_schema = json.loads(r"""{
   },
   "description" : "Compiled build and deployment information for a runtime version. Contains all defaults applied on the _global_, _functionType_, _archiveFormat_, _runtime_ and _runtime version_ level."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 compiled_runtime_version_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 compiled_runtime_version_faker = JSF(
