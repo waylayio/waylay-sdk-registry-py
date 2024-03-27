@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.legacy_function_meta import LegacyFunctionMeta
@@ -22,10 +21,10 @@ try:
     LegacyFunctionMetaAdapter = TypeAdapter(LegacyFunctionMeta)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for LegacyFunctionMeta not available: {exc}")
     MODELS_AVAILABLE = False
 
-legacy_function_meta_model_schema = json.loads(r"""{
+legacy_function_meta_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "author" : {
@@ -51,7 +50,9 @@ legacy_function_meta_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 legacy_function_meta_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 legacy_function_meta_faker = JSF(

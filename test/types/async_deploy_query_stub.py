@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.async_deploy_query import AsyncDeployQuery
@@ -22,10 +21,10 @@ try:
     AsyncDeployQueryAdapter = TypeAdapter(AsyncDeployQuery)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for AsyncDeployQuery not available: {exc}")
     MODELS_AVAILABLE = False
 
-async_deploy_query_model_schema = json.loads(r"""{
+async_deploy_query_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "deprecatePrevious" : {
@@ -48,7 +47,9 @@ async_deploy_query_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 async_deploy_query_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 async_deploy_query_faker = JSF(async_deploy_query_model_schema, allow_none_optionals=1)

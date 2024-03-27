@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.get_webscript_response_v2 import (
@@ -24,10 +23,10 @@ try:
     GetWebscriptResponseV2Adapter = TypeAdapter(GetWebscriptResponseV2)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for GetWebscriptResponseV2 not available: {exc}")
     MODELS_AVAILABLE = False
 
-get_webscript_response_v2_model_schema = json.loads(r"""{
+get_webscript_response_v2_model_schema = json.loads(
+    r"""{
   "required" : [ "_links", "entity" ],
   "type" : "object",
   "properties" : {
@@ -40,7 +39,9 @@ get_webscript_response_v2_model_schema = json.loads(r"""{
   },
   "description" : "Webscript Found"
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 get_webscript_response_v2_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 get_webscript_response_v2_faker = JSF(

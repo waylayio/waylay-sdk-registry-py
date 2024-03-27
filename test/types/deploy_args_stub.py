@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.deploy_args import DeployArgs
@@ -22,10 +21,10 @@ try:
     DeployArgsAdapter = TypeAdapter(DeployArgs)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for DeployArgs not available: {exc}")
     MODELS_AVAILABLE = False
 
-deploy_args_model_schema = json.loads(r"""{
+deploy_args_model_schema = json.loads(
+    r"""{
   "title" : "DeployArgs",
   "required" : [ "deploySpecOverrides", "endpoint", "imageName", "namespace", "runtimeName", "runtimeVersion" ],
   "type" : "object",
@@ -62,7 +61,9 @@ deploy_args_model_schema = json.loads(r"""{
   },
   "description" : "Input argument to an (openfaas) deployment job for a function."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 deploy_args_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 deploy_args_faker = JSF(deploy_args_model_schema, allow_none_optionals=1)

@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.function_entity_query import (
@@ -24,10 +23,10 @@ try:
     FunctionEntityQueryAdapter = TypeAdapter(FunctionEntityQuery)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for FunctionEntityQuery not available: {exc}")
     MODELS_AVAILABLE = False
 
-function_entity_query_model_schema = json.loads(r"""{
+function_entity_query_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "name" : {
@@ -52,7 +51,9 @@ function_entity_query_model_schema = json.loads(r"""{
   "additionalProperties" : false,
   "description" : "Filter on function attributes that do not change across function versions."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 function_entity_query_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 function_entity_query_faker = JSF(

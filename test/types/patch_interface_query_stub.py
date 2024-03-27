@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.patch_interface_query import (
@@ -24,10 +23,10 @@ try:
     PatchInterfaceQueryAdapter = TypeAdapter(PatchInterfaceQuery)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for PatchInterfaceQuery not available: {exc}")
     MODELS_AVAILABLE = False
 
-patch_interface_query_model_schema = json.loads(r"""{
+patch_interface_query_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "comment" : {
@@ -37,7 +36,9 @@ patch_interface_query_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 patch_interface_query_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 patch_interface_query_faker = JSF(

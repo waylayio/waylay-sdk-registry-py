@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.latest_models_response_v2_entities_inner import (
@@ -26,12 +25,10 @@ try:
     )
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for LatestModelsResponseV2EntitiesInner not available: {exc}"
-    )
     MODELS_AVAILABLE = False
 
-latest_models_response_v2_entities_inner_model_schema = json.loads(r"""{
+latest_models_response_v2_entities_inner_model_schema = json.loads(
+    r"""{
   "title" : "LatestModelsResponseV2_entities_inner",
   "required" : [ "_links", "createdAt", "createdBy", "deprecated", "draft", "model", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
   "type" : "object",
@@ -93,10 +90,12 @@ latest_models_response_v2_entities_inner_model_schema = json.loads(r"""{
     }
   }
 }
-""")
-latest_models_response_v2_entities_inner_model_schema.update(
-    {"definitions": MODEL_DEFINITIONS}
+""",
+    object_hook=with_example_provider,
 )
+latest_models_response_v2_entities_inner_model_schema.update({
+    "definitions": MODEL_DEFINITIONS
+})
 
 latest_models_response_v2_entities_inner_faker = JSF(
     latest_models_response_v2_entities_inner_model_schema, allow_none_optionals=1

@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.batch_job_status import BatchJobStatus
@@ -22,18 +21,15 @@ try:
     BatchJobStatusAdapter = TypeAdapter(BatchJobStatus)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for BatchJobStatus not available: {exc}")
     MODELS_AVAILABLE = False
 
-batch_job_status_model_schema = json.loads(r"""{
+batch_job_status_model_schema = json.loads(
+    r"""{
   "required" : [ "createdAt", "createdBy", "job", "operation", "request", "state", "type" ],
   "type" : "object",
   "properties" : {
     "type" : {
-      "title" : "Batch",
-      "type" : "string",
-      "description" : "The type of the background task.",
-      "enum" : [ "batch" ]
+      "$ref" : "#/components/schemas/BatchJobStatus_type"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -65,7 +61,9 @@ batch_job_status_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 batch_job_status_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 batch_job_status_faker = JSF(batch_job_status_model_schema, allow_none_optionals=1)

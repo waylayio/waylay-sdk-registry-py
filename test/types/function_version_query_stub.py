@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.function_version_query import (
@@ -24,10 +23,10 @@ try:
     FunctionVersionQueryAdapter = TypeAdapter(FunctionVersionQuery)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for FunctionVersionQuery not available: {exc}")
     MODELS_AVAILABLE = False
 
-function_version_query_model_schema = json.loads(r"""{
+function_version_query_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "version" : {
@@ -70,7 +69,9 @@ function_version_query_model_schema = json.loads(r"""{
   "additionalProperties" : false,
   "description" : "Filter on function attributes that can change across function versions. When these query parameters are used, the query is considered a _function version_ listing and no HAL links to latest (_draft_, _published_) versions are included."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 function_version_query_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 function_version_query_faker = JSF(

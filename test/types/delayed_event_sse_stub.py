@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.delayed_event_sse import DelayedEventSSE
@@ -22,17 +21,15 @@ try:
     DelayedEventSSEAdapter = TypeAdapter(DelayedEventSSE)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for DelayedEventSSE not available: {exc}")
     MODELS_AVAILABLE = False
 
-delayed_event_sse_model_schema = json.loads(r"""{
+delayed_event_sse_model_schema = json.loads(
+    r"""{
   "required" : [ "data", "event" ],
   "type" : "object",
   "properties" : {
     "event" : {
-      "type" : "string",
-      "description" : "The job queue event that trigged this message",
-      "enum" : [ "delayed" ]
+      "$ref" : "#/components/schemas/DelayedEventSSE_event"
     },
     "data" : {
       "$ref" : "#/components/schemas/JobEventResponse_DelayedEventData_"
@@ -40,7 +37,9 @@ delayed_event_sse_model_schema = json.loads(r"""{
   },
   "description" : "A message that notifies a state change in a background job."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 delayed_event_sse_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 delayed_event_sse_faker = JSF(delayed_event_sse_model_schema, allow_none_optionals=1)

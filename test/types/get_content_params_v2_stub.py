@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.get_content_params_v2 import GetContentParamsV2
@@ -22,10 +21,10 @@ try:
     GetContentParamsV2Adapter = TypeAdapter(GetContentParamsV2)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for GetContentParamsV2 not available: {exc}")
     MODELS_AVAILABLE = False
 
-get_content_params_v2_model_schema = json.loads(r"""{
+get_content_params_v2_model_schema = json.loads(
+    r"""{
   "required" : [ "*", "name", "version" ],
   "type" : "object",
   "properties" : {
@@ -43,7 +42,9 @@ get_content_params_v2_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 get_content_params_v2_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 get_content_params_v2_faker = JSF(

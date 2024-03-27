@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.with_paging import WithPaging
@@ -22,10 +21,10 @@ try:
     WithPagingAdapter = TypeAdapter(WithPaging)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for WithPaging not available: {exc}")
     MODELS_AVAILABLE = False
 
-with_paging_model_schema = json.loads(r"""{
+with_paging_model_schema = json.loads(
+    r"""{
   "required" : [ "count" ],
   "type" : "object",
   "properties" : {
@@ -43,7 +42,9 @@ with_paging_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 with_paging_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 with_paging_faker = JSF(with_paging_model_schema, allow_none_optionals=1)

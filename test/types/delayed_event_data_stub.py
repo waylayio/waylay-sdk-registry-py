@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.delayed_event_data import DelayedEventData
@@ -22,10 +21,10 @@ try:
     DelayedEventDataAdapter = TypeAdapter(DelayedEventData)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for DelayedEventData not available: {exc}")
     MODELS_AVAILABLE = False
 
-delayed_event_data_model_schema = json.loads(r"""{
+delayed_event_data_model_schema = json.loads(
+    r"""{
   "title" : "DelayedEventData",
   "required" : [ "delay" ],
   "type" : "object",
@@ -36,7 +35,9 @@ delayed_event_data_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 delayed_event_data_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 delayed_event_data_faker = JSF(delayed_event_data_model_schema, allow_none_optionals=1)

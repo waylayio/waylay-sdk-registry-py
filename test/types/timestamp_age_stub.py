@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.timestamp_age import TimestampAge
@@ -22,10 +21,10 @@ try:
     TimestampAgeAdapter = TypeAdapter(TimestampAge)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for TimestampAge not available: {exc}")
     MODELS_AVAILABLE = False
 
-timestamp_age_model_schema = json.loads(r"""{
+timestamp_age_model_schema = json.loads(
+    r"""{
   "title" : "TimestampAge",
   "description" : "A timestamp expressed as a age relative to now",
   "anyOf" : [ {
@@ -34,7 +33,9 @@ timestamp_age_model_schema = json.loads(r"""{
     "$ref" : "#/components/schemas/DurationSpec"
   } ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 timestamp_age_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 timestamp_age_faker = JSF(timestamp_age_model_schema, allow_none_optionals=1)

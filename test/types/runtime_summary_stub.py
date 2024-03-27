@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.runtime_summary import RuntimeSummary
@@ -22,10 +21,10 @@ try:
     RuntimeSummaryAdapter = TypeAdapter(RuntimeSummary)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for RuntimeSummary not available: {exc}")
     MODELS_AVAILABLE = False
 
-runtime_summary_model_schema = json.loads(r"""{
+runtime_summary_model_schema = json.loads(
+    r"""{
   "required" : [ "archiveFormat", "functionType", "name", "title", "versions" ],
   "type" : "object",
   "properties" : {
@@ -53,7 +52,9 @@ runtime_summary_model_schema = json.loads(r"""{
   },
   "description" : "A summary representation of the runtime, and (selected) versions of it."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 runtime_summary_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 runtime_summary_faker = JSF(runtime_summary_model_schema, allow_none_optionals=1)

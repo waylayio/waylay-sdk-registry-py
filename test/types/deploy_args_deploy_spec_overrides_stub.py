@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.deploy_args_deploy_spec_overrides import (
@@ -24,12 +23,10 @@ try:
     DeployArgsDeploySpecOverridesAdapter = TypeAdapter(DeployArgsDeploySpecOverrides)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for DeployArgsDeploySpecOverrides not available: {exc}"
-    )
     MODELS_AVAILABLE = False
 
-deploy_args_deploy_spec_overrides_model_schema = json.loads(r"""{
+deploy_args_deploy_spec_overrides_model_schema = json.loads(
+    r"""{
   "title" : "DeployArgs_deploySpecOverrides",
   "type" : "object",
   "properties" : {
@@ -105,10 +102,12 @@ deploy_args_deploy_spec_overrides_model_schema = json.loads(r"""{
   },
   "description" : "Overrides on the deployment specification."
 }
-""")
-deploy_args_deploy_spec_overrides_model_schema.update(
-    {"definitions": MODEL_DEFINITIONS}
+""",
+    object_hook=with_example_provider,
 )
+deploy_args_deploy_spec_overrides_model_schema.update({
+    "definitions": MODEL_DEFINITIONS
+})
 
 deploy_args_deploy_spec_overrides_faker = JSF(
     deploy_args_deploy_spec_overrides_model_schema, allow_none_optionals=1

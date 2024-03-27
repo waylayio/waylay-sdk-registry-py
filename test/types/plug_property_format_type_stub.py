@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.plug_property_format_type import (
@@ -24,16 +23,18 @@ try:
     PlugPropertyFormatTypeAdapter = TypeAdapter(PlugPropertyFormatType)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for PlugPropertyFormatType not available: {exc}")
     MODELS_AVAILABLE = False
 
-plug_property_format_type_model_schema = json.loads(r"""{
+plug_property_format_type_model_schema = json.loads(
+    r"""{
   "title" : "PlugPropertyFormatType",
   "type" : "string",
   "description" : "Value domain for a plug input or output property.",
   "enum" : [ "enum", "resource", "vault", "duration", "code", "url", "date", "template" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 plug_property_format_type_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 plug_property_format_type_faker = JSF(

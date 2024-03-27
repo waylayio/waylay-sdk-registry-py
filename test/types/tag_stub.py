@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.tag import Tag
@@ -22,10 +21,10 @@ try:
     TagAdapter = TypeAdapter(Tag)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for Tag not available: {exc}")
     MODELS_AVAILABLE = False
 
-tag_model_schema = json.loads(r"""{
+tag_model_schema = json.loads(
+    r"""{
   "title" : "Tag",
   "required" : [ "color", "name" ],
   "type" : "object",
@@ -43,7 +42,9 @@ tag_model_schema = json.loads(r"""{
   },
   "description" : "One or more tags can be assigned to a function entity to facilitate grouping and searching."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 tag_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 tag_faker = JSF(tag_model_schema, allow_none_optionals=1)

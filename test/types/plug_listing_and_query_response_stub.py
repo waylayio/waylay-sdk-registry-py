@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.plug_listing_and_query_response import (
@@ -24,10 +23,10 @@ try:
     PlugListingAndQueryResponseAdapter = TypeAdapter(PlugListingAndQueryResponse)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for PlugListingAndQueryResponse not available: {exc}")
     MODELS_AVAILABLE = False
 
-plug_listing_and_query_response_model_schema = json.loads(r"""{
+plug_listing_and_query_response_model_schema = json.loads(
+    r"""{
   "required" : [ "plugs" ],
   "type" : "object",
   "properties" : {
@@ -52,7 +51,9 @@ plug_listing_and_query_response_model_schema = json.loads(r"""{
   },
   "description" : "Successful Response"
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 plug_listing_and_query_response_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 plug_listing_and_query_response_faker = JSF(

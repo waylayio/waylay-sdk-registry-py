@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.semantic_version_range import (
@@ -24,10 +23,10 @@ try:
     SemanticVersionRangeAdapter = TypeAdapter(SemanticVersionRange)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for SemanticVersionRange not available: {exc}")
     MODELS_AVAILABLE = False
 
-semantic_version_range_model_schema = json.loads(r"""{
+semantic_version_range_model_schema = json.loads(
+    r"""{
   "title" : "SemanticVersionRange",
   "description" : "A range of semantic versions. See https://devhints.io/semver",
   "anyOf" : [ {
@@ -36,7 +35,9 @@ semantic_version_range_model_schema = json.loads(r"""{
     "$ref" : "#/components/schemas/SemanticVersion"
   } ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 semantic_version_range_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 semantic_version_range_faker = JSF(

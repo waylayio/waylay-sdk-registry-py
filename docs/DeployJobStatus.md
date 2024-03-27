@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** | The type of the background task. | 
+**type** | [**DeployType**](DeployType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**DeployArgs**](DeployArgs.md) |  | 
 **result** | [**DeployResult**](DeployResult.md) |  | [optional] 

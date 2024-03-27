@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.content_query_v2 import ContentQueryV2
@@ -22,10 +21,10 @@ try:
     ContentQueryV2Adapter = TypeAdapter(ContentQueryV2)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for ContentQueryV2 not available: {exc}")
     MODELS_AVAILABLE = False
 
-content_query_v2_model_schema = json.loads(r"""{
+content_query_v2_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "ls" : {
@@ -36,7 +35,9 @@ content_query_v2_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 content_query_v2_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 content_query_v2_faker = JSF(content_query_v2_model_schema, allow_none_optionals=1)

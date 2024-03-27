@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** | The type of the background task. | 
+**type** | [**ScaleType**](ScaleType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**ScaleArgs**](ScaleArgs.md) |  | 
 **result** | **object** | The result data for a completed scale job. | [optional] 

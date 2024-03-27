@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.operation import Operation
@@ -22,10 +21,10 @@ try:
     OperationAdapter = TypeAdapter(Operation)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for Operation not available: {exc}")
     MODELS_AVAILABLE = False
 
-operation_model_schema = json.loads(r"""{
+operation_model_schema = json.loads(
+    r"""{
   "required" : [ "description", "id", "name", "type" ],
   "type" : "object",
   "properties" : {
@@ -44,7 +43,9 @@ operation_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 operation_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 operation_faker = JSF(operation_model_schema, allow_none_optionals=1)

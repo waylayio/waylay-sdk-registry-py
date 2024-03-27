@@ -1,9 +1,11 @@
 .github/workflows/python.yml
 .openapi-generator-ignore
+LICENSE.txt
 Makefile
 README.md
 docs/ActiveEventData.md
 docs/ActiveEventSSE.md
+docs/ActiveEventSSEEvent.md
 docs/AltVersionHALLink.md
 docs/AnyFunctionResponse.md
 docs/AnyJobForFunction.md
@@ -28,6 +30,7 @@ docs/AsyncVerifyQuery.md
 docs/Batch.md
 docs/BatchArgs.md
 docs/BatchJobStatus.md
+docs/BatchJobStatusType.md
 docs/BatchResult.md
 docs/Build.md
 docs/Build1.md
@@ -35,10 +38,12 @@ docs/BuildArgs.md
 docs/BuildJobStatus.md
 docs/BuildResult.md
 docs/BuildSpec.md
+docs/BuildType.md
 docs/CleanupResult.md
 docs/CompiledRuntimeVersion.md
 docs/CompletedEventData.md
 docs/CompletedEventSSE.md
+docs/CompletedEventSSEEvent.md
 docs/ContentQueryV2.md
 docs/ContentValidationListing.md
 docs/CreateFunctionQueryV2.md
@@ -48,6 +53,7 @@ docs/CreateWebscriptAsyncResponse.md
 docs/DefaultApi.md
 docs/DelayedEventData.md
 docs/DelayedEventSSE.md
+docs/DelayedEventSSEEvent.md
 docs/Deploy.md
 docs/Deploy1.md
 docs/DeployArgs.md
@@ -57,6 +63,7 @@ docs/DeployJobStatus.md
 docs/DeployResult.md
 docs/DeploySpec.md
 docs/DeploySpecOpenfaasSpec.md
+docs/DeployType.md
 docs/DeprecatePreviousPolicy.md
 docs/DeprecatePreviousQuery.md
 docs/DeprecatedDraftFilter.md
@@ -75,6 +82,7 @@ docs/EventWithCloseSSE.md
 docs/ExposedOpenfaasDeploySpec.md
 docs/FailedEventData.md
 docs/FailedEventSSE.md
+docs/FailedEventSSEEvent.md
 docs/FailureReason.md
 docs/FileUpload.md
 docs/ForceDeleteQueryV1.md
@@ -323,6 +331,7 @@ docs/Scale.md
 docs/Scale1.md
 docs/ScaleArgs.md
 docs/ScaleJobStatus.md
+docs/ScaleType.md
 docs/SchemaByIdParams.md
 docs/SchemaParams.md
 docs/SchemasApi.md
@@ -348,6 +357,7 @@ docs/UndeployArgs.md
 docs/UndeployJobStatus.md
 docs/UndeployResult.md
 docs/UndeploySubmittedResponseV2.md
+docs/UndeployType.md
 docs/UndeployedResponseV2.md
 docs/UnhealthyInvokableWebscriptError.md
 docs/UpdateComment.md
@@ -364,14 +374,17 @@ docs/VerifyModelSyncResponseV2.md
 docs/VerifyPlugSyncResponseV2.md
 docs/VerifyQueryV1.md
 docs/VerifyResult.md
+docs/VerifyType.md
 docs/VerifyWebscriptSyncResponseV2.md
 docs/VersionIncludes.md
 docs/VersionsQuery.md
 docs/VersionsQueryV2.md
 docs/VersionsResponseV2.md
 docs/WaitingChildrenEventSSE.md
+docs/WaitingChildrenEventSSEEvent.md
 docs/WaitingEventData.md
 docs/WaitingEventSSE.md
+docs/WaitingEventSSEEvent.md
 docs/Webscript.md
 docs/Webscript1.md
 docs/Webscript2.md
@@ -403,6 +416,7 @@ test/conftest.py
 test/openapi.py
 test/types/__init__.py
 test/types/active_event_data_stub.py
+test/types/active_event_sse_event_stub.py
 test/types/active_event_sse_stub.py
 test/types/alt_version_hal_link_stub.py
 test/types/any_function_response_stub.py
@@ -427,6 +441,7 @@ test/types/async_query_default_true_stub.py
 test/types/async_verify_query_stub.py
 test/types/batch_args_stub.py
 test/types/batch_job_status_stub.py
+test/types/batch_job_status_type_stub.py
 test/types/batch_result_stub.py
 test/types/batch_stub.py
 test/types/build1_stub.py
@@ -435,9 +450,11 @@ test/types/build_job_status_stub.py
 test/types/build_result_stub.py
 test/types/build_spec_stub.py
 test/types/build_stub.py
+test/types/build_type_stub.py
 test/types/cleanup_result_stub.py
 test/types/compiled_runtime_version_stub.py
 test/types/completed_event_data_stub.py
+test/types/completed_event_sse_event_stub.py
 test/types/completed_event_sse_stub.py
 test/types/content_query_v2_stub.py
 test/types/content_validation_listing_stub.py
@@ -446,6 +463,7 @@ test/types/create_kf_serving_async_response_stub.py
 test/types/create_plug_async_response_stub.py
 test/types/create_webscript_async_response_stub.py
 test/types/delayed_event_data_stub.py
+test/types/delayed_event_sse_event_stub.py
 test/types/delayed_event_sse_stub.py
 test/types/deploy1_stub.py
 test/types/deploy_args_deploy_spec_overrides_stub.py
@@ -456,6 +474,7 @@ test/types/deploy_result_stub.py
 test/types/deploy_spec_openfaas_spec_stub.py
 test/types/deploy_spec_stub.py
 test/types/deploy_stub.py
+test/types/deploy_type_stub.py
 test/types/deprecate_previous_policy_stub.py
 test/types/deprecate_previous_query_stub.py
 test/types/deprecated_draft_filter_stub.py
@@ -473,6 +492,7 @@ test/types/event_type_sse_stub.py
 test/types/event_with_close_sse_stub.py
 test/types/exposed_openfaas_deploy_spec_stub.py
 test/types/failed_event_data_stub.py
+test/types/failed_event_sse_event_stub.py
 test/types/failed_event_sse_stub.py
 test/types/failure_reason_stub.py
 test/types/file_upload_stub.py
@@ -717,6 +737,7 @@ test/types/scale1_stub.py
 test/types/scale_args_stub.py
 test/types/scale_job_status_stub.py
 test/types/scale_stub.py
+test/types/scale_type_stub.py
 test/types/schema_by_id_params_stub.py
 test/types/schema_params_stub.py
 test/types/semantic_version_range_stub.py
@@ -741,6 +762,7 @@ test/types/undeploy_job_status_stub.py
 test/types/undeploy_result_stub.py
 test/types/undeploy_stub.py
 test/types/undeploy_submitted_response_v2_stub.py
+test/types/undeploy_type_stub.py
 test/types/undeployed_response_v2_stub.py
 test/types/unhealthy_invokable_webscript_error_stub.py
 test/types/update_comment_stub.py
@@ -757,13 +779,16 @@ test/types/verify_plug_sync_response_v2_stub.py
 test/types/verify_query_v1_stub.py
 test/types/verify_result_stub.py
 test/types/verify_stub.py
+test/types/verify_type_stub.py
 test/types/verify_webscript_sync_response_v2_stub.py
 test/types/version_includes_stub.py
 test/types/versions_query_stub.py
 test/types/versions_query_v2_stub.py
 test/types/versions_response_v2_stub.py
+test/types/waiting_children_event_sse_event_stub.py
 test/types/waiting_children_event_sse_stub.py
 test/types/waiting_event_data_stub.py
+test/types/waiting_event_sse_event_stub.py
 test/types/waiting_event_sse_stub.py
 test/types/webscript1_stub.py
 test/types/webscript2_stub.py

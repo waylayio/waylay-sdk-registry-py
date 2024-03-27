@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.provided_dependency import ProvidedDependency
@@ -22,10 +21,10 @@ try:
     ProvidedDependencyAdapter = TypeAdapter(ProvidedDependency)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for ProvidedDependency not available: {exc}")
     MODELS_AVAILABLE = False
 
-provided_dependency_model_schema = json.loads(r"""{
+provided_dependency_model_schema = json.loads(
+    r"""{
   "title" : "ProvidedDependency",
   "required" : [ "name" ],
   "type" : "object",
@@ -78,7 +77,9 @@ provided_dependency_model_schema = json.loads(r"""{
   },
   "description" : "Library dependency that is provided by this runtime."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 provided_dependency_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 provided_dependency_faker = JSF(

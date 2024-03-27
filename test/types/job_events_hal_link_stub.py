@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.job_events_hal_link import JobEventsHALLink
@@ -22,10 +21,10 @@ try:
     JobEventsHALLinkAdapter = TypeAdapter(JobEventsHALLink)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for JobEventsHALLink not available: {exc}")
     MODELS_AVAILABLE = False
 
-job_events_hal_link_model_schema = json.loads(r"""{
+job_events_hal_link_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "event" : {
@@ -34,7 +33,9 @@ job_events_hal_link_model_schema = json.loads(r"""{
   },
   "description" : "HAL links to related actions."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 job_events_hal_link_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 job_events_hal_link_faker = JSF(

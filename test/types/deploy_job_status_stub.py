@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.deploy_job_status import DeployJobStatus
@@ -22,18 +21,15 @@ try:
     DeployJobStatusAdapter = TypeAdapter(DeployJobStatus)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for DeployJobStatus not available: {exc}")
     MODELS_AVAILABLE = False
 
-deploy_job_status_model_schema = json.loads(r"""{
+deploy_job_status_model_schema = json.loads(
+    r"""{
   "required" : [ "createdAt", "createdBy", "job", "operation", "request", "state", "type" ],
   "type" : "object",
   "properties" : {
     "type" : {
-      "title" : "Deploy",
-      "type" : "string",
-      "description" : "The type of the background task.",
-      "enum" : [ "deploy" ]
+      "$ref" : "#/components/schemas/Deploy_type"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -65,7 +61,9 @@ deploy_job_status_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 deploy_job_status_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 deploy_job_status_faker = JSF(deploy_job_status_model_schema, allow_none_optionals=1)

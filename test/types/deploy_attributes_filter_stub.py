@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.deploy_attributes_filter import (
@@ -24,10 +23,10 @@ try:
     DeployAttributesFilterAdapter = TypeAdapter(DeployAttributesFilter)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for DeployAttributesFilter not available: {exc}")
     MODELS_AVAILABLE = False
 
-deploy_attributes_filter_model_schema = json.loads(r"""{
+deploy_attributes_filter_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "endpoint" : {
@@ -45,7 +44,9 @@ deploy_attributes_filter_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 deploy_attributes_filter_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 deploy_attributes_filter_faker = JSF(

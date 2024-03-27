@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.undeploy_result import UndeployResult
@@ -22,10 +21,10 @@ try:
     UndeployResultAdapter = TypeAdapter(UndeployResult)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for UndeployResult not available: {exc}")
     MODELS_AVAILABLE = False
 
-undeploy_result_model_schema = json.loads(r"""{
+undeploy_result_model_schema = json.loads(
+    r"""{
   "title" : "UndeployResult",
   "required" : [ "assets", "deployment", "registration" ],
   "type" : "object",
@@ -45,7 +44,9 @@ undeploy_result_model_schema = json.loads(r"""{
   },
   "description" : "The result data for a completed undeployment job."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 undeploy_result_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 undeploy_result_faker = JSF(undeploy_result_model_schema, allow_none_optionals=1)

@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.legacy_documentation import LegacyDocumentation
@@ -22,10 +21,10 @@ try:
     LegacyDocumentationAdapter = TypeAdapter(LegacyDocumentation)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for LegacyDocumentation not available: {exc}")
     MODELS_AVAILABLE = False
 
-legacy_documentation_model_schema = json.loads(r"""{
+legacy_documentation_model_schema = json.loads(
+    r"""{
   "required" : [ "configuration", "rawData", "supportedStates" ],
   "type" : "object",
   "properties" : {
@@ -49,7 +48,9 @@ legacy_documentation_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 legacy_documentation_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 legacy_documentation_faker = JSF(

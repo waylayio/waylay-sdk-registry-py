@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **links** | [**JobHALLinks**](JobHALLinks.md) |  | [optional] 
-**type** | **str** | The type of the background task. | 
+**type** | [**VerifyType**](VerifyType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**VerifyArgs**](VerifyArgs.md) |  | [optional] 
 **result** | [**VerifyResult**](VerifyResult.md) |  | [optional] 

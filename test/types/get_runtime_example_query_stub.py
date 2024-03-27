@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.get_runtime_example_query import (
@@ -24,10 +23,10 @@ try:
     GetRuntimeExampleQueryAdapter = TypeAdapter(GetRuntimeExampleQuery)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for GetRuntimeExampleQuery not available: {exc}")
     MODELS_AVAILABLE = False
 
-get_runtime_example_query_model_schema = json.loads(r"""{
+get_runtime_example_query_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "ls" : {
@@ -43,7 +42,9 @@ get_runtime_example_query_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 get_runtime_example_query_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 get_runtime_example_query_faker = JSF(

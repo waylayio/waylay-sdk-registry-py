@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.job_state_delayed import JobStateDelayed
@@ -22,16 +21,18 @@ try:
     JobStateDelayedAdapter = TypeAdapter(JobStateDelayed)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for JobStateDelayed not available: {exc}")
     MODELS_AVAILABLE = False
 
-job_state_delayed_model_schema = json.loads(r"""{
+job_state_delayed_model_schema = json.loads(
+    r"""{
   "title" : "JobStateDelayed",
   "type" : "string",
   "description" : "The job has been delayed for retry after a failure.",
   "enum" : [ "delayed" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 job_state_delayed_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 job_state_delayed_faker = JSF(job_state_delayed_model_schema, allow_none_optionals=1)

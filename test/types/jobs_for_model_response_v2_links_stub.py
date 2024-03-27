@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.jobs_for_model_response_v2_links import (
@@ -24,10 +23,10 @@ try:
     JobsForModelResponseV2LinksAdapter = TypeAdapter(JobsForModelResponseV2Links)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for JobsForModelResponseV2Links not available: {exc}")
     MODELS_AVAILABLE = False
 
-jobs_for_model_response_v2__links_model_schema = json.loads(r"""{
+jobs_for_model_response_v2__links_model_schema = json.loads(
+    r"""{
   "title" : "JobsForModelResponseV2__links",
   "type" : "object",
   "properties" : {
@@ -38,10 +37,12 @@ jobs_for_model_response_v2__links_model_schema = json.loads(r"""{
   "additionalProperties" : false,
   "description" : "Link to the function entity."
 }
-""")
-jobs_for_model_response_v2__links_model_schema.update(
-    {"definitions": MODEL_DEFINITIONS}
+""",
+    object_hook=with_example_provider,
 )
+jobs_for_model_response_v2__links_model_schema.update({
+    "definitions": MODEL_DEFINITIONS
+})
 
 jobs_for_model_response_v2__links_faker = JSF(
     jobs_for_model_response_v2__links_model_schema, allow_none_optionals=1

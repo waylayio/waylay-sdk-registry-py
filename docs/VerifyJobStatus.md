@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** | The type of the background task. | 
+**type** | [**VerifyType**](VerifyType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**VerifyArgs**](VerifyArgs.md) |  | 
 **result** | [**VerifyResult**](VerifyResult.md) |  | [optional] 

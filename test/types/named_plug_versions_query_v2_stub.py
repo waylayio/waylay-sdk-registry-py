@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.named_plug_versions_query_v2 import (
@@ -24,10 +23,10 @@ try:
     NamedPlugVersionsQueryV2Adapter = TypeAdapter(NamedPlugVersionsQueryV2)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for NamedPlugVersionsQueryV2 not available: {exc}")
     MODELS_AVAILABLE = False
 
-named_plug_versions_query_v2_model_schema = json.loads(r"""{
+named_plug_versions_query_v2_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
     "tags" : {
@@ -105,7 +104,9 @@ named_plug_versions_query_v2_model_schema = json.loads(r"""{
   "additionalProperties" : false,
   "description" : "Named plug version listing query"
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 named_plug_versions_query_v2_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 named_plug_versions_query_v2_faker = JSF(

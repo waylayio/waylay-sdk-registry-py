@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.event_close import EventClose
@@ -22,14 +21,16 @@ try:
     EventCloseAdapter = TypeAdapter(EventClose)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for EventClose not available: {exc}")
     MODELS_AVAILABLE = False
 
-event_close_model_schema = json.loads(r"""{
+event_close_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "enum" : [ "close" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 event_close_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 event_close_faker = JSF(event_close_model_schema, allow_none_optionals=1)

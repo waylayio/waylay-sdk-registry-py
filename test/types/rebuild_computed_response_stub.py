@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.rebuild_computed_response import (
@@ -24,10 +23,10 @@ try:
     RebuildComputedResponseAdapter = TypeAdapter(RebuildComputedResponse)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for RebuildComputedResponse not available: {exc}")
     MODELS_AVAILABLE = False
 
-rebuild_computed_response_model_schema = json.loads(r"""{
+rebuild_computed_response_model_schema = json.loads(
+    r"""{
   "required" : [ "causes", "message" ],
   "type" : "object",
   "properties" : {
@@ -40,7 +39,9 @@ rebuild_computed_response_model_schema = json.loads(r"""{
   },
   "description" : "Rebuild Ignored"
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 rebuild_computed_response_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 rebuild_computed_response_faker = JSF(

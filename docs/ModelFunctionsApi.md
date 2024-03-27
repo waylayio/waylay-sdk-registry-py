@@ -27,7 +27,7 @@ Method | HTTP request | Description
 > query: CreateQuery,
 > files,
 > headers
-> ) -> PostModelJobSyncResponseV2 
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
 Create Model
 
@@ -45,6 +45,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.deprecate_previous_policy import DeprecatePreviousPolicy
 from waylay.services.registry.models.multipart_file_upload import MultipartFileUpload
 from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
@@ -54,12 +55,10 @@ try:
     api_response = await waylay_client.registry.model_functions.create(
         # query parameters:
         query = {
-            'deprecatePrevious': waylay.services.registry.DeprecatePreviousPolicy()
+            'deprecatePrevious': 'none'
             'dryRun': True
             'async': True
             'scaleToZero': False
-            'version': waylay.services.registry.SemanticVersionRange()
-            'name': 'name_example'
             'draft': False
         },
         # non-json binary data: use a byte array or a generator of bytearray chuncks
@@ -67,7 +66,7 @@ try:
         # this operation supports multiple request content types: use `headers` to specify the one used
         # alternatives: 'application/tar+gzip', 'application/x-gzip', 'application/x-tar', 'application/gzip', 'multipart/form-data', 
         headers = {
-            'content-type': 'application/octet-stream',
+            'content-type': 'application/octet-stream'
         },
     )
     print("The response of registry.model_functions.create:\n")
@@ -87,20 +86,23 @@ Name     | Type  | API binding   | Description   | Notes
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;model&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;      The required &lt;code&gt;model.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;kfserving&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
 **files** | **[FileTypes](Operation.md#req_arg_files)** | request body files |   |
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['deprecatePrevious']** | [**DeprecatePreviousPolicy**](.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions. | [optional] 
-**query['dryRun']** | **bool** | query parameter `"dryRun"` | If set to &lt;code&gt;true&lt;/code&gt;, validates the deployment conditions, but does not change anything. | [optional] 
-**query['async']** | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['scaleToZero']** | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately. | [optional] [default False]
-**query['version']** | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, the function version will be an increment of the latest existing version that satisfies the &#x60;version&#x60; range. Note that this increment always takes precedence over an explicit &#x60;version&#x60; in the function manifest. | [optional] 
-**query['name']** | **str** | query parameter `"name"` | If set, the value will be used as the function name instead of the one specified in the manifest. | [optional] 
-**query['draft']** | **bool** | query parameter `"draft"` | If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid. | [optional] [default False]
+**query['deprecatePrevious']** (dict) <br> **query.deprecate_previous** (Query) | [**DeprecatePreviousPolicy**](.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions. | [optional] 
+**query['dryRun']** (dict) <br> **query.dry_run** (Query) | **bool** | query parameter `"dryRun"` | If set to &lt;code&gt;true&lt;/code&gt;, validates the deployment conditions, but does not change anything. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately. | [optional] [default False]
+**query['version']** (dict) <br> **query.version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, the function version will be an increment of the latest existing version that satisfies the &#x60;version&#x60; range. Note that this increment always takes precedence over an explicit &#x60;version&#x60; in the function manifest. | [optional] 
+**query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` | If set, the value will be used as the function name instead of the one specified in the manifest. | [optional] 
+**query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid. | [optional] [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType `application/octet-stream`, `application/tar+gzip`, `application/x-gzip`, `application/x-tar`, `application/gzip`, `multipart/form-data`
 
 ### Return type
 
-
-[**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -123,7 +125,7 @@ Name     | Type  | API binding   | Description   | Notes
 > wildcard: str,
 > query: DeleteAssetQuery,
 > headers
-> ) -> PostModelJobSyncResponseV2 
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
 Delete Model Asset
 
@@ -141,6 +143,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
     # Delete Model Asset
@@ -151,7 +154,6 @@ try:
         'wildcard_example', # wildcard | path param "wildcard"
         # query parameters:
         query = {
-            'comment': 'comment_example'
             'async': True
             'chown': False
         },
@@ -174,15 +176,18 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['comment']** | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['async']** | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['chown']** | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -204,7 +209,7 @@ Name     | Type  | API binding   | Description   | Notes
 > version: str,
 > query: GetArchiveQuery,
 > headers
-> ) -> bytearray 
+> ) -> bytearray
 
 Get Model Archive
 
@@ -222,6 +227,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 try:
     # Get Model Archive
     # calls `GET /registry/v2/models/{name}/versions/{version}/content`
@@ -250,13 +256,16 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['ls']** | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
+**query['ls']** (dict) <br> **query.ls** (Query) | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-**bytearray**
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`bytearray`** |  | 
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -278,7 +287,7 @@ Name     | Type  | API binding   | Description   | Notes
 > wildcard: str,
 > query: GetAssetQuery,
 > headers
-> ) -> bytearray 
+> ) -> bytearray
 
 Get File From Model Archive
 
@@ -296,6 +305,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 try:
     # Get File From Model Archive
     # calls `GET /registry/v2/models/{name}/versions/{version}/content/{wildcard}`
@@ -326,13 +336,16 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['ls']** | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
+**query['ls']** (dict) <br> **query.ls** (Query) | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-**bytearray**
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`bytearray`** |  | 
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -352,7 +365,7 @@ Name     | Type  | API binding   | Description   | Notes
 > name: str,
 > query: GetLatestQuery,
 > headers
-> ) -> GetModelResponseV2 
+> ) -> GetModelResponseV2
 
 Get Latest Model Version
 
@@ -370,6 +383,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.get_model_response_v2 import GetModelResponseV2
 try:
     # Get Latest Model Version
@@ -398,14 +412,17 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['includeDraft']** | **bool** | query parameter `"includeDraft"` | Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to &#x60;true&#x60;, draft versions are **included**. If set to &#x60;false&#x60;, draft versions are **excluded**. | [optional] 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions are **included**. If set to &#x60;false&#x60;, deprecated versions are **excluded**. | [optional] 
+**query['includeDraft']** (dict) <br> **query.include_draft** (Query) | **bool** | query parameter `"includeDraft"` | Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to &#x60;true&#x60;, draft versions are **included**. If set to &#x60;false&#x60;, draft versions are **excluded**. | [optional] 
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions are **included**. If set to &#x60;false&#x60;, deprecated versions are **excluded**. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**GetModelResponseV2**](GetModelResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`GetModelResponseV2`** |  | [GetModelResponseV2](GetModelResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -425,7 +442,7 @@ Name     | Type  | API binding   | Description   | Notes
 > name: str,
 > version: str,
 > headers
-> ) -> GetModelResponseV2 
+> ) -> GetModelResponseV2
 
 Get Model Version
 
@@ -443,6 +460,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.get_model_response_v2 import GetModelResponseV2
 try:
     # Get Model Version
@@ -471,8 +489,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-[**GetModelResponseV2**](GetModelResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`GetModelResponseV2`** |  | [GetModelResponseV2](GetModelResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -493,7 +514,7 @@ Name     | Type  | API binding   | Description   | Notes
 > version: str,
 > query: JobsQuery,
 > headers
-> ) -> JobsForModelResponseV2 
+> ) -> JobsForModelResponseV2
 
 List Model Jobs
 
@@ -511,6 +532,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.job_state_result import JobStateResult
 from waylay.services.registry.models.job_type_schema import JobTypeSchema
@@ -523,12 +545,6 @@ try:
         'version_example', # version | path param "version"
         # query parameters:
         query = {
-            'limit': 3.4
-            'type': [waylay.services.registry.JobTypeSchema()]
-            'state': [waylay.services.registry.JobStateResult()]
-            'functionType': [waylay.services.registry.FunctionType()]
-            'createdBefore': waylay.services.registry.TimestampSpec()
-            'createdAfter': waylay.services.registry.TimestampSpec()
         },
     )
     print("The response of registry.model_functions.jobs:\n")
@@ -548,18 +564,21 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['limit']** | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
-**query['type']** | [**List[JobTypeSchema]**](JobTypeSchema.md) | query parameter `"type"` | Filter on job type | [optional] 
-**query['state']** | [**List[JobStateResult]**](JobStateResult.md) | query parameter `"state"` | Filter on job state | [optional] 
-**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | Filter on function type | [optional] 
-**query['createdBefore']** | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on jobs that created before the given timestamp or age | [optional] 
-**query['createdAfter']** | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on jobs that created after the given timestamp or age | [optional] 
+**query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
+**query['type']** (dict) <br> **query.type** (Query) | [**List[JobTypeSchema]**](JobTypeSchema.md) | query parameter `"type"` | Filter on job type | [optional] 
+**query['state']** (dict) <br> **query.state** (Query) | [**List[JobStateResult]**](JobStateResult.md) | query parameter `"state"` | Filter on job state | [optional] 
+**query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | Filter on function type | [optional] 
+**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on jobs that created before the given timestamp or age | [optional] 
+**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on jobs that created after the given timestamp or age | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**JobsForModelResponseV2**](JobsForModelResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`JobsForModelResponseV2`** |  | [JobsForModelResponseV2](JobsForModelResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -578,7 +597,7 @@ Name     | Type  | API binding   | Description   | Notes
 > list(
 > query: ListQuery,
 > headers
-> ) -> LatestModelsResponseV2 
+> ) -> LatestModelsResponseV2
 
 List Models
 
@@ -596,6 +615,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.archive_format import ArchiveFormat
 from waylay.services.registry.models.latest_models_response_v2 import LatestModelsResponseV2
 from waylay.services.registry.models.status_filter import StatusFilter
@@ -605,25 +625,12 @@ try:
     api_response = await waylay_client.registry.model_functions.list(
         # query parameters:
         query = {
-            'limit': 3.4
-            'page': 3.4
             'includeDraft': True
             'includeDeprecated': True
             'deprecated': True
             'draft': True
-            'nameVersion': ['name_version_example']
-            'version': 'version_example'
-            'status': [waylay.services.registry.StatusFilter()]
-            'runtimeVersion': waylay.services.registry.SemanticVersionRange()
             'createdBy': '@me'
             'updatedBy': '@me'
-            'createdBefore': waylay.services.registry.TimestampSpec()
-            'createdAfter': waylay.services.registry.TimestampSpec()
-            'updatedBefore': waylay.services.registry.TimestampSpec()
-            'updatedAfter': waylay.services.registry.TimestampSpec()
-            'name': 'name_example'
-            'archiveFormat': [waylay.services.registry.ArchiveFormat()]
-            'runtime': ['runtime_example']
             'latest': True
         },
     )
@@ -642,32 +649,35 @@ GET /registry/v2/models/
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['limit']** | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
-**query['page']** | **float** | query parameter `"page"` | The number of pages to skip when returning result to this query. | [optional] 
-**query['includeDraft']** | **bool** | query parameter `"includeDraft"` | Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to &#x60;true&#x60;, draft versions are **included**. If set to &#x60;false&#x60;, draft versions are **excluded**. | [optional] 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions are **included**. If set to &#x60;false&#x60;, deprecated versions are **excluded**. | [optional] 
-**query['deprecated']** | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
-**query['draft']** | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
-**query['nameVersion']** | [**List[str]**](str.md) | query parameter `"nameVersion"` | Filter on exact &#x60;{name}@{version}&#x60; functions. Using this filter implies a &#x60;latest&#x3D;false&#x60; default, returning multiple versions of the same named versions if they are filtered. | [optional] 
-**query['version']** | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
-**query['status']** | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
-**query['runtimeVersion']** | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
-**query['createdBy']** | **str** | query parameter `"createdBy"` | Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
-**query['updatedBy']** | **str** | query parameter `"updatedBy"` | Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
-**query['createdBefore']** | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
-**query['createdAfter']** | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
-**query['updatedBefore']** | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
-**query['updatedAfter']** | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
-**query['name']** | **str** | query parameter `"name"` | Filter on the name of the function. This is case-insensitive and supports wild-cards &#x60;?&#x60; (any one character) and &#x60;*&#x60; (any sequence of characters). | [optional] 
-**query['archiveFormat']** | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
-**query['runtime']** | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
-**query['latest']** | **bool** | query parameter `"latest"` | When &#x60;true&#x60;, only the latest version per function name is returned. If set to &#x60;false&#x60;, multiple versions per named function can be returned. Defaults to &#x60;true&#x60;, except when specific versions are selected with the &#x60;nameVersion&#x60; filter. | [optional] 
+**query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
+**query['page']** (dict) <br> **query.page** (Query) | **float** | query parameter `"page"` | The number of pages to skip when returning result to this query. | [optional] 
+**query['includeDraft']** (dict) <br> **query.include_draft** (Query) | **bool** | query parameter `"includeDraft"` | Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to &#x60;true&#x60;, draft versions are **included**. If set to &#x60;false&#x60;, draft versions are **excluded**. | [optional] 
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions are **included**. If set to &#x60;false&#x60;, deprecated versions are **excluded**. | [optional] 
+**query['deprecated']** (dict) <br> **query.deprecated** (Query) | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
+**query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
+**query['nameVersion']** (dict) <br> **query.name_version** (Query) | [**List[str]**](str.md) | query parameter `"nameVersion"` | Filter on exact &#x60;{name}@{version}&#x60; functions. Using this filter implies a &#x60;latest&#x3D;false&#x60; default, returning multiple versions of the same named versions if they are filtered. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
+**query['status']** (dict) <br> **query.status** (Query) | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
+**query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
+**query['createdBy']** (dict) <br> **query.created_by** (Query) | **str** | query parameter `"createdBy"` | Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
+**query['updatedBy']** (dict) <br> **query.updated_by** (Query) | **str** | query parameter `"updatedBy"` | Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
+**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
+**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
+**query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
+**query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
+**query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` | Filter on the name of the function. This is case-insensitive and supports wild-cards &#x60;?&#x60; (any one character) and &#x60;*&#x60; (any sequence of characters). | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
+**query['runtime']** (dict) <br> **query.runtime** (Query) | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
+**query['latest']** (dict) <br> **query.latest** (Query) | **bool** | query parameter `"latest"` | When &#x60;true&#x60;, only the latest version per function name is returned. If set to &#x60;false&#x60;, multiple versions per named function can be returned. Defaults to &#x60;true&#x60;, except when specific versions are selected with the &#x60;nameVersion&#x60; filter. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**LatestModelsResponseV2**](LatestModelsResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`LatestModelsResponseV2`** |  | [LatestModelsResponseV2](LatestModelsResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -687,7 +697,7 @@ Name     | Type  | API binding   | Description   | Notes
 > name: str,
 > query: ListVersionsQuery,
 > headers
-> ) -> ModelVersionsResponseV2 
+> ) -> ModelVersionsResponseV2
 
 List Model Versions
 
@@ -705,6 +715,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.archive_format import ArchiveFormat
 from waylay.services.registry.models.model_versions_response_v2 import ModelVersionsResponseV2
 from waylay.services.registry.models.status_filter import StatusFilter
@@ -715,21 +726,10 @@ try:
         'name_example', # name | path param "name"
         # query parameters:
         query = {
-            'limit': 3.4
-            'page': 3.4
             'deprecated': True
             'draft': True
-            'version': 'version_example'
-            'status': [waylay.services.registry.StatusFilter()]
-            'runtimeVersion': waylay.services.registry.SemanticVersionRange()
             'createdBy': '@me'
             'updatedBy': '@me'
-            'createdBefore': waylay.services.registry.TimestampSpec()
-            'createdAfter': waylay.services.registry.TimestampSpec()
-            'updatedBefore': waylay.services.registry.TimestampSpec()
-            'updatedAfter': waylay.services.registry.TimestampSpec()
-            'archiveFormat': [waylay.services.registry.ArchiveFormat()]
-            'runtime': ['runtime_example']
         },
     )
     print("The response of registry.model_functions.list_versions:\n")
@@ -748,27 +748,30 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['limit']** | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
-**query['page']** | **float** | query parameter `"page"` | The number of pages to skip when returning result to this query. | [optional] 
-**query['deprecated']** | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
-**query['draft']** | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
-**query['version']** | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
-**query['status']** | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
-**query['runtimeVersion']** | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
-**query['createdBy']** | **str** | query parameter `"createdBy"` | Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
-**query['updatedBy']** | **str** | query parameter `"updatedBy"` | Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
-**query['createdBefore']** | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
-**query['createdAfter']** | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
-**query['updatedBefore']** | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
-**query['updatedAfter']** | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
-**query['archiveFormat']** | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
-**query['runtime']** | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
+**query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
+**query['page']** (dict) <br> **query.page** (Query) | **float** | query parameter `"page"` | The number of pages to skip when returning result to this query. | [optional] 
+**query['deprecated']** (dict) <br> **query.deprecated** (Query) | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
+**query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
+**query['status']** (dict) <br> **query.status** (Query) | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
+**query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
+**query['createdBy']** (dict) <br> **query.created_by** (Query) | **str** | query parameter `"createdBy"` | Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
+**query['updatedBy']** (dict) <br> **query.updated_by** (Query) | **str** | query parameter `"updatedBy"` | Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
+**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
+**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
+**query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
+**query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
+**query['runtime']** (dict) <br> **query.runtime** (Query) | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**ModelVersionsResponseV2**](ModelVersionsResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`ModelVersionsResponseV2`** |  | [ModelVersionsResponseV2](ModelVersionsResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -789,7 +792,7 @@ Name     | Type  | API binding   | Description   | Notes
 > version: str,
 > query: PatchMetadataQuery,
 > headers
-> ) -> GetModelResponseV2 
+> ) -> GetModelResponseV2
 
 Patch Model Metadata
 
@@ -807,6 +810,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_meta import FunctionMeta
 from waylay.services.registry.models.get_model_response_v2 import GetModelResponseV2
 try:
@@ -817,7 +821,6 @@ try:
         'version_example', # version | path param "version"
         # query parameters:
         query = {
-            'comment': 'comment_example'
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json = waylay.services.registry.FunctionMeta() # FunctionMeta |  (optional)
@@ -840,13 +843,16 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **json** | [**FunctionMeta**](FunctionMeta.md) | json request body |  | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['comment']** | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**GetModelResponseV2**](GetModelResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`GetModelResponseV2`** |  | [GetModelResponseV2](GetModelResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -867,7 +873,7 @@ Name     | Type  | API binding   | Description   | Notes
 > version: str,
 > query: PublishQuery,
 > headers
-> ) -> PostModelJobSyncResponseV2 
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
 Publish Draft Model
 
@@ -885,6 +891,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.deprecate_previous_policy import DeprecatePreviousPolicy
 from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
@@ -895,8 +902,7 @@ try:
         'version_example', # version | path param "version"
         # query parameters:
         query = {
-            'comment': 'comment_example'
-            'deprecatePrevious': waylay.services.registry.DeprecatePreviousPolicy()
+            'deprecatePrevious': 'none'
             'async': True
         },
     )
@@ -917,15 +923,18 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['comment']** | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['deprecatePrevious']** | [**DeprecatePreviousPolicy**](.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions. | [optional] 
-**query['async']** | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['deprecatePrevious']** (dict) <br> **query.deprecate_previous** (Query) | [**DeprecatePreviousPolicy**](.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -947,7 +956,7 @@ Name     | Type  | API binding   | Description   | Notes
 > version: str,
 > query: RebuildQuery,
 > headers
-> ) -> RebuildModelSyncResponseV2 
+> ) -> RebuildModelSyncResponseV2 \| RebuildModelAsyncResponseV2
 
 Rebuild Model
 
@@ -965,6 +974,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.rebuild_model_sync_response_v2 import RebuildModelSyncResponseV2
 from waylay.services.registry.models.rebuild_policy import RebuildPolicy
 try:
@@ -975,11 +985,9 @@ try:
         'version_example', # version | path param "version"
         # query parameters:
         query = {
-            'comment': 'comment_example'
             'dryRun': True
             'async': True
-            'upgrade': waylay.services.registry.RebuildPolicy()
-            'forceVersion': 'force_version_example'
+            'upgrade': 'patch'
             'ignoreChecks': True
             'scaleToZero': True
             'skipRebuild': True
@@ -1002,20 +1010,23 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['comment']** | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['dryRun']** | **bool** | query parameter `"dryRun"` | If set to &lt;code&gt;true&lt;/code&gt;, checks whether rebuild jobs are needed, but do not start any jobs. | [optional] 
-**query['async']** | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['upgrade']** | [**RebuildPolicy**](.md) | query parameter `"upgrade"` | If set, force a rebuild with the given &lt;em&gt;runtime&lt;/em&gt; version selection policy. &lt;ul&gt;  &lt;li&gt;&lt;code&gt;same&lt;/code&gt; &lt;b&gt;patch&lt;/b&gt; version.   This should only include backward compatible upgrades.  &lt;/li&gt;  &lt;li&gt;&lt;code&gt;minor&lt;/code&gt; &lt;b&gt;major&lt;/b&gt; version.   This might include an upgrade of e.g. the language runtime and/or provided   dependencies that could break compatiblity with the function. .&lt;/li&gt; &lt;/ul&gt; | [optional] 
-**query['forceVersion']** | **str** | query parameter `"forceVersion"` | If set, force a rebuild with the given runtime version (including downgrades). This parameter is mutually exclusive to the &#x60;upgrade&#x60; parameter. | [optional] 
-**query['ignoreChecks']** | **bool** | query parameter `"ignoreChecks"` | If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in &#x60;pending&#x60;, &#x60;running&#x60;, &#x60;failed&#x60; or &#x60;undeployed&#x60; * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the &#x60;dryRun&#x60; option | [optional] 
-**query['scaleToZero']** | **bool** | query parameter `"scaleToZero"` | Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
-**query['skipRebuild']** | **bool** | query parameter `"skipRebuild"` | If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function. | [optional] 
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['dryRun']** (dict) <br> **query.dry_run** (Query) | **bool** | query parameter `"dryRun"` | If set to &lt;code&gt;true&lt;/code&gt;, checks whether rebuild jobs are needed, but do not start any jobs. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['upgrade']** (dict) <br> **query.upgrade** (Query) | [**RebuildPolicy**](.md) | query parameter `"upgrade"` | If set, force a rebuild with the given &lt;em&gt;runtime&lt;/em&gt; version selection policy. &lt;ul&gt;  &lt;li&gt;&lt;code&gt;same&lt;/code&gt; &lt;b&gt;patch&lt;/b&gt; version.   This should only include backward compatible upgrades.  &lt;/li&gt;  &lt;li&gt;&lt;code&gt;minor&lt;/code&gt; &lt;b&gt;major&lt;/b&gt; version.   This might include an upgrade of e.g. the language runtime and/or provided   dependencies that could break compatiblity with the function. .&lt;/li&gt; &lt;/ul&gt; | [optional] 
+**query['forceVersion']** (dict) <br> **query.force_version** (Query) | **str** | query parameter `"forceVersion"` | If set, force a rebuild with the given runtime version (including downgrades). This parameter is mutually exclusive to the &#x60;upgrade&#x60; parameter. | [optional] 
+**query['ignoreChecks']** (dict) <br> **query.ignore_checks** (Query) | **bool** | query parameter `"ignoreChecks"` | If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in &#x60;pending&#x60;, &#x60;running&#x60;, &#x60;failed&#x60; or &#x60;undeployed&#x60; * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the &#x60;dryRun&#x60; option | [optional] 
+**query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
+**query['skipRebuild']** (dict) <br> **query.skip_rebuild** (Query) | **bool** | query parameter `"skipRebuild"` | If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**RebuildModelSyncResponseV2**](RebuildModelSyncResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RebuildModelSyncResponseV2 \| RebuildModelAsyncResponseV2`** |  | [RebuildModelSyncResponseV2](RebuildModelSyncResponseV2.md) <br> [RebuildModelAsyncResponseV2](RebuildModelAsyncResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -1037,7 +1048,7 @@ Name     | Type  | API binding   | Description   | Notes
 > version: str,
 > query: RemoveVersionQuery,
 > headers
-> ) -> UndeployedResponseV2 
+> ) -> UndeployedResponseV2 \| UndeploySubmittedResponseV2
 
 Remove Model Version
 
@@ -1055,6 +1066,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.undeployed_response_v2 import UndeployedResponseV2
 try:
     # Remove Model Version
@@ -1064,7 +1076,6 @@ try:
         'version_example', # version | path param "version"
         # query parameters:
         query = {
-            'comment': 'comment_example'
             'async': True
             'force': True
             'undeploy': True
@@ -1087,16 +1098,19 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['comment']** | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['async']** | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['force']** | **bool** | query parameter `"force"` | If &lt;code&gt;true&lt;/code&gt;, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_. | [optional] 
-**query['undeploy']** | **bool** | query parameter `"undeploy"` | If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['force']** (dict) <br> **query.force** (Query) | **bool** | query parameter `"force"` | If &lt;code&gt;true&lt;/code&gt;, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_. | [optional] 
+**query['undeploy']** (dict) <br> **query.undeploy** (Query) | **bool** | query parameter `"undeploy"` | If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**UndeployedResponseV2**](UndeployedResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`UndeployedResponseV2 \| UndeploySubmittedResponseV2`** |  | [UndeployedResponseV2](UndeployedResponseV2.md) <br> [UndeploySubmittedResponseV2](UndeploySubmittedResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -1117,7 +1131,7 @@ Name     | Type  | API binding   | Description   | Notes
 > name: str,
 > query: RemoveVersionsQuery,
 > headers
-> ) -> UndeployedResponseV2 
+> ) -> UndeployedResponseV2 \| UndeploySubmittedResponseV2
 
 Remove Model
 
@@ -1135,6 +1149,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.undeployed_response_v2 import UndeployedResponseV2
 try:
     # Remove Model
@@ -1143,7 +1158,6 @@ try:
         'name_example', # name | path param "name"
         # query parameters:
         query = {
-            'comment': 'comment_example'
             'force': True
             'undeploy': True
             'async': True
@@ -1165,16 +1179,19 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['comment']** | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['force']** | **bool** | query parameter `"force"` | If &lt;code&gt;true&lt;/code&gt;, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_. | [optional] 
-**query['undeploy']** | **bool** | query parameter `"undeploy"` | If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
-**query['async']** | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['force']** (dict) <br> **query.force** (Query) | **bool** | query parameter `"force"` | If &lt;code&gt;true&lt;/code&gt;, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_. | [optional] 
+**query['undeploy']** (dict) <br> **query.undeploy** (Query) | **bool** | query parameter `"undeploy"` | If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**UndeployedResponseV2**](UndeployedResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`UndeployedResponseV2 \| UndeploySubmittedResponseV2`** |  | [UndeployedResponseV2](UndeployedResponseV2.md) <br> [UndeploySubmittedResponseV2](UndeploySubmittedResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -1197,7 +1214,7 @@ Name     | Type  | API binding   | Description   | Notes
 > wildcard: str,
 > query: UpdateAssetQuery,
 > headers
-> ) -> PostModelJobSyncResponseV2 
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
 Update Model Asset
 
@@ -1215,6 +1232,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.file_upload import FileUpload
 from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
@@ -1226,7 +1244,6 @@ try:
         'wildcard_example', # wildcard | path param "wildcard"
         # query parameters:
         query = {
-            'comment': 'comment_example'
             'async': True
             'chown': False
         },
@@ -1235,7 +1252,7 @@ try:
         # this operation supports multiple request content types: use `headers` to specify the one used
         # alternatives: 
         headers = {
-            'content-type': 'application/octet-stream',
+            'content-type': 'application/octet-stream'
         },
     )
     print("The response of registry.model_functions.update_asset:\n")
@@ -1257,16 +1274,19 @@ Name     | Type  | API binding   | Description   | Notes
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | A single asset file. | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['comment']** | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['async']** | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['chown']** | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType `application/octet-stream`
 
 ### Return type
 
-
-[**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -1289,7 +1309,7 @@ Name     | Type  | API binding   | Description   | Notes
 > query: UpdateAssetsQuery,
 > files,
 > headers
-> ) -> PostModelJobSyncResponseV2 
+> ) -> PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2
 
 Update Model Assets
 
@@ -1307,6 +1327,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.multipart_file_upload import MultipartFileUpload
 from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
@@ -1317,7 +1338,6 @@ try:
         'version_example', # version | path param "version"
         # query parameters:
         query = {
-            'comment': 'comment_example'
             'async': True
             'chown': False
         },
@@ -1326,7 +1346,7 @@ try:
         # this operation supports multiple request content types: use `headers` to specify the one used
         # alternatives: 'application/tar+gzip', 'application/x-gzip', 'application/x-tar', 'application/gzip', 'multipart/form-data', 
         headers = {
-            'content-type': 'application/octet-stream',
+            'content-type': 'application/octet-stream'
         },
     )
     print("The response of registry.model_functions.update_assets:\n")
@@ -1348,16 +1368,19 @@ Name     | Type  | API binding   | Description   | Notes
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;model&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;    The provided assets will be added to the &lt;em&gt;model&lt;/em&gt; function&#39;s collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the model.json&lt;/code&gt; json file with a changed value for any of the    &lt;code&gt;name&lt;/code&gt;, &lt;code&gt;version&lt;/code&gt; and/or &lt;code&gt;runtime&lt;/code&gt; attributes.    For each &lt;em&gt;runtime&lt;/em&gt; other files are supported.  | [optional] 
 **files** | **[FileTypes](Operation.md#req_arg_files)** | request body files |   |
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['comment']** | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['async']** | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['chown']** | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType `application/octet-stream`, `application/tar+gzip`, `application/x-gzip`, `application/x-tar`, `application/gzip`, `multipart/form-data`
 
 ### Return type
 
-
-[**PostModelJobSyncResponseV2**](PostModelJobSyncResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`PostModelJobSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [PostModelJobSyncResponseV2](PostModelJobSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -1379,7 +1402,7 @@ Name     | Type  | API binding   | Description   | Notes
 > version: str,
 > query: VerifyQuery,
 > headers
-> ) -> VerifyModelSyncResponseV2 
+> ) -> VerifyModelSyncResponseV2 \| PostModelJobAsyncResponseV2
 
 Verify Health Of Model
 
@@ -1397,6 +1420,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.verify_model_sync_response_v2 import VerifyModelSyncResponseV2
 try:
     # Verify Health Of Model
@@ -1406,7 +1430,6 @@ try:
         'version_example', # version | path param "version"
         # query parameters:
         query = {
-            'comment': 'comment_example'
             'async': True
             'scaleToZero': True
         },
@@ -1428,15 +1451,18 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['comment']** | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['async']** | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['scaleToZero']** | **bool** | query parameter `"scaleToZero"` | Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**VerifyModelSyncResponseV2**](VerifyModelSyncResponseV2.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`VerifyModelSyncResponseV2 \| PostModelJobAsyncResponseV2`** |  | [VerifyModelSyncResponseV2](VerifyModelSyncResponseV2.md) <br> [PostModelJobAsyncResponseV2](PostModelJobAsyncResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 

@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.named_parameters_typeof_as_job_reference_job_status import (
@@ -26,12 +25,10 @@ try:
     )
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for NamedParametersTypeofAsJobReferenceJobStatus not available: {exc}"
-    )
     MODELS_AVAILABLE = False
 
-named_parameters_typeof_as_job_reference__job_status_model_schema = json.loads(r"""{
+named_parameters_typeof_as_job_reference__job_status_model_schema = json.loads(
+    r"""{
   "title" : "NamedParameters_typeof_asJobReference__jobStatus",
   "required" : [ "createdAt", "createdBy", "operation", "state", "type" ],
   "type" : "object",
@@ -81,10 +78,12 @@ named_parameters_typeof_as_job_reference__job_status_model_schema = json.loads(r
     }
   }
 }
-""")
-named_parameters_typeof_as_job_reference__job_status_model_schema.update(
-    {"definitions": MODEL_DEFINITIONS}
+""",
+    object_hook=with_example_provider,
 )
+named_parameters_typeof_as_job_reference__job_status_model_schema.update({
+    "definitions": MODEL_DEFINITIONS
+})
 
 named_parameters_typeof_as_job_reference__job_status_faker = JSF(
     named_parameters_typeof_as_job_reference__job_status_model_schema,
