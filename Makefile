@@ -53,6 +53,7 @@ clean:
 	rm -fr */.*_cache
 	rm -fr */src/*.egg-info
 	rm -fr **/__pycache__
+	rm -rf ${TEST_RUN_FOLDER}
 
 lint: install ### Run linting checks
 	@${VENV_TYPES_ACTIVATE} && make exec-lint

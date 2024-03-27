@@ -269,7 +269,7 @@ class RuntimesApi(WithApiClient):
             **body_args,
             headers=headers,
             **kwargs,
-            response_types_map=response_types_map,
+            response_type=response_types_map,
             select_path=select_path,
             raw_response=raw_response,
         )
@@ -478,7 +478,7 @@ class RuntimesApi(WithApiClient):
             **body_args,
             headers=headers,
             **kwargs,
-            response_types_map=response_types_map,
+            response_type=response_types_map,
             select_path=select_path,
             raw_response=raw_response,
         )
@@ -631,7 +631,7 @@ class RuntimesApi(WithApiClient):
             **body_args,
             headers=headers,
             **kwargs,
-            response_types_map=response_types_map,
+            response_type=response_types_map,
             select_path=select_path,
             raw_response=raw_response,
         )
@@ -799,7 +799,7 @@ class RuntimesApi(WithApiClient):
             **body_args,
             headers=headers,
             **kwargs,
-            response_types_map=response_types_map,
+            response_type=response_types_map,
             select_path=select_path,
             raw_response=raw_response,
         )
@@ -946,7 +946,7 @@ class RuntimesApi(WithApiClient):
             **body_args,
             headers=headers,
             **kwargs,
-            response_types_map=response_types_map,
+            response_type=response_types_map,
             select_path=select_path,
             raw_response=raw_response,
         )
@@ -1101,7 +1101,7 @@ class RuntimesApi(WithApiClient):
             **body_args,
             headers=headers,
             **kwargs,
-            response_types_map=response_types_map,
+            response_type=response_types_map,
             select_path=select_path,
             raw_response=raw_response,
         )
