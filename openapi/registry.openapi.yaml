@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Waylay Function Registry
-  version: 2.12.3
+  version: 2.12.4
   x-visibility: stable
   description: V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML
     models).

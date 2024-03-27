@@ -2,7 +2,7 @@
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
 This Python package is automatically generated based on the 
-Waylay Registry OpenAPI specification (API version: 2.12.3)
+Waylay Registry OpenAPI specification (API version: 2.12.4)
 
 It consists of two sub-packages that are both plugins for the waylay-sdk package.
 - The `waylay-sdk-registry` sub-package contains the Registry api methods.
