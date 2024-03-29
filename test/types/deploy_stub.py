@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.deploy import Deploy
@@ -22,10 +21,10 @@ try:
     DeployAdapter = TypeAdapter(Deploy)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for Deploy not available: {exc}")
     MODELS_AVAILABLE = False
 
-deploy_model_schema = json.loads(r"""{
+deploy_model_schema = json.loads(
+    r"""{
   "title" : "Deploy",
   "required" : [ "createdAt", "createdBy", "operation", "state", "type" ],
   "type" : "object",
@@ -34,10 +33,7 @@ deploy_model_schema = json.loads(r"""{
       "$ref" : "#/components/schemas/JobHALLinks"
     },
     "type" : {
-      "title" : "Deploy",
-      "type" : "string",
-      "description" : "The type of the background task.",
-      "enum" : [ "deploy" ]
+      "$ref" : "#/components/schemas/Deploy_type"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -75,7 +71,9 @@ deploy_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 deploy_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 deploy_faker = JSF(deploy_model_schema, allow_none_optionals=1)

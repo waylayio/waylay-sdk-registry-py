@@ -1,6 +1,6 @@
 # waylay.services.registry.JobsApi
 
-All URIs are relative to *https://api.waylay.io*
+All URIs are relative to *https://api-aws-dev.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -12,7 +12,7 @@ Method | HTTP request | Description
 > events(
 > query: EventsQuery,
 > headers
-> ) -> EventWithCloseSSE 
+> ) -> EventWithCloseSSE
 
 Stream Events
 
@@ -30,6 +30,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.event_with_close_sse import EventWithCloseSSE
 from waylay.services.registry.models.job_type import JobType
 try:
@@ -38,8 +39,7 @@ try:
     api_response = await waylay_client.registry.jobs.events(
         # query parameters:
         query = {
-            'type': waylay.services.registry.JobType()
-            'id': 'id_example'
+            'type': 'build'
             'children': True
         },
     )
@@ -58,15 +58,18 @@ GET /registry/v2/jobs/events
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['type']** | [**JobType**](.md) | query parameter `"type"` | The type of the job. | [optional] 
-**query['id']** | **str** | query parameter `"id"` | The id of the job. | [optional] 
-**query['children']** | **bool** | query parameter `"children"` | If set to &lt;code&gt;true&lt;/code&gt;, the event stream will include events of the job&#39;s dependants. E.g., when subscribing to a verify job with &#x60;children&#x3D;true&#x60;, you will also receive the events of the underlying build and deploy jobs. Defaults to &lt;code&gt;false&lt;/code&gt;. | [optional] 
+**query['type']** (dict) <br> **query.type** (Query) | [**JobType**](.md) | query parameter `"type"` | The type of the job. | [optional] 
+**query['id']** (dict) <br> **query.id** (Query) | **str** | query parameter `"id"` | The id of the job. | [optional] 
+**query['children']** (dict) <br> **query.children** (Query) | **bool** | query parameter `"children"` | If set to &lt;code&gt;true&lt;/code&gt;, the event stream will include events of the job&#39;s dependants. E.g., when subscribing to a verify job with &#x60;children&#x3D;true&#x60;, you will also receive the events of the underlying build and deploy jobs. Defaults to &lt;code&gt;false&lt;/code&gt;. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**EventWithCloseSSE**](EventWithCloseSSE.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`EventWithCloseSSE`** |  | [EventWithCloseSSE](EventWithCloseSSE.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -86,7 +89,7 @@ Name     | Type  | API binding   | Description   | Notes
 > type: JobType,
 > id: str,
 > headers
-> ) -> JobResponse 
+> ) -> JobResponse
 
 Get Job
 
@@ -104,13 +107,14 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.job_response import JobResponse
 from waylay.services.registry.models.job_type import JobType
 try:
     # Get Job
     # calls `GET /registry/v2/jobs/{type}/{id}`
     api_response = await waylay_client.registry.jobs.get(
-        waylay.services.registry.JobType(), # type | path param "type"
+        'build', # type | path param "type"
         'id_example', # id | path param "id"
     )
     print("The response of registry.jobs.get:\n")
@@ -133,8 +137,11 @@ Name     | Type  | API binding   | Description   | Notes
 
 ### Return type
 
-
-[**JobResponse**](JobResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`JobResponse`** |  | [JobResponse](JobResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -153,7 +160,7 @@ Name     | Type  | API binding   | Description   | Notes
 > list(
 > query: ListQuery,
 > headers
-> ) -> JobsResponse 
+> ) -> JobsResponse
 
 List Jobs
 
@@ -171,6 +178,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.job_state_result import JobStateResult
 from waylay.services.registry.models.job_type_schema import JobTypeSchema
@@ -181,12 +189,6 @@ try:
     api_response = await waylay_client.registry.jobs.list(
         # query parameters:
         query = {
-            'limit': 3.4
-            'type': [waylay.services.registry.JobTypeSchema()]
-            'state': [waylay.services.registry.JobStateResult()]
-            'functionType': [waylay.services.registry.FunctionType()]
-            'createdBefore': waylay.services.registry.TimestampSpec()
-            'createdAfter': waylay.services.registry.TimestampSpec()
         },
     )
     print("The response of registry.jobs.list:\n")
@@ -204,18 +206,21 @@ GET /registry/v2/jobs/
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['limit']** | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
-**query['type']** | [**List[JobTypeSchema]**](JobTypeSchema.md) | query parameter `"type"` | Filter on job type | [optional] 
-**query['state']** | [**List[JobStateResult]**](JobStateResult.md) | query parameter `"state"` | Filter on job state | [optional] 
-**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | Filter on function type | [optional] 
-**query['createdBefore']** | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on jobs that created before the given timestamp or age | [optional] 
-**query['createdAfter']** | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on jobs that created after the given timestamp or age | [optional] 
+**query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
+**query['type']** (dict) <br> **query.type** (Query) | [**List[JobTypeSchema]**](JobTypeSchema.md) | query parameter `"type"` | Filter on job type | [optional] 
+**query['state']** (dict) <br> **query.state** (Query) | [**List[JobStateResult]**](JobStateResult.md) | query parameter `"state"` | Filter on job state | [optional] 
+**query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | Filter on function type | [optional] 
+**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on jobs that created before the given timestamp or age | [optional] 
+**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on jobs that created after the given timestamp or age | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**JobsResponse**](JobsResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`JobsResponse`** |  | [JobsResponse](JobsResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 

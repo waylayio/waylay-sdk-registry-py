@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.create_function_query_v2 import (
@@ -24,12 +23,20 @@ try:
     CreateFunctionQueryV2Adapter = TypeAdapter(CreateFunctionQueryV2)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for CreateFunctionQueryV2 not available: {exc}")
     MODELS_AVAILABLE = False
 
-create_function_query_v2_model_schema = json.loads(r"""{
+create_function_query_v2_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
+    },
+    "comment" : {
+      "type" : "string",
+      "description" : "An optional user-specified comment corresponding to the operation."
+    },
     "deprecatePrevious" : {
       "$ref" : "#/components/schemas/DeprecatePreviousPolicy"
     },
@@ -58,11 +65,19 @@ create_function_query_v2_model_schema = json.loads(r"""{
       "type" : "boolean",
       "description" : "If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.",
       "default" : false
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/NamedVersionRange"
+    },
+    "copy" : {
+      "$ref" : "#/components/schemas/CreateFunctionQueryV2_copy"
     }
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 create_function_query_v2_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 create_function_query_v2_faker = JSF(

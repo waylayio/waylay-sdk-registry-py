@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **links** | [**JobHALLinks**](JobHALLinks.md) |  | [optional] 
-**type** | **str** | The type of the background task. | 
+**type** | [**UndeployType**](UndeployType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**UndeployArgs**](UndeployArgs.md) |  | [optional] 
 **result** | [**UndeployResult**](UndeployResult.md) |  | [optional] 

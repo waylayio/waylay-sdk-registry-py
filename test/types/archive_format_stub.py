@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.archive_format import ArchiveFormat
@@ -22,15 +21,17 @@ try:
     ArchiveFormatAdapter = TypeAdapter(ArchiveFormat)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for ArchiveFormat not available: {exc}")
     MODELS_AVAILABLE = False
 
-archive_format_model_schema = json.loads(r"""{
+archive_format_model_schema = json.loads(
+    r"""{
   "title" : "ArchiveFormat",
   "type" : "string",
   "enum" : [ "node", "python", "golang", "byoml", "native" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 archive_format_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 archive_format_faker = JSF(archive_format_model_schema, allow_none_optionals=1)

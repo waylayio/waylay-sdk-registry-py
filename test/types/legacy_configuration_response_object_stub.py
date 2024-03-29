@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.legacy_configuration_response_object import (
@@ -26,12 +25,10 @@ try:
     )
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(
-        f"Type adapter for LegacyConfigurationResponseObject not available: {exc}"
-    )
     MODELS_AVAILABLE = False
 
-legacy_configuration_response_object_model_schema = json.loads(r"""{
+legacy_configuration_response_object_model_schema = json.loads(
+    r"""{
   "title" : "LegacyConfigurationResponseObject",
   "required" : [ "name", "type" ],
   "type" : "object",
@@ -59,10 +56,12 @@ legacy_configuration_response_object_model_schema = json.loads(r"""{
     }
   }
 }
-""")
-legacy_configuration_response_object_model_schema.update(
-    {"definitions": MODEL_DEFINITIONS}
+""",
+    object_hook=with_example_provider,
 )
+legacy_configuration_response_object_model_schema.update({
+    "definitions": MODEL_DEFINITIONS
+})
 
 legacy_configuration_response_object_faker = JSF(
     legacy_configuration_response_object_model_schema, allow_none_optionals=1

@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.build_args import BuildArgs
@@ -22,10 +21,10 @@ try:
     BuildArgsAdapter = TypeAdapter(BuildArgs)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for BuildArgs not available: {exc}")
     MODELS_AVAILABLE = False
 
-build_args_model_schema = json.loads(r"""{
+build_args_model_schema = json.loads(
+    r"""{
   "title" : "BuildArgs",
   "required" : [ "args", "imageName", "runtimeName", "runtimeVersion", "storageLocation" ],
   "type" : "object",
@@ -62,7 +61,9 @@ build_args_model_schema = json.loads(r"""{
   },
   "description" : "Input arguments to a job that builds a function."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 build_args_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 build_args_faker = JSF(build_args_model_schema, allow_none_optionals=1)

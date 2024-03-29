@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.legacy_debug_plug_manifest import (
@@ -24,10 +23,10 @@ try:
     LegacyDebugPlugManifestAdapter = TypeAdapter(LegacyDebugPlugManifest)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for LegacyDebugPlugManifest not available: {exc}")
     MODELS_AVAILABLE = False
 
-legacy_debug_plug_manifest_model_schema = json.loads(r"""{
+legacy_debug_plug_manifest_model_schema = json.loads(
+    r"""{
   "required" : [ "metadata", "name", "runtime", "script", "tenant", "version" ],
   "type" : "object",
   "properties" : {
@@ -62,7 +61,9 @@ legacy_debug_plug_manifest_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 legacy_debug_plug_manifest_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 legacy_debug_plug_manifest_faker = JSF(

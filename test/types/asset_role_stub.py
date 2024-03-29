@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.asset_role import AssetRole
@@ -22,16 +21,18 @@ try:
     AssetRoleAdapter = TypeAdapter(AssetRole)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for AssetRole not available: {exc}")
     MODELS_AVAILABLE = False
 
-asset_role_model_schema = json.loads(r"""{
+asset_role_model_schema = json.loads(
+    r"""{
   "title" : "AssetRole",
   "type" : "string",
   "description" : "Classification of assets with regard to their role.",
   "enum" : [ "manifest", "project", "main", "lib", "script", "other" ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 asset_role_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 asset_role_faker = JSF(asset_role_model_schema, allow_none_optionals=1)

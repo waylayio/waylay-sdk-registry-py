@@ -1,6 +1,6 @@
 # waylay.services.registry.RuntimesApi
 
-All URIs are relative to *https://api.waylay.io*
+All URIs are relative to *https://api-aws-dev.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -17,7 +17,7 @@ Method | HTTP request | Description
 > version: SemanticVersionRange,
 > query: ExampleArchiveQuery,
 > headers
-> ) -> bytearray 
+> ) -> bytearray
 
 Get Runtime Example Archive
 
@@ -35,6 +35,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 try:
     # Get Runtime Example Archive
     # calls `GET /registry/v2/runtimes/{name}/versions/{version}/example`
@@ -64,19 +65,22 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of a &lt;em&gt;runtime&lt;/em&gt; | 
 **version** | [**SemanticVersionRange**](.md) | path parameter `"version"` | A version range for a &lt;em&gt;runtime&lt;/em&gt; | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['ls']** | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
+**query['ls']** (dict) <br> **query.ls** (Query) | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-**bytearray**
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`bytearray`** |  | 
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/octet-stream, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
+ - **Accept**: application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
 
 ### HTTP response details
 
@@ -93,7 +97,7 @@ Name     | Type  | API binding   | Description   | Notes
 > wildcard: str,
 > query: GetExampleAssetQuery,
 > headers
-> ) -> bytearray 
+> ) -> bytearray
 
 Get File From Runtime Example Archive
 
@@ -111,6 +115,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 try:
     # Get File From Runtime Example Archive
     # calls `GET /registry/v2/runtimes/{name}/versions/{version}/example/{wildcard}`
@@ -142,19 +147,22 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | [**SemanticVersionRange**](.md) | path parameter `"version"` | A version range for a &lt;em&gt;runtime&lt;/em&gt; | 
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['ls']** | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
+**query['ls']** (dict) <br> **query.ls** (Query) | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-**bytearray**
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`bytearray`** |  | 
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/octet-stream, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
+ - **Accept**: application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
 
 ### HTTP response details
 
@@ -169,7 +177,7 @@ Name     | Type  | API binding   | Description   | Notes
 > name: str,
 > query: GetLatestQuery,
 > headers
-> ) -> RuntimeVersionResponse 
+> ) -> RuntimeVersionResponse
 
 Get Latest Runtime Version
 
@@ -187,6 +195,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.archive_format import ArchiveFormat
 from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.runtime_version_response import RuntimeVersionResponse
@@ -199,8 +208,8 @@ try:
         query = {
             'version': waylay.services.registry.SemanticVersionRange()
             'includeDeprecated': False
-            'functionType': [waylay.services.registry.FunctionType()]
-            'archiveFormat': [waylay.services.registry.ArchiveFormat()]
+            'functionType': []
+            'archiveFormat': []
         },
     )
     print("The response of registry.runtimes.get_latest:\n")
@@ -219,16 +228,19 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of a &lt;em&gt;runtime&lt;/em&gt; | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['version']** | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
-**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
-**query['archiveFormat']** | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
+**query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**RuntimeVersionResponse**](RuntimeVersionResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RuntimeVersionResponse`** |  | [RuntimeVersionResponse](RuntimeVersionResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -249,7 +261,7 @@ Name     | Type  | API binding   | Description   | Notes
 > version: SemanticVersionRange,
 > query: GetQuery,
 > headers
-> ) -> RuntimeVersionResponse 
+> ) -> RuntimeVersionResponse
 
 Get Runtime Version
 
@@ -267,6 +279,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.runtime_version_response import RuntimeVersionResponse
 try:
     # Get Runtime Version
@@ -296,13 +309,16 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of a &lt;em&gt;runtime&lt;/em&gt; | 
 **version** | [**SemanticVersionRange**](.md) | path parameter `"version"` | A version range for a &lt;em&gt;runtime&lt;/em&gt; | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**RuntimeVersionResponse**](RuntimeVersionResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RuntimeVersionResponse`** |  | [RuntimeVersionResponse](RuntimeVersionResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -321,7 +337,7 @@ Name     | Type  | API binding   | Description   | Notes
 > list(
 > query: ListQuery,
 > headers
-> ) -> RuntimeSummaryResponse 
+> ) -> RuntimeSummaryResponse
 
 List Runtimes
 
@@ -339,6 +355,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.archive_format import ArchiveFormat
 from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.latest_version_level import LatestVersionLevel
@@ -350,11 +367,11 @@ try:
         # query parameters:
         query = {
             'version': waylay.services.registry.SemanticVersionRange()
-            'latest': waylay.services.registry.LatestVersionLevel()
+            'latest': 'major'
             'includeDeprecated': False
             'name': 'node*'
-            'functionType': [waylay.services.registry.FunctionType()]
-            'archiveFormat': [waylay.services.registry.ArchiveFormat()]
+            'functionType': []
+            'archiveFormat': []
         },
     )
     print("The response of registry.runtimes.list:\n")
@@ -372,18 +389,21 @@ GET /registry/v2/runtimes/
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['version']** | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
-**query['latest']** | [**LatestVersionLevel**](.md) | query parameter `"latest"` | If set, filters on the level of latest versions that will be included in the query. * &#x60;major&#x60;: include at most one latest version per name and major release. * &#x60;minor&#x60;: include at most one latest version per name and minor release. * &#x60;patch&#x60;: include each matching patch version. * &#x60;true&#x60;: include the latest matching version. * &#x60;false&#x60;: include any matching version (same as &#x60;patch&#x60;).  This filter is applied after all other selection criteria. | [optional] 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
-**query['name']** | **str** | query parameter `"name"` | If set, filters on the &lt;code&gt;name&lt;/code&gt; of a runtime. Supports &lt;code&gt;*&lt;/code&gt; and &lt;code&gt;?&lt;/code&gt; wildcards and is case-insensitive. | [optional] 
-**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
-**query['archiveFormat']** | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
+**query['latest']** (dict) <br> **query.latest** (Query) | [**LatestVersionLevel**](.md) | query parameter `"latest"` | If set, filters on the level of latest versions that will be included in the query. * &#x60;major&#x60;: include at most one latest version per name and major release. * &#x60;minor&#x60;: include at most one latest version per name and minor release. * &#x60;patch&#x60;: include each matching patch version. * &#x60;true&#x60;: include the latest matching version. * &#x60;false&#x60;: include any matching version (same as &#x60;patch&#x60;).  This filter is applied after all other selection criteria. | [optional] 
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
+**query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` | If set, filters on the &lt;code&gt;name&lt;/code&gt; of a runtime. Supports &lt;code&gt;*&lt;/code&gt; and &lt;code&gt;?&lt;/code&gt; wildcards and is case-insensitive. | [optional] 
+**query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**RuntimeSummaryResponse**](RuntimeSummaryResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RuntimeSummaryResponse`** |  | [RuntimeSummaryResponse](RuntimeSummaryResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 
@@ -403,7 +423,7 @@ Name     | Type  | API binding   | Description   | Notes
 > name: str,
 > query: ListVersionsQuery,
 > headers
-> ) -> RuntimeSummaryResponse 
+> ) -> RuntimeSummaryResponse
 
 List Runtime Versions
 
@@ -421,6 +441,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.archive_format import ArchiveFormat
 from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.latest_version_level import LatestVersionLevel
@@ -433,10 +454,10 @@ try:
         # query parameters:
         query = {
             'version': waylay.services.registry.SemanticVersionRange()
-            'latest': waylay.services.registry.LatestVersionLevel()
+            'latest': 'major'
             'includeDeprecated': False
-            'functionType': [waylay.services.registry.FunctionType()]
-            'archiveFormat': [waylay.services.registry.ArchiveFormat()]
+            'functionType': []
+            'archiveFormat': []
         },
     )
     print("The response of registry.runtimes.list_versions:\n")
@@ -455,17 +476,20 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of a &lt;em&gt;runtime&lt;/em&gt; | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['version']** | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
-**query['latest']** | [**LatestVersionLevel**](.md) | query parameter `"latest"` | If set, filters on the level of latest versions that will be included in the query. * &#x60;major&#x60;: include at most one latest version per name and major release. * &#x60;minor&#x60;: include at most one latest version per name and minor release. * &#x60;patch&#x60;: include each matching patch version. * &#x60;true&#x60;: include the latest matching version. * &#x60;false&#x60;: include any matching version (same as &#x60;patch&#x60;).  This filter is applied after all other selection criteria. | [optional] 
-**query['includeDeprecated']** | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
-**query['functionType']** | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
-**query['archiveFormat']** | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, filters on the &lt;code&gt;version&lt;/code&gt; of a runtime. Supports [version ranges](https://devhints.io/semver). | [optional] 
+**query['latest']** (dict) <br> **query.latest** (Query) | [**LatestVersionLevel**](.md) | query parameter `"latest"` | If set, filters on the level of latest versions that will be included in the query. * &#x60;major&#x60;: include at most one latest version per name and major release. * &#x60;minor&#x60;: include at most one latest version per name and minor release. * &#x60;patch&#x60;: include each matching patch version. * &#x60;true&#x60;: include the latest matching version. * &#x60;false&#x60;: include any matching version (same as &#x60;patch&#x60;).  This filter is applied after all other selection criteria. | [optional] 
+**query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | If set to &#x60;true&#x60;, deprecated runtimes will be included in the query. | [optional] [default False]
+**query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | If set, filters on the &lt;code&gt;functionType&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | If set, filters on the &lt;code&gt;archiveFormat&lt;/code&gt; of a runtime. Uses an exact match. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
 
-
-[**RuntimeSummaryResponse**](RuntimeSummaryResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RuntimeSummaryResponse`** |  | [RuntimeSummaryResponse](RuntimeSummaryResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 

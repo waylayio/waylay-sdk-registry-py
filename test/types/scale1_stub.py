@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.scale1 import Scale1
@@ -22,19 +21,16 @@ try:
     Scale1Adapter = TypeAdapter(Scale1)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for Scale1 not available: {exc}")
     MODELS_AVAILABLE = False
 
-scale_1_model_schema = json.loads(r"""{
+scale_1_model_schema = json.loads(
+    r"""{
   "title" : "Scale",
   "required" : [ "_links", "createdAt", "createdBy", "id", "operation", "state", "type" ],
   "type" : "object",
   "properties" : {
     "type" : {
-      "title" : "type",
-      "type" : "string",
-      "description" : "The type of the background task.",
-      "enum" : [ "scale" ]
+      "$ref" : "#/components/schemas/Scale_type"
     },
     "operation" : {
       "title" : "operation",
@@ -68,7 +64,9 @@ scale_1_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 scale_1_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 scale_1_faker = JSF(scale_1_model_schema, allow_none_optionals=1)

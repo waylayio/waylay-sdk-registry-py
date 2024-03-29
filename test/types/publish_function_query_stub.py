@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.publish_function_query import (
@@ -24,15 +23,24 @@ try:
     PublishFunctionQueryAdapter = TypeAdapter(PublishFunctionQuery)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for PublishFunctionQuery not available: {exc}")
     MODELS_AVAILABLE = False
 
-publish_function_query_model_schema = json.loads(r"""{
+publish_function_query_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
+    "chown" : {
+      "type" : "boolean",
+      "description" : "If set, ownership of the draft function is transferred to the current user.",
+      "default" : false
+    },
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
+    },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
     },
     "deprecatePrevious" : {
       "$ref" : "#/components/schemas/DeprecatePreviousPolicy"
@@ -45,7 +53,9 @@ publish_function_query_model_schema = json.loads(r"""{
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 publish_function_query_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 publish_function_query_faker = JSF(

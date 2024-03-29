@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.latest_functions_query import (
@@ -24,12 +23,15 @@ try:
     LatestFunctionsQueryAdapter = TypeAdapter(LatestFunctionsQuery)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for LatestFunctionsQuery not available: {exc}")
     MODELS_AVAILABLE = False
 
-latest_functions_query_model_schema = json.loads(r"""{
+latest_functions_query_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
+    "showRelated" : {
+      "$ref" : "#/components/schemas/ShowRelatedType"
+    },
     "limit" : {
       "minimum" : 0,
       "type" : "number",
@@ -70,7 +72,9 @@ latest_functions_query_model_schema = json.loads(r"""{
   "additionalProperties" : false,
   "description" : "Request to list latest function versions per named function. A request that only uses these query parameters will include links to the _latest_ draft/published versions."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 latest_functions_query_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 latest_functions_query_faker = JSF(

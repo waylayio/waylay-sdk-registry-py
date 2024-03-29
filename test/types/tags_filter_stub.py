@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.tags_filter import TagsFilter
@@ -22,10 +21,10 @@ try:
     TagsFilterAdapter = TypeAdapter(TagsFilter)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for TagsFilter not available: {exc}")
     MODELS_AVAILABLE = False
 
-tags_filter_model_schema = json.loads(r"""{
+tags_filter_model_schema = json.loads(
+    r"""{
   "title" : "TagsFilter",
   "anyOf" : [ {
     "type" : "array",
@@ -36,7 +35,9 @@ tags_filter_model_schema = json.loads(r"""{
     "type" : "string"
   } ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 tags_filter_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 tags_filter_faker = JSF(tags_filter_model_schema, allow_none_optionals=1)

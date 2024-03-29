@@ -1,6 +1,6 @@
 # waylay.services.registry.DefaultApi
 
-All URIs are relative to *https://api.waylay.io*
+All URIs are relative to *https://api-aws-dev.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -9,7 +9,7 @@ Method | HTTP request | Description
 # **get**
 > get(
 > headers
-> ) -> RootPageResponse 
+> ) -> RootPageResponse
 
 Version
 
@@ -27,6 +27,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 # Intialize a waylay client instance
 waylay_client = WaylayClient.from_profile()
 
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.root_page_response import RootPageResponse
 try:
     # Version
@@ -50,8 +51,11 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-
-[**RootPageResponse**](RootPageResponse.md)
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`RootPageResponse`** |  | [RootPageResponse](RootPageResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
 
 ### HTTP request headers
 

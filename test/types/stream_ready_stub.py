@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.stream_ready import StreamReady
@@ -22,10 +21,10 @@ try:
     StreamReadyAdapter = TypeAdapter(StreamReady)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for StreamReady not available: {exc}")
     MODELS_AVAILABLE = False
 
-stream_ready_model_schema = json.loads(r"""{
+stream_ready_model_schema = json.loads(
+    r"""{
   "title" : "Stream Ready",
   "required" : [ "data", "event" ],
   "type" : "object",
@@ -41,7 +40,9 @@ stream_ready_model_schema = json.loads(r"""{
   },
   "description" : "A message that acknowledges that the server will sent job state changes."
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 stream_ready_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 stream_ready_faker = JSF(stream_ready_model_schema, allow_none_optionals=1)

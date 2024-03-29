@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.update_draft_query import UpdateDraftQuery
@@ -22,31 +21,36 @@ try:
     UpdateDraftQueryAdapter = TypeAdapter(UpdateDraftQuery)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for UpdateDraftQuery not available: {exc}")
     MODELS_AVAILABLE = False
 
-update_draft_query_model_schema = json.loads(r"""{
-  "required" : [ "chown" ],
+update_draft_query_model_schema = json.loads(
+    r"""{
   "type" : "object",
   "properties" : {
+    "chown" : {
+      "type" : "boolean",
+      "description" : "If set, ownership of the draft function is transferred to the current user.",
+      "default" : false
+    },
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
+    },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
     },
     "async" : {
       "type" : "boolean",
       "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
       "default" : true
-    },
-    "chown" : {
-      "type" : "boolean",
-      "description" : "If set, ownership of the draft function is transferred to the current user.",
-      "default" : false
     }
   },
   "additionalProperties" : false
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 update_draft_query_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 update_draft_query_faker = JSF(update_draft_query_model_schema, allow_none_optionals=1)

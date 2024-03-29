@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.root_page_response import RootPageResponse
@@ -22,10 +21,10 @@ try:
     RootPageResponseAdapter = TypeAdapter(RootPageResponse)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for RootPageResponse not available: {exc}")
     MODELS_AVAILABLE = False
 
-root_page_response_model_schema = json.loads(r"""{
+root_page_response_model_schema = json.loads(
+    r"""{
   "required" : [ "enabled", "name", "revision", "version" ],
   "type" : "object",
   "properties" : {
@@ -47,7 +46,9 @@ root_page_response_model_schema = json.loads(r"""{
   },
   "description" : "Status Page"
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 root_page_response_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 root_page_response_faker = JSF(root_page_response_model_schema, allow_none_optionals=1)

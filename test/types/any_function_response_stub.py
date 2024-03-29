@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.any_function_response import (
@@ -24,10 +23,10 @@ try:
     AnyFunctionResponseAdapter = TypeAdapter(AnyFunctionResponse)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for AnyFunctionResponse not available: {exc}")
     MODELS_AVAILABLE = False
 
-any_function_response_model_schema = json.loads(r"""{
+any_function_response_model_schema = json.loads(
+    r"""{
   "anyOf" : [ {
     "$ref" : "#/components/schemas/PlugResponseV2"
   }, {
@@ -36,7 +35,9 @@ any_function_response_model_schema = json.loads(r"""{
     "$ref" : "#/components/schemas/WebscriptResponseV2"
   } ]
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 any_function_response_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 any_function_response_faker = JSF(

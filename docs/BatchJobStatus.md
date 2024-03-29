@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** | The type of the background task. | 
+**type** | [**BatchJobStatusType**](BatchJobStatusType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**BatchArgs**](BatchArgs.md) |  | 
 **result** | [**BatchResult**](BatchResult.md) |  | [optional] 

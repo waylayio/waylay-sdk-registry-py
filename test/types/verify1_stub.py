@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.verify1 import Verify1
@@ -22,19 +21,16 @@ try:
     Verify1Adapter = TypeAdapter(Verify1)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for Verify1 not available: {exc}")
     MODELS_AVAILABLE = False
 
-verify_1_model_schema = json.loads(r"""{
+verify_1_model_schema = json.loads(
+    r"""{
   "title" : "Verify",
   "required" : [ "_links", "createdAt", "createdBy", "id", "operation", "state", "type" ],
   "type" : "object",
   "properties" : {
     "type" : {
-      "title" : "Verify",
-      "type" : "string",
-      "description" : "The type of the background task.",
-      "enum" : [ "verify" ]
+      "$ref" : "#/components/schemas/Verify_type"
     },
     "operation" : {
       "title" : "operation",
@@ -68,7 +64,9 @@ verify_1_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 verify_1_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 verify_1_faker = JSF(verify_1_model_schema, allow_none_optionals=1)

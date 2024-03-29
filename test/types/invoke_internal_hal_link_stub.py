@@ -9,12 +9,11 @@ Do not edit the class manually.
 """
 
 import json
-import warnings
 
 from jsf import JSF
 from pydantic import TypeAdapter
 
-from ..openapi import MODEL_DEFINITIONS
+from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
     from waylay.services.registry.models.invoke_internal_hal_link import (
@@ -24,10 +23,10 @@ try:
     InvokeInternalHALLinkAdapter = TypeAdapter(InvokeInternalHALLink)
     MODELS_AVAILABLE = True
 except ImportError as exc:
-    warnings.warn(f"Type adapter for InvokeInternalHALLink not available: {exc}")
     MODELS_AVAILABLE = False
 
-invoke_internal_hal_link_model_schema = json.loads(r"""{
+invoke_internal_hal_link_model_schema = json.loads(
+    r"""{
   "title" : "InvokeInternalHALLink",
   "type" : "object",
   "properties" : {
@@ -36,7 +35,9 @@ invoke_internal_hal_link_model_schema = json.loads(r"""{
     }
   }
 }
-""")
+""",
+    object_hook=with_example_provider,
+)
 invoke_internal_hal_link_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
 invoke_internal_hal_link_faker = JSF(
