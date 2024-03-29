@@ -125,6 +125,9 @@ latest_plug_versions_query_model_schema = json.loads(
     "latest" : {
       "type" : "boolean",
       "description" : "When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter."
+    },
+    "showRelated" : {
+      "$ref" : "#/components/schemas/LatestFunctionVersionsQuery_showRelated"
     }
   },
   "additionalProperties" : false,

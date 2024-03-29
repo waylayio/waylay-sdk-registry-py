@@ -5,6 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**author** | **str** | Optionally changes the author metadata when updating a function. | [optional] 
+**comment** | **str** | An optional user-specified comment corresponding to the operation. | [optional] 
 **deprecate_previous** | [**DeprecatePreviousPolicy**](DeprecatePreviousPolicy.md) |  | [optional] 
 **dry_run** | **bool** | If set to &lt;code&gt;true&lt;/code&gt;, validates the deployment conditions, but does not change anything. | [optional] 
 **var_async** | **bool** | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default to True]
@@ -12,6 +14,8 @@ Name | Type | Description | Notes
 **version** | [**SemanticVersionRange**](SemanticVersionRange.md) |  | [optional] 
 **name** | **str** | If set, the value will be used as the function name instead of the one specified in the manifest. | [optional] 
 **draft** | **bool** | If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid. | [optional] [default to False]
+**runtime** | **str** | A name reference with optional version range: &#x60;&lt;name&gt;[@&lt;versionRange&gt;]&#x60;.  References (a version range of) a named and versioned entity like _function_ or _runtime_. | [optional] 
+**copy_from** | [**CreateFunctionQueryV2Copy**](CreateFunctionQueryV2Copy.md) |  | [optional] 
 
 ## Example
 

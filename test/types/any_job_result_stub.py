@@ -40,6 +40,8 @@ any_job_result_model_schema = json.loads(
     "$ref" : "#/components/schemas/BatchResult"
   }, {
     "$ref" : "#/components/schemas/CleanupResult"
+  }, {
+    "$ref" : "#/components/schemas/NotifyResult"
   } ]
 }
 """,

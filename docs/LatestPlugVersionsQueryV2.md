@@ -28,6 +28,7 @@ Name | Type | Description | Notes
 **archive_format** | [**List[ArchiveFormat]**](ArchiveFormat.md) | Filter on the archive format of the function. | [optional] 
 **runtime** | **List[str]** | Filter on the runtime of the function. | [optional] 
 **latest** | **bool** | When &#x60;true&#x60;, only the latest version per function name is returned. If set to &#x60;false&#x60;, multiple versions per named function can be returned. Defaults to &#x60;true&#x60;, except when specific versions are selected with the &#x60;nameVersion&#x60; filter. | [optional] 
+**show_related** | [**ShowRelatedType**](ShowRelatedType.md) |  | [optional] 
 
 ## Example
 

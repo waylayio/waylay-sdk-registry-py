@@ -15,7 +15,6 @@ from pydantic import (
     ConfigDict,
     Field,
     StrictBool,
-    StrictStr,
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
@@ -23,10 +22,6 @@ from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 class AsyncVerifyQuery(WaylayBaseModel):
     """AsyncVerifyQuery."""
 
-    comment: StrictStr | None = Field(
-        default=None,
-        description="An optional user-specified comment corresponding to the operation.",
-    )
     var_async: StrictBool | None = Field(
         default=True,
         description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",

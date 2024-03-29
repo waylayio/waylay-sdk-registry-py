@@ -11,14 +11,21 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
+import re
+
 from pydantic import (
     ConfigDict,
     Field,
     StrictBool,
     StrictStr,
+    field_validator,
+)
+from typing_extensions import (
+    Annotated,  # >=3.11
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
+from ..models.create_function_query_v2_copy import CreateFunctionQueryV2Copy
 from ..models.deprecate_previous_policy import DeprecatePreviousPolicy
 from ..models.semantic_version_range import SemanticVersionRange
 
@@ -26,6 +33,14 @@ from ..models.semantic_version_range import SemanticVersionRange
 class CreateFunctionQueryV2(WaylayBaseModel):
     """CreateFunctionQueryV2."""
 
+    author: StrictStr | None = Field(
+        default=None,
+        description="Optionally changes the author metadata when updating a function.",
+    )
+    comment: StrictStr | None = Field(
+        default=None,
+        description="An optional user-specified comment corresponding to the operation.",
+    )
     deprecate_previous: DeprecatePreviousPolicy | None = Field(
         default=None, alias="deprecatePrevious"
     )
@@ -53,6 +68,21 @@ class CreateFunctionQueryV2(WaylayBaseModel):
         default=False,
         description="If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.",
     )
+    runtime: Annotated[str, Field(strict=True)] | None = Field(
+        default=None,
+        description="A name reference with optional version range: `<name>[@<versionRange>]`.  References (a version range of) a named and versioned entity like _function_ or _runtime_.",
+    )
+    copy_from: CreateFunctionQueryV2Copy | None = Field(default=None, alias="copy")
+
+    @field_validator("runtime")
+    @classmethod
+    def runtime_validate_regular_expression(cls, value):
+        """Validate the regular expression."""
+        if value is None:
+            return value
+        if not re.match(r"^[^@]*(@.*)?$", value):
+            raise ValueError(r"must validate the regular expression /^[^@]*(@.*)?$/")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

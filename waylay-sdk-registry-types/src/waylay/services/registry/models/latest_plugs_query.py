@@ -26,12 +26,14 @@ from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.archive_format import ArchiveFormat
 from ..models.plug_type import PlugType
+from ..models.show_related_type import ShowRelatedType
 
 
 class LatestPlugsQuery(WaylayBaseModel):
     """Latest plug versions listing query with latest links. A request that only uses these query parameters will include links to the _latest_ draft/published versions of the plug.."""
 
     type: PlugType | None = None
+    show_related: ShowRelatedType | None = Field(default=None, alias="showRelated")
     limit: (
         Annotated[float, Field(strict=True, ge=0)]
         | Annotated[int, Field(strict=True, ge=0)]

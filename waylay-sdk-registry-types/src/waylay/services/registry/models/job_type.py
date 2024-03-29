@@ -24,6 +24,7 @@ class JobType(str, Enum):
     BATCH = "batch"
     SCALE = "scale"
     CLEANUP = "cleanup"
+    NOTIFY = "notify"
     OTHER = "other"
 
     def __str__(self) -> str:

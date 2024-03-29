@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waylay-sdk-registry-types"
-version = "2.12.4rc1"
+version = "2.13.0-beta.0-0"
 description = "Waylay Function Registry Types "
 authors = [
     { name = "Waylay", email = "info@waylay.io"}
@@ -13,6 +13,7 @@ keywords = ["Waylay Function Registry" , "Types"]
 requires-python = ">= 3.9"
 dependencies = [
     "waylay-sdk ~= 0.0.4rc5",
+    "waylay-sdk-registry == 2.13.0-beta.0-0",
     "pydantic ~= 2.6",
     "typing-extensions ~= 4.10",
     "eval-type-backport ~= 0.1.3; python_version < '3.10'",

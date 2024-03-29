@@ -29,6 +29,14 @@ create_function_query_v2_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
+    },
+    "comment" : {
+      "type" : "string",
+      "description" : "An optional user-specified comment corresponding to the operation."
+    },
     "deprecatePrevious" : {
       "$ref" : "#/components/schemas/DeprecatePreviousPolicy"
     },
@@ -57,6 +65,12 @@ create_function_query_v2_model_schema = json.loads(
       "type" : "boolean",
       "description" : "If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.",
       "default" : false
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/NamedVersionRange"
+    },
+    "copy" : {
+      "$ref" : "#/components/schemas/CreateFunctionQueryV2_copy"
     }
   },
   "additionalProperties" : false
