@@ -11031,7 +11031,7 @@ paths:
       parameters:
       - schema:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
-          default: patch
+          default: none
         in: query
         name: deprecatePrevious
         required: false
@@ -12397,7 +12397,7 @@ paths:
         description: An optional user-specified comment corresponding to the operation.
       - schema:
           $ref: '#/components/schemas/DeprecatePreviousPolicy'
-          default: patch
+          default: none
         in: query
         name: deprecatePrevious
         required: false

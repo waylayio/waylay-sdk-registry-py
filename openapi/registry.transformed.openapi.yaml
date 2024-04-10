@@ -11979,7 +11979,7 @@ paths:
       parameters:
         - schema:
             $ref: '#/components/schemas/DeprecatePreviousPolicy'
-            default: patch
+            default: none
           in: query
           name: deprecatePrevious
           required: false
@@ -13712,7 +13712,7 @@ paths:
           x-showExample: false
         - schema:
             $ref: '#/components/schemas/DeprecatePreviousPolicy'
-            default: patch
+            default: none
           in: query
           name: deprecatePrevious
           required: false
