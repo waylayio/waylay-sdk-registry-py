@@ -1,5 +1,4 @@
 LICENSE.txt
-README.md
 pyproject.toml
 src/waylay/services/registry/models/__init__.py
 src/waylay/services/registry/models/active_event_data.py

@@ -805,3 +805,5 @@ test/types/with_asset_hal_link_stub.py
 test/types/with_entity_attributes_stub.py
 test/types/with_limit_stub.py
 test/types/with_paging_stub.py
+waylay-sdk-registry-types/README.md
+waylay-sdk-registry/README.md
