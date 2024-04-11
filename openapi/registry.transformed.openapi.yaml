@@ -9030,6 +9030,7 @@ paths:
             text/eventstream:
               schema:
                 $ref: '#/components/schemas/EventWithCloseSSE'
+          x-is-event-stream: true
       security:
         - waylayApiKeySecret: []
       x-py-method: events
@@ -9037,6 +9038,7 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: false
+      x-produces-event-stream: true
   /registry/v2/runtimes/:
     get:
       operationId: list_runtimes

@@ -12,7 +12,7 @@ Method | HTTP request | Description
 > events(
 > query: EventsQuery,
 > headers
-> ) -> EventWithCloseSSE
+> ) -> AsyncIterator[EventWithCloseSSE]
 
 Stream Events
 
@@ -67,7 +67,7 @@ Name     | Type  | API binding   | Description   | Notes
 
 Selected path param | Raw response param | Return Type  | Description | Links
 ------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`EventWithCloseSSE`** |  | [EventWithCloseSSE](EventWithCloseSSE.md)
+Literal[""] _(default)_  | False _(default)_ | **`AsyncIterator[EventWithCloseSSE]`** |  | [EventWithCloseSSE](EventWithCloseSSE.md)
 str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
 / | True | `Response` | The raw http response object.
 
