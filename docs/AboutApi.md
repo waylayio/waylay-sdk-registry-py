@@ -1,19 +1,19 @@
-# waylay.services.registry.DefaultApi
+# waylay.services.registry.AboutApi
 
 All URIs are relative to *https://api.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get**](DefaultApi.md#get) | **GET** /registry/v2/ | Version
+[**get**](AboutApi.md#get) | **GET** /registry/v2/ | Get Service Status
 
 # **get**
 > get(
 > headers
 > ) -> RootPageResponse
 
-Version
+Get Service Status
 
-Get the version of this function registry deployment.
+Get the status and version of the function registry service.
 
 ### Example
 
@@ -30,14 +30,14 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.root_page_response import RootPageResponse
 try:
-    # Version
+    # Get Service Status
     # calls `GET /registry/v2/`
-    api_response = await waylay_client.registry.default.get(
+    api_response = await waylay_client.registry.about.get(
     )
-    print("The response of registry.default.get:\n")
+    print("The response of registry.about.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.default.get: %s\n" % e)
+    print("Exception when calling registry.about.get: %s\n" % e)
 ```
 
 ### Endpoint

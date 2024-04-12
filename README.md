@@ -34,22 +34,16 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.function_type import FunctionType
-from waylay.services.registry.models.job_state_result import JobStateResult
-from waylay.services.registry.models.job_type_schema import JobTypeSchema
-from waylay.services.registry.models.jobs_response import JobsResponse
+from waylay.services.registry.models.root_page_response import RootPageResponse
 try:
-    # List Jobs
-    # calls `GET /registry/v2/jobs/`
-    api_response = await waylay_client.registry.jobs.list(
-        # query parameters:
-        query = {
-        },
+    # Get Service Status
+    # calls `GET /registry/v2/`
+    api_response = await waylay_client.registry.about.get(
     )
-    print("The response of registry.jobs.list:\n")
+    print("The response of registry.about.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.jobs.list: %s\n" % e)
+    print("Exception when calling registry.about.get: %s\n" % e)
 ```
 
 
@@ -61,6 +55,7 @@ All URIs are relative to *https://api.waylay.io*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AboutApi* | [**get**](docs/AboutApi.md#get) | **GET** /registry/v2/ | Get Service Status
 *JobsApi* | [**events**](docs/JobsApi.md#events) | **GET** /registry/v2/jobs/events | Stream Events
 *JobsApi* | [**get**](docs/JobsApi.md#get) | **GET** /registry/v2/jobs/{type}/{id} | Get Job
 *JobsApi* | [**list**](docs/JobsApi.md#list) | **GET** /registry/v2/jobs/ | List Jobs
@@ -124,7 +119,6 @@ Class | Method | HTTP request | Description
 *WebscriptFunctionsApi* | [**update_asset**](docs/WebscriptFunctionsApi.md#update_asset) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Update Webscript Asset
 *WebscriptFunctionsApi* | [**update_assets**](docs/WebscriptFunctionsApi.md#update_assets) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content | Update Webscript Assets
 *WebscriptFunctionsApi* | [**verify**](docs/WebscriptFunctionsApi.md#verify) | **POST** /registry/v2/webscripts/{name}/versions/{version}/verify | Verify Health Of Webscript
-*DefaultApi* | [**get**](docs/DefaultApi.md#get) | **GET** /registry/v2/ | Version
 
 
 ## Documentation For Models
