@@ -8856,8 +8856,11 @@ components:
 paths:
   /registry/v2/:
     get:
-      summary: Version
-      description: Get the version of this function registry deployment.
+      operationId: get_about
+      summary: Get Service Status
+      tags:
+        - About
+      description: Get the status and version of the function registry service.
       x-version: v2
       responses:
         default:
@@ -8866,7 +8869,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RootPageResponse'
-      operationId: get_registry_v2
       security:
         - waylayApiKeySecret: []
       x-py-method: get
@@ -9030,6 +9032,7 @@ paths:
             text/eventstream:
               schema:
                 $ref: '#/components/schemas/EventWithCloseSSE'
+          x-is-event-stream: true
       security:
         - waylayApiKeySecret: []
       x-py-method: events
@@ -9037,6 +9040,7 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: false
+      x-produces-event-stream: true
   /registry/v2/runtimes/:
     get:
       operationId: list_runtimes

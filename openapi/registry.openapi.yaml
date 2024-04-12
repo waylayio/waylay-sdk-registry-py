@@ -8476,8 +8476,11 @@ components:
 paths:
   /registry/v2/:
     get:
-      summary: Version
-      description: Get the version of this function registry deployment.
+      operationId: get_about
+      summary: Get Service Status
+      tags:
+      - About
+      description: Get the status and version of the function registry service.
       x-version: v2
       responses:
         default:
@@ -8486,7 +8489,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IRootPageResponse'
-      operationId: get_registry_v2
       security: &id001
       - waylayApiKeySecret: []
   /registry/v2/jobs/:

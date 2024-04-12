@@ -11,7 +11,7 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import Union
+from typing import AsyncIterator, Union, get_args
 from urllib.parse import quote
 
 import pytest
@@ -59,8 +59,9 @@ def _events_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
     httpx_mock_kwargs = {
         "method": "GET",
         "url": re.compile(f"^{gateway_url}/registry/v2/jobs/events(\\?.*)?"),
-        "content": json.dumps(mock_response, default=str),
+        "content": json.dumps(mock_response, default=str) + "\n",
         "status_code": 200,
+        "headers": {"content-type": "application/x-ndjson"},
     }
     httpx_mock.add_response(**httpx_mock_kwargs)
 
@@ -84,7 +85,10 @@ async def test_events(
     }
     _events_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.events(**kwargs)
-    check_type(resp, Union[EventWithCloseSSE,])
+    check_type(resp, Union[AsyncIterator[EventWithCloseSSE],])
+    async for item in resp:
+        check_type(item, get_args(Union[AsyncIterator[EventWithCloseSSE],])[0])
+        break  # Test only the first value
 
 
 @pytest.mark.asyncio
@@ -106,6 +110,9 @@ async def test_events_without_types(
     _events_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.events(**kwargs)
     check_type(resp, Model)
+    async for item in resp:
+        check_type(item, Model)
+        break  # Test only the first value
 
 
 def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, type: str, id: str):
