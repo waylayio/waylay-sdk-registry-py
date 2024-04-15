@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **runtime_name** | **str** |  | 
 **runtime_version** | **str** | A semantic version with _exactly_ a &#x60;major&#x60;, &#x60;minor&#x60; and &#x60;patch&#x60; specifier. No &#x60;pre-release&#x60; or &#x60;build&#x60; identifiers are allowed. See https://semver.org | 
-**revision** | **str** | The revision hash of the current (draft) function revision | [optional] 
+**revision** | **str** | The revision hash of the current (draft) function revision | 
 **storage_location** | **str** | Location of the function assets. | 
 **image_name** | **str** | Provided (or defaulted) image name to publish the function image. | 
 **args** | **Dict[str, str]** | Parameters to the runtime configuration. | 

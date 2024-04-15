@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **limit** | **float** | The page size used for this query result. | [optional] 
 **count** | **float** | The total count of matching items, from which this result is one page. | 
 **page** | **float** | The page number of a paged query result. | [optional] 
-**entities** | [**List[LatestWebscriptsResponseV2EntitiesInner]**](LatestWebscriptsResponseV2EntitiesInner.md) | The specification and deployment status of the queried functions | 
+**entities** | [**List[EntityWithLinksIWebscriptResponseWithInvokeLinkV2]**](EntityWithLinksIWebscriptResponseWithInvokeLinkV2.md) | The specification and deployment status of the queried functions | 
 
 ## Example
 

@@ -25,22 +25,35 @@ except ImportError as exc:
 
 update_draft_query_model_schema = json.loads(
     r"""{
-  "required" : [ "chown" ],
   "type" : "object",
   "properties" : {
-    "comment" : {
-      "type" : "string",
-      "description" : "An optional user-specified comment corresponding to the operation."
-    },
-    "async" : {
+    "scaleToZero" : {
       "type" : "boolean",
-      "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately.",
+      "default" : false
+    },
+    "deploy" : {
+      "type" : "boolean",
+      "description" : "Indicates that a function should be _deployed_ when its assets are valid.\n\n* If `true` (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated.\n* If `false`, the uploaded assets are stored and the function is created/updated in `registered` state. Asset validation errors are only returned as warning, and stored as `failureReason` on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage.",
       "default" : true
     },
     "chown" : {
       "type" : "boolean",
       "description" : "If set, ownership of the draft function is transferred to the current user.",
       "default" : false
+    },
+    "comment" : {
+      "type" : "string",
+      "description" : "An optional user-specified comment corresponding to the operation."
+    },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
+    },
+    "async" : {
+      "type" : "boolean",
+      "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+      "default" : true
     }
   },
   "additionalProperties" : false

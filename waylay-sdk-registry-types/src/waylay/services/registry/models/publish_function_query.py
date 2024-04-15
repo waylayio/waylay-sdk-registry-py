@@ -25,9 +25,17 @@ from ..models.deprecate_previous_policy import DeprecatePreviousPolicy
 class PublishFunctionQuery(WaylayBaseModel):
     """PublishFunctionQuery."""
 
+    chown: StrictBool | None = Field(
+        default=False,
+        description="If set, ownership of the draft function is transferred to the current user.",
+    )
     comment: StrictStr | None = Field(
         default=None,
         description="An optional user-specified comment corresponding to the operation.",
+    )
+    author: StrictStr | None = Field(
+        default=None,
+        description="Optionally changes the author metadata when updating a function.",
     )
     deprecate_previous: DeprecatePreviousPolicy | None = Field(
         default=None, alias="deprecatePrevious"

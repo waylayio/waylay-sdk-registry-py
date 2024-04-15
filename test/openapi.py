@@ -75,6 +75,71 @@ _active_event_sse_event_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"ActiveEventSSE_event": _active_event_sse_event_model_schema})
 
+_alt_embedded_version_i_kfserving_response_v2__model_schema = json.loads(
+    r"""{
+  "title" : "AltEmbeddedVersion_IKfservingResponseV2_",
+  "type" : "object",
+  "properties" : {
+    "draft" : {
+      "$ref" : "#/components/schemas/KfservingResponseV2"
+    },
+    "published" : {
+      "$ref" : "#/components/schemas/KfservingResponseV2"
+    }
+  },
+  "description" : "Embedded representations of the _latest_ draft/published versions."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AltEmbeddedVersion_IKfservingResponseV2_": _alt_embedded_version_i_kfserving_response_v2__model_schema
+})
+
+_alt_embedded_version_i_plug_response_v2__model_schema = json.loads(
+    r"""{
+  "title" : "AltEmbeddedVersion_IPlugResponseV2_",
+  "type" : "object",
+  "properties" : {
+    "draft" : {
+      "$ref" : "#/components/schemas/PlugResponseV2"
+    },
+    "published" : {
+      "$ref" : "#/components/schemas/PlugResponseV2"
+    }
+  },
+  "description" : "Embedded representations of the _latest_ draft/published versions."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AltEmbeddedVersion_IPlugResponseV2_": _alt_embedded_version_i_plug_response_v2__model_schema
+})
+
+_alt_embedded_version_i_webscript_response_with_invoke_link_v2__model_schema = (
+    json.loads(
+        r"""{
+  "title" : "AltEmbeddedVersion_IWebscriptResponseWithInvokeLinkV2_",
+  "type" : "object",
+  "properties" : {
+    "draft" : {
+      "$ref" : "#/components/schemas/WebscriptResponseWithInvokeLinkV2"
+    },
+    "published" : {
+      "$ref" : "#/components/schemas/WebscriptResponseWithInvokeLinkV2"
+    }
+  },
+  "description" : "Embedded representations of the _latest_ draft/published versions."
+}
+""",
+        object_hook=with_example_provider,
+    )
+)
+MODEL_DEFINITIONS.update({
+    "AltEmbeddedVersion_IWebscriptResponseWithInvokeLinkV2_": _alt_embedded_version_i_webscript_response_with_invoke_link_v2__model_schema
+})
+
 _alt_version_hal_link_model_schema = json.loads(
     r"""{
   "type" : "object",
@@ -144,6 +209,8 @@ _any_job_result_model_schema = json.loads(
     "$ref" : "#/components/schemas/BatchResult"
   }, {
     "$ref" : "#/components/schemas/CleanupResult"
+  }, {
+    "$ref" : "#/components/schemas/NotifyResult"
   } ]
 }
 """,
@@ -429,44 +496,10 @@ _assets_conditions_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"AssetsConditions": _assets_conditions_model_schema})
 
-_async_deploy_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "deprecatePrevious" : {
-      "$ref" : "#/components/schemas/DeprecatePreviousPolicy"
-    },
-    "dryRun" : {
-      "type" : "boolean",
-      "description" : "If set to <code>true</code>, validates the deployment conditions, but does not change anything."
-    },
-    "async" : {
-      "type" : "boolean",
-      "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
-      "default" : true
-    },
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.",
-      "default" : false
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"AsyncDeployQuery": _async_deploy_query_model_schema})
-
 _async_deploy_query_v1_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.",
-      "default" : false
-    },
     "async" : {
       "type" : "boolean",
       "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
@@ -475,6 +508,11 @@ _async_deploy_query_v1_model_schema = json.loads(
     "dryRun" : {
       "type" : "boolean",
       "description" : "If set to <code>true</code>, validates the deployment conditions, but does not change anything."
+    },
+    "scaleToZero" : {
+      "type" : "boolean",
+      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately.",
+      "default" : false
     }
   },
   "additionalProperties" : false
@@ -503,41 +541,18 @@ MODEL_DEFINITIONS.update({
     "AsyncQueryDefaultFalse": _async_query_default_false_model_schema
 })
 
-_async_query_default_true_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "async" : {
-      "type" : "boolean",
-      "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
-      "default" : true
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "AsyncQueryDefaultTrue": _async_query_default_true_model_schema
-})
-
 _async_verify_query_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
-    "comment" : {
-      "type" : "string",
-      "description" : "An optional user-specified comment corresponding to the operation."
+    "scaleToZero" : {
+      "type" : "boolean",
+      "description" : "Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command."
     },
     "async" : {
       "type" : "boolean",
       "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
       "default" : true
-    },
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command."
     }
   },
   "additionalProperties" : false
@@ -790,7 +805,7 @@ MODEL_DEFINITIONS.update({"Build_1": _build_1_model_schema})
 _build_args_model_schema = json.loads(
     r"""{
   "title" : "BuildArgs",
-  "required" : [ "args", "imageName", "runtimeName", "runtimeVersion", "storageLocation" ],
+  "required" : [ "args", "imageName", "revision", "runtimeName", "runtimeVersion", "storageLocation" ],
   "type" : "object",
   "properties" : {
     "runtimeName" : {
@@ -1026,13 +1041,13 @@ MODEL_DEFINITIONS.update({
 _completed_event_data_model_schema = json.loads(
     r"""{
   "title" : "CompletedEventData",
-  "required" : [ "returnValue" ],
+  "required" : [ "returnvalue" ],
   "type" : "object",
   "properties" : {
     "prev" : {
       "$ref" : "#/components/schemas/QueueEvents"
     },
-    "returnValue" : {
+    "returnvalue" : {
       "$ref" : "#/components/schemas/AnyJobResult"
     }
   }
@@ -1117,6 +1132,24 @@ _create_function_query_v2_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
+    "deploy" : {
+      "type" : "boolean",
+      "description" : "Indicates that a function should be _deployed_ when its assets are valid.\n\n* If `true` (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated.\n* If `false`, the uploaded assets are stored and the function is created/updated in `registered` state. Asset validation errors are only returned as warning, and stored as `failureReason` on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage.",
+      "default" : true
+    },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
+    },
+    "comment" : {
+      "type" : "string",
+      "description" : "An optional user-specified comment corresponding to the operation."
+    },
+    "scaleToZero" : {
+      "type" : "boolean",
+      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately.",
+      "default" : false
+    },
     "deprecatePrevious" : {
       "$ref" : "#/components/schemas/DeprecatePreviousPolicy"
     },
@@ -1129,11 +1162,6 @@ _create_function_query_v2_model_schema = json.loads(
       "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
       "default" : true
     },
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.",
-      "default" : false
-    },
     "version" : {
       "$ref" : "#/components/schemas/SemanticVersionRange"
     },
@@ -1145,6 +1173,12 @@ _create_function_query_v2_model_schema = json.loads(
       "type" : "boolean",
       "description" : "If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.",
       "default" : false
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/NamedVersionRange"
+    },
+    "copy" : {
+      "$ref" : "#/components/schemas/CreateFunctionQueryV2_copy"
     }
   },
   "additionalProperties" : false
@@ -1154,6 +1188,23 @@ _create_function_query_v2_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "CreateFunctionQueryV2": _create_function_query_v2_model_schema
+})
+
+_create_function_query_v2_copy_model_schema = json.loads(
+    r"""{
+  "title" : "CreateFunctionQueryV2_copy",
+  "description" : "Indicates the _source_ of initial assets for a _new function_.\n\nWhen using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.\n\n#### Selection of _assets_ source\n\n* If set as `<sourceName>[@<sourceVersionRange>]`, the _new function_ will be created with copied assets of the selected _source function_.\n* If set as `!example`, a `runtime` query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.\n\n#### Selection of the _source function_\n\nWhen `<sourceVersionRange>` is a range (or is not given), the latest _published_ version (in that range) is used.\n\nIf no _published_ version exists, the latest _draft_ is selected.\n\nIf no versions in the range exist, a `404` _Not Found_ error is returned.\n\n#### The `name` of the _new function_\n\nIf a `name` is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the `name` of the _new function_ will be that of the _source function_.\n\n#### The `version` of the _new function_\n\nWhen the _target_ and _source_ name are equal, the `version` query parameters is defaulted to `<sourceVersionRange>` (`~<sourceVersionRange>` when it's an exact version)\n\nThe version of the _new function_ will be:\n* If a `version` is NOT specified (either as query parameter, in an optional manifest asset, or as `<sourceVersionRange>` _default_)\n\n  * a **patch increment** (`<major>.<minor>.<patch>+1`) of the latest **existing version** with the target `name`\n\n  * **`1.0.0`** otherwise\n\n* If a `version` is specified:\n\n  * the **lowest version** in that range **if no existing version** is in that range.\n\n  * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.\n\n  * otherwise, if all allowed versions already exist, a **`409` _Duplicate_ error** is raised.\n\n#### Deployment overrides\n\nThe new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body.",
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/NamedVersionRange"
+  }, {
+    "$ref" : "#/components/schemas/ExampleReference"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "CreateFunctionQueryV2_copy": _create_function_query_v2_copy_model_schema
 })
 
 _create_kf_serving_async_response_model_schema = json.loads(
@@ -1226,6 +1277,21 @@ _create_webscript_async_response_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "CreateWebscriptAsyncResponse": _create_webscript_async_response_model_schema
+})
+
+_create_webscripts_copy_parameter_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/NamedVersionRange"
+  }, {
+    "$ref" : "#/components/schemas/ExampleReference"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "create_webscripts_copy_parameter": _create_webscripts_copy_parameter_model_schema
 })
 
 _delayed_event_data_model_schema = json.loads(
@@ -1380,7 +1446,7 @@ MODEL_DEFINITIONS.update({"Deploy_1": _deploy_1_model_schema})
 _deploy_args_model_schema = json.loads(
     r"""{
   "title" : "DeployArgs",
-  "required" : [ "deploySpecOverrides", "endpoint", "imageName", "namespace", "runtimeName", "runtimeVersion" ],
+  "required" : [ "deploySpecOverrides", "endpoint", "imageName", "namespace", "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "namespace" : {
@@ -1502,32 +1568,6 @@ _deploy_args_deploy_spec_overrides_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "DeployArgs_deploySpecOverrides": _deploy_args_deploy_spec_overrides_model_schema
-})
-
-_deploy_attributes_filter_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "endpoint" : {
-      "type" : "string",
-      "description" : "Filter on the openfaas endpoint. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters)."
-    },
-    "imageName" : {
-      "type" : "string",
-      "description" : "Filter on the container image name. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters)."
-    },
-    "storageLocation" : {
-      "type" : "string",
-      "description" : "Filter on the storageLocation. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters)."
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "DeployAttributesFilter": _deploy_attributes_filter_model_schema
 })
 
 _deploy_job_status_model_schema = json.loads(
@@ -1714,45 +1754,6 @@ MODEL_DEFINITIONS.update({
     "DeprecatePreviousPolicy": _deprecate_previous_policy_model_schema
 })
 
-_deprecate_previous_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "deprecatePrevious" : {
-      "$ref" : "#/components/schemas/DeprecatePreviousPolicy"
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "DeprecatePreviousQuery": _deprecate_previous_query_model_schema
-})
-
-_deprecated_draft_filter_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "deprecated" : {
-      "type" : "boolean",
-      "description" : "Filter on the deprecation status of the function."
-    },
-    "draft" : {
-      "type" : "boolean",
-      "description" : "Filter on the draft status of the function."
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "DeprecatedDraftFilter": _deprecated_draft_filter_model_schema
-})
-
 _documentation_model_schema = json.loads(
     r"""{
   "type" : "object",
@@ -1809,22 +1810,6 @@ _documentation_property_model_schema = json.loads(
 MODEL_DEFINITIONS.update({
     "DocumentationProperty": _documentation_property_model_schema
 })
-
-_dry_run_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "dryRun" : {
-      "type" : "boolean",
-      "description" : "If set to <code>true</code>, validates the deployment conditions, but does not change anything."
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"DryRunQuery": _dry_run_query_model_schema})
 
 _entity_response_model_schema = json.loads(
     r"""{
@@ -1887,6 +1872,230 @@ _entity_response_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"EntityResponse": _entity_response_model_schema})
+
+_entity_with_links_i_kfserving_response_v2__model_schema = json.loads(
+    r"""{
+  "title" : "EntityWithLinks_IKfservingResponseV2_",
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "model", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
+  "type" : "object",
+  "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/AltEmbeddedVersion_IKfservingResponseV2_"
+    },
+    "_links" : {
+      "$ref" : "#/components/schemas/AltVersionHALLink"
+    },
+    "createdBy" : {
+      "title" : "createdBy",
+      "type" : "string",
+      "description" : "The user that created this entity."
+    },
+    "createdAt" : {
+      "title" : "createdAt",
+      "type" : "string",
+      "description" : "The timestamp at which this entity was created.",
+      "format" : "date-time"
+    },
+    "updatedBy" : {
+      "title" : "updatedBy",
+      "type" : "string",
+      "description" : "The user that last updated this entity."
+    },
+    "updatedAt" : {
+      "title" : "updatedAt",
+      "type" : "string",
+      "description" : "The timestamp at which this entity was last updated.",
+      "format" : "date-time"
+    },
+    "updates" : {
+      "title" : "updates",
+      "type" : "array",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "items" : {
+        "$ref" : "#/components/schemas/UpdateRecord"
+      }
+    },
+    "status" : {
+      "$ref" : "#/components/schemas/Status"
+    },
+    "failureReason" : {
+      "$ref" : "#/components/schemas/FailureReason"
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/RuntimeAttributes"
+    },
+    "deprecated" : {
+      "title" : "deprecated",
+      "type" : "boolean",
+      "description" : "If <code>true</code> this function is deprecated and removed from regular listings."
+    },
+    "draft" : {
+      "title" : "draft",
+      "type" : "boolean",
+      "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "model" : {
+      "$ref" : "#/components/schemas/KFServingManifest"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "EntityWithLinks_IKfservingResponseV2_": _entity_with_links_i_kfserving_response_v2__model_schema
+})
+
+_entity_with_links_i_plug_response_v2__model_schema = json.loads(
+    r"""{
+  "title" : "EntityWithLinks_IPlugResponseV2_",
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "plug", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
+  "type" : "object",
+  "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/AltEmbeddedVersion_IPlugResponseV2_"
+    },
+    "_links" : {
+      "$ref" : "#/components/schemas/AltVersionHALLink"
+    },
+    "createdBy" : {
+      "title" : "createdBy",
+      "type" : "string",
+      "description" : "The user that created this entity."
+    },
+    "createdAt" : {
+      "title" : "createdAt",
+      "type" : "string",
+      "description" : "The timestamp at which this entity was created.",
+      "format" : "date-time"
+    },
+    "updatedBy" : {
+      "title" : "updatedBy",
+      "type" : "string",
+      "description" : "The user that last updated this entity."
+    },
+    "updatedAt" : {
+      "title" : "updatedAt",
+      "type" : "string",
+      "description" : "The timestamp at which this entity was last updated.",
+      "format" : "date-time"
+    },
+    "updates" : {
+      "title" : "updates",
+      "type" : "array",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "items" : {
+        "$ref" : "#/components/schemas/UpdateRecord"
+      }
+    },
+    "status" : {
+      "$ref" : "#/components/schemas/Status"
+    },
+    "failureReason" : {
+      "$ref" : "#/components/schemas/FailureReason"
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/RuntimeAttributes"
+    },
+    "deprecated" : {
+      "title" : "deprecated",
+      "type" : "boolean",
+      "description" : "If <code>true</code> this plug is removed from regular listings, as a result of a <code>DELETE</code> with <code>force=false</code>."
+    },
+    "draft" : {
+      "title" : "draft",
+      "type" : "boolean",
+      "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "plug" : {
+      "$ref" : "#/components/schemas/PlugManifest"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "EntityWithLinks_IPlugResponseV2_": _entity_with_links_i_plug_response_v2__model_schema
+})
+
+_entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema = json.loads(
+    r"""{
+  "title" : "EntityWithLinks_IWebscriptResponseWithInvokeLinkV2_",
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "updates", "webscript" ],
+  "type" : "object",
+  "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/AltEmbeddedVersion_IWebscriptResponseWithInvokeLinkV2_"
+    },
+    "_links" : {
+      "$ref" : "#/components/schemas/InvokeHALLink"
+    },
+    "createdBy" : {
+      "title" : "createdBy",
+      "type" : "string",
+      "description" : "The user that created this entity."
+    },
+    "createdAt" : {
+      "title" : "createdAt",
+      "type" : "string",
+      "description" : "The timestamp at which this entity was created.",
+      "format" : "date-time"
+    },
+    "updatedBy" : {
+      "title" : "updatedBy",
+      "type" : "string",
+      "description" : "The user that last updated this entity."
+    },
+    "updatedAt" : {
+      "title" : "updatedAt",
+      "type" : "string",
+      "description" : "The timestamp at which this entity was last updated.",
+      "format" : "date-time"
+    },
+    "updates" : {
+      "title" : "updates",
+      "type" : "array",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "items" : {
+        "$ref" : "#/components/schemas/UpdateRecord"
+      }
+    },
+    "status" : {
+      "$ref" : "#/components/schemas/Status"
+    },
+    "failureReason" : {
+      "$ref" : "#/components/schemas/FailureReason"
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/RuntimeAttributes"
+    },
+    "deprecated" : {
+      "title" : "deprecated",
+      "type" : "boolean",
+      "description" : "If <code>true</code> this function is deprecated and removed from regular listings."
+    },
+    "draft" : {
+      "title" : "draft",
+      "type" : "boolean",
+      "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "webscript" : {
+      "$ref" : "#/components/schemas/WebscriptManifest"
+    },
+    "secret" : {
+      "title" : "secret",
+      "type" : "string",
+      "description" : "The secret for this webscript deployment. This is <code>null</code> when <code>allowHmac=false</code> in the webscript specificaton."
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "EntityWithLinks_IWebscriptResponseWithInvokeLinkV2_": _entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema
+})
 
 _error_and_status_response_model_schema = json.loads(
     r"""{
@@ -2003,6 +2212,17 @@ _event_with_close_sse_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"EventWithCloseSSE": _event_with_close_sse_model_schema})
+
+_example_reference_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Example reference.\n\nReferences the example assets from the selected runtime.",
+  "enum" : [ "!example" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"ExampleReference": _example_reference_model_schema})
 
 _exposed_openfaas_deploy_spec_model_schema = json.loads(
     r"""{
@@ -2175,26 +2395,6 @@ _force_delete_query_v1_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"ForceDeleteQueryV1": _force_delete_query_v1_model_schema})
 
-_function_delete_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "force" : {
-      "type" : "boolean",
-      "description" : "If <code>true</code>, the function version will be immediately undeployed and removed.\n\nOtherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_."
-    },
-    "undeploy" : {
-      "type" : "boolean",
-      "description" : "If `true`, the `DELETE` operation\n* undeploys the (openfaas) function: it becomes no longer available for invocation.\n* does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.\n\nIf `false`, the `DELETE` operation\n* _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.\n\nThis parameter is incompatible with `force=true`.\n\nIf not set the default behaviour applies:\n* _draft_ versions are _undeployed_ and _removed_ from registry.\n* non-_draft_ versions are marked _deprecated_ only."
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"FunctionDeleteQuery": _function_delete_query_model_schema})
-
 _function_deploy_overrides_model_schema = json.loads(
     r"""{
   "type" : "object",
@@ -2252,40 +2452,9 @@ MODEL_DEFINITIONS.update({
     "FunctionDeployOverridesType": _function_deploy_overrides_type_model_schema
 })
 
-_function_entity_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "name" : {
-      "type" : "string",
-      "description" : "Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters)."
-    },
-    "archiveFormat" : {
-      "type" : "array",
-      "description" : "Filter on the archive format of the function.",
-      "items" : {
-        "$ref" : "#/components/schemas/ArchiveFormat"
-      }
-    },
-    "runtime" : {
-      "type" : "array",
-      "description" : "Filter on the runtime of the function.",
-      "items" : {
-        "$ref" : "#/components/schemas/Runtime"
-      }
-    }
-  },
-  "additionalProperties" : false,
-  "description" : "Filter on function attributes that do not change across function versions."
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"FunctionEntityQuery": _function_entity_query_model_schema})
-
 _function_job_args_model_schema = json.loads(
     r"""{
-  "required" : [ "runtimeName", "runtimeVersion" ],
+  "required" : [ "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "runtimeName" : {
@@ -2448,55 +2617,6 @@ _function_type_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"FunctionType": _function_type_model_schema})
-
-_function_version_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "version" : {
-      "type" : "string",
-      "description" : "Filter on the version of the function (case-sensitive, supports wildcards)."
-    },
-    "status" : {
-      "type" : "array",
-      "description" : "Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.",
-      "items" : {
-        "$ref" : "#/components/schemas/StatusFilter"
-      }
-    },
-    "runtimeVersion" : {
-      "$ref" : "#/components/schemas/SemanticVersionRange"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.",
-      "example" : "@me"
-    },
-    "updatedBy" : {
-      "type" : "string",
-      "description" : "Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.",
-      "example" : "@me"
-    },
-    "createdBefore" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "createdAfter" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "updatedBefore" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "updatedAfter" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    }
-  },
-  "additionalProperties" : false,
-  "description" : "Filter on function attributes that can change across function versions. When these query parameters are used, the query is considered a _function version_ listing and no HAL links to latest (_draft_, _published_) versions are included."
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"FunctionVersionQuery": _function_version_query_model_schema})
 
 _get_content_params_v2_model_schema = json.loads(
     r"""{
@@ -3881,7 +4001,7 @@ _job_type_model_schema = json.loads(
     r"""{
   "title" : "JobType",
   "type" : "string",
-  "enum" : [ "build", "deploy", "verify", "undeploy", "batch", "scale", "cleanup", "other" ]
+  "enum" : [ "build", "deploy", "verify", "undeploy", "batch", "scale", "cleanup", "notify" ]
 }
 """,
     object_hook=with_example_provider,
@@ -3924,6 +4044,18 @@ _job_type_deploy_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"JobTypeDeploy": _job_type_deploy_model_schema})
 
+_job_type_notify_model_schema = json.loads(
+    r"""{
+  "title" : "JobTypeNotify",
+  "type" : "string",
+  "description" : "A job to notify that an function version has changed.",
+  "enum" : [ "notify" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"JobTypeNotify": _job_type_notify_model_schema})
+
 _job_type_scale_model_schema = json.loads(
     r"""{
   "title" : "JobTypeScale",
@@ -3951,6 +4083,8 @@ _job_type_schema_model_schema = json.loads(
     "$ref" : "#/components/schemas/JobTypeScale"
   }, {
     "$ref" : "#/components/schemas/JobTypeBatch"
+  }, {
+    "$ref" : "#/components/schemas/JobTypeNotify"
   } ]
 }
 """,
@@ -4916,6 +5050,9 @@ _latest_function_versions_query_model_schema = json.loads(
     "latest" : {
       "type" : "boolean",
       "description" : "When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter."
+    },
+    "showRelated" : {
+      "$ref" : "#/components/schemas/LatestFunctionVersionsQuery_showRelated"
     }
   },
   "additionalProperties" : false,
@@ -4928,10 +5065,26 @@ MODEL_DEFINITIONS.update({
     "LatestFunctionVersionsQuery": _latest_function_versions_query_model_schema
 })
 
+_latest_function_versions_query_show_related_model_schema = json.loads(
+    r"""{
+  "title" : "LatestFunctionVersionsQuery_showRelated",
+  "type" : "string",
+  "enum" : [ "none" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "LatestFunctionVersionsQuery_showRelated": _latest_function_versions_query_show_related_model_schema
+})
+
 _latest_functions_query_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
+    "showRelated" : {
+      "$ref" : "#/components/schemas/ShowRelatedType"
+    },
     "limit" : {
       "minimum" : 0,
       "type" : "number",
@@ -4998,7 +5151,7 @@ _latest_models_response_v2_model_schema = json.loads(
       "type" : "array",
       "description" : "The specification and deployment status of the queried functions",
       "items" : {
-        "$ref" : "#/components/schemas/LatestModelsResponseV2_entities_inner"
+        "$ref" : "#/components/schemas/EntityWithLinks_IKfservingResponseV2_"
       }
     }
   },
@@ -5009,76 +5162,6 @@ _latest_models_response_v2_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "LatestModelsResponseV2": _latest_models_response_v2_model_schema
-})
-
-_latest_models_response_v2_entities_inner_model_schema = json.loads(
-    r"""{
-  "title" : "LatestModelsResponseV2_entities_inner",
-  "required" : [ "_links", "createdAt", "createdBy", "deprecated", "draft", "model", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
-  "type" : "object",
-  "properties" : {
-    "_links" : {
-      "$ref" : "#/components/schemas/AltVersionHALLink"
-    },
-    "createdBy" : {
-      "title" : "createdBy",
-      "type" : "string",
-      "description" : "The user that created this entity."
-    },
-    "createdAt" : {
-      "title" : "createdAt",
-      "type" : "string",
-      "description" : "The timestamp at which this entity was created.",
-      "format" : "date-time"
-    },
-    "updatedBy" : {
-      "title" : "updatedBy",
-      "type" : "string",
-      "description" : "The user that last updated this entity."
-    },
-    "updatedAt" : {
-      "title" : "updatedAt",
-      "type" : "string",
-      "description" : "The timestamp at which this entity was last updated.",
-      "format" : "date-time"
-    },
-    "updates" : {
-      "title" : "updates",
-      "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
-      "items" : {
-        "$ref" : "#/components/schemas/UpdateRecord"
-      }
-    },
-    "status" : {
-      "$ref" : "#/components/schemas/Status"
-    },
-    "failureReason" : {
-      "$ref" : "#/components/schemas/FailureReason"
-    },
-    "runtime" : {
-      "$ref" : "#/components/schemas/RuntimeAttributes"
-    },
-    "deprecated" : {
-      "title" : "deprecated",
-      "type" : "boolean",
-      "description" : "If <code>true</code> this function is deprecated and removed from regular listings."
-    },
-    "draft" : {
-      "title" : "draft",
-      "type" : "boolean",
-      "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
-    },
-    "model" : {
-      "$ref" : "#/components/schemas/KFServingManifest"
-    }
-  }
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "LatestModelsResponseV2_entities_inner": _latest_models_response_v2_entities_inner_model_schema
 })
 
 _latest_plug_query_model_schema = json.loads(
@@ -5298,6 +5381,9 @@ _latest_plug_versions_query_model_schema = json.loads(
     "latest" : {
       "type" : "boolean",
       "description" : "When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter."
+    },
+    "showRelated" : {
+      "$ref" : "#/components/schemas/LatestFunctionVersionsQuery_showRelated"
     }
   },
   "additionalProperties" : false,
@@ -5332,6 +5418,9 @@ _latest_plugs_query_model_schema = json.loads(
   "properties" : {
     "type" : {
       "$ref" : "#/components/schemas/PlugType"
+    },
+    "showRelated" : {
+      "$ref" : "#/components/schemas/ShowRelatedType"
     },
     "limit" : {
       "minimum" : 0,
@@ -5399,7 +5488,7 @@ _latest_plugs_response_v2_model_schema = json.loads(
       "type" : "array",
       "description" : "The specification and deployment status of the queried functions",
       "items" : {
-        "$ref" : "#/components/schemas/LatestPlugsResponseV2_entities_inner"
+        "$ref" : "#/components/schemas/EntityWithLinks_IPlugResponseV2_"
       }
     }
   },
@@ -5410,76 +5499,6 @@ _latest_plugs_response_v2_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "LatestPlugsResponseV2": _latest_plugs_response_v2_model_schema
-})
-
-_latest_plugs_response_v2_entities_inner_model_schema = json.loads(
-    r"""{
-  "title" : "LatestPlugsResponseV2_entities_inner",
-  "required" : [ "_links", "createdAt", "createdBy", "deprecated", "draft", "plug", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
-  "type" : "object",
-  "properties" : {
-    "_links" : {
-      "$ref" : "#/components/schemas/AltVersionHALLink"
-    },
-    "createdBy" : {
-      "title" : "createdBy",
-      "type" : "string",
-      "description" : "The user that created this entity."
-    },
-    "createdAt" : {
-      "title" : "createdAt",
-      "type" : "string",
-      "description" : "The timestamp at which this entity was created.",
-      "format" : "date-time"
-    },
-    "updatedBy" : {
-      "title" : "updatedBy",
-      "type" : "string",
-      "description" : "The user that last updated this entity."
-    },
-    "updatedAt" : {
-      "title" : "updatedAt",
-      "type" : "string",
-      "description" : "The timestamp at which this entity was last updated.",
-      "format" : "date-time"
-    },
-    "updates" : {
-      "title" : "updates",
-      "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
-      "items" : {
-        "$ref" : "#/components/schemas/UpdateRecord"
-      }
-    },
-    "status" : {
-      "$ref" : "#/components/schemas/Status"
-    },
-    "failureReason" : {
-      "$ref" : "#/components/schemas/FailureReason"
-    },
-    "runtime" : {
-      "$ref" : "#/components/schemas/RuntimeAttributes"
-    },
-    "deprecated" : {
-      "title" : "deprecated",
-      "type" : "boolean",
-      "description" : "If <code>true</code> this plug is removed from regular listings, as a result of a <code>DELETE</code> with <code>force=false</code>."
-    },
-    "draft" : {
-      "title" : "draft",
-      "type" : "boolean",
-      "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
-    },
-    "plug" : {
-      "$ref" : "#/components/schemas/PlugManifest"
-    }
-  }
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "LatestPlugsResponseV2_entities_inner": _latest_plugs_response_v2_entities_inner_model_schema
 })
 
 _latest_version_level_model_schema = json.loads(
@@ -5515,7 +5534,7 @@ _latest_webscripts_response_v2_model_schema = json.loads(
       "type" : "array",
       "description" : "The specification and deployment status of the queried functions",
       "items" : {
-        "$ref" : "#/components/schemas/LatestWebscriptsResponseV2_entities_inner"
+        "$ref" : "#/components/schemas/EntityWithLinks_IWebscriptResponseWithInvokeLinkV2_"
       }
     }
   },
@@ -5526,81 +5545,6 @@ _latest_webscripts_response_v2_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "LatestWebscriptsResponseV2": _latest_webscripts_response_v2_model_schema
-})
-
-_latest_webscripts_response_v2_entities_inner_model_schema = json.loads(
-    r"""{
-  "title" : "LatestWebscriptsResponseV2_entities_inner",
-  "required" : [ "_links", "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "updates", "webscript" ],
-  "type" : "object",
-  "properties" : {
-    "_links" : {
-      "$ref" : "#/components/schemas/InvokeHALLink"
-    },
-    "createdBy" : {
-      "title" : "createdBy",
-      "type" : "string",
-      "description" : "The user that created this entity."
-    },
-    "createdAt" : {
-      "title" : "createdAt",
-      "type" : "string",
-      "description" : "The timestamp at which this entity was created.",
-      "format" : "date-time"
-    },
-    "updatedBy" : {
-      "title" : "updatedBy",
-      "type" : "string",
-      "description" : "The user that last updated this entity."
-    },
-    "updatedAt" : {
-      "title" : "updatedAt",
-      "type" : "string",
-      "description" : "The timestamp at which this entity was last updated.",
-      "format" : "date-time"
-    },
-    "updates" : {
-      "title" : "updates",
-      "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
-      "items" : {
-        "$ref" : "#/components/schemas/UpdateRecord"
-      }
-    },
-    "status" : {
-      "$ref" : "#/components/schemas/Status"
-    },
-    "failureReason" : {
-      "$ref" : "#/components/schemas/FailureReason"
-    },
-    "runtime" : {
-      "$ref" : "#/components/schemas/RuntimeAttributes"
-    },
-    "deprecated" : {
-      "title" : "deprecated",
-      "type" : "boolean",
-      "description" : "If <code>true</code> this function is deprecated and removed from regular listings."
-    },
-    "draft" : {
-      "title" : "draft",
-      "type" : "boolean",
-      "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
-    },
-    "webscript" : {
-      "$ref" : "#/components/schemas/WebscriptManifest"
-    },
-    "secret" : {
-      "title" : "secret",
-      "type" : "string",
-      "description" : "The secret for this webscript deployment. This is <code>null</code> when <code>allowHmac=false</code> in the webscript specificaton."
-    }
-  }
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "LatestWebscriptsResponseV2_entities_inner": _latest_webscripts_response_v2_entities_inner_model_schema
 })
 
 _legacy_configuration_object_model_schema = json.loads(
@@ -6538,23 +6482,6 @@ MODEL_DEFINITIONS.update({
     "LegacyRequiredPropertyObject": _legacy_required_property_object_model_schema
 })
 
-_limit_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "limit" : {
-      "minimum" : 0,
-      "type" : "number",
-      "description" : "The maximum number of items to be return from this query. Has a deployment-defined default and maximum value."
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"LimitQuery": _limit_query_model_schema})
-
 _media_type_model_schema = json.loads(
     r"""{
   "title" : "MediaType",
@@ -6695,29 +6622,6 @@ MODEL_DEFINITIONS.update({
     "ModelVersionsResponseV2": _model_versions_response_v2_model_schema
 })
 
-_multipart_file_upload__model_schema = json.loads(
-    r"""{
-  "title" : "Multipart file upload.",
-  "type" : "object",
-  "properties" : {
-    "filename" : {
-      "type" : "array",
-      "items" : {
-        "type" : "string",
-        "format" : "binary"
-      }
-    }
-  },
-  "description" : "A multi-part upload containing one or more file assets.",
-  "nullable" : true
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "Multipart_file_upload_": _multipart_file_upload__model_schema
-})
-
 _name_model_schema = json.loads(
     r"""{
   "required" : [ "name" ],
@@ -6752,89 +6656,6 @@ _name_and_version_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"NameAndVersion": _name_and_version_model_schema})
-
-_named_function_versions_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "limit" : {
-      "minimum" : 0,
-      "type" : "number",
-      "description" : "The maximum number of items to be return from this query. Has a deployment-defined default and maximum value."
-    },
-    "page" : {
-      "minimum" : 0,
-      "type" : "number",
-      "description" : "The number of pages to skip when returning result to this query."
-    },
-    "deprecated" : {
-      "type" : "boolean",
-      "description" : "Filter on the deprecation status of the function."
-    },
-    "draft" : {
-      "type" : "boolean",
-      "description" : "Filter on the draft status of the function."
-    },
-    "version" : {
-      "type" : "string",
-      "description" : "Filter on the version of the function (case-sensitive, supports wildcards)."
-    },
-    "status" : {
-      "type" : "array",
-      "description" : "Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.",
-      "items" : {
-        "$ref" : "#/components/schemas/StatusFilter"
-      }
-    },
-    "runtimeVersion" : {
-      "$ref" : "#/components/schemas/SemanticVersionRange"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.",
-      "example" : "@me"
-    },
-    "updatedBy" : {
-      "type" : "string",
-      "description" : "Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.",
-      "example" : "@me"
-    },
-    "createdBefore" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "createdAfter" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "updatedBefore" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "updatedAfter" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "archiveFormat" : {
-      "type" : "array",
-      "description" : "Filter on the archive format of the function.",
-      "items" : {
-        "$ref" : "#/components/schemas/ArchiveFormat"
-      }
-    },
-    "runtime" : {
-      "type" : "array",
-      "description" : "Filter on the runtime of the function.",
-      "items" : {
-        "$ref" : "#/components/schemas/Runtime"
-      }
-    }
-  },
-  "additionalProperties" : false,
-  "description" : "Named function versions listing query."
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "NamedFunctionVersionsQuery": _named_function_versions_query_model_schema
-})
 
 _named_kf_serving_versions_query_v2_model_schema = json.loads(
     r"""{
@@ -7139,25 +6960,6 @@ MODEL_DEFINITIONS.update({
     "NamedPlugVersionsQueryV2": _named_plug_versions_query_v2_model_schema
 })
 
-_named_versions_filter_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "nameVersion" : {
-      "type" : "array",
-      "description" : "Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered.",
-      "items" : {
-        "$ref" : "#/components/schemas/NamedVersion"
-      }
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"NamedVersionsFilter": _named_versions_filter_model_schema})
-
 _named_webscript_versions_query_v2_model_schema = json.loads(
     r"""{
   "type" : "object",
@@ -7240,6 +7042,23 @@ _named_webscript_versions_query_v2_model_schema = json.loads(
 MODEL_DEFINITIONS.update({
     "NamedWebscriptVersionsQueryV2": _named_webscript_versions_query_v2_model_schema
 })
+
+_notify_result_model_schema = json.loads(
+    r"""{
+  "title" : "NotifyResult",
+  "required" : [ "operation" ],
+  "type" : "object",
+  "properties" : {
+    "operation" : {
+      "$ref" : "#/components/schemas/RequestOperation"
+    }
+  },
+  "description" : "The result data for a change notification."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"NotifyResult": _notify_result_model_schema})
 
 _openfaas_deploy_args_model_schema = json.loads(
     r"""{
@@ -7371,28 +7190,6 @@ _operation_status_error_model_schema = json.loads(
 MODEL_DEFINITIONS.update({
     "OperationStatus_error": _operation_status_error_model_schema
 })
-
-_paging_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "limit" : {
-      "minimum" : 0,
-      "type" : "number",
-      "description" : "The maximum number of items to be return from this query. Has a deployment-defined default and maximum value."
-    },
-    "page" : {
-      "minimum" : 0,
-      "type" : "number",
-      "description" : "The number of pages to skip when returning result to this query."
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"PagingQuery": _paging_query_model_schema})
 
 _paging_response_model_schema = json.loads(
     r"""{
@@ -7559,26 +7356,6 @@ _plug_delete_force_query_model_schema = json.loads(
 MODEL_DEFINITIONS.update({
     "PlugDeleteForceQuery": _plug_delete_force_query_model_schema
 })
-
-_plug_delete_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "force" : {
-      "type" : "boolean",
-      "description" : "If <code>true</code>, the plug version(s) will be undeployed and removed. Otherwise, the plug version(s) will only be <code>deprecated</code>, i.e removed from regular listings."
-    },
-    "undeploy" : {
-      "type" : "boolean",
-      "description" : "If `true`, the `DELETE` operation\n* undeploys the (openfaas) function for the plug: it becomes no longer available for invocation.\n* does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.\n\nIf `false`, the `DELETE` operation\n* _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.\n\nThis parameter is incompatible with `force=true`.\n\nIf not set the default behaviour applies:\n* _draft_ versions are _undeployed_ and _removed_ from registry.\n* non-_draft_ versions are marked _deprecated_ only."
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"PlugDeleteQuery": _plug_delete_query_model_schema})
 
 _plug_interface_model_schema = json.loads(
     r"""{
@@ -7987,21 +7764,6 @@ _plug_type_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"PlugType": _plug_type_model_schema})
 
-_plug_type_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "type" : {
-      "$ref" : "#/components/schemas/PlugType"
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"PlugTypeQuery": _plug_type_query_model_schema})
-
 _plug_versions_response_v2_model_schema = json.loads(
     r"""{
   "required" : [ "count", "entities" ],
@@ -8234,9 +7996,18 @@ _publish_function_query_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
+    "chown" : {
+      "type" : "boolean",
+      "description" : "If set, ownership of the draft function is transferred to the current user.",
+      "default" : false
+    },
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
+    },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
     },
     "deprecatePrevious" : {
       "$ref" : "#/components/schemas/DeprecatePreviousPolicy"
@@ -8399,44 +8170,14 @@ _rebuild_policy_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"RebuildPolicy": _rebuild_policy_model_schema})
 
-_rebuild_query_params_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "upgrade" : {
-      "$ref" : "#/components/schemas/RebuildPolicy"
-    },
-    "dryRun" : {
-      "type" : "boolean",
-      "description" : "If set to <code>true</code>, checks whether rebuild jobs are needed, but do not start any jobs."
-    },
-    "forceVersion" : {
-      "$ref" : "#/components/schemas/SemanticVersion"
-    },
-    "ignoreChecks" : {
-      "type" : "boolean",
-      "description" : "If set to true, checks that normally prevent a rebuild are overriden. These checks include:\n* function state in `pending`, `running`, `failed` or `undeployed`\n* backoff period due to recent failures\n* usage of deprecated dependencies\n* running jobs on entity\n* the `dryRun` option"
-    },
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command."
-    },
-    "skipRebuild" : {
-      "type" : "boolean",
-      "description" : "If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function."
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"RebuildQueryParams": _rebuild_query_params_model_schema})
-
 _rebuild_query_v2_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
+    "scaleToZero" : {
+      "type" : "boolean",
+      "description" : "Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command."
+    },
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
@@ -8459,10 +8200,6 @@ _rebuild_query_v2_model_schema = json.loads(
     "ignoreChecks" : {
       "type" : "boolean",
       "description" : "If set to true, checks that normally prevent a rebuild are overriden. These checks include:\n* function state in `pending`, `running`, `failed` or `undeployed`\n* backoff period due to recent failures\n* usage of deprecated dependencies\n* running jobs on entity\n* the `dryRun` option"
-    },
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command."
     },
     "skipRebuild" : {
       "type" : "boolean",
@@ -8551,6 +8288,35 @@ MODEL_DEFINITIONS.update({
     "RebuildWebscriptSyncResponseV2": _rebuild_webscript_sync_response_v2_model_schema
 })
 
+_registry_error_response_model_schema = json.loads(
+    r"""{
+  "required" : [ "code", "error", "statusCode" ],
+  "type" : "object",
+  "properties" : {
+    "error" : {
+      "type" : "string"
+    },
+    "code" : {
+      "type" : "string"
+    },
+    "statusCode" : {
+      "type" : "number"
+    },
+    "data" : {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "RegistryErrorResponse": _registry_error_response_model_schema
+})
+
 _remove_function_query_v2_model_schema = json.loads(
     r"""{
   "type" : "object",
@@ -8610,6 +8376,23 @@ _remove_plug_query_v2_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"RemovePlugQueryV2": _remove_plug_query_v2_model_schema})
+
+_request_deploy_query_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "deploy" : {
+      "type" : "boolean",
+      "description" : "Indicates that a function should be _deployed_ when its assets are valid.\n\n* If `true` (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated.\n* If `false`, the uploaded assets are stored and the function is created/updated in `registered` state. Asset validation errors are only returned as warning, and stored as `failureReason` on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage.",
+      "default" : true
+    }
+  },
+  "additionalProperties" : false
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"RequestDeployQuery": _request_deploy_query_model_schema})
 
 _request_operation_model_schema = json.loads(
     r"""{
@@ -9280,7 +9063,7 @@ MODEL_DEFINITIONS.update({"Scale_1": _scale_1_model_schema})
 _scale_args_model_schema = json.loads(
     r"""{
   "title" : "ScaleArgs",
-  "required" : [ "endpoint", "namespace", "replicas", "runtimeName", "runtimeVersion" ],
+  "required" : [ "endpoint", "namespace", "replicas", "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "namespace" : {
@@ -9423,6 +9206,16 @@ _semantic_version_range_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"SemanticVersionRange": _semantic_version_range_model_schema})
 
+_show_related_type_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "enum" : [ "embed", "link", "none" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"ShowRelatedType": _show_related_type_model_schema})
+
 _status_model_schema = json.loads(
     r"""{
   "title" : "Status",
@@ -9445,6 +9238,19 @@ _status_any_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"StatusAny": _status_any_model_schema})
+
+_status_exclude_model_schema = json.loads(
+    r"""{
+  "pattern" : "^(registered|pending|deployed|unhealthy|failed|running|undeploying|undeployed)-$",
+  "type" : "string",
+  "description" : "Any status value with a `-` postfix appended, excludes that status as a filter.",
+  "example" : "running-",
+  "enum" : [ "registered-", "running-", "pending-", "deployed-", "unhealthy-", "failed-", "undeploying-", "undeployed-" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"StatusExclude": _status_exclude_model_schema})
 
 _status_filter_model_schema = json.loads(
     r"""{
@@ -9607,21 +9413,6 @@ _tags_filter_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"TagsFilter": _tags_filter_model_schema})
 
-_tags_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "tags" : {
-      "$ref" : "#/components/schemas/TagsFilter"
-    }
-  },
-  "additionalProperties" : false
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"TagsQuery": _tags_query_model_schema})
-
 _timestamp_absolute_model_schema = json.loads(
     r"""{
   "title" : "TimestampAbsolute",
@@ -9769,7 +9560,7 @@ MODEL_DEFINITIONS.update({"Undeploy_1": _undeploy_1_model_schema})
 _undeploy_args_model_schema = json.loads(
     r"""{
   "title" : "UndeployArgs",
-  "required" : [ "deleteEntity", "endpoint", "isNativePlug", "namespace", "runtimeName", "runtimeVersion" ],
+  "required" : [ "deleteEntity", "endpoint", "isNativePlug", "namespace", "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "namespace" : {
@@ -9969,39 +9760,37 @@ MODEL_DEFINITIONS.update({
     "UnhealthyInvokableWebscriptError": _unhealthy_invokable_webscript_error_model_schema
 })
 
-_update_comment_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "comment" : {
-      "type" : "string",
-      "description" : "An optional user-specified comment corresponding to the operation."
-    }
-  }
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"UpdateComment": _update_comment_model_schema})
-
 _update_draft_query_model_schema = json.loads(
     r"""{
-  "required" : [ "chown" ],
   "type" : "object",
   "properties" : {
-    "comment" : {
-      "type" : "string",
-      "description" : "An optional user-specified comment corresponding to the operation."
-    },
-    "async" : {
+    "scaleToZero" : {
       "type" : "boolean",
-      "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately.",
+      "default" : false
+    },
+    "deploy" : {
+      "type" : "boolean",
+      "description" : "Indicates that a function should be _deployed_ when its assets are valid.\n\n* If `true` (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated.\n* If `false`, the uploaded assets are stored and the function is created/updated in `registered` state. Asset validation errors are only returned as warning, and stored as `failureReason` on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage.",
       "default" : true
     },
     "chown" : {
       "type" : "boolean",
       "description" : "If set, ownership of the draft function is transferred to the current user.",
       "default" : false
+    },
+    "comment" : {
+      "type" : "string",
+      "description" : "An optional user-specified comment corresponding to the operation."
+    },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
+    },
+    "async" : {
+      "type" : "boolean",
+      "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
+      "default" : true
     }
   },
   "additionalProperties" : false
@@ -10310,7 +10099,7 @@ MODEL_DEFINITIONS.update({"Verify_1": _verify_1_model_schema})
 _verify_args_model_schema = json.loads(
     r"""{
   "title" : "VerifyArgs",
-  "required" : [ "endpoint", "namespace", "runtimeName", "runtimeVersion" ],
+  "required" : [ "endpoint", "namespace", "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "namespace" : {
@@ -10528,110 +10317,6 @@ _version_includes_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"VersionIncludes": _version_includes_model_schema})
-
-_versions_query_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "limit" : {
-      "minimum" : 0,
-      "type" : "number",
-      "description" : "The maximum number of items to be return from this query. Has a deployment-defined default and maximum value."
-    },
-    "page" : {
-      "minimum" : 0,
-      "type" : "number",
-      "description" : "The number of pages to skip when returning result to this query."
-    },
-    "endpoint" : {
-      "type" : "string",
-      "description" : "Filter on the openfaas endpoint. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters)."
-    },
-    "imageName" : {
-      "type" : "string",
-      "description" : "Filter on the container image name. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters)."
-    },
-    "storageLocation" : {
-      "type" : "string",
-      "description" : "Filter on the storageLocation. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters)."
-    },
-    "deprecated" : {
-      "type" : "boolean",
-      "description" : "Filter on the deprecation status of the function."
-    },
-    "draft" : {
-      "type" : "boolean",
-      "description" : "Filter on the draft status of the function."
-    },
-    "nameVersion" : {
-      "type" : "array",
-      "description" : "Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered.",
-      "items" : {
-        "$ref" : "#/components/schemas/NamedVersion"
-      }
-    },
-    "version" : {
-      "type" : "string",
-      "description" : "Filter on the version of the function (case-sensitive, supports wildcards)."
-    },
-    "status" : {
-      "type" : "array",
-      "description" : "Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.",
-      "items" : {
-        "$ref" : "#/components/schemas/StatusFilter"
-      }
-    },
-    "runtimeVersion" : {
-      "$ref" : "#/components/schemas/SemanticVersionRange"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "Filter on the user that create the plug. You can use the `@me` token to indicate your own plugs.",
-      "example" : "@me"
-    },
-    "updatedBy" : {
-      "type" : "string",
-      "description" : "Filter on the user that last updated the plug. You can use the `@me` token to indicate your own plugs.",
-      "example" : "@me"
-    },
-    "createdBefore" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "createdAfter" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "updatedBefore" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "updatedAfter" : {
-      "$ref" : "#/components/schemas/TimestampSpec"
-    },
-    "name" : {
-      "type" : "string",
-      "description" : "Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters)."
-    },
-    "archiveFormat" : {
-      "type" : "array",
-      "description" : "Filter on the archive format of the function.",
-      "items" : {
-        "$ref" : "#/components/schemas/ArchiveFormat"
-      }
-    },
-    "runtime" : {
-      "type" : "array",
-      "description" : "Filter on the runtime of the function.",
-      "items" : {
-        "$ref" : "#/components/schemas/Runtime"
-      }
-    }
-  },
-  "additionalProperties" : false,
-  "description" : "Function versions paged query"
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"VersionsQuery": _versions_query_model_schema})
 
 _versions_query_v2_model_schema = json.loads(
     r"""{
@@ -11323,6 +11008,56 @@ _with_asset_hal_link_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"WithAssetHALLink": _with_asset_hal_link_model_schema})
+
+_with_embedded_alt_versions_i_kfserving_response_v2__model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/AltEmbeddedVersion_IKfservingResponseV2_"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "WithEmbeddedAltVersions_IKfservingResponseV2_": _with_embedded_alt_versions_i_kfserving_response_v2__model_schema
+})
+
+_with_embedded_alt_versions_i_plug_response_v2__model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/AltEmbeddedVersion_IPlugResponseV2_"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "WithEmbeddedAltVersions_IPlugResponseV2_": _with_embedded_alt_versions_i_plug_response_v2__model_schema
+})
+
+_with_embedded_alt_versions_i_webscript_response_with_invoke_link_v2__model_schema = (
+    json.loads(
+        r"""{
+  "type" : "object",
+  "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/AltEmbeddedVersion_IWebscriptResponseWithInvokeLinkV2_"
+    }
+  }
+}
+""",
+        object_hook=with_example_provider,
+    )
+)
+MODEL_DEFINITIONS.update({
+    "WithEmbeddedAltVersions_IWebscriptResponseWithInvokeLinkV2_": _with_embedded_alt_versions_i_webscript_response_with_invoke_link_v2__model_schema
+})
 
 _with_entity_attributes_model_schema = json.loads(
     r"""{

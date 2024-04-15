@@ -26,7 +26,7 @@ except ImportError as exc:
 deploy_args_model_schema = json.loads(
     r"""{
   "title" : "DeployArgs",
-  "required" : [ "deploySpecOverrides", "endpoint", "imageName", "namespace", "runtimeName", "runtimeVersion" ],
+  "required" : [ "deploySpecOverrides", "endpoint", "imageName", "namespace", "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "namespace" : {

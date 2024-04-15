@@ -29,6 +29,24 @@ create_function_query_v2_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
+    "deploy" : {
+      "type" : "boolean",
+      "description" : "Indicates that a function should be _deployed_ when its assets are valid.\n\n* If `true` (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated.\n* If `false`, the uploaded assets are stored and the function is created/updated in `registered` state. Asset validation errors are only returned as warning, and stored as `failureReason` on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage.",
+      "default" : true
+    },
+    "author" : {
+      "type" : "string",
+      "description" : "Optionally changes the author metadata when updating a function."
+    },
+    "comment" : {
+      "type" : "string",
+      "description" : "An optional user-specified comment corresponding to the operation."
+    },
+    "scaleToZero" : {
+      "type" : "boolean",
+      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately.",
+      "default" : false
+    },
     "deprecatePrevious" : {
       "$ref" : "#/components/schemas/DeprecatePreviousPolicy"
     },
@@ -41,11 +59,6 @@ create_function_query_v2_model_schema = json.loads(
       "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
       "default" : true
     },
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.",
-      "default" : false
-    },
     "version" : {
       "$ref" : "#/components/schemas/SemanticVersionRange"
     },
@@ -57,6 +70,12 @@ create_function_query_v2_model_schema = json.loads(
       "type" : "boolean",
       "description" : "If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid.",
       "default" : false
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/NamedVersionRange"
+    },
+    "copy" : {
+      "$ref" : "#/components/schemas/CreateFunctionQueryV2_copy"
     }
   },
   "additionalProperties" : false

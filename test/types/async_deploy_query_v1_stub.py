@@ -27,11 +27,6 @@ async_deploy_query_v1_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.",
-      "default" : false
-    },
     "async" : {
       "type" : "boolean",
       "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
@@ -40,6 +35,11 @@ async_deploy_query_v1_model_schema = json.loads(
     "dryRun" : {
       "type" : "boolean",
       "description" : "If set to <code>true</code>, validates the deployment conditions, but does not change anything."
+    },
+    "scaleToZero" : {
+      "type" : "boolean",
+      "description" : "If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately.",
+      "default" : false
     }
   },
   "additionalProperties" : false
