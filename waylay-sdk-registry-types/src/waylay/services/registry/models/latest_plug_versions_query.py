@@ -25,6 +25,9 @@ from typing_extensions import (
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.archive_format import ArchiveFormat
+from ..models.latest_function_versions_query_show_related import (
+    LatestFunctionVersionsQueryShowRelated,
+)
 from ..models.plug_type import PlugType
 from ..models.semantic_version_range import SemanticVersionRange
 from ..models.status_filter import StatusFilter
@@ -114,6 +117,9 @@ class LatestPlugVersionsQuery(WaylayBaseModel):
     latest: StrictBool | None = Field(
         default=None,
         description="When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter.",
+    )
+    show_related: LatestFunctionVersionsQueryShowRelated | None = Field(
+        default=None, alias="showRelated"
     )
 
     model_config = ConfigDict(

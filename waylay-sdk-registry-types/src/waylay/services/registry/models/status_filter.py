@@ -20,14 +20,10 @@ from typing_extensions import (
 )
 
 from ..models.status_any import StatusAny
+from ..models.status_exclude import StatusExclude
 from ..models.status_include import StatusInclude
 
 StatusFilter = Union[
-    Annotated[StatusInclude, ""],
-    Annotated[
-        str,
-        "Any status value with a `-` postfix appended, excludes that status as a filter.",
-    ],
-    Annotated[StatusAny, ""],
+    Annotated[StatusInclude, ""], Annotated[StatusExclude, ""], Annotated[StatusAny, ""]
 ]
 """Inclusion or exclusion filter on the `status` property.."""

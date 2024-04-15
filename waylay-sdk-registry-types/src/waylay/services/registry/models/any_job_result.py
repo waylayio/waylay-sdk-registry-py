@@ -23,6 +23,7 @@ from ..models.batch_result import BatchResult
 from ..models.build_result import BuildResult
 from ..models.cleanup_result import CleanupResult
 from ..models.deploy_result import DeployResult
+from ..models.notify_result import NotifyResult
 from ..models.undeploy_result import UndeployResult
 from ..models.verify_result import VerifyResult
 
@@ -34,5 +35,6 @@ AnyJobResult = Union[
     Annotated[object, "The result data for a completed scale job."],
     Annotated[BatchResult, ""],
     Annotated[CleanupResult, ""],
+    Annotated[NotifyResult, ""],
 ]
 """AnyJobResult."""

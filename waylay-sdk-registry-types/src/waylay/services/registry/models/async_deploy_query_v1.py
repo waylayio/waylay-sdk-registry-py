@@ -22,11 +22,6 @@ from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 class AsyncDeployQueryV1(WaylayBaseModel):
     """AsyncDeployQueryV1."""
 
-    scale_to_zero: StrictBool | None = Field(
-        default=False,
-        description="If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. Saves computing resources when the function is not to be used immediately.",
-        alias="scaleToZero",
-    )
     var_async: StrictBool | None = Field(
         default=True,
         description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
@@ -36,6 +31,11 @@ class AsyncDeployQueryV1(WaylayBaseModel):
         default=None,
         description="If set to <code>true</code>, validates the deployment conditions, but does not change anything.",
         alias="dryRun",
+    )
+    scale_to_zero: StrictBool | None = Field(
+        default=False,
+        description="If set to <code>true</code>, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately.",
+        alias="scaleToZero",
     )
 
     model_config = ConfigDict(

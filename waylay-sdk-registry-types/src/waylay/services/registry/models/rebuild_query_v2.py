@@ -31,6 +31,11 @@ from ..models.rebuild_policy import RebuildPolicy
 class RebuildQueryV2(WaylayBaseModel):
     """RebuildQueryV2."""
 
+    scale_to_zero: StrictBool | None = Field(
+        default=None,
+        description="Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.",
+        alias="scaleToZero",
+    )
     comment: StrictStr | None = Field(
         default=None,
         description="An optional user-specified comment corresponding to the operation.",
@@ -55,11 +60,6 @@ class RebuildQueryV2(WaylayBaseModel):
         default=None,
         description="If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in `pending`, `running`, `failed` or `undeployed` * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the `dryRun` option",
         alias="ignoreChecks",
-    )
-    scale_to_zero: StrictBool | None = Field(
-        default=None,
-        description="Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command.",
-        alias="scaleToZero",
     )
     skip_rebuild: StrictBool | None = Field(
         default=None,

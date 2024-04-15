@@ -25,11 +25,13 @@ from typing_extensions import (
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.archive_format import ArchiveFormat
+from ..models.show_related_type import ShowRelatedType
 
 
 class LatestFunctionsQuery(WaylayBaseModel):
     """Request to list latest function versions per named function. A request that only uses these query parameters will include links to the _latest_ draft/published versions.."""
 
+    show_related: ShowRelatedType | None = Field(default=None, alias="showRelated")
     limit: (
         Annotated[float, Field(strict=True, ge=0)]
         | Annotated[int, Field(strict=True, ge=0)]

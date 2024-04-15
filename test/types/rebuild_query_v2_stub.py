@@ -27,6 +27,10 @@ rebuild_query_v2_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
+    "scaleToZero" : {
+      "type" : "boolean",
+      "description" : "Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command."
+    },
     "comment" : {
       "type" : "string",
       "description" : "An optional user-specified comment corresponding to the operation."
@@ -49,10 +53,6 @@ rebuild_query_v2_model_schema = json.loads(
     "ignoreChecks" : {
       "type" : "boolean",
       "description" : "If set to true, checks that normally prevent a rebuild are overriden. These checks include:\n* function state in `pending`, `running`, `failed` or `undeployed`\n* backoff period due to recent failures\n* usage of deprecated dependencies\n* running jobs on entity\n* the `dryRun` option"
-    },
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "Indicates whether the function needs to be scaled down after successful (re-)deployment. If not set, the function is scaled to zero only if it was not active before this command."
     },
     "skipRebuild" : {
       "type" : "boolean",

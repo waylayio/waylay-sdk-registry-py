@@ -25,7 +25,7 @@ except ImportError as exc:
 
 function_job_args_model_schema = json.loads(
     r"""{
-  "required" : [ "runtimeName", "runtimeVersion" ],
+  "required" : [ "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "runtimeName" : {

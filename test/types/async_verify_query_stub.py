@@ -27,18 +27,14 @@ async_verify_query_model_schema = json.loads(
     r"""{
   "type" : "object",
   "properties" : {
-    "comment" : {
-      "type" : "string",
-      "description" : "An optional user-specified comment corresponding to the operation."
+    "scaleToZero" : {
+      "type" : "boolean",
+      "description" : "Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command."
     },
     "async" : {
       "type" : "boolean",
       "description" : "Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
       "default" : true
-    },
-    "scaleToZero" : {
-      "type" : "boolean",
-      "description" : "Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command."
     }
   },
   "additionalProperties" : false

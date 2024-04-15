@@ -1,6 +1,6 @@
 # waylay.services.registry.AboutApi
 
-All URIs are relative to *https://api.waylay.io*
+All URIs are relative to *https://api-aws-dev.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

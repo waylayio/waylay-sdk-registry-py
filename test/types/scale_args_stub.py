@@ -26,7 +26,7 @@ except ImportError as exc:
 scale_args_model_schema = json.loads(
     r"""{
   "title" : "ScaleArgs",
-  "required" : [ "endpoint", "namespace", "replicas", "runtimeName", "runtimeVersion" ],
+  "required" : [ "endpoint", "namespace", "replicas", "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "namespace" : {

@@ -15,7 +15,6 @@ from pydantic import (
     ConfigDict,
     Field,
     StrictBool,
-    StrictStr,
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
@@ -23,19 +22,15 @@ from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 class AsyncVerifyQuery(WaylayBaseModel):
     """AsyncVerifyQuery."""
 
-    comment: StrictStr | None = Field(
+    scale_to_zero: StrictBool | None = Field(
         default=None,
-        description="An optional user-specified comment corresponding to the operation.",
+        description="Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.",
+        alias="scaleToZero",
     )
     var_async: StrictBool | None = Field(
         default=True,
         description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.",
         alias="async",
-    )
-    scale_to_zero: StrictBool | None = Field(
-        default=None,
-        description="Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.",
-        alias="scaleToZero",
     )
 
     model_config = ConfigDict(
