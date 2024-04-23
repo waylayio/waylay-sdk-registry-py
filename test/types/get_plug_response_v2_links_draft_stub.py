@@ -70,11 +70,22 @@ class GetPlugResponseV2LinksDraftStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return get_plug_response_v2__links_draft_faker.generate()
+        return get_plug_response_v2__links_draft_faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "GetPlugResponseV2LinksDraft":
         """Create GetPlugResponseV2LinksDraft stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return GetPlugResponseV2LinksDraftAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                GetPlugResponseV2LinksDraftAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return GetPlugResponseV2LinksDraftAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

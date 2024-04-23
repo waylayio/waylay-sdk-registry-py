@@ -49,11 +49,20 @@ class WithAssetHALLinkStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return with_asset_hal_link_faker.generate()
+        return with_asset_hal_link_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "WithAssetHALLink":
         """Create WithAssetHALLink stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return WithAssetHALLinkAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                WithAssetHALLinkAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return WithAssetHALLinkAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

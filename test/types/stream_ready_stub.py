@@ -54,11 +54,18 @@ class StreamReadyStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return stream_ready_faker.generate()
+        return stream_ready_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "StreamReady":
         """Create StreamReady stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return StreamReadyAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(StreamReadyAdapter.json_schema(), allow_none_optionals=1)
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return StreamReadyAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

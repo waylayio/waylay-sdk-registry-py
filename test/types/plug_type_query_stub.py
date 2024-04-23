@@ -47,11 +47,20 @@ class PlugTypeQueryStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return plug_type_query_faker.generate()
+        return plug_type_query_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "PlugTypeQuery":
         """Create PlugTypeQuery stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return PlugTypeQueryAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                PlugTypeQueryAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return PlugTypeQueryAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

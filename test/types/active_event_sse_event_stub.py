@@ -48,11 +48,22 @@ class ActiveEventSSEEventStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return active_event_sse_event_faker.generate()
+        return active_event_sse_event_faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "ActiveEventSSEEvent":
         """Create ActiveEventSSEEvent stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return ActiveEventSSEEventAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                ActiveEventSSEEventAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return ActiveEventSSEEventAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

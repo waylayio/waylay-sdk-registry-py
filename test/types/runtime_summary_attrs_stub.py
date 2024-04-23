@@ -63,11 +63,22 @@ class RuntimeSummaryAttrsStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return runtime_summary_attrs_faker.generate()
+        return runtime_summary_attrs_faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "RuntimeSummaryAttrs":
         """Create RuntimeSummaryAttrs stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return RuntimeSummaryAttrsAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                RuntimeSummaryAttrsAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return RuntimeSummaryAttrsAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

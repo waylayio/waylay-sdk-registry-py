@@ -43,11 +43,16 @@ class JobTypeStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return job_type_faker.generate()
+        return job_type_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "JobType":
         """Create JobType stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return JobTypeAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(JobTypeAdapter.json_schema(), allow_none_optionals=1)
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return JobTypeAdapter.validate_python(json, context={"skip_validation": True})

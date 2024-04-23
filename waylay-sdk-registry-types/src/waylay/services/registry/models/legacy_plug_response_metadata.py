@@ -36,8 +36,5 @@ class LegacyPlugResponseMetadata(WaylayBaseModel):
     friendly_name: StrictStr | None = Field(default=None, alias="friendlyName")
 
     model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-        extra="ignore",
+        populate_by_name=True, protected_namespaces=(), extra="ignore"
     )

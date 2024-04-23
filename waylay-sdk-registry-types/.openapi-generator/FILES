@@ -394,7 +394,7 @@ src/waylay/services/registry/models/with_entity_attributes.py
 src/waylay/services/registry/models/with_limit.py
 src/waylay/services/registry/models/with_paging.py
 src/waylay/services/registry/queries/__init__.py
-src/waylay/services/registry/queries/about_api.py
+src/waylay/services/registry/queries/default_api.py
 src/waylay/services/registry/queries/jobs_api.py
 src/waylay/services/registry/queries/model_functions_api.py
 src/waylay/services/registry/queries/plug_functions_api.py

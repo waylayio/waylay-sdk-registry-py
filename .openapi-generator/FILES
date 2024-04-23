@@ -3,7 +3,6 @@
 LICENSE.txt
 Makefile
 README.md
-docs/AboutApi.md
 docs/ActiveEventData.md
 docs/ActiveEventSSE.md
 docs/ActiveEventSSEEvent.md
@@ -51,6 +50,7 @@ docs/CreateFunctionQueryV2.md
 docs/CreateKFServingAsyncResponse.md
 docs/CreatePlugAsyncResponse.md
 docs/CreateWebscriptAsyncResponse.md
+docs/DefaultApi.md
 docs/DelayedEventData.md
 docs/DelayedEventSSE.md
 docs/DelayedEventSSEEvent.md
@@ -405,7 +405,7 @@ pyproject.toml
 requirements.txt
 test/__init__.py
 test/api/__init__.py
-test/api/about_api_test.py
+test/api/default_api_test.py
 test/api/jobs_api_test.py
 test/api/model_functions_api_test.py
 test/api/plug_functions_api_test.py
