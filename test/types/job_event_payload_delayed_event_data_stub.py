@@ -63,11 +63,23 @@ class JobEventPayloadDelayedEventDataStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return job_event_payload_delayed_event_data__faker.generate()
+        return job_event_payload_delayed_event_data__faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "JobEventPayloadDelayedEventData":
         """Create JobEventPayloadDelayedEventData stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return JobEventPayloadDelayedEventDataAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                JobEventPayloadDelayedEventDataAdapter.json_schema(),
+                allow_none_optionals=1,
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return JobEventPayloadDelayedEventDataAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

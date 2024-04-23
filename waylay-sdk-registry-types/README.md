@@ -32,16 +32,22 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.root_page_response import RootPageResponse
+from waylay.services.registry.models.function_type import FunctionType
+from waylay.services.registry.models.job_state_result import JobStateResult
+from waylay.services.registry.models.job_type_schema import JobTypeSchema
+from waylay.services.registry.models.jobs_response import JobsResponse
 try:
-    # Get Service Status
-    # calls `GET /registry/v2/`
-    api_response = await waylay_client.registry.about.get(
+    # List Jobs
+    # calls `GET /registry/v2/jobs/`
+    api_response = await waylay_client.registry.jobs.list(
+        # query parameters:
+        query = {
+        },
     )
-    print("The response of registry.about.get:\n")
+    print("The response of registry.jobs.list:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.about.get: %s\n" % e)
+    print("Exception when calling registry.jobs.list: %s\n" % e)
 ```
 
 

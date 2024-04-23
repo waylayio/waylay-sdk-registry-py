@@ -57,11 +57,22 @@ class LegacyPlugCreateResponseStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return legacy_plug_create_response_faker.generate()
+        return legacy_plug_create_response_faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "LegacyPlugCreateResponse":
         """Create LegacyPlugCreateResponse stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return LegacyPlugCreateResponseAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                LegacyPlugCreateResponseAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return LegacyPlugCreateResponseAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

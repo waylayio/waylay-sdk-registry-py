@@ -50,8 +50,5 @@ class Deploy(WaylayBaseModel):
     failure_reason: FailureReason | None = Field(default=None, alias="failureReason")
 
     model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-        extra="ignore",
+        populate_by_name=True, protected_namespaces=(), extra="ignore"
     )

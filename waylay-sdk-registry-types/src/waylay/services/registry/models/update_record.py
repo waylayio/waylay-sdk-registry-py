@@ -40,8 +40,5 @@ class UpdateRecord(WaylayBaseModel):
     by: StrictStr = Field(description="The user that initiated this operation.")
 
     model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-        extra="ignore",
+        populate_by_name=True, protected_namespaces=(), extra="ignore"
     )

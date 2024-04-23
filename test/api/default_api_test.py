@@ -18,7 +18,7 @@ from pytest_httpx import HTTPXMock
 from typeguard import check_type
 from waylay.sdk import ApiClient, WaylayClient
 from waylay.sdk.api._models import Model
-from waylay.services.registry.api import AboutApi
+from waylay.services.registry.api import DefaultApi
 from waylay.services.registry.service import RegistryService
 
 from ..types.root_page_response_stub import RootPageResponseStub
@@ -36,13 +36,13 @@ null, true, false = None, True, False
 
 
 @pytest.fixture
-def about_api(waylay_api_client: ApiClient) -> AboutApi:
-    return AboutApi(waylay_api_client)
+def default_api(waylay_api_client: ApiClient) -> DefaultApi:
+    return DefaultApi(waylay_api_client)
 
 
 def test_registered(waylay_client: WaylayClient):
-    """Test that AboutApi api is registered in the sdk client."""
-    assert isinstance(waylay_client.registry.about, AboutApi)
+    """Test that DefaultApi api is registered in the sdk client."""
+    assert isinstance(waylay_client.registry.default, DefaultApi)
 
 
 def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
@@ -60,12 +60,12 @@ def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
 @pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
-    Get Service Status
+    Version
     """
     # set path params
     kwargs = {}
     _get_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.about.get(**kwargs)
+    resp = await service.default.get(**kwargs)
     check_type(resp, Union[RootPageResponse,])
 
 
@@ -75,10 +75,10 @@ async def test_get_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for get with models not installed
-    Get Service Status
+    Version
     """
     # set path params
     kwargs = {}
     _get_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.about.get(**kwargs)
+    resp = await service.default.get(**kwargs)
     check_type(resp, Model)

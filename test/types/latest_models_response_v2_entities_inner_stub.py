@@ -108,13 +108,23 @@ class LatestModelsResponseV2EntitiesInnerStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return latest_models_response_v2_entities_inner_faker.generate()
+        return latest_models_response_v2_entities_inner_faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "LatestModelsResponseV2EntitiesInner":
         """Create LatestModelsResponseV2EntitiesInner stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                LatestModelsResponseV2EntitiesInnerAdapter.json_schema(),
+                allow_none_optionals=1,
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
         return LatestModelsResponseV2EntitiesInnerAdapter.validate_python(
-            cls.create_json()
+            json, context={"skip_validation": True}
         )

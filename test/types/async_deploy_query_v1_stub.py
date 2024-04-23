@@ -60,11 +60,22 @@ class AsyncDeployQueryV1Stub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return async_deploy_query_v1_faker.generate()
+        return async_deploy_query_v1_faker.generate(
+            use_defaults=True, use_examples=True
+        )
 
     @classmethod
     def create_instance(cls) -> "AsyncDeployQueryV1":
         """Create AsyncDeployQueryV1 stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return AsyncDeployQueryV1Adapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                AsyncDeployQueryV1Adapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return AsyncDeployQueryV1Adapter.validate_python(
+            json, context={"skip_validation": True}
+        )
