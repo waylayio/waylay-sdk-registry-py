@@ -25,7 +25,6 @@ except ImportError as exc:
 
 job_state_result_model_schema = json.loads(
     r"""{
-  "title" : "JobStateResult",
   "description" : "All reported job states",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/JobState"

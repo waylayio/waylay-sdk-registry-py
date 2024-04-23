@@ -1,6 +1,6 @@
 # waylay.services.registry.JobsApi
 
-All URIs are relative to *https://api.waylay.io*
+All URIs are relative to *https://api-aws-dev.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -74,7 +74,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: text/eventstream
+ - **Accept**: text/event-stream
 
 ### HTTP response details
 
