@@ -27,7 +27,6 @@ except ImportError as exc:
 
 deprecate_previous_policy_model_schema = json.loads(
     r"""{
-  "title" : "DeprecatePreviousPolicy",
   "type" : "string",
   "enum" : [ "none", "all", "patch", "minor" ]
 }

@@ -43,9 +43,8 @@ class DeployArgs(WaylayBaseModel):
         description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org",
         alias="runtimeVersion",
     )
-    revision: StrictStr | None = Field(
-        default=None,
-        description="The revision hash of the current (draft) function revision",
+    revision: StrictStr = Field(
+        description="The revision hash of the current (draft) function revision"
     )
     deploy_spec_overrides: DeployArgsDeploySpecOverrides = Field(
         alias="deploySpecOverrides"

@@ -25,7 +25,6 @@ except ImportError as exc:
 
 job_type_schema_model_schema = json.loads(
     r"""{
-  "title" : "JobTypeSchema",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/JobTypeBuild"
   }, {
@@ -38,6 +37,8 @@ job_type_schema_model_schema = json.loads(
     "$ref" : "#/components/schemas/JobTypeScale"
   }, {
     "$ref" : "#/components/schemas/JobTypeBatch"
+  }, {
+    "$ref" : "#/components/schemas/JobTypeNotify"
   } ]
 }
 """,

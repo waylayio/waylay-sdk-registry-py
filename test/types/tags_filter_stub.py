@@ -25,7 +25,6 @@ except ImportError as exc:
 
 tags_filter_model_schema = json.loads(
     r"""{
-  "title" : "TagsFilter",
   "anyOf" : [ {
     "type" : "array",
     "items" : {

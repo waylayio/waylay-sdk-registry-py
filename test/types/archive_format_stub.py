@@ -25,7 +25,6 @@ except ImportError as exc:
 
 archive_format_model_schema = json.loads(
     r"""{
-  "title" : "ArchiveFormat",
   "type" : "string",
   "enum" : [ "node", "python", "golang", "byoml", "native" ]
 }

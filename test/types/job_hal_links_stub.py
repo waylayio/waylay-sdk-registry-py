@@ -25,7 +25,6 @@ except ImportError as exc:
 
 job_hal_links_model_schema = json.loads(
     r"""{
-  "title" : "JobHALLinks",
   "type" : "object",
   "properties" : {
     "event" : {
