@@ -53,7 +53,6 @@ class ExampleArchiveQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_example_archive_query_alias_for,
@@ -86,7 +85,6 @@ class GetExampleAssetQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_example_asset_query_alias_for,
@@ -135,7 +133,6 @@ class GetLatestQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_latest_query_alias_for,
@@ -160,7 +157,6 @@ class GetQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_query_alias_for,
@@ -225,7 +221,6 @@ class ListQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_list_query_alias_for,
@@ -282,7 +277,6 @@ class ListVersionsQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_list_versions_query_alias_for,

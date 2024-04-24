@@ -234,6 +234,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2: ...
@@ -261,6 +262,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -288,6 +290,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -315,6 +318,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -342,6 +346,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -368,6 +373,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> (
@@ -416,6 +422,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -434,16 +441,12 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {}
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
-        if json is not None and should_validate:
+        if json is not None and validate_request:
             body_adapter = TypeAdapter(
                 Annotated[
                     Optional[Union[StrictBytes, StrictStr]],
@@ -458,7 +461,7 @@ class WebscriptsApi(WithApiClient):
         body_args["files"] = files
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(CreateQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -504,6 +507,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2: ...
@@ -526,6 +530,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -548,6 +553,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -570,6 +576,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -592,6 +599,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -613,6 +621,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> (
@@ -649,6 +658,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -667,10 +677,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -682,7 +688,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(DeleteAssetQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -724,6 +730,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> bytearray: ...
@@ -740,6 +747,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -756,6 +764,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -772,6 +781,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -788,6 +798,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -803,6 +814,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> bytearray | T | Response | Model:
@@ -821,6 +833,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -839,10 +852,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -853,7 +862,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(GetArchiveQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -898,6 +907,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> bytearray: ...
@@ -920,6 +930,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -942,6 +953,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -964,6 +976,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -986,6 +999,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1007,6 +1021,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> bytearray | T | Response | Model:
@@ -1027,6 +1042,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1045,10 +1061,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -1060,7 +1072,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(GetAssetQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -1096,6 +1108,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> GetWebscriptResponseV2: ...
@@ -1109,6 +1122,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1122,6 +1136,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -1135,6 +1150,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -1148,6 +1164,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1160,6 +1177,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> GetWebscriptResponseV2 | T | Response | Model:
@@ -1178,6 +1196,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1196,10 +1215,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -1209,7 +1224,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(GetLatestQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -1248,6 +1263,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> GetWebscriptResponseV2: ...
@@ -1264,6 +1280,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1280,6 +1297,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -1296,6 +1314,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -1312,6 +1331,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1327,6 +1347,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> GetWebscriptResponseV2 | T | Response | Model:
@@ -1343,6 +1364,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1361,10 +1383,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -1375,7 +1393,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(GetQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -1414,6 +1432,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> JobsForWebscriptResponseV2: ...
@@ -1430,6 +1449,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1446,6 +1466,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -1462,6 +1483,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -1478,6 +1500,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1493,6 +1516,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> JobsForWebscriptResponseV2 | T | Response | Model:
@@ -1521,6 +1545,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1539,10 +1564,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -1553,7 +1574,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(JobsQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -1589,6 +1610,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> WebscriptVersionsResponseV2: ...
@@ -1602,6 +1624,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1615,6 +1638,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -1628,6 +1652,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -1641,6 +1666,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1653,6 +1679,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> WebscriptVersionsResponseV2 | T | Response | Model:
@@ -1697,6 +1724,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1715,10 +1743,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -1728,7 +1752,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ListVersionsQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -1763,6 +1787,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> LatestWebscriptsResponseV2: ...
@@ -1775,6 +1800,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1787,6 +1813,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -1799,6 +1826,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -1811,6 +1839,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1822,6 +1851,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> LatestWebscriptsResponseV2 | T | Response | Model:
@@ -1876,6 +1906,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -1894,10 +1925,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {}
 
@@ -1905,7 +1932,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(ListQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -1945,6 +1972,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> GetWebscriptResponseV2: ...
@@ -1962,6 +1990,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -1979,6 +2008,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -1996,6 +2026,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -2013,6 +2044,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2029,6 +2061,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> GetWebscriptResponseV2 | T | Response | Model:
@@ -2049,6 +2082,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -2067,10 +2101,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -2079,13 +2109,13 @@ class WebscriptsApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
-        if json is not None and should_validate:
+        if json is not None and validate_request:
             body_adapter = TypeAdapter(Optional[FunctionMeta])
             json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
         body_args["json"] = json
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(PatchMetadataQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -2124,6 +2154,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2: ...
@@ -2140,6 +2171,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2156,6 +2188,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -2172,6 +2205,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -2188,6 +2222,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2203,6 +2238,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> (
@@ -2235,6 +2271,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -2253,10 +2290,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -2267,7 +2300,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(PublishQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -2307,6 +2340,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> RebuildWebscriptSyncResponseV2 | RebuildWebscriptAsyncResponseV2: ...
@@ -2323,6 +2357,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2339,6 +2374,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -2355,6 +2391,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -2371,6 +2408,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2386,6 +2424,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> (
@@ -2424,6 +2463,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -2442,10 +2482,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -2456,7 +2492,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(RebuildQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -2496,6 +2532,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> UndeployedResponseV2 | UndeploySubmittedResponseV2: ...
@@ -2512,6 +2549,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2528,6 +2566,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -2544,6 +2583,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -2560,6 +2600,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2575,6 +2616,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> UndeployedResponseV2 | UndeploySubmittedResponseV2 | T | Response | Model:
@@ -2599,6 +2641,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -2617,10 +2660,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -2631,7 +2670,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(RemoveVersionQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -2668,6 +2707,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> UndeployedResponseV2 | UndeploySubmittedResponseV2: ...
@@ -2681,6 +2721,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2694,6 +2735,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -2707,6 +2749,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -2720,6 +2763,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2732,6 +2776,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> UndeployedResponseV2 | UndeploySubmittedResponseV2 | T | Response | Model:
@@ -2754,6 +2799,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -2772,10 +2818,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -2785,7 +2827,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(RemoveVersionsQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -2834,6 +2876,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2: ...
@@ -2859,6 +2902,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2884,6 +2928,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -2909,6 +2954,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -2934,6 +2980,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -2958,6 +3005,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> (
@@ -2996,6 +3044,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -3014,10 +3063,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -3030,7 +3075,7 @@ class WebscriptsApi(WithApiClient):
         body_args["content"] = content
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(UpdateAssetQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -3081,6 +3126,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2: ...
@@ -3106,6 +3152,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -3131,6 +3178,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -3156,6 +3204,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -3181,6 +3230,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -3205,6 +3255,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> (
@@ -3243,6 +3294,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -3261,10 +3313,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -3277,7 +3325,7 @@ class WebscriptsApi(WithApiClient):
         body_args["files"] = files
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(UpdateAssetsQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -3319,6 +3367,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> VerifyWebscriptSyncResponseV2 | PostWebscriptJobAsyncResponseV2: ...
@@ -3335,6 +3384,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -3351,6 +3401,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -3367,6 +3418,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -3383,6 +3435,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -3398,6 +3451,7 @@ class WebscriptsApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> (
@@ -3424,6 +3478,7 @@ class WebscriptsApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -3442,10 +3497,6 @@ class WebscriptsApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "name": str(name),
@@ -3456,7 +3507,7 @@ class WebscriptsApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(VerifyQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (

@@ -25,7 +25,6 @@ except ImportError as exc:
 
 archive_format_model_schema = json.loads(
     r"""{
-  "title" : "ArchiveFormat",
   "type" : "string",
   "enum" : [ "node", "python", "golang", "byoml", "native" ]
 }
@@ -43,11 +42,20 @@ class ArchiveFormatStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return archive_format_faker.generate()
+        return archive_format_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "ArchiveFormat":
         """Create ArchiveFormat stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return ArchiveFormatAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                ArchiveFormatAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return ArchiveFormatAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

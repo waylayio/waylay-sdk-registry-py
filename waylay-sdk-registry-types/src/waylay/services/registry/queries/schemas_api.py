@@ -24,7 +24,6 @@ class GetByRoleQuery(WaylayBaseModel):
     """Model for `get_by_role` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_by_role_query_alias_for,
@@ -40,7 +39,6 @@ class GetQuery(WaylayBaseModel):
     """Model for `get` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_query_alias_for,

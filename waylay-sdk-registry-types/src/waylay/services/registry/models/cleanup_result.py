@@ -26,8 +26,5 @@ class CleanupResult(WaylayBaseModel):
     scheduled_job: JobReference | None = Field(default=None, alias="scheduledJob")
 
     model_config = ConfigDict(
-        populate_by_name=True,
-        validate_assignment=True,
-        protected_namespaces=(),
-        extra="ignore",
+        populate_by_name=True, protected_namespaces=(), extra="ignore"
     )

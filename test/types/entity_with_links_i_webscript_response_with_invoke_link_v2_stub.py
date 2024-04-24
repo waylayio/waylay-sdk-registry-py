@@ -118,7 +118,9 @@ class EntityWithLinksIWebscriptResponseWithInvokeLinkV2Stub:
     def create_json(cls):
         """Create a dict stub instance."""
         return (
-            entity_with_links_i_webscript_response_with_invoke_link_v2__faker.generate()
+            entity_with_links_i_webscript_response_with_invoke_link_v2__faker.generate(
+                use_defaults=True, use_examples=True
+            )
         )
 
     @classmethod
@@ -126,6 +128,14 @@ class EntityWithLinksIWebscriptResponseWithInvokeLinkV2Stub:
         """Create EntityWithLinksIWebscriptResponseWithInvokeLinkV2 stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                EntityWithLinksIWebscriptResponseWithInvokeLinkV2Adapter.json_schema(),
+                allow_none_optionals=1,
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
         return EntityWithLinksIWebscriptResponseWithInvokeLinkV2Adapter.validate_python(
-            cls.create_json()
+            json, context={"skip_validation": True}
         )
