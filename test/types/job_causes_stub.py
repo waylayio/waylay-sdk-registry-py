@@ -25,7 +25,6 @@ except ImportError as exc:
 
 job_causes_model_schema = json.loads(
     r"""{
-  "title" : "JobCauses",
   "type" : "object",
   "properties" : {
     "build" : {
@@ -60,11 +59,16 @@ class JobCausesStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return job_causes_faker.generate()
+        return job_causes_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "JobCauses":
         """Create JobCauses stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return JobCausesAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(JobCausesAdapter.json_schema(), allow_none_optionals=1)
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return JobCausesAdapter.validate_python(json, context={"skip_validation": True})

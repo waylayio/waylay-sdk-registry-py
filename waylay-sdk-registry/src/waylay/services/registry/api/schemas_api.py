@@ -80,6 +80,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Dict[str, object]: ...
@@ -94,6 +95,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -108,6 +110,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -122,6 +125,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -136,6 +140,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -149,6 +154,7 @@ class SchemasApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Dict[str, object] | T | Response | Model:
@@ -165,6 +171,7 @@ class SchemasApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -187,9 +194,6 @@ class SchemasApi(WithApiClient):
             "GET /registry/v2/schemas/{functionType}/{role}/schema is deprecated.",
             DeprecationWarning,
         )
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
 
         # path parameters
         path_params: Dict[str, str] = {
@@ -201,7 +205,7 @@ class SchemasApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(GetByRoleQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (
@@ -237,6 +241,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Dict[str, object]: ...
@@ -250,6 +255,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -263,6 +269,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
         response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Response: ...
@@ -276,6 +283,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Model: ...
@@ -289,6 +297,7 @@ class SchemasApi(WithApiClient):
         raw_response: Literal[False] = False,
         select_path: str,
         response_type: T,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> T: ...
@@ -301,6 +310,7 @@ class SchemasApi(WithApiClient):
         raw_response: StrictBool = False,
         select_path: str = "",
         response_type: T | None = None,
+        validate_request: StrictBool = True,
         headers: HeaderTypes | None = None,
         **kwargs,
     ) -> Dict[str, object] | T | Response | Model:
@@ -315,6 +325,7 @@ class SchemasApi(WithApiClient):
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
         :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
         :param headers: Header parameters for this request
         :type headers: dict, optional
         :param `**kwargs`: Additional parameters passed on to the http client.
@@ -333,10 +344,6 @@ class SchemasApi(WithApiClient):
             object wraps both the http Response and any parsed data.
         """
 
-        should_validate = (
-            MODELS_AVAILABLE and self.api_client.config.client_side_validation
-        )
-
         # path parameters
         path_params: Dict[str, str] = {
             "schemaId": str(schema_id),
@@ -346,7 +353,7 @@ class SchemasApi(WithApiClient):
         body_args: Dict[str, Any] = {}
 
         # query parameters
-        if query is not None and should_validate:
+        if query is not None and MODELS_AVAILABLE and validate_request:
             query = TypeAdapter(GetQuery).validate_python(query)
 
         response_types_map: Dict[str, Any] = (

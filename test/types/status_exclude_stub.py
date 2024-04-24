@@ -45,11 +45,20 @@ class StatusExcludeStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return status_exclude_faker.generate()
+        return status_exclude_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "StatusExclude":
         """Create StatusExclude stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return StatusExcludeAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(
+                StatusExcludeAdapter.json_schema(), allow_none_optionals=1
+            )
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return StatusExcludeAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

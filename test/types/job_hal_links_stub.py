@@ -25,7 +25,6 @@ except ImportError as exc:
 
 job_hal_links_model_schema = json.loads(
     r"""{
-  "title" : "JobHALLinks",
   "type" : "object",
   "properties" : {
     "event" : {
@@ -51,11 +50,18 @@ class JobHALLinksStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return job_hal_links_faker.generate()
+        return job_hal_links_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "JobHALLinks":
         """Create JobHALLinks stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
-        return JobHALLinksAdapter.validate_python(cls.create_json())
+        json = cls.create_json()
+        if not json:
+            # use backup example based on the pydantic model schema
+            backup_faker = JSF(JobHALLinksAdapter.json_schema(), allow_none_optionals=1)
+            json = backup_faker.generate(use_defaults=True, use_examples=True)
+        return JobHALLinksAdapter.validate_python(
+            json, context={"skip_validation": True}
+        )

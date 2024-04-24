@@ -138,7 +138,6 @@ class CreateQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_create_query_alias_for,
@@ -203,7 +202,6 @@ class DeleteAssetQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_delete_asset_query_alias_for,
@@ -228,7 +226,6 @@ class GetArchiveQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_archive_query_alias_for,
@@ -253,7 +250,6 @@ class GetAssetQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_asset_query_alias_for,
@@ -286,7 +282,6 @@ class GetLatestQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_latest_query_alias_for,
@@ -302,7 +297,6 @@ class GetQuery(WaylayBaseModel):
     """Model for `get` query parameters."""
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_get_query_alias_for,
@@ -360,7 +354,6 @@ class JobsQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_jobs_query_alias_for,
@@ -490,7 +483,6 @@ class ListVersionsQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_list_versions_query_alias_for,
@@ -668,7 +660,6 @@ class ListQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_list_query_alias_for,
@@ -693,7 +684,6 @@ class PatchMetadataQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_patch_metadata_query_alias_for,
@@ -750,7 +740,6 @@ class PublishQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_publish_query_alias_for,
@@ -831,7 +820,6 @@ class RebuildQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_rebuild_query_alias_for,
@@ -880,7 +868,6 @@ class RemoveVersionQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_remove_version_query_alias_for,
@@ -929,7 +916,6 @@ class RemoveVersionsQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_remove_versions_query_alias_for,
@@ -994,7 +980,6 @@ class UpdateAssetQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_update_asset_query_alias_for,
@@ -1059,7 +1044,6 @@ class UpdateAssetsQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_update_assets_query_alias_for,
@@ -1092,7 +1076,6 @@ class VerifyQuery(WaylayBaseModel):
     ] = None
 
     model_config = ConfigDict(
-        validate_assignment=True,
         protected_namespaces=(),
         extra="allow",
         alias_generator=_verify_query_alias_for,
