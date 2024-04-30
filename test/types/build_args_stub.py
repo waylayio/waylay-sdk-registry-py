@@ -26,7 +26,7 @@ except ImportError as exc:
 build_args_model_schema = json.loads(
     r"""{
   "title" : "BuildArgs",
-  "required" : [ "args", "imageName", "runtimeName", "runtimeVersion", "storageLocation" ],
+  "required" : [ "args", "imageName", "revision", "runtimeName", "runtimeVersion", "storageLocation" ],
   "type" : "object",
   "properties" : {
     "runtimeName" : {

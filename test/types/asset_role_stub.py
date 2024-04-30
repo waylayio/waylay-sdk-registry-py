@@ -25,7 +25,6 @@ except ImportError as exc:
 
 asset_role_model_schema = json.loads(
     r"""{
-  "title" : "AssetRole",
   "type" : "string",
   "description" : "Classification of assets with regard to their role.",
   "enum" : [ "manifest", "project", "main", "lib", "script", "other" ]

@@ -26,7 +26,7 @@ except ImportError as exc:
 verify_args_model_schema = json.loads(
     r"""{
   "title" : "VerifyArgs",
-  "required" : [ "endpoint", "namespace", "runtimeName", "runtimeVersion" ],
+  "required" : [ "endpoint", "namespace", "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "namespace" : {

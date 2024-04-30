@@ -13,7 +13,6 @@ from __future__ import annotations
 
 from pydantic import (
     ConfigDict,
-    Field,
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
@@ -25,7 +24,7 @@ class CompletedEventData(WaylayBaseModel):
     """CompletedEventData."""
 
     prev: QueueEvents | None = None
-    return_value: AnyJobResult = Field(alias="returnValue")
+    returnvalue: AnyJobResult
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

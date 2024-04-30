@@ -2,13 +2,13 @@
 
 from waylay.sdk import ApiClient, WaylayService
 
-from ..api.default_api import DefaultApi
+from ..api.about_api import AboutApi
 from ..api.jobs_api import JobsApi
-from ..api.model_functions_api import ModelFunctionsApi
-from ..api.plug_functions_api import PlugFunctionsApi
+from ..api.models_api import ModelsApi
+from ..api.plugs_api import PlugsApi
 from ..api.runtimes_api import RuntimesApi
 from ..api.schemas_api import SchemasApi
-from ..api.webscript_functions_api import WebscriptFunctionsApi
+from ..api.webscripts_api import WebscriptsApi
 
 
 class RegistryService(WaylayService):
@@ -17,22 +17,22 @@ class RegistryService(WaylayService):
     name = "registry"
     title = "Registry Service"
 
+    about: AboutApi
     jobs: JobsApi
-    model_functions: ModelFunctionsApi
-    plug_functions: PlugFunctionsApi
+    models: ModelsApi
+    plugs: PlugsApi
     runtimes: RuntimesApi
     schemas: SchemasApi
-    webscript_functions: WebscriptFunctionsApi
-    default: DefaultApi
+    webscripts: WebscriptsApi
 
     def __init__(self, api_client: ApiClient):
         """Create the registry service."""
 
         super().__init__(api_client)
+        self.about = AboutApi(api_client)
         self.jobs = JobsApi(api_client)
-        self.model_functions = ModelFunctionsApi(api_client)
-        self.plug_functions = PlugFunctionsApi(api_client)
+        self.models = ModelsApi(api_client)
+        self.plugs = PlugsApi(api_client)
         self.runtimes = RuntimesApi(api_client)
         self.schemas = SchemasApi(api_client)
-        self.webscript_functions = WebscriptFunctionsApi(api_client)
-        self.default = DefaultApi(api_client)
+        self.webscripts = WebscriptsApi(api_client)

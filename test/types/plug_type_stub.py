@@ -25,7 +25,6 @@ except ImportError as exc:
 
 plug_type_model_schema = json.loads(
     r"""{
-  "title" : "PlugType",
   "type" : "string",
   "enum" : [ "sensor", "actuator", "transformer" ]
 }
