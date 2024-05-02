@@ -21,8 +21,8 @@ from pydantic import (
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.latest_models_response_v2_entities_inner import (
-    LatestModelsResponseV2EntitiesInner,
+from ..models.entity_with_links_i_kfserving_response_v2 import (
+    EntityWithLinksIKfservingResponseV2,
 )
 
 
@@ -38,7 +38,7 @@ class LatestModelsResponseV2(WaylayBaseModel):
     page: StrictFloat | StrictInt | None = Field(
         default=None, description="The page number of a paged query result."
     )
-    entities: List[LatestModelsResponseV2EntitiesInner] = Field(
+    entities: List[EntityWithLinksIKfservingResponseV2] = Field(
         description="The specification and deployment status of the queried functions"
     )
 

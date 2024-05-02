@@ -25,7 +25,6 @@ except ImportError as exc:
 
 timestamp_spec_model_schema = json.loads(
     r"""{
-  "title" : "TimestampSpec",
   "description" : "A timestamp specification.",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/TimestampAge"

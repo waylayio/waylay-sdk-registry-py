@@ -27,7 +27,6 @@ except ImportError as exc:
 
 semantic_version_range_model_schema = json.loads(
     r"""{
-  "title" : "SemanticVersionRange",
   "description" : "A range of semantic versions. See https://devhints.io/semver",
   "anyOf" : [ {
     "type" : "string"

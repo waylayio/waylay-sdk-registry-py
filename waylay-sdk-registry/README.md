@@ -2,7 +2,7 @@
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
 This Python package is automatically generated based on the 
-Waylay Registry OpenAPI specification (API version: 2.12.4)
+Waylay Registry OpenAPI specification (API version: 2.13.0)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/registry.html).
 
 It consists of a plugin for the waylay-sdk-core package, and contains the Registry api methods.
@@ -33,22 +33,16 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.function_type import FunctionType
-from waylay.services.registry.models.job_state_result import JobStateResult
-from waylay.services.registry.models.job_type_schema import JobTypeSchema
-from waylay.services.registry.models.jobs_response import JobsResponse
+from waylay.services.registry.models.root_page_response import RootPageResponse
 try:
-    # List Jobs
-    # calls `GET /registry/v2/jobs/`
-    api_response = await waylay_client.registry.jobs.list(
-        # query parameters:
-        query = {
-        },
+    # Get Service Status
+    # calls `GET /registry/v2/`
+    api_response = await waylay_client.registry.about.get(
     )
-    print("The response of registry.jobs.list:\n")
+    print("The response of registry.about.get:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling registry.jobs.list: %s\n" % e)
+    print("Exception when calling registry.about.get: %s\n" % e)
 ```
 
 

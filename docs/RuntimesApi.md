@@ -80,7 +80,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/octet-stream, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
+ - **Accept**: application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
 
 ### HTTP response details
 
@@ -162,7 +162,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/octet-stream, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
+ - **Accept**: application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
 
 ### HTTP response details
 

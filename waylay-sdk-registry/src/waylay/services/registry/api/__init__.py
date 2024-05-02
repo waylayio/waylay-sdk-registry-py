@@ -1,20 +1,20 @@
 """Waylay Function Registry: apis."""
 
 # import apis into api package
-from .default_api import DefaultApi
+from .about_api import AboutApi
 from .jobs_api import JobsApi
-from .model_functions_api import ModelFunctionsApi
-from .plug_functions_api import PlugFunctionsApi
+from .models_api import ModelsApi
+from .plugs_api import PlugsApi
 from .runtimes_api import RuntimesApi
 from .schemas_api import SchemasApi
-from .webscript_functions_api import WebscriptFunctionsApi
+from .webscripts_api import WebscriptsApi
 
 __all__ = [
+    "AboutApi",
     "JobsApi",
-    "ModelFunctionsApi",
-    "PlugFunctionsApi",
+    "ModelsApi",
+    "PlugsApi",
     "RuntimesApi",
     "SchemasApi",
-    "WebscriptFunctionsApi",
-    "DefaultApi",
+    "WebscriptsApi",
 ]

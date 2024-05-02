@@ -25,7 +25,6 @@ except ImportError as exc:
 
 latest_version_level_model_schema = json.loads(
     r"""{
-  "title" : "LatestVersionLevel",
   "type" : "string",
   "description" : "Level of latest versions that should be included.",
   "enum" : [ "major", "minor", "patch", "true", "false" ]
