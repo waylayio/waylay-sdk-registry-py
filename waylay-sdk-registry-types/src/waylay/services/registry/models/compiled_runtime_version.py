@@ -31,6 +31,7 @@ from ..models.assets_conditions import AssetsConditions
 from ..models.build_spec import BuildSpec
 from ..models.deploy_spec import DeploySpec
 from ..models.function_type import FunctionType
+from ..models.invocation_attributes import InvocationAttributes
 from ..models.language_release import LanguageRelease
 from ..models.provided_dependency import ProvidedDependency
 
@@ -56,6 +57,7 @@ class CompiledRuntimeVersion(WaylayBaseModel):
         alias="providedDependencies",
     )
     assets: AssetsConditions | None = None
+    invocation: InvocationAttributes | None = None
     title: StrictStr
     description: StrictStr | None = None
     version: Annotated[str, Field(strict=True)] = Field(

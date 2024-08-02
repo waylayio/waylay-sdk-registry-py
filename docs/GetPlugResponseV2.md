@@ -6,7 +6,7 @@ Plug Found
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**entity** | [**PlugResponseV2**](PlugResponseV2.md) |  | 
+**entity** | [**PlugWithInvocationResponseV2**](PlugWithInvocationResponseV2.md) |  | 
 **links** | [**GetPlugResponseV2Links**](GetPlugResponseV2Links.md) |  | 
 
 ## Example

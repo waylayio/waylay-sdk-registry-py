@@ -25,6 +25,7 @@ except ImportError as exc:
 
 status_exclude_model_schema = json.loads(
     r"""{
+  "title" : "StatusExclude",
   "pattern" : "^(registered|pending|deployed|unhealthy|failed|running|undeploying|undeployed)-$",
   "type" : "string",
   "description" : "Any status value with a `-` postfix appended, excludes that status as a filter.",

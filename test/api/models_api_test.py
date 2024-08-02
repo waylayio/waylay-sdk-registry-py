@@ -25,6 +25,7 @@ from waylay.services.registry.service import RegistryService
 from ..types.create_webscripts_copy_parameter_stub import (
     CreateWebscriptsCopyParameterStub,
 )
+from ..types.deprecate_previous_policy_stub import DeprecatePreviousPolicyStub
 from ..types.function_meta_stub import FunctionMetaStub
 from ..types.get_model_response_v2_stub import GetModelResponseV2Stub
 from ..types.jobs_for_model_response_v2_stub import JobsForModelResponseV2Stub
@@ -32,6 +33,7 @@ from ..types.latest_models_response_v2_stub import LatestModelsResponseV2Stub
 from ..types.model_versions_response_v2_stub import ModelVersionsResponseV2Stub
 from ..types.post_model_job_sync_response_v2_stub import PostModelJobSyncResponseV2Stub
 from ..types.rebuild_model_sync_response_v2_stub import RebuildModelSyncResponseV2Stub
+from ..types.rebuild_request_v2_stub import RebuildRequestV2Stub
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
 from ..types.timestamp_spec_stub import TimestampSpecStub
 from ..types.undeployed_response_v2_stub import UndeployedResponseV2Stub
@@ -116,7 +118,7 @@ async def test_create(
             author="author_example",
             comment="comment_example",
             scale_to_zero=False,
-            deprecate_previous="none",
+            deprecate_previous=DeprecatePreviousPolicyStub.create_json(),
             dry_run=True,
             var_async=True,
             version=SemanticVersionRangeStub.create_json(),
@@ -159,7 +161,7 @@ async def test_create_without_types(
             "author": "author_example",
             "comment": "comment_example",
             "scaleToZero": False,
-            "deprecatePrevious": "none",
+            "deprecatePrevious": DeprecatePreviousPolicyStub.create_json(),
             "dryRun": True,
             "async": True,
             "version": SemanticVersionRangeStub.create_json(),
@@ -878,7 +880,7 @@ async def test_publish(
             chown=False,
             comment="comment_example",
             author="author_example",
-            deprecate_previous="none",
+            deprecate_previous=DeprecatePreviousPolicyStub.create_json(),
             var_async=True,
         ),
     }
@@ -913,7 +915,7 @@ async def test_publish_without_types(
             "chown": False,
             "comment": "comment_example",
             "author": "author_example",
-            "deprecatePrevious": "none",
+            "deprecatePrevious": DeprecatePreviousPolicyStub.create_json(),
             "async": True,
         },
     }
@@ -963,7 +965,9 @@ async def test_rebuild(
             force_version="force_version_example",
             ignore_checks=True,
             skip_rebuild=True,
+            skip_verify=False,
         ),
+        "json": RebuildRequestV2Stub.create_instance(),
     }
     _rebuild_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
@@ -1001,7 +1005,9 @@ async def test_rebuild_without_types(
             "forceVersion": "force_version_example",
             "ignoreChecks": True,
             "skipRebuild": True,
+            "skipVerify": False,
         },
+        "json": RebuildRequestV2Stub.create_json(),
     }
     _rebuild_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
@@ -1045,6 +1051,7 @@ async def test_remove_version(
             var_async=True,
             force=True,
             undeploy=True,
+            reset=True,
         ),
     }
     _remove_version_set_mock_response(
@@ -1079,6 +1086,7 @@ async def test_remove_version_without_types(
             "async": True,
             "force": True,
             "undeploy": True,
+            "reset": True,
         },
     }
     _remove_version_set_mock_response(
@@ -1118,6 +1126,7 @@ async def test_remove_versions(
             comment="comment_example",
             force=True,
             undeploy=True,
+            reset=True,
             var_async=True,
         ),
     }
@@ -1148,6 +1157,7 @@ async def test_remove_versions_without_types(
             "comment": "comment_example",
             "force": True,
             "undeploy": True,
+            "reset": True,
             "async": True,
         },
     }

@@ -29,7 +29,7 @@ get_plug_response_v2_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "entity" : {
-      "$ref" : "#/components/schemas/PlugResponseV2"
+      "$ref" : "#/components/schemas/PlugWithInvocationResponseV2"
     },
     "_links" : {
       "$ref" : "#/components/schemas/GetPlugResponseV2__links"

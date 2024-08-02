@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**href** | **str** |  | 
+**href** | [**HALLinkHref**](HALLinkHref.md) |  | 
 
 ## Example
 

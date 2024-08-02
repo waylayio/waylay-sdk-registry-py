@@ -26,7 +26,7 @@ except ImportError as exc:
 undeploy_args_model_schema = json.loads(
     r"""{
   "title" : "UndeployArgs",
-  "required" : [ "deleteEntity", "endpoint", "isNativePlug", "namespace", "revision", "runtimeName", "runtimeVersion" ],
+  "required" : [ "deleteEntity", "endpoint", "isNativePlug", "namespace", "resetEntity", "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "namespace" : {
@@ -57,6 +57,10 @@ undeploy_args_model_schema = json.loads(
     },
     "deleteEntity" : {
       "title" : "deleteEntity",
+      "type" : "boolean"
+    },
+    "resetEntity" : {
+      "title" : "resetEntity",
       "type" : "boolean"
     }
   },

@@ -6,7 +6,7 @@ HAL links to related actions.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**job** | [**HALLink**](HALLink.md) |  | [optional] 
+**job** | [**HALLinks**](HALLinks.md) |  | [optional] 
 
 ## Example
 

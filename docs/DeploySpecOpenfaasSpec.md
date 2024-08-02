@@ -9,7 +9,6 @@ Name | Type | Description | Notes
 **service** | **str** |  | [optional] 
 **image** | **str** |  | [optional] 
 **namespace** | **str** |  | [optional] 
-**env_process** | **str** |  | [optional] 
 **network** | **str** |  | [optional] 
 **env_vars** | **Dict[str, str]** |  | [optional] 
 **constraints** | **List[str]** |  | [optional] 

@@ -11,16 +11,23 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from enum import Enum
+from typing import (
+    Union,
+)
 
+from typing_extensions import (
+    Annotated,  # >=3.9
+)
 
-class DeprecatePreviousPolicy(str, Enum):
-    """DeprecatePreviousPolicy."""
+from ..models.deprecate_previous_policy_any_of import DeprecatePreviousPolicyAnyOf
+from ..models.deprecate_previous_policy_any_of1 import DeprecatePreviousPolicyAnyOf1
+from ..models.deprecate_previous_policy_any_of2 import DeprecatePreviousPolicyAnyOf2
+from ..models.deprecate_previous_policy_any_of3 import DeprecatePreviousPolicyAnyOf3
 
-    NONE = "none"
-    ALL = "all"
-    PATCH = "patch"
-    MINOR = "minor"
-
-    def __str__(self) -> str:
-        return str(self.value)
+DeprecatePreviousPolicy = Union[
+    Annotated[DeprecatePreviousPolicyAnyOf, ""],
+    Annotated[DeprecatePreviousPolicyAnyOf1, ""],
+    Annotated[DeprecatePreviousPolicyAnyOf2, ""],
+    Annotated[DeprecatePreviousPolicyAnyOf3, ""],
+]
+"""DeprecatePreviousPolicy."""

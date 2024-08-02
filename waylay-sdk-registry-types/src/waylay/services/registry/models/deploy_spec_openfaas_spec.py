@@ -30,7 +30,6 @@ class DeploySpecOpenfaasSpec(WaylayBaseModel):
     service: StrictStr | None = None
     image: StrictStr | None = None
     namespace: StrictStr | None = None
-    env_process: StrictStr | None = Field(default=None, alias="envProcess")
     network: StrictStr | None = None
     env_vars: Dict[str, StrictStr] | None = Field(default=None, alias="envVars")
     constraints: List[StrictStr] | None = None

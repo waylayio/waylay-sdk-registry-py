@@ -27,8 +27,15 @@ except ImportError as exc:
 
 deprecate_previous_policy_model_schema = json.loads(
     r"""{
-  "type" : "string",
-  "enum" : [ "none", "all", "patch", "minor" ]
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf"
+  }, {
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf_1"
+  }, {
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf_2"
+  }, {
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf_3"
+  } ]
 }
 """,
     object_hook=with_example_provider,

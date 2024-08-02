@@ -6,7 +6,7 @@ Link to the function entity.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**webscript** | [**HALLink**](HALLink.md) |  | [optional] 
+**webscript** | [**HALLinks**](HALLinks.md) |  | [optional] 
 
 ## Example
 

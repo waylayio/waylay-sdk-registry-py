@@ -31,7 +31,7 @@ jobs_for_model_response_v2__links_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "model" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "additionalProperties" : false,

@@ -16,14 +16,14 @@ from pydantic import (
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.hal_link import HALLink
+from ..models.hal_links import HALLinks
 
 
 class Plug2(WaylayBaseModel):
     """Plug2."""
 
-    job: HALLink | None = None
-    plug: HALLink
+    job: HALLinks | None = None
+    plug: HALLinks
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

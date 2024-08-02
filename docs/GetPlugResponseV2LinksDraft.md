@@ -7,7 +7,7 @@ Link to the lastest draft version.
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **draft** | **bool** |  | 
-**href** | **str** |  | 
+**href** | [**HALLinkHref**](HALLinkHref.md) |  | 
 **version** | **str** |  | 
 **deprecated** | **bool** |  | 
 

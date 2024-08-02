@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**event** | [**HALLink**](HALLink.md) |  | [optional] 
-**job** | [**HALLink**](HALLink.md) |  | [optional] 
-**model** | [**HALLink**](HALLink.md) |  | 
+**event** | [**HALLinks**](HALLinks.md) |  | [optional] 
+**job** | [**HALLinks**](HALLinks.md) |  | [optional] 
+**model** | [**HALLinks**](HALLinks.md) |  | 
 
 ## Example
 

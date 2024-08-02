@@ -6,7 +6,7 @@ HAL links to the asset
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**asset** | [**HALLink**](HALLink.md) |  | 
+**asset** | [**HALLinks**](HALLinks.md) |  | 
 
 ## Example
 

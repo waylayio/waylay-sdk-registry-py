@@ -55,6 +55,10 @@ docs/DeploySpec.md
 docs/DeploySpecOpenfaasSpec.md
 docs/DeployType.md
 docs/DeprecatePreviousPolicy.md
+docs/DeprecatePreviousPolicyAnyOf.md
+docs/DeprecatePreviousPolicyAnyOf1.md
+docs/DeprecatePreviousPolicyAnyOf2.md
+docs/DeprecatePreviousPolicyAnyOf3.md
 docs/Documentation.md
 docs/DocumentationProperty.md
 docs/EntityWithLinksIKfservingResponseV2.md
@@ -83,6 +87,10 @@ docs/GetPlugResponseV2LinksPublished.md
 docs/GetWebscriptResponseV2.md
 docs/GetWebscriptResponseV2Links.md
 docs/HALLink.md
+docs/HALLinkHref.md
+docs/HALLinks.md
+docs/InvocationAttributes.md
+docs/InvocationAttributesAuth.md
 docs/InvokeHALLink.md
 docs/JobAndFunctionHALLink.md
 docs/JobCause.md
@@ -159,6 +167,7 @@ docs/PlugPropertyFormatType.md
 docs/PlugResponseV2.md
 docs/PlugType.md
 docs/PlugVersionsResponseV2.md
+docs/PlugWithInvocationResponseV2.md
 docs/PlugsApi.md
 docs/PostModelJobAsyncResponseV2.md
 docs/PostModelJobSyncResponseV2.md
@@ -173,6 +182,7 @@ docs/RebuildModelSyncResponseV2.md
 docs/RebuildPlugAsyncResponseV2.md
 docs/RebuildPlugSyncResponseV2.md
 docs/RebuildPolicy.md
+docs/RebuildRequestV2.md
 docs/RebuildWebscriptAsyncResponseV2.md
 docs/RebuildWebscriptSyncResponseV2.md
 docs/RegistryErrorResponse.md
@@ -301,6 +311,10 @@ test/types/deploy_spec_openfaas_spec_stub.py
 test/types/deploy_spec_stub.py
 test/types/deploy_stub.py
 test/types/deploy_type_stub.py
+test/types/deprecate_previous_policy_any_of1_stub.py
+test/types/deprecate_previous_policy_any_of2_stub.py
+test/types/deprecate_previous_policy_any_of3_stub.py
+test/types/deprecate_previous_policy_any_of_stub.py
 test/types/deprecate_previous_policy_stub.py
 test/types/documentation_property_stub.py
 test/types/documentation_stub.py
@@ -329,7 +343,11 @@ test/types/get_plug_response_v2_links_stub.py
 test/types/get_plug_response_v2_stub.py
 test/types/get_webscript_response_v2_links_stub.py
 test/types/get_webscript_response_v2_stub.py
+test/types/hal_link_href_stub.py
 test/types/hal_link_stub.py
+test/types/hal_links_stub.py
+test/types/invocation_attributes_auth_stub.py
+test/types/invocation_attributes_stub.py
 test/types/invoke_hal_link_stub.py
 test/types/job_and_function_hal_link_stub.py
 test/types/job_cause_stub.py
@@ -403,6 +421,7 @@ test/types/plug_response_v2_stub.py
 test/types/plug_stub.py
 test/types/plug_type_stub.py
 test/types/plug_versions_response_v2_stub.py
+test/types/plug_with_invocation_response_v2_stub.py
 test/types/post_model_job_async_response_v2_stub.py
 test/types/post_model_job_sync_response_v2_stub.py
 test/types/post_plug_job_async_response_v2_stub.py
@@ -416,6 +435,7 @@ test/types/rebuild_model_sync_response_v2_stub.py
 test/types/rebuild_plug_async_response_v2_stub.py
 test/types/rebuild_plug_sync_response_v2_stub.py
 test/types/rebuild_policy_stub.py
+test/types/rebuild_request_v2_stub.py
 test/types/rebuild_webscript_async_response_v2_stub.py
 test/types/rebuild_webscript_sync_response_v2_stub.py
 test/types/registry_error_response_stub.py

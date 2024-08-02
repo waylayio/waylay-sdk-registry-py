@@ -35,7 +35,7 @@ get_plug_response_v2__links_draft_model_schema = json.loads(
       "type" : "boolean"
     },
     "href" : {
-      "type" : "string"
+      "$ref" : "#/components/schemas/HALLink_href"
     },
     "version" : {
       "type" : "string"

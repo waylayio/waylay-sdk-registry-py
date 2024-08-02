@@ -30,10 +30,10 @@ model_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "model" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }

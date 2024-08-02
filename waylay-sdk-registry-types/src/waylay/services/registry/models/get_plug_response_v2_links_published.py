@@ -18,12 +18,14 @@ from pydantic import (
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
+from ..models.hal_link_href import HALLinkHref
+
 
 class GetPlugResponseV2LinksPublished(WaylayBaseModel):
     """Link to the lastest published version.."""
 
     draft: StrictBool
-    href: StrictStr
+    href: HALLinkHref
     version: StrictStr
     deprecated: StrictBool
 

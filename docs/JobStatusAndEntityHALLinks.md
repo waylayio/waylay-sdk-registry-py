@@ -6,10 +6,10 @@ HAL links to related actions.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**job** | [**HALLink**](HALLink.md) |  | [optional] 
-**plug** | [**HALLink**](HALLink.md) |  | 
-**webscript** | [**HALLink**](HALLink.md) |  | 
-**model** | [**HALLink**](HALLink.md) |  | 
+**job** | [**HALLinks**](HALLinks.md) |  | [optional] 
+**plug** | [**HALLinks**](HALLinks.md) |  | 
+**webscript** | [**HALLinks**](HALLinks.md) |  | 
+**model** | [**HALLinks**](HALLinks.md) |  | 
 
 ## Example
 

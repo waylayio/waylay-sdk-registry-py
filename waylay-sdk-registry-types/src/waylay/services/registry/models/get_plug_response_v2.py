@@ -18,13 +18,13 @@ from pydantic import (
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.get_plug_response_v2_links import GetPlugResponseV2Links
-from ..models.plug_response_v2 import PlugResponseV2
+from ..models.plug_with_invocation_response_v2 import PlugWithInvocationResponseV2
 
 
 class GetPlugResponseV2(WaylayBaseModel):
     """Plug Found."""
 
-    entity: PlugResponseV2
+    entity: PlugWithInvocationResponseV2
     links: GetPlugResponseV2Links = Field(alias="_links")
 
     model_config = ConfigDict(

@@ -33,7 +33,7 @@ jobs_for_webscript_response_v2__links_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "webscript" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "additionalProperties" : false,

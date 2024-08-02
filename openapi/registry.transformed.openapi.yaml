@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Waylay Function Registry
-  version: 2.13.0
+  version: 2.14.2
   x-visibility: stable
   description: >-
     V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML
@@ -45,6 +45,19 @@ components:
         - webscripts
         - kfserving
       description: Type of functions supported by the registry service.
+    ArchiveFormat:
+      type: string
+      enum:
+        - node
+        - python
+        - golang
+        - byoml
+        - native
+    SemanticVersionRange:
+      anyOf:
+        - type: string
+        - $ref: '#/components/schemas/SemanticVersion'
+      description: A range of semantic versions. See https://devhints.io/semver
     SemanticVersion:
       type: string
       description: >-
@@ -52,16 +65,23 @@ components:
         specifier. No `pre-release` or `build` identifiers are allowed. See
         https://semver.org
       pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$
-    RebuildPolicy:
+    LatestVersionLevel:
       type: string
       enum:
-        - patch
-        - minor
         - major
-        - same
-      description: >-
-        The policy to select a new <em>runtime</em> version when a rebuild is
-        issued.
+        - minor
+        - patch
+        - 'true'
+        - 'false'
+      description: Level of latest versions that should be included.
+    Runtime:
+      type: string
+    StatusFilter:
+      anyOf:
+        - $ref: '#/components/schemas/StatusInclude'
+        - $ref: '#/components/schemas/StatusExclude'
+        - $ref: '#/components/schemas/StatusAny'
+      description: Inclusion or exclusion filter on the `status` property.
     StatusInclude:
       type: string
       enum:
@@ -97,33 +117,6 @@ components:
       description: Includes *all* statuses (including `undeployed`) as a filter
       enum:
         - any
-    StatusFilter:
-      anyOf:
-        - $ref: '#/components/schemas/StatusInclude'
-        - $ref: '#/components/schemas/StatusExclude'
-        - $ref: '#/components/schemas/StatusAny'
-      description: Inclusion or exclusion filter on the `status` property.
-    ShowRelatedType:
-      type: string
-      enum:
-        - embed
-        - link
-        - none
-    ArchiveFormat:
-      type: string
-      enum:
-        - node
-        - python
-        - golang
-        - byoml
-        - native
-    Runtime:
-      type: string
-    SemanticVersionRange:
-      anyOf:
-        - type: string
-        - $ref: '#/components/schemas/SemanticVersion'
-      description: A range of semantic versions. See https://devhints.io/semver
     TimestampSpec:
       anyOf:
         - $ref: '#/components/schemas/TimestampAge'
@@ -176,6 +169,168 @@ components:
           items:
             type: string
         - type: string
+    ShowRelatedType:
+      type: string
+      enum:
+        - embed
+        - link
+        - none
+    RebuildPolicy:
+      type: string
+      enum:
+        - patch
+        - minor
+        - major
+        - same
+      description: >-
+        The policy to select a new <em>runtime</em> version when a rebuild is
+        issued.
+    RebuildRequestV2:
+      type: object
+      additionalProperties: false
+      properties:
+        deploy:
+          $ref: '#/components/schemas/FunctionDeployOverridesType'
+          description: Deployment overrides of the function.
+    FunctionDeployOverridesType:
+      type: object
+      properties:
+        envVars:
+          type: object
+          additionalProperties:
+            type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+        limits:
+          $ref: '#/components/schemas/ResourceLimits'
+        requests:
+          $ref: '#/components/schemas/ResourceLimits'
+    ResourceLimits:
+      type: object
+      properties:
+        memory:
+          type: string
+        cpu:
+          type: string
+    RebuildRequestBodyV2:
+      anyOf:
+        - $ref: '#/components/schemas/RebuildRequestV2'
+          nullable: true
+    UpdateMetadataRequestV2:
+      type: object
+      additionalProperties: false
+      properties:
+        author:
+          type: string
+          description: The author of the function.
+        description:
+          type: string
+          description: A description of the function
+        iconURL:
+          type: string
+          description: An url to an icon that represents this function.
+        category:
+          type: string
+          description: >-
+            A category for this function (Deprecated: use tags to categorise
+            your functions)
+          deprecated: true
+        documentationURL:
+          type: string
+          description: External url that document this function.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          description: Tags associated with this function.
+          example:
+            - name: awaiting-review
+              color: '#4153ea'
+            - name: demo
+              color: '#e639a4'
+        friendlyName:
+          type: string
+          description: Display title for this function.
+    FunctionMeta:
+      type: object
+      properties:
+        author:
+          type: string
+          description: The author of the function.
+        description:
+          type: string
+          description: A description of the function
+        iconURL:
+          type: string
+          description: An url to an icon that represents this function.
+        category:
+          type: string
+          description: >-
+            A category for this function (Deprecated: use tags to categorise
+            your functions)
+          deprecated: true
+    Tag:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the tag
+        color:
+          type: string
+          description: Color associated with the tag in an UI.
+      required:
+        - name
+        - color
+      description: >-
+        One or more tags can be assigned to a function entity to facilitate
+        grouping and searching.
+    DeprecatePreviousPolicy:
+      anyOf:
+        - type: string
+          enum:
+            - none
+        - type: string
+          enum:
+            - all
+        - type: string
+          enum:
+            - patch
+        - type: string
+          enum:
+            - minor
+    NamedVersionRange:
+      type: string
+      description: >-
+        A name reference with optional version range: `<name>[@<versionRange>]`.
+
+
+        References (a version range of) a named and versioned entity like
+        _function_ or _runtime_.
+      pattern: ^[^@]*(@.*)?$
+    ExampleReference:
+      type: string
+      description: |-
+        Example reference.
+
+        References the example assets from the selected runtime.
+      enum:
+        - '!example'
+    AssetRole:
+      type: string
+      enum:
+        - manifest
+        - project
+        - main
+        - lib
+        - script
+        - other
+      description: Classification of assets with regard to their role.
     JobTypeSchema:
       anyOf:
         - $ref: '#/components/schemas/JobTypeBuild'
@@ -277,117 +432,6 @@ components:
       description: The job state is unknown (undocument or inconsistent).
       enum:
         - unknown
-    LatestVersionLevel:
-      type: string
-      enum:
-        - major
-        - minor
-        - patch
-        - 'true'
-        - 'false'
-      description: Level of latest versions that should be included.
-    UpdateMetadataRequestV2:
-      type: object
-      additionalProperties: false
-      properties:
-        author:
-          type: string
-          description: The author of the function.
-        description:
-          type: string
-          description: A description of the function
-        iconURL:
-          type: string
-          description: An url to an icon that represents this function.
-        category:
-          type: string
-          description: >-
-            A category for this function (Deprecated: use tags to categorise
-            your functions)
-          deprecated: true
-        documentationURL:
-          type: string
-          description: External url that document this function.
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/Tag'
-          description: Tags associated with this function.
-          example:
-            - name: awaiting-review
-              color: '#4153ea'
-            - name: demo
-              color: '#e639a4'
-        friendlyName:
-          type: string
-          description: Display title for this function.
-    FunctionMeta:
-      type: object
-      properties:
-        author:
-          type: string
-          description: The author of the function.
-        description:
-          type: string
-          description: A description of the function
-        iconURL:
-          type: string
-          description: An url to an icon that represents this function.
-        category:
-          type: string
-          description: >-
-            A category for this function (Deprecated: use tags to categorise
-            your functions)
-          deprecated: true
-    Tag:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the tag
-        color:
-          type: string
-          description: Color associated with the tag in an UI.
-      required:
-        - name
-        - color
-      description: >-
-        One or more tags can be assigned to a function entity to facilitate
-        grouping and searching.
-    DeprecatePreviousPolicy:
-      type: string
-      enum:
-        - none
-        - all
-        - patch
-        - minor
-    NamedVersionRange:
-      type: string
-      description: >-
-        A name reference with optional version range: `<name>[@<versionRange>]`.
-
-
-        References (a version range of) a named and versioned entity like
-        _function_ or _runtime_.
-      pattern: ^[^@]*(@.*)?$
-    ExampleReference:
-      type: string
-      description: |-
-        Example reference.
-
-        References the example assets from the selected runtime.
-      enum:
-        - '!example'
-    AssetRole:
-      type: string
-      enum:
-        - manifest
-        - project
-        - main
-        - lib
-        - script
-        - other
-      description: Classification of assets with regard to their role.
     DocumentationProperty:
       type: object
       properties:
@@ -445,168 +489,6 @@ components:
       description: Value domain for a plug input or output property.
     EnumValue: {}
     DefaultValue: {}
-    FunctionDeployOverridesType:
-      type: object
-      properties:
-        envVars:
-          type: object
-          additionalProperties:
-            type: string
-        labels:
-          type: object
-          additionalProperties:
-            type: string
-        annotations:
-          type: object
-          additionalProperties:
-            type: string
-        limits:
-          $ref: '#/components/schemas/ResourceLimits'
-        requests:
-          $ref: '#/components/schemas/ResourceLimits'
-    ResourceLimits:
-      type: object
-      properties:
-        memory:
-          type: string
-        cpu:
-          type: string
-      required:
-        - memory
-        - cpu
-    RegistryErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-        code:
-          type: string
-        statusCode:
-          type: number
-        data:
-          type: object
-          additionalProperties:
-            type: string
-      required:
-        - code
-        - error
-        - statusCode
-    JobHALLinks:
-      type: object
-      properties:
-        event:
-          $ref: '#/components/schemas/HALLink'
-          description: Link to an SSE stream of job events for the submitted job(s).
-          example:
-            href: >-
-              https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
-        job:
-          $ref: '#/components/schemas/HALLink'
-          description: Link to the job status page for the related entity.
-          example:
-            href: >-
-              https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
-      description: HAL links to related actions.
-    JobStatusHALLink:
-      type: object
-      properties:
-        job:
-          $ref: '#/components/schemas/HALLink'
-          description: Link to the job status page for the related entity.
-          example:
-            href: >-
-              https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
-      description: HAL links to related actions.
-    HALLink:
-      type: object
-      properties:
-        href:
-          type: string
-      required:
-        - href
-    JobEventsHALLink:
-      type: object
-      properties:
-        event:
-          $ref: '#/components/schemas/HALLink'
-          description: Link to an SSE stream of job events for the submitted job(s).
-          example:
-            href: >-
-              https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
-      description: HAL links to related actions.
-    JobCauses:
-      type: object
-      properties:
-        build:
-          $ref: '#/components/schemas/JobCause'
-        deploy:
-          $ref: '#/components/schemas/JobCause'
-        verify:
-          $ref: '#/components/schemas/JobCause'
-        undeploy:
-          $ref: '#/components/schemas/JobCause'
-        scale:
-          $ref: '#/components/schemas/JobCause'
-      description: >-
-        The motivations for including or excluding a job in response to a
-        <em>rebuild</em> request.
-    JobCause:
-      type: object
-      properties:
-        changed:
-          type: boolean
-          description: >-
-            If <code>true</code>, the argument configuration for this job has
-            changed in comparison to the previous job execution. A
-            <code>false</code> will prevent the job to be run. Use
-            <code>forceVersion</code> or <code>upgrade</code> parameter to force
-            a rebuild.
-        reason:
-          type: string
-          description: Human readable message describing the cause.
-        backoff:
-          type: boolean
-          description: >-
-            If <code>true</code>, recent failures of the job prevented the
-            re-execution. Use <code>forceVersion</code> or <code>upgrade</code>
-            parameter to force a rebuild.
-        newValue:
-          type: string
-          description: The new configuration value that causes the change.
-        oldValue:
-          type: string
-          description: The old configuration value used by the last succeeded job.
-      required:
-        - changed
-        - reason
-      description: >-
-        The motivation for including or excluding a job (<em>build</em>,
-        <em>deploy</em>, <em>verify</em>, ...) in response to a <em>rebuild</em>
-        request.
-    RootPageResponse:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the service.
-        version:
-          $ref: '#/components/schemas/SemanticVersion'
-          description: Semantic version of the service.
-        enabled:
-          type: object
-          description: Description of the features enabled on this service deployment.
-        revision:
-          type: string
-          description: Revision of the service source code.
-      required:
-        - name
-        - version
-        - enabled
-        - revision
-      description: Status Page
-    PlugHtmlResponse:
-      type: string
-      description: Successful Response
     RuntimeSummary:
       type: object
       properties:
@@ -704,6 +586,9 @@ components:
         assets:
           $ref: '#/components/schemas/AssetsConditions'
           description: Restrictions on the assets in the function archive.
+        invocation:
+          $ref: '#/components/schemas/InvocationAttributes'
+          description: The default invocation attributes
         title:
           type: string
         description:
@@ -745,8 +630,6 @@ components:
             image:
               type: string
             namespace:
-              type: string
-            envProcess:
               type: string
             network:
               type: string
@@ -907,6 +790,43 @@ components:
         - role
         - pattern
       description: Describes conditions on the set of files that match a file pattern.
+    InvocationAttributes:
+      type: object
+      properties:
+        auth:
+          type: string
+          enum:
+            - waylay
+            - none
+          description: >-
+            Indicates what credentials are passed to provide a Waylay
+            authorization context.
+        taskContext:
+          type: boolean
+          description: >-
+            Indicates whether the task context attributes should be provided in
+            `options.task`.
+        nodeContext:
+          type: boolean
+          description: >-
+            Indicates whether the node context attributes should be provided in
+            `options.node`.
+        rawDataContext:
+          type: boolean
+          description: >-
+            Indicates that the rawdata context attributes should be provided in
+            `options.rawData`.
+        callback:
+          type: boolean
+          description: >-
+            Indicates that the plug implementer intends to use the callback
+            mechanism.
+      required:
+        - auth
+        - taskContext
+        - nodeContext
+        - rawDataContext
+        - callback
     PlugResponseV2:
       type: object
       properties:
@@ -1006,6 +926,7 @@ components:
         - publish
         - deprecate
         - undeploy
+        - undeprecate
       description: A modifying operation on the function.
     Status:
       type: string
@@ -1201,6 +1122,71 @@ components:
         documentation:
           $ref: '#/components/schemas/Documentation'
           description: Documentation of the plug interface.
+    PlugWithInvocationResponseV2:
+      type: object
+      properties:
+        createdBy:
+          type: string
+          description: The user that created this entity.
+        createdAt:
+          type: string
+          format: date-time
+          description: The timestamp at which this entity was created.
+        updatedBy:
+          type: string
+          description: The user that last updated this entity.
+        updatedAt:
+          type: string
+          format: date-time
+          description: The timestamp at which this entity was last updated.
+        updates:
+          type: array
+          items:
+            $ref: '#/components/schemas/UpdateRecord'
+          description: >-
+            The audit logs corresponding to the latest modifying operations on
+            this entity.
+        status:
+          $ref: '#/components/schemas/Status'
+          description: The current status of this function entity.
+        failureReason:
+          $ref: '#/components/schemas/FailureReason'
+          description: A description of the last failure related to this function entity.
+        runtime:
+          $ref: '#/components/schemas/RuntimeAttributes'
+          description: >-
+            Information about the current runtime used by this function
+            deployment.
+        deprecated:
+          type: boolean
+          description: >-
+            If <code>true</code> this plug is removed from regular listings, as
+            a result of a <code>DELETE</code> with <code>force=false</code>.
+        draft:
+          type: boolean
+          description: >-
+            If <code>true</code> this function is a draft function and it's
+            assets are still mutable.
+        plug:
+          $ref: '#/components/schemas/PlugManifest'
+          description: >-
+            The plug specification as provided by the <code>plug.json</code>
+            asset.
+        invocation:
+          $ref: '#/components/schemas/InvocationAttributes'
+          description: Information about the plug invocation contract.
+      required:
+        - createdAt
+        - createdBy
+        - deprecated
+        - draft
+        - invocation
+        - plug
+        - runtime
+        - status
+        - updatedAt
+        - updatedBy
+        - updates
     KfservingResponseV2:
       type: object
       properties:
@@ -1492,6 +1478,16 @@ components:
           description: HAL link to the endpoint where the webscript is exposed.
           example:
             href: https://api-aws-dev.waylay.io/functions/v1/<TENANT>/myWebscript
+    HALLink:
+      type: object
+      properties:
+        href:
+          anyOf:
+            - type: string
+              format: uri
+            - type: string
+      required:
+        - href
     UndeploySubmittedResponseV2:
       type: object
       properties:
@@ -1509,6 +1505,49 @@ components:
         - message
         - versions
       description: Undeployment Initiated
+    JobHALLinks:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/HALLinks'
+          description: Link to an SSE stream of job events for the submitted job(s).
+          example:
+            href: >-
+              https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
+        job:
+          $ref: '#/components/schemas/HALLinks'
+          description: Link to the job status page for the related entity.
+          example:
+            href: >-
+              https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
+      description: HAL links to related actions.
+    JobStatusHALLink:
+      type: object
+      properties:
+        job:
+          $ref: '#/components/schemas/HALLinks'
+          description: Link to the job status page for the related entity.
+          example:
+            href: >-
+              https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
+      description: HAL links to related actions.
+    HALLinks:
+      anyOf:
+        - $ref: '#/components/schemas/HALLink'
+        - type: array
+          items:
+            $ref: '#/components/schemas/HALLink'
+      description: One or more links of the same HAL collection.
+    JobEventsHALLink:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/HALLinks'
+          description: Link to an SSE stream of job events for the submitted job(s).
+          example:
+            href: >-
+              https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
+      description: HAL links to related actions.
     UndeployedResponseV2:
       type: object
       properties:
@@ -1540,7 +1579,7 @@ components:
           type: object
           properties:
             asset:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the asset content page for the related entity.
               example:
                 href: >-
@@ -1564,7 +1603,7 @@ components:
       type: object
       properties:
         entity:
-          $ref: '#/components/schemas/PlugResponseV2'
+          $ref: '#/components/schemas/PlugWithInvocationResponseV2'
           description: The specification and deployment status of the function
         _links:
           type: object
@@ -1577,7 +1616,10 @@ components:
                   enum:
                     - true
                 href:
-                  type: string
+                  anyOf:
+                    - type: string
+                      format: uri
+                    - type: string
                 version:
                   type: string
                 deprecated:
@@ -1602,7 +1644,10 @@ components:
                   enum:
                     - false
                 href:
-                  type: string
+                  anyOf:
+                    - type: string
+                      format: uri
+                    - type: string
                 version:
                   type: string
                 deprecated:
@@ -1638,7 +1683,10 @@ components:
               enum:
                 - true
             href:
-              type: string
+              anyOf:
+                - type: string
+                  format: uri
+                - type: string
             version:
               type: string
             deprecated:
@@ -1662,7 +1710,10 @@ components:
               enum:
                 - false
             href:
-              type: string
+              anyOf:
+                - type: string
+                  format: uri
+                - type: string
             version:
               type: string
             deprecated:
@@ -1852,6 +1903,55 @@ components:
         - entity
         - message
       description: Plug Rebuild Initiated
+    JobCauses:
+      type: object
+      properties:
+        build:
+          $ref: '#/components/schemas/JobCause'
+        deploy:
+          $ref: '#/components/schemas/JobCause'
+        verify:
+          $ref: '#/components/schemas/JobCause'
+        undeploy:
+          $ref: '#/components/schemas/JobCause'
+        scale:
+          $ref: '#/components/schemas/JobCause'
+      description: >-
+        The motivations for including or excluding a job in response to a
+        <em>rebuild</em> request.
+    JobCause:
+      type: object
+      properties:
+        changed:
+          type: boolean
+          description: >-
+            If <code>true</code>, the argument configuration for this job has
+            changed in comparison to the previous job execution. A
+            <code>false</code> will prevent the job to be run. Use
+            <code>forceVersion</code> or <code>upgrade</code> parameter to force
+            a rebuild.
+        reason:
+          type: string
+          description: Human readable message describing the cause.
+        backoff:
+          type: boolean
+          description: >-
+            If <code>true</code>, recent failures of the job prevented the
+            re-execution. Use <code>forceVersion</code> or <code>upgrade</code>
+            parameter to force a rebuild.
+        newValue:
+          type: string
+          description: The new configuration value that causes the change.
+        oldValue:
+          type: string
+          description: The old configuration value used by the last succeeded job.
+      required:
+        - changed
+        - reason
+      description: >-
+        The motivation for including or excluding a job (<em>build</em>,
+        <em>deploy</em>, <em>verify</em>, ...) in response to a <em>rebuild</em>
+        request.
     RebuildPlugSyncResponseV2:
       type: object
       properties:
@@ -1919,7 +2019,7 @@ components:
           type: object
           properties:
             plug:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
           additionalProperties: false
           description: Link to the function entity.
       required:
@@ -2298,8 +2398,6 @@ components:
               type: string
             namespace:
               type: string
-            envProcess:
-              type: string
             network:
               type: string
             envVars:
@@ -2422,11 +2520,14 @@ components:
           description: If true, the function is not expected to be deployed on openfaas.
         deleteEntity:
           type: boolean
+        resetEntity:
+          type: boolean
       required:
         - deleteEntity
         - endpoint
         - isNativePlug
         - namespace
+        - resetEntity
         - revision
         - runtimeName
         - runtimeVersion
@@ -2494,7 +2595,10 @@ components:
                   enum:
                     - true
                 href:
-                  type: string
+                  anyOf:
+                    - type: string
+                      format: uri
+                    - type: string
                 version:
                   type: string
                 deprecated:
@@ -2519,7 +2623,10 @@ components:
                   enum:
                     - false
                 href:
-                  type: string
+                  anyOf:
+                    - type: string
+                      format: uri
+                    - type: string
                 version:
                   type: string
                 deprecated:
@@ -2771,7 +2878,7 @@ components:
           type: object
           properties:
             model:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
           additionalProperties: false
           description: Link to the function entity.
       required:
@@ -3036,7 +3143,7 @@ components:
           type: object
           properties:
             webscript:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
           additionalProperties: false
           description: Link to the function entity.
       required:
@@ -3343,13 +3450,13 @@ components:
         - type: object
           properties:
             event:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to an SSE stream of job events for the submitted job(s).
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
             plug:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the plug.
               example:
                 href: >-
@@ -3360,13 +3467,13 @@ components:
         - type: object
           properties:
             event:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to an SSE stream of job events for the submitted job(s).
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
             webscript:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the webscript.
               example:
                 href: >-
@@ -3377,13 +3484,13 @@ components:
         - type: object
           properties:
             event:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to an SSE stream of job events for the submitted job(s).
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
             model:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the model.
               example:
                 href: >-
@@ -3653,19 +3760,19 @@ components:
         - type: object
           properties:
             event:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to an SSE stream of job events for the submitted job(s).
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
             job:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the job status page for the related entity.
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
             plug:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the plug.
               example:
                 href: >-
@@ -3676,19 +3783,19 @@ components:
         - type: object
           properties:
             event:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to an SSE stream of job events for the submitted job(s).
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
             job:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the job status page for the related entity.
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
             webscript:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the webscript.
               example:
                 href: >-
@@ -3699,19 +3806,19 @@ components:
         - type: object
           properties:
             event:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to an SSE stream of job events for the submitted job(s).
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
             job:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the job status page for the related entity.
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
             model:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the model.
               example:
                 href: >-
@@ -3827,13 +3934,13 @@ components:
         - type: object
           properties:
             job:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the job status page for the related entity.
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
             plug:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the plug.
               example:
                 href: >-
@@ -3844,13 +3951,13 @@ components:
         - type: object
           properties:
             job:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the job status page for the related entity.
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
             webscript:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the webscript.
               example:
                 href: >-
@@ -3861,13 +3968,13 @@ components:
         - type: object
           properties:
             job:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the job status page for the related entity.
               example:
                 href: >-
                   https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
             model:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/HALLinks'
               description: Link to the model.
               example:
                 href: >-
@@ -4191,6 +4298,47 @@ components:
             and that the client should close.
           title: Stream Closing
       description: SSE stream events with closing protocol
+    RegistryErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+        statusCode:
+          type: number
+        data:
+          type: object
+          additionalProperties:
+            type: string
+      required:
+        - code
+        - error
+        - statusCode
+    RootPageResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the service.
+        version:
+          $ref: '#/components/schemas/SemanticVersion'
+          description: Semantic version of the service.
+        enabled:
+          type: object
+          description: Description of the features enabled on this service deployment.
+        revision:
+          type: string
+          description: Revision of the service source code.
+      required:
+        - name
+        - version
+        - enabled
+        - revision
+      description: Status Page
+    PlugHtmlResponse:
+      type: string
+      description: Successful Response
 paths:
   /registry/v2/:
     get:
@@ -4896,6 +5044,312 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
   /registry/v2/webscripts/:
+    get:
+      operationId: list_webscripts
+      summary: List Webscripts
+      tags:
+        - Webscripts
+      description: >
+        List the (latest) versions of available <em>webscripts</em>.
+
+
+        ### List Latest Webscript Versions
+
+        By default, the result includes the latest non-deprecated, non-draft
+        version for each <em>webscript</em> name.
+
+        If there is no such version, the latest _deprecated_ or the latest
+        _draft_ version is included, with the former taking precedence.
+
+
+          Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:
+          <ul>
+          <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>
+          <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>
+          </ul>
+
+
+        As long as no version filters are used, each listed <em>webscript
+        version</em> contains representations of the latest draft
+        (`entities[]._links.draft`) 
+
+        or latest published (`entities[]._links.published`) version (if existing
+        and different).  
+
+        Use the query parameter `showRelated` to include only a link (default
+        `showRelated=link`) or a full representation (`showRelated=embed`).
+
+
+        ### List Latest Webscript Versions (with filter)
+
+        When any of the _version filter_ query parameters are used, the response
+        contains
+
+        the _latest_ version per named <em>webscript</em> that satisfy the
+        filters, but **without links**.
+
+
+        ### List All Webscript Versions
+
+        When using `latest=false` (default when using the `namedVersion`
+        filter), the listing contains _all_ 
+
+        <em>webscripts</em> versions that satisfy the query, possibly multiple
+        versions per named <em>webscripts</em>.
+
+        No HAL links are provided.
+
+
+        #### Filter on _status_
+
+        By default <em>webscript versions</em> with status  `undeployed` are
+        **excluded** in all cases.
+
+        Use the _version filter_ `status` to include/exclude a status from the
+        results.
+
+        By example, 
+
+        > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`
+
+
+        will list _ALL_ versions known to the function registry.
+
+
+        #### Version filter parameters
+
+        The following query parameters are _version filters_ for the
+        <em>webscript</em> listing:
+
+        > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`,
+        `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`,
+        `nameVersion`, `deprecated`, `draft`
+      parameters:
+        - schema:
+            type: number
+            minimum: 0
+          in: query
+          name: limit
+          required: false
+          description: >-
+            The maximum number of items to be return from this query. Has a
+            deployment-defined default and maximum value.
+          x-showExample: false
+        - schema:
+            type: number
+            minimum: 0
+          in: query
+          name: page
+          required: false
+          description: The number of pages to skip when returning result to this query.
+          x-showExample: false
+        - schema:
+            type: boolean
+          in: query
+          name: includeDraft
+          required: false
+          description: >-
+            Configures the inclusion of _draft_ versions when selecting latest
+            versions per name. By default, draft versions are only considered
+            when no other versions are available. If set to `true`, draft
+            versions are **included**. If set to `false`, draft versions are
+            **excluded**.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: includeDeprecated
+          required: false
+          description: >-
+            Configures the inclusion of _deprecated_ versions when selecting
+            latest versions per name. By default, deprecated versions are only
+            considered when no other versions are available. If set to `true`,
+            deprecated versions are **included**. If set to `false`, deprecated
+            versions are **excluded**.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: deprecated
+          required: false
+          description: Filter on the deprecation status of the function.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: draft
+          required: false
+          description: Filter on the draft status of the function.
+          x-showExample: true
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NamedVersion'
+          in: query
+          name: nameVersion
+          required: false
+          description: >-
+            Filter on exact `{name}@{version}` functions. Using this filter
+            implies a `latest=false` default, returning multiple versions of the
+            same named versions if they are filtered.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: version
+          required: false
+          description: >-
+            Filter on the version of the function (case-sensitive, supports
+            wildcards).
+          x-showExample: false
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/StatusFilter'
+          in: query
+          name: status
+          required: false
+          description: >-
+            Filter on the status of the plug. Filter values with a `-` postfix
+            exclude the status. Use the `any` filter value to include all
+            states. When not specified, a default `undeployed-` filter excludes
+            _undeployed_ functions.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersionRange'
+          in: query
+          name: runtimeVersion
+          required: false
+          description: Filter on the runtime version.
+          x-showExample: false
+        - schema:
+            type: string
+          example: '@me'
+          in: query
+          name: createdBy
+          required: false
+          description: >-
+            Filter on the user that create the plug. You can use the `@me` token
+            to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
+        - schema:
+            type: string
+          example: '@me'
+          in: query
+          name: updatedBy
+          required: false
+          description: >-
+            Filter on the user that last updated the plug. You can use the `@me`
+            token to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: createdBefore
+          required: false
+          description: >-
+            Filter on funtions that were created before the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: createdAfter
+          required: false
+          description: >-
+            Filter on funtions that were created after the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: updatedBefore
+          required: false
+          description: >-
+            Filter on funtions that were updated before the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: updatedAfter
+          required: false
+          description: >-
+            Filter on funtions that were updated after the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: name
+          required: false
+          description: >-
+            Filter on the name of the function. This is case-insensitive and
+            supports wild-cards `?` (any one character) and `*` (any sequence of
+            characters).
+          x-showExample: false
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ArchiveFormat'
+          in: query
+          name: archiveFormat
+          required: false
+          description: Filter on the archive format of the function.
+          x-showExample: false
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Runtime'
+          in: query
+          name: runtime
+          required: false
+          description: Filter on the runtime of the function.
+          x-showExample: false
+        - schema:
+            type: boolean
+          in: query
+          name: latest
+          required: false
+          description: >-
+            When `true`, only the latest version per function name is returned.
+            If set to `false`, multiple versions per named function can be
+            returned. Defaults to `true`, except when specific versions are
+            selected with the `nameVersion` filter.
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowRelatedType'
+          in: query
+          name: showRelated
+          required: false
+          description: >-
+            Sets the representation of related function versions (like the
+            _latest_ draft and/or published) in the response. Ignored (forced to
+            `none`) when any of the _version filter_ query params are used.
+
+            - `embed`: as full summary representation (in `_embedded`).
+
+            - `link`: as HAL link in (in `_links`).
+
+            - `none`: omitted.
+          x-showExample: true
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestWebscriptsResponseV2'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
     post:
       operationId: create_webscripts
       summary: Create Webscript Version
@@ -5227,311 +5681,6 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: true
       x-consumes-other: true
-    get:
-      operationId: list_webscripts
-      summary: List Webscripts
-      tags:
-        - Webscripts
-      description: >
-        List the (latest) versions of available <em>webscripts</em>.
-
-
-        ### List Latest Webscript Versions
-
-        By default, the result includes the latest non-deprecated, non-draft
-        version for each <em>webscript</em> name.
-
-        If there is no such version, the latest _deprecated_ or the latest
-        _draft_ version is included, with the former taking precedence.
-
-
-          Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:
-          <ul>
-          <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>
-          <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>
-          </ul>
-
-
-        As long as no version filters are used, each listed <em>webscript
-        version</em> contains representations of the latest draft
-        (`entities[]._links.draft`) 
-
-        or latest published (`entities[]._links.published`) version (if existing
-        and different).  
-
-        Use the query parameter `showRelated` to include only a link (default
-        `showRelated=link`) or a full representation (`showRelated=embed`).
-
-
-        ### List Latest Webscript Versions (with filter)
-
-        When any of the _version filter_ query parameters are used, the response
-        contains
-
-        the _latest_ version per named <em>webscript</em> that satisfy the
-        filters, but **without links**.
-
-
-        ### List All Webscript Versions
-
-        When using `latest=false` (default when using the `namedVersion`
-        filter), the listing contains _all_ 
-
-        <em>webscripts</em> versions that satisfy the query, possibly multiple
-        versions per named <em>webscripts</em>.
-
-        No HAL links are provided.
-
-
-        #### Filter on _status_
-
-        By default <em>webscript versions</em> with status  `undeployed` are
-        **excluded** in all cases.
-
-        Use the _version filter_ `status` to include/exclude a status from the
-        results.
-
-        By example, 
-
-        > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`
-
-
-        will list _ALL_ versions known to the function registry.
-
-
-        #### Version filter parameters
-
-        The following query parameters are _version filters_ for the
-        <em>webscript</em> listing:
-
-        > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`,
-        `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`,
-        `nameVersion`, `deprecated`, `draft`
-      parameters:
-        - schema:
-            type: number
-            minimum: 0
-          in: query
-          name: limit
-          required: false
-          description: >-
-            The maximum number of items to be return from this query. Has a
-            deployment-defined default and maximum value.
-          x-showExample: false
-        - schema:
-            type: number
-            minimum: 0
-          in: query
-          name: page
-          required: false
-          description: The number of pages to skip when returning result to this query.
-          x-showExample: false
-        - schema:
-            type: boolean
-          in: query
-          name: includeDraft
-          required: false
-          description: >-
-            Configures the inclusion of _draft_ versions when selecting latest
-            versions per name. By default, draft versions are only considered
-            when no other versions are available. If set to `true`, draft
-            versions are **included**. If set to `false`, draft versions are
-            **excluded**.
-          x-showExample: true
-        - schema:
-            type: boolean
-          in: query
-          name: includeDeprecated
-          required: false
-          description: >-
-            Configures the inclusion of _deprecated_ versions when selecting
-            latest versions per name. By default, deprecated versions are only
-            considered when no other versions are available. If set to `true`,
-            deprecated versions are **included**. If set to `false`, deprecated
-            versions are **excluded**.
-          x-showExample: true
-        - schema:
-            type: boolean
-          in: query
-          name: deprecated
-          required: false
-          description: Filter on the deprecation status of the function.
-          x-showExample: true
-        - schema:
-            type: boolean
-          in: query
-          name: draft
-          required: false
-          description: Filter on the draft status of the function.
-          x-showExample: true
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/NamedVersion'
-          in: query
-          name: nameVersion
-          required: false
-          description: >-
-            Filter on exact `{name}@{version}` functions. Using this filter
-            implies a `latest=false` default, returning multiple versions of the
-            same named versions if they are filtered.
-          x-showExample: false
-        - schema:
-            type: string
-          in: query
-          name: version
-          required: false
-          description: >-
-            Filter on the version of the function (case-sensitive, supports
-            wildcards).
-          x-showExample: false
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/StatusFilter'
-          in: query
-          name: status
-          required: false
-          description: >-
-            Filter on the status of the plug. Filter values with a `-` postfix
-            exclude the status. Use the `any` filter value to include all
-            states. When not specified, a default `undeployed-` filter excludes
-            _undeployed_ functions.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/SemanticVersionRange'
-          in: query
-          name: runtimeVersion
-          required: false
-          description: Filter on the runtime version.
-          x-showExample: false
-        - schema:
-            type: string
-          example: '@me'
-          in: query
-          name: createdBy
-          required: false
-          description: >-
-            Filter on the user that create the plug. You can use the `@me` token
-            to indicate your own plugs.
-          x-example: '''@me'''
-          x-showExample: true
-        - schema:
-            type: string
-          example: '@me'
-          in: query
-          name: updatedBy
-          required: false
-          description: >-
-            Filter on the user that last updated the plug. You can use the `@me`
-            token to indicate your own plugs.
-          x-example: '''@me'''
-          x-showExample: true
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: createdBefore
-          required: false
-          description: >-
-            Filter on funtions that were created before the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: createdAfter
-          required: false
-          description: >-
-            Filter on funtions that were created after the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: updatedBefore
-          required: false
-          description: >-
-            Filter on funtions that were updated before the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: updatedAfter
-          required: false
-          description: >-
-            Filter on funtions that were updated after the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            type: string
-          in: query
-          name: name
-          required: false
-          description: >-
-            Filter on the name of the function. This is case-insensitive and
-            supports wild-cards `?` (any one character) and `*` (any sequence of
-            characters).
-          x-showExample: false
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ArchiveFormat'
-          in: query
-          name: archiveFormat
-          required: false
-          description: Filter on the archive format of the function.
-          x-showExample: false
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Runtime'
-          in: query
-          name: runtime
-          required: false
-          description: Filter on the runtime of the function.
-          x-showExample: false
-        - schema:
-            type: boolean
-          in: query
-          name: latest
-          required: false
-          description: >-
-            When `true`, only the latest version per function name is returned.
-            If set to `false`, multiple versions per named function can be
-            returned. Defaults to `true`, except when specific versions are
-            selected with the `nameVersion` filter.
-          x-showExample: true
-        - schema:
-            $ref: '#/components/schemas/ShowRelatedType'
-          in: query
-          name: showRelated
-          required: false
-          description: >-
-            Sets the representation of related function versions (like the
-            _latest_ draft and/or published) in the response.
-
-            - `embed`: as full summary representation (in `_embedded`).
-
-            - `link`: as HAL link in (in `_links`).
-
-            - `none`: omitted.
-          x-showExample: true
-      x-version: v2
-      responses:
-        '200':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LatestWebscriptsResponseV2'
-      security:
-        - waylayApiKeySecret: []
-      x-py-method: list
-      x-consumes-multipart: false
-      x-consumes-urlencoded: false
-      x-consumes-json: false
-      x-consumes-other: false
   /registry/v2/webscripts/{name}/versions:
     get:
       operationId: listVersions_webscripts
@@ -5810,7 +5959,8 @@ paths:
             applies to _draft_ versions.
 
 
-            This parameter is incompatible with `force=true`.
+            Setting this parameter is incompatible with `force=true` or
+            `reset=true`.
 
 
             If not set the default behaviour applies:
@@ -5818,6 +5968,16 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: reset
+          required: false
+          description: >-
+            If `true`, the function version will be immediately undeployed and
+            reset to `registered` state as a _draft_. This is incompatible with
+            `force=true` or `undeploy=false`.
           x-showExample: true
         - schema:
             type: string
@@ -5861,6 +6021,12 @@ paths:
       tags:
         - Webscripts
       description: Rebuild and deploy a webscript with the original or updated base image.
+      requestBody:
+        x-force-dataType: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RebuildRequestBodyV2'
       parameters:
         - schema:
             type: boolean
@@ -5953,6 +6119,18 @@ paths:
             runtime version when re-deploying/re-verifying the function.
           x-showExample: true
         - schema:
+            type: boolean
+            default: false
+          in: query
+          name: skipVerify
+          required: false
+          description: >-
+            If set, the function will not be validated: it transitions to
+            `running` without verification of it's deployment health. When a
+            `scaleToZero` is requested or implied, it is executed at the end of
+            the deployment job, rather than as a separate job.
+          x-showExample: true
+        - schema:
             type: string
           in: path
           name: name
@@ -5985,7 +6163,7 @@ paths:
       x-py-method: rebuild
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /registry/v2/webscripts/{name}:
     get:
@@ -6132,7 +6310,8 @@ paths:
             applies to _draft_ versions.
 
 
-            This parameter is incompatible with `force=true`.
+            Setting this parameter is incompatible with `force=true` or
+            `reset=true`.
 
 
             If not set the default behaviour applies:
@@ -6140,6 +6319,16 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: reset
+          required: false
+          description: >-
+            If `true`, the function version will be immediately undeployed and
+            reset to `registered` state as a _draft_. This is incompatible with
+            `force=true` or `undeploy=false`.
           x-showExample: true
         - schema:
             type: string
@@ -6596,6 +6785,130 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: false
+    delete:
+      operationId: deleteAsset_webscripts
+      summary: Delete Webscript Asset
+      tags:
+        - Webscripts
+      description: Delete an asset from the webscript's collection of existing assets.
+      parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: scaleToZero
+          required: false
+          description: >-
+            If set to <code>true</code>, after successful deployment, the
+            deployed function will be scaled to zero. This saves computing
+            resources when the function is not to be used immediately.
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: deploy
+          required: false
+          description: >-
+            Indicates that a function should be _deployed_ when its assets are
+            valid.
+
+
+            * If `true` (default), jobs to build and deploy the function will be
+            initiated after it is checked that the assets are valid. Invalid
+            assets lead to a validation error, and the function and its assets
+            are not created or updated.
+
+            * If `false`, the uploaded assets are stored and the function is
+            created/updated in `registered` state. Asset validation errors are
+            only returned as warning, and stored as `failureReason` on the
+            function entity. Use an _asset update_ or _rebuild_ to initiate a
+            build and deploy at a later stage.
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
+        - schema:
+            type: string
+          in: query
+          name: comment
+          required: false
+          description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: author
+          required: false
+          description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: async
+          required: false
+          description: >-
+            Unless this is set to <code>false</code>, the server will start the
+            required job actions asynchronously and return a <code>202</code>
+            <em>Accepted</em> response. If <code>false</code> the request will
+            block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: wildcard
+          required: true
+          description: Full path or path prefix of the asset within the archive
+          x-showExample: false
+      x-version: v2
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostWebscriptJobSyncResponseV2'
+        '202':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostWebscriptJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistryErrorResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: delete_asset
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
     put:
       operationId: updateAsset_webscripts
       summary: Update Webscript Asset
@@ -6741,130 +7054,6 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: true
-    delete:
-      operationId: deleteAsset_webscripts
-      summary: Delete Webscript Asset
-      tags:
-        - Webscripts
-      description: Delete an asset from the webscript's collection of existing assets.
-      parameters:
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: scaleToZero
-          required: false
-          description: >-
-            If set to <code>true</code>, after successful deployment, the
-            deployed function will be scaled to zero. This saves computing
-            resources when the function is not to be used immediately.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: true
-          in: query
-          name: deploy
-          required: false
-          description: >-
-            Indicates that a function should be _deployed_ when its assets are
-            valid.
-
-
-            * If `true` (default), jobs to build and deploy the function will be
-            initiated after it is checked that the assets are valid. Invalid
-            assets lead to a validation error, and the function and its assets
-            are not created or updated.
-
-            * If `false`, the uploaded assets are stored and the function is
-            created/updated in `registered` state. Asset validation errors are
-            only returned as warning, and stored as `failureReason` on the
-            function entity. Use an _asset update_ or _rebuild_ to initiate a
-            build and deploy at a later stage.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: false
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
-          x-showExample: true
-        - schema:
-            type: string
-          in: query
-          name: comment
-          required: false
-          description: An optional user-specified comment corresponding to the operation.
-          x-showExample: false
-        - schema:
-            type: string
-          in: query
-          name: author
-          required: false
-          description: Optionally changes the author metadata when updating a function.
-          x-showExample: false
-        - schema:
-            type: boolean
-            default: true
-          in: query
-          name: async
-          required: false
-          description: >-
-            Unless this is set to <code>false</code>, the server will start the
-            required job actions asynchronously and return a <code>202</code>
-            <em>Accepted</em> response. If <code>false</code> the request will
-            block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: string
-          in: path
-          name: name
-          required: true
-          description: The name of the function.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/SemanticVersion'
-          in: path
-          name: version
-          required: true
-          description: The version of the function.
-          x-showExample: false
-        - schema:
-            type: string
-          in: path
-          name: wildcard
-          required: true
-          description: Full path or path prefix of the asset within the archive
-          x-showExample: false
-      x-version: v2
-      responses:
-        '201':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostWebscriptJobSyncResponseV2'
-        '202':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostWebscriptJobAsyncResponseV2'
-        '403':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RegistryErrorResponse'
-      security:
-        - waylayApiKeySecret: []
-      x-py-method: delete_asset
-      x-consumes-multipart: false
-      x-consumes-urlencoded: false
-      x-consumes-json: false
-      x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/publish:
     post:
       operationId: publish_webscripts
@@ -7188,6 +7377,329 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
   /registry/v2/plugs/:
+    get:
+      operationId: list_plugs
+      summary: List Plugs
+      tags:
+        - Plugs
+      description: >
+        List the (latest) versions of available <em>plugs</em>.
+
+
+        ### List Latest Plug Versions
+
+        By default, the result includes the latest non-deprecated, non-draft
+        version for each <em>plug</em> name.
+
+        If there is no such version, the latest _deprecated_ or the latest
+        _draft_ version is included, with the former taking precedence.
+
+
+          Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:
+          <ul>
+          <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>
+          <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>
+          </ul>
+
+
+        As long as no version filters are used, each listed <em>plug
+        version</em> contains representations of the latest draft
+        (`entities[]._links.draft`) 
+
+        or latest published (`entities[]._links.published`) version (if existing
+        and different).  
+
+        Use the query parameter `showRelated` to include only a link (default
+        `showRelated=link`) or a full representation (`showRelated=embed`).
+
+
+        ### List Latest Plug Versions (with filter)
+
+        When any of the _version filter_ query parameters are used, the response
+        contains
+
+        the _latest_ version per named <em>plug</em> that satisfy the filters,
+        but **without links**.
+
+
+        ### List All Plug Versions
+
+        When using `latest=false` (default when using the `namedVersion`
+        filter), the listing contains _all_ 
+
+        <em>plugs</em> versions that satisfy the query, possibly multiple
+        versions per named <em>plugs</em>.
+
+        No HAL links are provided.
+
+
+        #### Filter on _status_
+
+        By default <em>plug versions</em> with status  `undeployed` are
+        **excluded** in all cases.
+
+        Use the _version filter_ `status` to include/exclude a status from the
+        results.
+
+        By example, 
+
+        > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`
+
+
+        will list _ALL_ versions known to the function registry.
+
+
+        #### Version filter parameters
+
+        The following query parameters are _version filters_ for the
+        <em>plug</em> listing:
+
+        > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`,
+        `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`,
+        `nameVersion`, `deprecated`, `draft`, `tags`
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagsFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            Filter on the tags of the item. Can be a single tag, or a list of
+            tags. When multiple tags are specified, an item must have all of the
+            tags to be selected.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/PlugType'
+          in: query
+          name: type
+          required: false
+          description: If set, filters on the type of plug.
+          x-showExample: true
+        - schema:
+            type: number
+            minimum: 0
+          in: query
+          name: limit
+          required: false
+          description: >-
+            The maximum number of items to be return from this query. Has a
+            deployment-defined default and maximum value.
+          x-showExample: false
+        - schema:
+            type: number
+            minimum: 0
+          in: query
+          name: page
+          required: false
+          description: The number of pages to skip when returning result to this query.
+          x-showExample: false
+        - schema:
+            type: boolean
+          in: query
+          name: includeDraft
+          required: false
+          description: >-
+            Configures the inclusion of _draft_ versions when selecting latest
+            versions per name. By default, draft versions are only considered
+            when no other versions are available. If set to `true`, draft
+            versions are **included**. If set to `false`, draft versions are
+            **excluded**.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: includeDeprecated
+          required: false
+          description: >-
+            Configures the inclusion of _deprecated_ versions when selecting
+            latest versions per name. By default, deprecated versions are only
+            considered when no other versions are available. If set to `true`,
+            deprecated versions are **included**. If set to `false`, deprecated
+            versions are **excluded**.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: deprecated
+          required: false
+          description: Filter on the deprecation status of the function.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: draft
+          required: false
+          description: Filter on the draft status of the function.
+          x-showExample: true
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NamedVersion'
+          in: query
+          name: nameVersion
+          required: false
+          description: >-
+            Filter on exact `{name}@{version}` functions. Using this filter
+            implies a `latest=false` default, returning multiple versions of the
+            same named versions if they are filtered.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: version
+          required: false
+          description: >-
+            Filter on the version of the function (case-sensitive, supports
+            wildcards).
+          x-showExample: false
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/StatusFilter'
+          in: query
+          name: status
+          required: false
+          description: >-
+            Filter on the status of the plug. Filter values with a `-` postfix
+            exclude the status. Use the `any` filter value to include all
+            states. When not specified, a default `undeployed-` filter excludes
+            _undeployed_ functions.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersionRange'
+          in: query
+          name: runtimeVersion
+          required: false
+          description: Filter on the runtime version.
+          x-showExample: false
+        - schema:
+            type: string
+          example: '@me'
+          in: query
+          name: createdBy
+          required: false
+          description: >-
+            Filter on the user that create the plug. You can use the `@me` token
+            to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
+        - schema:
+            type: string
+          example: '@me'
+          in: query
+          name: updatedBy
+          required: false
+          description: >-
+            Filter on the user that last updated the plug. You can use the `@me`
+            token to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: createdBefore
+          required: false
+          description: >-
+            Filter on funtions that were created before the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: createdAfter
+          required: false
+          description: >-
+            Filter on funtions that were created after the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: updatedBefore
+          required: false
+          description: >-
+            Filter on funtions that were updated before the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: updatedAfter
+          required: false
+          description: >-
+            Filter on funtions that were updated after the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: name
+          required: false
+          description: >-
+            Filter on the name of the function. This is case-insensitive and
+            supports wild-cards `?` (any one character) and `*` (any sequence of
+            characters).
+          x-showExample: false
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ArchiveFormat'
+          in: query
+          name: archiveFormat
+          required: false
+          description: Filter on the archive format of the function.
+          x-showExample: false
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Runtime'
+          in: query
+          name: runtime
+          required: false
+          description: Filter on the runtime of the function.
+          x-showExample: false
+        - schema:
+            type: boolean
+          in: query
+          name: latest
+          required: false
+          description: >-
+            When `true`, only the latest version per function name is returned.
+            If set to `false`, multiple versions per named function can be
+            returned. Defaults to `true`, except when specific versions are
+            selected with the `nameVersion` filter.
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowRelatedType'
+          in: query
+          name: showRelated
+          required: false
+          description: >-
+            Sets the representation of related function versions (like the
+            _latest_ draft and/or published) in the response. Ignored (forced to
+            `none`) when any of the _version filter_ query params are used.
+
+            - `embed`: as full summary representation (in `_embedded`).
+
+            - `link`: as HAL link in (in `_links`).
+
+            - `none`: omitted.
+          x-showExample: true
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestPlugsResponseV2'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
     post:
       operationId: create_plugs
       summary: Create Plug
@@ -7519,328 +8031,6 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: true
       x-consumes-other: true
-    get:
-      operationId: list_plugs
-      summary: List Plugs
-      tags:
-        - Plugs
-      description: >
-        List the (latest) versions of available <em>plugs</em>.
-
-
-        ### List Latest Plug Versions
-
-        By default, the result includes the latest non-deprecated, non-draft
-        version for each <em>plug</em> name.
-
-        If there is no such version, the latest _deprecated_ or the latest
-        _draft_ version is included, with the former taking precedence.
-
-
-          Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:
-          <ul>
-          <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>
-          <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>
-          </ul>
-
-
-        As long as no version filters are used, each listed <em>plug
-        version</em> contains representations of the latest draft
-        (`entities[]._links.draft`) 
-
-        or latest published (`entities[]._links.published`) version (if existing
-        and different).  
-
-        Use the query parameter `showRelated` to include only a link (default
-        `showRelated=link`) or a full representation (`showRelated=embed`).
-
-
-        ### List Latest Plug Versions (with filter)
-
-        When any of the _version filter_ query parameters are used, the response
-        contains
-
-        the _latest_ version per named <em>plug</em> that satisfy the filters,
-        but **without links**.
-
-
-        ### List All Plug Versions
-
-        When using `latest=false` (default when using the `namedVersion`
-        filter), the listing contains _all_ 
-
-        <em>plugs</em> versions that satisfy the query, possibly multiple
-        versions per named <em>plugs</em>.
-
-        No HAL links are provided.
-
-
-        #### Filter on _status_
-
-        By default <em>plug versions</em> with status  `undeployed` are
-        **excluded** in all cases.
-
-        Use the _version filter_ `status` to include/exclude a status from the
-        results.
-
-        By example, 
-
-        > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`
-
-
-        will list _ALL_ versions known to the function registry.
-
-
-        #### Version filter parameters
-
-        The following query parameters are _version filters_ for the
-        <em>plug</em> listing:
-
-        > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`,
-        `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`,
-        `nameVersion`, `deprecated`, `draft`, `tags`
-      parameters:
-        - schema:
-            $ref: '#/components/schemas/TagsFilter'
-          in: query
-          name: tags
-          required: false
-          description: >-
-            Filter on the tags of the item. Can be a single tag, or a list of
-            tags. When multiple tags are specified, an item must have all of the
-            tags to be selected.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/PlugType'
-          in: query
-          name: type
-          required: false
-          description: If set, filters on the type of plug.
-          x-showExample: true
-        - schema:
-            type: number
-            minimum: 0
-          in: query
-          name: limit
-          required: false
-          description: >-
-            The maximum number of items to be return from this query. Has a
-            deployment-defined default and maximum value.
-          x-showExample: false
-        - schema:
-            type: number
-            minimum: 0
-          in: query
-          name: page
-          required: false
-          description: The number of pages to skip when returning result to this query.
-          x-showExample: false
-        - schema:
-            type: boolean
-          in: query
-          name: includeDraft
-          required: false
-          description: >-
-            Configures the inclusion of _draft_ versions when selecting latest
-            versions per name. By default, draft versions are only considered
-            when no other versions are available. If set to `true`, draft
-            versions are **included**. If set to `false`, draft versions are
-            **excluded**.
-          x-showExample: true
-        - schema:
-            type: boolean
-          in: query
-          name: includeDeprecated
-          required: false
-          description: >-
-            Configures the inclusion of _deprecated_ versions when selecting
-            latest versions per name. By default, deprecated versions are only
-            considered when no other versions are available. If set to `true`,
-            deprecated versions are **included**. If set to `false`, deprecated
-            versions are **excluded**.
-          x-showExample: true
-        - schema:
-            type: boolean
-          in: query
-          name: deprecated
-          required: false
-          description: Filter on the deprecation status of the function.
-          x-showExample: true
-        - schema:
-            type: boolean
-          in: query
-          name: draft
-          required: false
-          description: Filter on the draft status of the function.
-          x-showExample: true
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/NamedVersion'
-          in: query
-          name: nameVersion
-          required: false
-          description: >-
-            Filter on exact `{name}@{version}` functions. Using this filter
-            implies a `latest=false` default, returning multiple versions of the
-            same named versions if they are filtered.
-          x-showExample: false
-        - schema:
-            type: string
-          in: query
-          name: version
-          required: false
-          description: >-
-            Filter on the version of the function (case-sensitive, supports
-            wildcards).
-          x-showExample: false
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/StatusFilter'
-          in: query
-          name: status
-          required: false
-          description: >-
-            Filter on the status of the plug. Filter values with a `-` postfix
-            exclude the status. Use the `any` filter value to include all
-            states. When not specified, a default `undeployed-` filter excludes
-            _undeployed_ functions.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/SemanticVersionRange'
-          in: query
-          name: runtimeVersion
-          required: false
-          description: Filter on the runtime version.
-          x-showExample: false
-        - schema:
-            type: string
-          example: '@me'
-          in: query
-          name: createdBy
-          required: false
-          description: >-
-            Filter on the user that create the plug. You can use the `@me` token
-            to indicate your own plugs.
-          x-example: '''@me'''
-          x-showExample: true
-        - schema:
-            type: string
-          example: '@me'
-          in: query
-          name: updatedBy
-          required: false
-          description: >-
-            Filter on the user that last updated the plug. You can use the `@me`
-            token to indicate your own plugs.
-          x-example: '''@me'''
-          x-showExample: true
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: createdBefore
-          required: false
-          description: >-
-            Filter on funtions that were created before the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: createdAfter
-          required: false
-          description: >-
-            Filter on funtions that were created after the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: updatedBefore
-          required: false
-          description: >-
-            Filter on funtions that were updated before the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: updatedAfter
-          required: false
-          description: >-
-            Filter on funtions that were updated after the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            type: string
-          in: query
-          name: name
-          required: false
-          description: >-
-            Filter on the name of the function. This is case-insensitive and
-            supports wild-cards `?` (any one character) and `*` (any sequence of
-            characters).
-          x-showExample: false
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ArchiveFormat'
-          in: query
-          name: archiveFormat
-          required: false
-          description: Filter on the archive format of the function.
-          x-showExample: false
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Runtime'
-          in: query
-          name: runtime
-          required: false
-          description: Filter on the runtime of the function.
-          x-showExample: false
-        - schema:
-            type: boolean
-          in: query
-          name: latest
-          required: false
-          description: >-
-            When `true`, only the latest version per function name is returned.
-            If set to `false`, multiple versions per named function can be
-            returned. Defaults to `true`, except when specific versions are
-            selected with the `nameVersion` filter.
-          x-showExample: true
-        - schema:
-            $ref: '#/components/schemas/ShowRelatedType'
-          in: query
-          name: showRelated
-          required: false
-          description: >-
-            Sets the representation of related function versions (like the
-            _latest_ draft and/or published) in the response.
-
-            - `embed`: as full summary representation (in `_embedded`).
-
-            - `link`: as HAL link in (in `_links`).
-
-            - `none`: omitted.
-          x-showExample: true
-      x-version: v2
-      responses:
-        '200':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LatestPlugsResponseV2'
-      security:
-        - waylayApiKeySecret: []
-      x-py-method: list
-      x-consumes-multipart: false
-      x-consumes-urlencoded: false
-      x-consumes-json: false
-      x-consumes-other: false
   /registry/v2/plugs/{name}:
     get:
       operationId: getLatest_plugs
@@ -8007,7 +8197,8 @@ paths:
             to _draft_ versions.
 
 
-            This parameter is incompatible with `force=true`.
+            Setting this parameter is incompatible with `force=true` or
+            `reset=true`.
 
 
             If not set the default behaviour applies:
@@ -8015,6 +8206,16 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: reset
+          required: false
+          description: >-
+            If `true`, the function version will be immediately undeployed and
+            reset to `registered` state as a _draft_. This is incompatible with
+            `force=true` or `undeploy=false`.
           x-showExample: true
         - schema:
             type: string
@@ -8346,7 +8547,8 @@ paths:
             to _draft_ versions.
 
 
-            This parameter is incompatible with `force=true`.
+            Setting this parameter is incompatible with `force=true` or
+            `reset=true`.
 
 
             If not set the default behaviour applies:
@@ -8354,6 +8556,16 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: reset
+          required: false
+          description: >-
+            If `true`, the function version will be immediately undeployed and
+            reset to `registered` state as a _draft_. This is incompatible with
+            `force=true` or `undeploy=false`.
           x-showExample: true
         - schema:
             type: string
@@ -8397,6 +8609,12 @@ paths:
       tags:
         - Plugs
       description: Rebuild and deploy a plug with the original or updated base image.
+      requestBody:
+        x-force-dataType: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RebuildRequestBodyV2'
       parameters:
         - schema:
             type: boolean
@@ -8489,6 +8707,18 @@ paths:
             runtime version when re-deploying/re-verifying the function.
           x-showExample: true
         - schema:
+            type: boolean
+            default: false
+          in: query
+          name: skipVerify
+          required: false
+          description: >-
+            If set, the function will not be validated: it transitions to
+            `running` without verification of it's deployment health. When a
+            `scaleToZero` is requested or implied, it is executed at the end of
+            the deployment job, rather than as a separate job.
+          x-showExample: true
+        - schema:
             type: string
           in: path
           name: name
@@ -8521,7 +8751,7 @@ paths:
       x-py-method: rebuild
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/content:
     get:
@@ -8901,6 +9131,130 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: false
+    delete:
+      operationId: deleteAsset_plugs
+      summary: Delete Plug Asset
+      tags:
+        - Plugs
+      description: Delete an asset from the plug's collection of existing assets.
+      parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: scaleToZero
+          required: false
+          description: >-
+            If set to <code>true</code>, after successful deployment, the
+            deployed function will be scaled to zero. This saves computing
+            resources when the function is not to be used immediately.
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: deploy
+          required: false
+          description: >-
+            Indicates that a function should be _deployed_ when its assets are
+            valid.
+
+
+            * If `true` (default), jobs to build and deploy the function will be
+            initiated after it is checked that the assets are valid. Invalid
+            assets lead to a validation error, and the function and its assets
+            are not created or updated.
+
+            * If `false`, the uploaded assets are stored and the function is
+            created/updated in `registered` state. Asset validation errors are
+            only returned as warning, and stored as `failureReason` on the
+            function entity. Use an _asset update_ or _rebuild_ to initiate a
+            build and deploy at a later stage.
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
+        - schema:
+            type: string
+          in: query
+          name: comment
+          required: false
+          description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: author
+          required: false
+          description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: async
+          required: false
+          description: >-
+            Unless this is set to <code>false</code>, the server will start the
+            required job actions asynchronously and return a <code>202</code>
+            <em>Accepted</em> response. If <code>false</code> the request will
+            block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: wildcard
+          required: true
+          description: Full path or path prefix of the asset within the archive
+          x-showExample: false
+      x-version: v2
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostPlugJobSyncResponseV2'
+        '202':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostPlugJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistryErrorResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: delete_asset
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
     put:
       operationId: updateAsset_plugs
       summary: Update Plug Asset
@@ -9046,130 +9400,6 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: true
-    delete:
-      operationId: deleteAsset_plugs
-      summary: Delete Plug Asset
-      tags:
-        - Plugs
-      description: Delete an asset from the plug's collection of existing assets.
-      parameters:
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: scaleToZero
-          required: false
-          description: >-
-            If set to <code>true</code>, after successful deployment, the
-            deployed function will be scaled to zero. This saves computing
-            resources when the function is not to be used immediately.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: true
-          in: query
-          name: deploy
-          required: false
-          description: >-
-            Indicates that a function should be _deployed_ when its assets are
-            valid.
-
-
-            * If `true` (default), jobs to build and deploy the function will be
-            initiated after it is checked that the assets are valid. Invalid
-            assets lead to a validation error, and the function and its assets
-            are not created or updated.
-
-            * If `false`, the uploaded assets are stored and the function is
-            created/updated in `registered` state. Asset validation errors are
-            only returned as warning, and stored as `failureReason` on the
-            function entity. Use an _asset update_ or _rebuild_ to initiate a
-            build and deploy at a later stage.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: false
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
-          x-showExample: true
-        - schema:
-            type: string
-          in: query
-          name: comment
-          required: false
-          description: An optional user-specified comment corresponding to the operation.
-          x-showExample: false
-        - schema:
-            type: string
-          in: query
-          name: author
-          required: false
-          description: Optionally changes the author metadata when updating a function.
-          x-showExample: false
-        - schema:
-            type: boolean
-            default: true
-          in: query
-          name: async
-          required: false
-          description: >-
-            Unless this is set to <code>false</code>, the server will start the
-            required job actions asynchronously and return a <code>202</code>
-            <em>Accepted</em> response. If <code>false</code> the request will
-            block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: string
-          in: path
-          name: name
-          required: true
-          description: The name of the function.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/SemanticVersion'
-          in: path
-          name: version
-          required: true
-          description: The version of the function.
-          x-showExample: false
-        - schema:
-            type: string
-          in: path
-          name: wildcard
-          required: true
-          description: Full path or path prefix of the asset within the archive
-          x-showExample: false
-      x-version: v2
-      responses:
-        '201':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostPlugJobSyncResponseV2'
-        '202':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostPlugJobAsyncResponseV2'
-        '403':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RegistryErrorResponse'
-      security:
-        - waylayApiKeySecret: []
-      x-py-method: delete_asset
-      x-consumes-multipart: false
-      x-consumes-urlencoded: false
-      x-consumes-json: false
-      x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/publish:
     post:
       operationId: publish_plugs
@@ -9521,6 +9751,312 @@ paths:
       x-consumes-json: false
       x-consumes-other: false
   /registry/v2/models/:
+    get:
+      operationId: list_models
+      summary: List Models
+      tags:
+        - Models
+      description: >
+        List the (latest) versions of available <em>models</em>.
+
+
+        ### List Latest Model Versions
+
+        By default, the result includes the latest non-deprecated, non-draft
+        version for each <em>model</em> name.
+
+        If there is no such version, the latest _deprecated_ or the latest
+        _draft_ version is included, with the former taking precedence.
+
+
+          Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:
+          <ul>
+          <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>
+          <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>
+          </ul>
+
+
+        As long as no version filters are used, each listed <em>model
+        version</em> contains representations of the latest draft
+        (`entities[]._links.draft`) 
+
+        or latest published (`entities[]._links.published`) version (if existing
+        and different).  
+
+        Use the query parameter `showRelated` to include only a link (default
+        `showRelated=link`) or a full representation (`showRelated=embed`).
+
+
+        ### List Latest Model Versions (with filter)
+
+        When any of the _version filter_ query parameters are used, the response
+        contains
+
+        the _latest_ version per named <em>model</em> that satisfy the filters,
+        but **without links**.
+
+
+        ### List All Model Versions
+
+        When using `latest=false` (default when using the `namedVersion`
+        filter), the listing contains _all_ 
+
+        <em>models</em> versions that satisfy the query, possibly multiple
+        versions per named <em>models</em>.
+
+        No HAL links are provided.
+
+
+        #### Filter on _status_
+
+        By default <em>model versions</em> with status  `undeployed` are
+        **excluded** in all cases.
+
+        Use the _version filter_ `status` to include/exclude a status from the
+        results.
+
+        By example, 
+
+        > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`
+
+
+        will list _ALL_ versions known to the function registry.
+
+
+        #### Version filter parameters
+
+        The following query parameters are _version filters_ for the
+        <em>model</em> listing:
+
+        > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`,
+        `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`,
+        `nameVersion`, `deprecated`, `draft`
+      parameters:
+        - schema:
+            type: number
+            minimum: 0
+          in: query
+          name: limit
+          required: false
+          description: >-
+            The maximum number of items to be return from this query. Has a
+            deployment-defined default and maximum value.
+          x-showExample: false
+        - schema:
+            type: number
+            minimum: 0
+          in: query
+          name: page
+          required: false
+          description: The number of pages to skip when returning result to this query.
+          x-showExample: false
+        - schema:
+            type: boolean
+          in: query
+          name: includeDraft
+          required: false
+          description: >-
+            Configures the inclusion of _draft_ versions when selecting latest
+            versions per name. By default, draft versions are only considered
+            when no other versions are available. If set to `true`, draft
+            versions are **included**. If set to `false`, draft versions are
+            **excluded**.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: includeDeprecated
+          required: false
+          description: >-
+            Configures the inclusion of _deprecated_ versions when selecting
+            latest versions per name. By default, deprecated versions are only
+            considered when no other versions are available. If set to `true`,
+            deprecated versions are **included**. If set to `false`, deprecated
+            versions are **excluded**.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: deprecated
+          required: false
+          description: Filter on the deprecation status of the function.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: draft
+          required: false
+          description: Filter on the draft status of the function.
+          x-showExample: true
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/NamedVersion'
+          in: query
+          name: nameVersion
+          required: false
+          description: >-
+            Filter on exact `{name}@{version}` functions. Using this filter
+            implies a `latest=false` default, returning multiple versions of the
+            same named versions if they are filtered.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: version
+          required: false
+          description: >-
+            Filter on the version of the function (case-sensitive, supports
+            wildcards).
+          x-showExample: false
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/StatusFilter'
+          in: query
+          name: status
+          required: false
+          description: >-
+            Filter on the status of the plug. Filter values with a `-` postfix
+            exclude the status. Use the `any` filter value to include all
+            states. When not specified, a default `undeployed-` filter excludes
+            _undeployed_ functions.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersionRange'
+          in: query
+          name: runtimeVersion
+          required: false
+          description: Filter on the runtime version.
+          x-showExample: false
+        - schema:
+            type: string
+          example: '@me'
+          in: query
+          name: createdBy
+          required: false
+          description: >-
+            Filter on the user that create the plug. You can use the `@me` token
+            to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
+        - schema:
+            type: string
+          example: '@me'
+          in: query
+          name: updatedBy
+          required: false
+          description: >-
+            Filter on the user that last updated the plug. You can use the `@me`
+            token to indicate your own plugs.
+          x-example: '''@me'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: createdBefore
+          required: false
+          description: >-
+            Filter on funtions that were created before the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: createdAfter
+          required: false
+          description: >-
+            Filter on funtions that were created after the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: updatedBefore
+          required: false
+          description: >-
+            Filter on funtions that were updated before the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/TimestampSpec'
+          in: query
+          name: updatedAfter
+          required: false
+          description: >-
+            Filter on funtions that were updated after the given timestamp or
+            age.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: name
+          required: false
+          description: >-
+            Filter on the name of the function. This is case-insensitive and
+            supports wild-cards `?` (any one character) and `*` (any sequence of
+            characters).
+          x-showExample: false
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/ArchiveFormat'
+          in: query
+          name: archiveFormat
+          required: false
+          description: Filter on the archive format of the function.
+          x-showExample: false
+        - schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Runtime'
+          in: query
+          name: runtime
+          required: false
+          description: Filter on the runtime of the function.
+          x-showExample: false
+        - schema:
+            type: boolean
+          in: query
+          name: latest
+          required: false
+          description: >-
+            When `true`, only the latest version per function name is returned.
+            If set to `false`, multiple versions per named function can be
+            returned. Defaults to `true`, except when specific versions are
+            selected with the `nameVersion` filter.
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowRelatedType'
+          in: query
+          name: showRelated
+          required: false
+          description: >-
+            Sets the representation of related function versions (like the
+            _latest_ draft and/or published) in the response. Ignored (forced to
+            `none`) when any of the _version filter_ query params are used.
+
+            - `embed`: as full summary representation (in `_embedded`).
+
+            - `link`: as HAL link in (in `_links`).
+
+            - `none`: omitted.
+          x-showExample: true
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestModelsResponseV2'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
     post:
       operationId: create_models
       summary: Create Model
@@ -9852,311 +10388,6 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: true
       x-consumes-other: true
-    get:
-      operationId: list_models
-      summary: List Models
-      tags:
-        - Models
-      description: >
-        List the (latest) versions of available <em>models</em>.
-
-
-        ### List Latest Model Versions
-
-        By default, the result includes the latest non-deprecated, non-draft
-        version for each <em>model</em> name.
-
-        If there is no such version, the latest _deprecated_ or the latest
-        _draft_ version is included, with the former taking precedence.
-
-
-          Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:
-          <ul>
-          <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>
-          <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>
-          </ul>
-
-
-        As long as no version filters are used, each listed <em>model
-        version</em> contains representations of the latest draft
-        (`entities[]._links.draft`) 
-
-        or latest published (`entities[]._links.published`) version (if existing
-        and different).  
-
-        Use the query parameter `showRelated` to include only a link (default
-        `showRelated=link`) or a full representation (`showRelated=embed`).
-
-
-        ### List Latest Model Versions (with filter)
-
-        When any of the _version filter_ query parameters are used, the response
-        contains
-
-        the _latest_ version per named <em>model</em> that satisfy the filters,
-        but **without links**.
-
-
-        ### List All Model Versions
-
-        When using `latest=false` (default when using the `namedVersion`
-        filter), the listing contains _all_ 
-
-        <em>models</em> versions that satisfy the query, possibly multiple
-        versions per named <em>models</em>.
-
-        No HAL links are provided.
-
-
-        #### Filter on _status_
-
-        By default <em>model versions</em> with status  `undeployed` are
-        **excluded** in all cases.
-
-        Use the _version filter_ `status` to include/exclude a status from the
-        results.
-
-        By example, 
-
-        > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`
-
-
-        will list _ALL_ versions known to the function registry.
-
-
-        #### Version filter parameters
-
-        The following query parameters are _version filters_ for the
-        <em>model</em> listing:
-
-        > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`,
-        `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`,
-        `nameVersion`, `deprecated`, `draft`
-      parameters:
-        - schema:
-            type: number
-            minimum: 0
-          in: query
-          name: limit
-          required: false
-          description: >-
-            The maximum number of items to be return from this query. Has a
-            deployment-defined default and maximum value.
-          x-showExample: false
-        - schema:
-            type: number
-            minimum: 0
-          in: query
-          name: page
-          required: false
-          description: The number of pages to skip when returning result to this query.
-          x-showExample: false
-        - schema:
-            type: boolean
-          in: query
-          name: includeDraft
-          required: false
-          description: >-
-            Configures the inclusion of _draft_ versions when selecting latest
-            versions per name. By default, draft versions are only considered
-            when no other versions are available. If set to `true`, draft
-            versions are **included**. If set to `false`, draft versions are
-            **excluded**.
-          x-showExample: true
-        - schema:
-            type: boolean
-          in: query
-          name: includeDeprecated
-          required: false
-          description: >-
-            Configures the inclusion of _deprecated_ versions when selecting
-            latest versions per name. By default, deprecated versions are only
-            considered when no other versions are available. If set to `true`,
-            deprecated versions are **included**. If set to `false`, deprecated
-            versions are **excluded**.
-          x-showExample: true
-        - schema:
-            type: boolean
-          in: query
-          name: deprecated
-          required: false
-          description: Filter on the deprecation status of the function.
-          x-showExample: true
-        - schema:
-            type: boolean
-          in: query
-          name: draft
-          required: false
-          description: Filter on the draft status of the function.
-          x-showExample: true
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/NamedVersion'
-          in: query
-          name: nameVersion
-          required: false
-          description: >-
-            Filter on exact `{name}@{version}` functions. Using this filter
-            implies a `latest=false` default, returning multiple versions of the
-            same named versions if they are filtered.
-          x-showExample: false
-        - schema:
-            type: string
-          in: query
-          name: version
-          required: false
-          description: >-
-            Filter on the version of the function (case-sensitive, supports
-            wildcards).
-          x-showExample: false
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/StatusFilter'
-          in: query
-          name: status
-          required: false
-          description: >-
-            Filter on the status of the plug. Filter values with a `-` postfix
-            exclude the status. Use the `any` filter value to include all
-            states. When not specified, a default `undeployed-` filter excludes
-            _undeployed_ functions.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/SemanticVersionRange'
-          in: query
-          name: runtimeVersion
-          required: false
-          description: Filter on the runtime version.
-          x-showExample: false
-        - schema:
-            type: string
-          example: '@me'
-          in: query
-          name: createdBy
-          required: false
-          description: >-
-            Filter on the user that create the plug. You can use the `@me` token
-            to indicate your own plugs.
-          x-example: '''@me'''
-          x-showExample: true
-        - schema:
-            type: string
-          example: '@me'
-          in: query
-          name: updatedBy
-          required: false
-          description: >-
-            Filter on the user that last updated the plug. You can use the `@me`
-            token to indicate your own plugs.
-          x-example: '''@me'''
-          x-showExample: true
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: createdBefore
-          required: false
-          description: >-
-            Filter on funtions that were created before the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: createdAfter
-          required: false
-          description: >-
-            Filter on funtions that were created after the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: updatedBefore
-          required: false
-          description: >-
-            Filter on funtions that were updated before the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/TimestampSpec'
-          in: query
-          name: updatedAfter
-          required: false
-          description: >-
-            Filter on funtions that were updated after the given timestamp or
-            age.
-          x-showExample: false
-        - schema:
-            type: string
-          in: query
-          name: name
-          required: false
-          description: >-
-            Filter on the name of the function. This is case-insensitive and
-            supports wild-cards `?` (any one character) and `*` (any sequence of
-            characters).
-          x-showExample: false
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/ArchiveFormat'
-          in: query
-          name: archiveFormat
-          required: false
-          description: Filter on the archive format of the function.
-          x-showExample: false
-        - schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Runtime'
-          in: query
-          name: runtime
-          required: false
-          description: Filter on the runtime of the function.
-          x-showExample: false
-        - schema:
-            type: boolean
-          in: query
-          name: latest
-          required: false
-          description: >-
-            When `true`, only the latest version per function name is returned.
-            If set to `false`, multiple versions per named function can be
-            returned. Defaults to `true`, except when specific versions are
-            selected with the `nameVersion` filter.
-          x-showExample: true
-        - schema:
-            $ref: '#/components/schemas/ShowRelatedType'
-          in: query
-          name: showRelated
-          required: false
-          description: >-
-            Sets the representation of related function versions (like the
-            _latest_ draft and/or published) in the response.
-
-            - `embed`: as full summary representation (in `_embedded`).
-
-            - `link`: as HAL link in (in `_links`).
-
-            - `none`: omitted.
-          x-showExample: true
-      x-version: v2
-      responses:
-        '200':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LatestModelsResponseV2'
-      security:
-        - waylayApiKeySecret: []
-      x-py-method: list
-      x-consumes-multipart: false
-      x-consumes-urlencoded: false
-      x-consumes-json: false
-      x-consumes-other: false
   /registry/v2/models/{name}:
     get:
       operationId: getLatest_models
@@ -10290,7 +10521,8 @@ paths:
             applies to _draft_ versions.
 
 
-            This parameter is incompatible with `force=true`.
+            Setting this parameter is incompatible with `force=true` or
+            `reset=true`.
 
 
             If not set the default behaviour applies:
@@ -10298,6 +10530,16 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: reset
+          required: false
+          description: >-
+            If `true`, the function version will be immediately undeployed and
+            reset to `registered` state as a _draft_. This is incompatible with
+            `force=true` or `undeploy=false`.
           x-showExample: true
         - schema:
             type: boolean
@@ -10617,7 +10859,8 @@ paths:
             applies to _draft_ versions.
 
 
-            This parameter is incompatible with `force=true`.
+            Setting this parameter is incompatible with `force=true` or
+            `reset=true`.
 
 
             If not set the default behaviour applies:
@@ -10625,6 +10868,16 @@ paths:
             * _draft_ versions are _undeployed_ and _removed_ from registry.
 
             * non-_draft_ versions are marked _deprecated_ only.
+          x-showExample: true
+        - schema:
+            type: boolean
+          in: query
+          name: reset
+          required: false
+          description: >-
+            If `true`, the function version will be immediately undeployed and
+            reset to `registered` state as a _draft_. This is incompatible with
+            `force=true` or `undeploy=false`.
           x-showExample: true
         - schema:
             type: string
@@ -11039,6 +11292,130 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: false
+    delete:
+      operationId: deleteAsset_models
+      summary: Delete Model Asset
+      tags:
+        - Models
+      description: Delete an asset from the model's collection of existing assets.
+      parameters:
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: scaleToZero
+          required: false
+          description: >-
+            If set to <code>true</code>, after successful deployment, the
+            deployed function will be scaled to zero. This saves computing
+            resources when the function is not to be used immediately.
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: deploy
+          required: false
+          description: >-
+            Indicates that a function should be _deployed_ when its assets are
+            valid.
+
+
+            * If `true` (default), jobs to build and deploy the function will be
+            initiated after it is checked that the assets are valid. Invalid
+            assets lead to a validation error, and the function and its assets
+            are not created or updated.
+
+            * If `false`, the uploaded assets are stored and the function is
+            created/updated in `registered` state. Asset validation errors are
+            only returned as warning, and stored as `failureReason` on the
+            function entity. Use an _asset update_ or _rebuild_ to initiate a
+            build and deploy at a later stage.
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of the draft function is transferred to the
+            current user.
+          x-showExample: true
+        - schema:
+            type: string
+          in: query
+          name: comment
+          required: false
+          description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: author
+          required: false
+          description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: async
+          required: false
+          description: >-
+            Unless this is set to <code>false</code>, the server will start the
+            required job actions asynchronously and return a <code>202</code>
+            <em>Accepted</em> response. If <code>false</code> the request will
+            block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: wildcard
+          required: true
+          description: Full path or path prefix of the asset within the archive
+          x-showExample: false
+      x-version: v2
+      responses:
+        '201':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostModelJobSyncResponseV2'
+        '202':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostModelJobAsyncResponseV2'
+        '403':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistryErrorResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: delete_asset
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
     put:
       operationId: updateAsset_models
       summary: Update Model Asset
@@ -11184,130 +11561,6 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: true
-    delete:
-      operationId: deleteAsset_models
-      summary: Delete Model Asset
-      tags:
-        - Models
-      description: Delete an asset from the model's collection of existing assets.
-      parameters:
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: scaleToZero
-          required: false
-          description: >-
-            If set to <code>true</code>, after successful deployment, the
-            deployed function will be scaled to zero. This saves computing
-            resources when the function is not to be used immediately.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: true
-          in: query
-          name: deploy
-          required: false
-          description: >-
-            Indicates that a function should be _deployed_ when its assets are
-            valid.
-
-
-            * If `true` (default), jobs to build and deploy the function will be
-            initiated after it is checked that the assets are valid. Invalid
-            assets lead to a validation error, and the function and its assets
-            are not created or updated.
-
-            * If `false`, the uploaded assets are stored and the function is
-            created/updated in `registered` state. Asset validation errors are
-            only returned as warning, and stored as `failureReason` on the
-            function entity. Use an _asset update_ or _rebuild_ to initiate a
-            build and deploy at a later stage.
-          x-showExample: true
-        - schema:
-            type: boolean
-            default: false
-          in: query
-          name: chown
-          required: false
-          description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
-          x-showExample: true
-        - schema:
-            type: string
-          in: query
-          name: comment
-          required: false
-          description: An optional user-specified comment corresponding to the operation.
-          x-showExample: false
-        - schema:
-            type: string
-          in: query
-          name: author
-          required: false
-          description: Optionally changes the author metadata when updating a function.
-          x-showExample: false
-        - schema:
-            type: boolean
-            default: true
-          in: query
-          name: async
-          required: false
-          description: >-
-            Unless this is set to <code>false</code>, the server will start the
-            required job actions asynchronously and return a <code>202</code>
-            <em>Accepted</em> response. If <code>false</code> the request will
-            block until the job actions are completed, or a timeout occurs.
-          x-showExample: true
-        - schema:
-            type: string
-          in: path
-          name: name
-          required: true
-          description: The name of the function.
-          x-showExample: false
-        - schema:
-            $ref: '#/components/schemas/SemanticVersion'
-          in: path
-          name: version
-          required: true
-          description: The version of the function.
-          x-showExample: false
-        - schema:
-            type: string
-          in: path
-          name: wildcard
-          required: true
-          description: Full path or path prefix of the asset within the archive
-          x-showExample: false
-      x-version: v2
-      responses:
-        '201':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostModelJobSyncResponseV2'
-        '202':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostModelJobAsyncResponseV2'
-        '403':
-          description: Default Response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RegistryErrorResponse'
-      security:
-        - waylayApiKeySecret: []
-      x-py-method: delete_asset
-      x-consumes-multipart: false
-      x-consumes-urlencoded: false
-      x-consumes-json: false
-      x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/publish:
     post:
       operationId: publish_models
@@ -11550,6 +11803,12 @@ paths:
       tags:
         - Models
       description: Rebuild and deploy a model with the original or updated base image.
+      requestBody:
+        x-force-dataType: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RebuildRequestBodyV2'
       parameters:
         - schema:
             type: boolean
@@ -11642,6 +11901,18 @@ paths:
             runtime version when re-deploying/re-verifying the function.
           x-showExample: true
         - schema:
+            type: boolean
+            default: false
+          in: query
+          name: skipVerify
+          required: false
+          description: >-
+            If set, the function will not be validated: it transitions to
+            `running` without verification of it's deployment health. When a
+            `scaleToZero` is requested or implied, it is executed at the end of
+            the deployment job, rather than as a separate job.
+          x-showExample: true
+        - schema:
             type: string
           in: path
           name: name
@@ -11674,7 +11945,7 @@ paths:
       x-py-method: rebuild
       x-consumes-multipart: false
       x-consumes-urlencoded: false
-      x-consumes-json: false
+      x-consumes-json: true
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/verify:
     post:

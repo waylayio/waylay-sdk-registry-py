@@ -28,7 +28,7 @@ request_operation_model_schema = json.loads(
   "title" : "RequestOperation",
   "type" : "string",
   "description" : "A modifying operation on the function.",
-  "enum" : [ "create", "metadata-update", "assets-update", "rebuild", "verify", "publish", "deprecate", "undeploy" ]
+  "enum" : [ "create", "metadata-update", "assets-update", "rebuild", "verify", "publish", "deprecate", "undeploy", "undeprecate" ]
 }
 """,
     object_hook=with_example_provider,

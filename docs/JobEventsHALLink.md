@@ -6,7 +6,7 @@ HAL links to related actions.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**event** | [**HALLink**](HALLink.md) |  | [optional] 
+**event** | [**HALLinks**](HALLinks.md) |  | [optional] 
 
 ## Example
 

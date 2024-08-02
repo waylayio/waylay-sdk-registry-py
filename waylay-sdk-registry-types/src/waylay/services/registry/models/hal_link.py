@@ -13,15 +13,16 @@ from __future__ import annotations
 
 from pydantic import (
     ConfigDict,
-    StrictStr,
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
+
+from ..models.hal_link_href import HALLinkHref
 
 
 class HALLink(WaylayBaseModel):
     """HALLink."""
 
-    href: StrictStr
+    href: HALLinkHref
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"
