@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**memory** | **str** |  | 
-**cpu** | **str** |  | 
+**memory** | **str** |  | [optional] 
+**cpu** | **str** |  | [optional] 
 
 ## Example
 

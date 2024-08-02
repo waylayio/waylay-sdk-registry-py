@@ -26,7 +26,6 @@ except ImportError as exc:
 resource_limits_model_schema = json.loads(
     r"""{
   "title" : "ResourceLimits",
-  "required" : [ "cpu", "memory" ],
   "type" : "object",
   "properties" : {
     "memory" : {

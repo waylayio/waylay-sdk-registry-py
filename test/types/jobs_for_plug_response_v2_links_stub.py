@@ -31,7 +31,7 @@ jobs_for_plug_response_v2__links_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "plug" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "additionalProperties" : false,

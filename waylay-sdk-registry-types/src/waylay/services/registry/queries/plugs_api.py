@@ -24,7 +24,6 @@ from typing_extensions import (
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.archive_format import ArchiveFormat
-from ..models.deprecate_previous_policy import DeprecatePreviousPolicy
 from ..models.function_type import FunctionType
 from ..models.job_state_result import JobStateResult
 from ..models.job_type_schema import JobTypeSchema
@@ -90,7 +89,7 @@ class CreateQuery(WaylayBaseModel):
         ),
     ] = None
     deprecate_previous: Annotated[
-        DeprecatePreviousPolicy | None,
+        Any | None,
         Field(
             description="Set the cleanup policy used to automatically deprecate/delete previous versions."
         ),
@@ -545,7 +544,7 @@ class ListQuery(WaylayBaseModel):
     show_related: Annotated[
         ShowRelatedType | None,
         Field(
-            description="Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. - `embed`: as full summary representation (in `_embedded`). - `link`: as HAL link in (in `_links`). - `none`: omitted."
+            description="Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. Ignored (forced to `none`) when any of the _version filter_ query params are used. - `embed`: as full summary representation (in `_embedded`). - `link`: as HAL link in (in `_links`). - `none`: omitted."
         ),
     ] = None
 
@@ -778,7 +777,7 @@ class PublishQuery(WaylayBaseModel):
         ),
     ] = None
     deprecate_previous: Annotated[
-        DeprecatePreviousPolicy | None,
+        Any | None,
         Field(
             description="Set the cleanup policy used to automatically deprecate/delete previous versions."
         ),
@@ -815,6 +814,8 @@ def _rebuild_query_alias_for(field_name: str) -> str:
         return "ignoreChecks"
     if field_name == "skip_rebuild":
         return "skipRebuild"
+    if field_name == "skip_verify":
+        return "skipVerify"
     return field_name
 
 
@@ -869,6 +870,12 @@ class RebuildQuery(WaylayBaseModel):
             description="If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function."
         ),
     ] = None
+    skip_verify: Annotated[
+        StrictBool | None,
+        Field(
+            description="If set, the function will not be validated: it transitions to `running` without verification of it's deployment health. When a `scaleToZero` is requested or implied, it is executed at the end of the deployment job, rather than as a separate job."
+        ),
+    ] = None
 
     model_config = ConfigDict(
         protected_namespaces=(),
@@ -887,6 +894,8 @@ def _remove_version_query_alias_for(field_name: str) -> str:
         return "force"
     if field_name == "undeploy":
         return "undeploy"
+    if field_name == "reset":
+        return "reset"
     return field_name
 
 
@@ -914,7 +923,13 @@ class RemoveVersionQuery(WaylayBaseModel):
     undeploy: Annotated[
         StrictBool | None,
         Field(
-            description="If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only."
+            description="If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  Setting this parameter is incompatible with `force=true` or `reset=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only."
+        ),
+    ] = None
+    reset: Annotated[
+        StrictBool | None,
+        Field(
+            description="If `true`, the function version will be immediately undeployed and reset to `registered` state as a _draft_. This is incompatible with `force=true` or `undeploy=false`."
         ),
     ] = None
 
@@ -935,6 +950,8 @@ def _remove_versions_query_alias_for(field_name: str) -> str:
         return "force"
     if field_name == "undeploy":
         return "undeploy"
+    if field_name == "reset":
+        return "reset"
     return field_name
 
 
@@ -962,7 +979,13 @@ class RemoveVersionsQuery(WaylayBaseModel):
     undeploy: Annotated[
         StrictBool | None,
         Field(
-            description="If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only."
+            description="If `true`, the `DELETE` operation * undeploys the (openfaas) function for the plug: it becomes no longer available for invocation. * does NOT remove the plug from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the plug can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug version(s) as _deprecated_: the plug remains active but is removed from the default listings.   This also applies to _draft_ versions.  Setting this parameter is incompatible with `force=true` or `reset=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only."
+        ),
+    ] = None
+    reset: Annotated[
+        StrictBool | None,
+        Field(
+            description="If `true`, the function version will be immediately undeployed and reset to `registered` state as a _draft_. This is incompatible with `force=true` or `undeploy=false`."
         ),
     ] = None
 

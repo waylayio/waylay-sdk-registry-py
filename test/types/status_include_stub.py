@@ -25,6 +25,7 @@ except ImportError as exc:
 
 status_include_model_schema = json.loads(
     r"""{
+  "title" : "StatusInclude",
   "type" : "string",
   "description" : "Inlude a status as a filter.",
   "example" : "running",

@@ -30,8 +30,7 @@ hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "href" : {
-      "title" : "href",
-      "type" : "string"
+      "$ref" : "#/components/schemas/HALLink_href"
     }
   }
 }

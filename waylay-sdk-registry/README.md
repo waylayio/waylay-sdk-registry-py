@@ -2,7 +2,7 @@
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
 This Python package is automatically generated based on the 
-Waylay Registry OpenAPI specification (API version: 2.13.0)
+Waylay Registry OpenAPI specification (API version: 2.14.2)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/registry.html).
 
 It consists of a plugin for the waylay-sdk-core package, and contains the Registry api methods.
@@ -12,13 +12,16 @@ Note that the typed model classes for all path params, query params, body params
 This package requires Python 3.9+.
 
 ## Installation
-Typically this package is installed when installing the [waylay-sdk-core](https://pypi.org/project/waylay-sdk/) package to enable the service's functionality.
-When the service api methods are required, waylay-sdk-registry is included in:
-- ```pip install waylay-sdk-core[registry]``` to install `waylay-sdk-core` along with only this service, or
-- ```pip install waylay-sdk-core[services]``` to install `waylay-sdk-core` along with all services.
-When the typed models are required, both waylay-sdk-registry and waylay-sdk-registry-types are included in:
-- ```pip install waylay-sdk-core[registry,registry-types]``` to install `waylay-sdk-core` along with only this service including the typed models, or
-- ```pip install waylay-sdk-core[services,services-types]``` to install `waylay-sdk-core` along with all services along with the typed models.
+
+Normally this package is installed together with support for other services using the [waylay-sdk](https://pypi.org/project/waylay-sdk/) umbrella package:
+* `pip install waylay-sdk` will install `waylay-sdk-registry` together with the SDK api packages for other services.
+* `pip install waylay-sdk[types-registry]` will additionally install the types package `waylay-sdk-registry-types`.
+* `pip install waylay-sdk[types]` will install the types packages for this and all other services.
+
+Alternatively, you can install support for this _registry_ service only, installing or extending an existing [waylay-sdk-core](https://pypi.org/project/waylay-sdk-core/):
+
+- `pip install waylay-sdk-registry` to only install api support for _registry_.
+- `pip install waylay-sdk-registry[types]` to additionally install type support for _registry_.
 
 ## Usage
 

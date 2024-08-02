@@ -25,6 +25,7 @@ from waylay.services.registry.service import RegistryService
 from ..types.create_webscripts_copy_parameter_stub import (
     CreateWebscriptsCopyParameterStub,
 )
+from ..types.deprecate_previous_policy_stub import DeprecatePreviousPolicyStub
 from ..types.documentation_stub import DocumentationStub
 from ..types.get_plug_response_v2_stub import GetPlugResponseV2Stub
 from ..types.jobs_for_plug_response_v2_stub import JobsForPlugResponseV2Stub
@@ -32,6 +33,7 @@ from ..types.latest_plugs_response_v2_stub import LatestPlugsResponseV2Stub
 from ..types.plug_versions_response_v2_stub import PlugVersionsResponseV2Stub
 from ..types.post_plug_job_sync_response_v2_stub import PostPlugJobSyncResponseV2Stub
 from ..types.rebuild_plug_sync_response_v2_stub import RebuildPlugSyncResponseV2Stub
+from ..types.rebuild_request_v2_stub import RebuildRequestV2Stub
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
 from ..types.tags_filter_stub import TagsFilterStub
 from ..types.timestamp_spec_stub import TimestampSpecStub
@@ -119,7 +121,7 @@ async def test_create(
             author="author_example",
             comment="comment_example",
             scale_to_zero=False,
-            deprecate_previous="none",
+            deprecate_previous=DeprecatePreviousPolicyStub.create_json(),
             dry_run=True,
             var_async=True,
             version=SemanticVersionRangeStub.create_json(),
@@ -162,7 +164,7 @@ async def test_create_without_types(
             "author": "author_example",
             "comment": "comment_example",
             "scaleToZero": False,
-            "deprecatePrevious": "none",
+            "deprecatePrevious": DeprecatePreviousPolicyStub.create_json(),
             "dryRun": True,
             "async": True,
             "version": SemanticVersionRangeStub.create_json(),
@@ -957,7 +959,7 @@ async def test_publish(
             chown=False,
             comment="comment_example",
             author="author_example",
-            deprecate_previous="none",
+            deprecate_previous=DeprecatePreviousPolicyStub.create_json(),
             var_async=True,
         ),
     }
@@ -992,7 +994,7 @@ async def test_publish_without_types(
             "chown": False,
             "comment": "comment_example",
             "author": "author_example",
-            "deprecatePrevious": "none",
+            "deprecatePrevious": DeprecatePreviousPolicyStub.create_json(),
             "async": True,
         },
     }
@@ -1042,7 +1044,9 @@ async def test_rebuild(
             force_version="force_version_example",
             ignore_checks=True,
             skip_rebuild=True,
+            skip_verify=False,
         ),
+        "json": RebuildRequestV2Stub.create_instance(),
     }
     _rebuild_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
@@ -1080,7 +1084,9 @@ async def test_rebuild_without_types(
             "forceVersion": "force_version_example",
             "ignoreChecks": True,
             "skipRebuild": True,
+            "skipVerify": False,
         },
+        "json": RebuildRequestV2Stub.create_json(),
     }
     _rebuild_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
@@ -1124,6 +1130,7 @@ async def test_remove_version(
             var_async=True,
             force=True,
             undeploy=True,
+            reset=True,
         ),
     }
     _remove_version_set_mock_response(
@@ -1158,6 +1165,7 @@ async def test_remove_version_without_types(
             "async": True,
             "force": True,
             "undeploy": True,
+            "reset": True,
         },
     }
     _remove_version_set_mock_response(
@@ -1198,6 +1206,7 @@ async def test_remove_versions(
             var_async=True,
             force=True,
             undeploy=True,
+            reset=True,
         ),
     }
     _remove_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
@@ -1228,6 +1237,7 @@ async def test_remove_versions_without_types(
             "async": True,
             "force": True,
             "undeploy": True,
+            "reset": True,
         },
     }
     _remove_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))

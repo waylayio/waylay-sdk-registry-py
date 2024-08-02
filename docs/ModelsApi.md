@@ -46,7 +46,6 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.deprecate_previous_policy import DeprecatePreviousPolicy
 from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
     # Create Model
@@ -56,7 +55,7 @@ try:
         query = {
             'deploy': True
             'scaleToZero': False
-            'deprecatePrevious': 'none'
+            'deprecatePrevious': waylay.services.registry.DeprecatePreviousPolicy()
             'dryRun': True
             'async': True
             'draft': False
@@ -685,7 +684,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
 **query['runtime']** (dict) <br> **query.runtime** (Query) | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
 **query['latest']** (dict) <br> **query.latest** (Query) | **bool** | query parameter `"latest"` | When &#x60;true&#x60;, only the latest version per function name is returned. If set to &#x60;false&#x60;, multiple versions per named function can be returned. Defaults to &#x60;true&#x60;, except when specific versions are selected with the &#x60;nameVersion&#x60; filter. | [optional] 
-**query['showRelated']** (dict) <br> **query.show_related** (Query) | [**ShowRelatedType**](.md) | query parameter `"showRelated"` | Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. - &#x60;embed&#x60;: as full summary representation (in &#x60;_embedded&#x60;). - &#x60;link&#x60;: as HAL link in (in &#x60;_links&#x60;). - &#x60;none&#x60;: omitted. | [optional] 
+**query['showRelated']** (dict) <br> **query.show_related** (Query) | [**ShowRelatedType**](.md) | query parameter `"showRelated"` | Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. Ignored (forced to &#x60;none&#x60;) when any of the _version filter_ query params are used. - &#x60;embed&#x60;: as full summary representation (in &#x60;_embedded&#x60;). - &#x60;link&#x60;: as HAL link in (in &#x60;_links&#x60;). - &#x60;none&#x60;: omitted. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -909,7 +908,6 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.deprecate_previous_policy import DeprecatePreviousPolicy
 from waylay.services.registry.models.post_model_job_sync_response_v2 import PostModelJobSyncResponseV2
 try:
     # Publish Draft Model
@@ -920,7 +918,7 @@ try:
         # query parameters:
         query = {
             'chown': False
-            'deprecatePrevious': 'none'
+            'deprecatePrevious': waylay.services.registry.DeprecatePreviousPolicy()
             'async': True
         },
     )
@@ -997,6 +995,7 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.rebuild_model_sync_response_v2 import RebuildModelSyncResponseV2
 from waylay.services.registry.models.rebuild_policy import RebuildPolicy
+from waylay.services.registry.models.rebuild_request_v2 import RebuildRequestV2
 try:
     # Rebuild Model
     # calls `POST /registry/v2/models/{name}/versions/{version}/rebuild`
@@ -1011,7 +1010,10 @@ try:
             'upgrade': 'patch'
             'ignoreChecks': True
             'skipRebuild': True
+            'skipVerify': False
         },
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json = waylay.services.registry.RebuildRequestV2() # RebuildRequestV2 |  (optional)
     )
     print("The response of registry.models.rebuild:\n")
     pprint(api_response)
@@ -1029,6 +1031,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
+**json** | **RebuildRequestV2** | json request body |  | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
@@ -1038,6 +1041,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['forceVersion']** (dict) <br> **query.force_version** (Query) | **str** | query parameter `"forceVersion"` | If set, force a rebuild with the given runtime version (including downgrades). This parameter is mutually exclusive to the &#x60;upgrade&#x60; parameter. | [optional] 
 **query['ignoreChecks']** (dict) <br> **query.ignore_checks** (Query) | **bool** | query parameter `"ignoreChecks"` | If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in &#x60;pending&#x60;, &#x60;running&#x60;, &#x60;failed&#x60; or &#x60;undeployed&#x60; * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the &#x60;dryRun&#x60; option | [optional] 
 **query['skipRebuild']** (dict) <br> **query.skip_rebuild** (Query) | **bool** | query parameter `"skipRebuild"` | If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function. | [optional] 
+**query['skipVerify']** (dict) <br> **query.skip_verify** (Query) | **bool** | query parameter `"skipVerify"` | If set, the function will not be validated: it transitions to &#x60;running&#x60; without verification of it&#39;s deployment health. When a &#x60;scaleToZero&#x60; is requested or implied, it is executed at the end of the deployment job, rather than as a separate job. | [optional] [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -1050,7 +1054,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 ### HTTP response details
@@ -1099,6 +1103,7 @@ try:
             'async': True
             'force': True
             'undeploy': True
+            'reset': True
         },
     )
     print("The response of registry.models.remove_version:\n")
@@ -1121,7 +1126,8 @@ Name     | Type  | API binding   | Description   | Notes
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
 **query['force']** (dict) <br> **query.force** (Query) | **bool** | query parameter `"force"` | If &lt;code&gt;true&lt;/code&gt;, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_. | [optional] 
-**query['undeploy']** (dict) <br> **query.undeploy** (Query) | **bool** | query parameter `"undeploy"` | If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
+**query['undeploy']** (dict) <br> **query.undeploy** (Query) | **bool** | query parameter `"undeploy"` | If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  Setting this parameter is incompatible with &#x60;force&#x3D;true&#x60; or &#x60;reset&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
+**query['reset']** (dict) <br> **query.reset** (Query) | **bool** | query parameter `"reset"` | If &#x60;true&#x60;, the function version will be immediately undeployed and reset to &#x60;registered&#x60; state as a _draft_. This is incompatible with &#x60;force&#x3D;true&#x60; or &#x60;undeploy&#x3D;false&#x60;. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -1180,6 +1186,7 @@ try:
         query = {
             'force': True
             'undeploy': True
+            'reset': True
             'async': True
         },
     )
@@ -1201,7 +1208,8 @@ Name     | Type  | API binding   | Description   | Notes
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['force']** (dict) <br> **query.force** (Query) | **bool** | query parameter `"force"` | If &lt;code&gt;true&lt;/code&gt;, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_. | [optional] 
-**query['undeploy']** (dict) <br> **query.undeploy** (Query) | **bool** | query parameter `"undeploy"` | If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with &#x60;force&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
+**query['undeploy']** (dict) <br> **query.undeploy** (Query) | **bool** | query parameter `"undeploy"` | If &#x60;true&#x60;, the &#x60;DELETE&#x60; operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an &#x60;undeployed&#x60; status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If &#x60;false&#x60;, the &#x60;DELETE&#x60; operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  Setting this parameter is incompatible with &#x60;force&#x3D;true&#x60; or &#x60;reset&#x3D;true&#x60;.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only. | [optional] 
+**query['reset']** (dict) <br> **query.reset** (Query) | **bool** | query parameter `"reset"` | If &#x60;true&#x60;, the function version will be immediately undeployed and reset to &#x60;registered&#x60; state as a _draft_. This is incompatible with &#x60;force&#x3D;true&#x60; or &#x60;undeploy&#x3D;false&#x60;. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 

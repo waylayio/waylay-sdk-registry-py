@@ -399,7 +399,7 @@ _asset_summary_with_hal_link__links_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "asset" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "description" : "HAL links to the asset"
@@ -892,6 +892,9 @@ _compiled_runtime_version_model_schema = json.loads(
     "assets" : {
       "$ref" : "#/components/schemas/AssetsConditions"
     },
+    "invocation" : {
+      "$ref" : "#/components/schemas/InvocationAttributes"
+    },
     "title" : {
       "title" : "title",
       "type" : "string"
@@ -1210,10 +1213,6 @@ _deploy_args_deploy_spec_overrides_model_schema = json.loads(
       "title" : "namespace",
       "type" : "string"
     },
-    "envProcess" : {
-      "title" : "envProcess",
-      "type" : "string"
-    },
     "network" : {
       "title" : "network",
       "type" : "string"
@@ -1369,10 +1368,6 @@ _deploy_spec_openfaas_spec_model_schema = json.loads(
       "title" : "namespace",
       "type" : "string"
     },
-    "envProcess" : {
-      "title" : "envProcess",
-      "type" : "string"
-    },
     "network" : {
       "title" : "network",
       "type" : "string"
@@ -1450,14 +1445,73 @@ MODEL_DEFINITIONS.update({"Deploy_type": _deploy_type_model_schema})
 
 _deprecate_previous_policy_model_schema = json.loads(
     r"""{
-  "type" : "string",
-  "enum" : [ "none", "all", "patch", "minor" ]
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf"
+  }, {
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf_1"
+  }, {
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf_2"
+  }, {
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf_3"
+  } ]
 }
 """,
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
     "DeprecatePreviousPolicy": _deprecate_previous_policy_model_schema
+})
+
+_deprecate_previous_policy_any_of_model_schema = json.loads(
+    r"""{
+  "title" : "DeprecatePreviousPolicy_anyOf",
+  "type" : "string",
+  "enum" : [ "none" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "DeprecatePreviousPolicy_anyOf": _deprecate_previous_policy_any_of_model_schema
+})
+
+_deprecate_previous_policy_any_of_1_model_schema = json.loads(
+    r"""{
+  "title" : "DeprecatePreviousPolicy_anyOf_1",
+  "type" : "string",
+  "enum" : [ "all" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "DeprecatePreviousPolicy_anyOf_1": _deprecate_previous_policy_any_of_1_model_schema
+})
+
+_deprecate_previous_policy_any_of_2_model_schema = json.loads(
+    r"""{
+  "title" : "DeprecatePreviousPolicy_anyOf_2",
+  "type" : "string",
+  "enum" : [ "patch" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "DeprecatePreviousPolicy_anyOf_2": _deprecate_previous_policy_any_of_2_model_schema
+})
+
+_deprecate_previous_policy_any_of_3_model_schema = json.loads(
+    r"""{
+  "title" : "DeprecatePreviousPolicy_anyOf_3",
+  "type" : "string",
+  "enum" : [ "minor" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "DeprecatePreviousPolicy_anyOf_3": _deprecate_previous_policy_any_of_3_model_schema
 })
 
 _documentation_model_schema = json.loads(
@@ -1952,21 +2006,25 @@ MODEL_DEFINITIONS.update({"File_Upload": _file_upload_model_schema})
 
 _function_deploy_overrides_type_model_schema = json.loads(
     r"""{
+  "title" : "FunctionDeployOverridesType",
   "type" : "object",
   "properties" : {
     "envVars" : {
+      "title" : "envVars",
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
       }
     },
     "labels" : {
+      "title" : "labels",
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
       }
     },
     "annotations" : {
+      "title" : "annotations",
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
@@ -2083,7 +2141,7 @@ _get_plug_response_v2_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "entity" : {
-      "$ref" : "#/components/schemas/PlugResponseV2"
+      "$ref" : "#/components/schemas/PlugWithInvocationResponseV2"
     },
     "_links" : {
       "$ref" : "#/components/schemas/GetPlugResponseV2__links"
@@ -2130,7 +2188,7 @@ _get_plug_response_v2__links_draft_model_schema = json.loads(
       "type" : "boolean"
     },
     "href" : {
-      "type" : "string"
+      "$ref" : "#/components/schemas/HALLink_href"
     },
     "version" : {
       "type" : "string"
@@ -2164,7 +2222,7 @@ _get_plug_response_v2__links_published_model_schema = json.loads(
       "type" : "boolean"
     },
     "href" : {
-      "type" : "string"
+      "$ref" : "#/components/schemas/HALLink_href"
     },
     "version" : {
       "type" : "string"
@@ -2237,8 +2295,7 @@ _hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "href" : {
-      "title" : "href",
-      "type" : "string"
+      "$ref" : "#/components/schemas/HALLink_href"
     }
   }
 }
@@ -2246,6 +2303,89 @@ _hal_link_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"HALLink": _hal_link_model_schema})
+
+_hal_link_href_model_schema = json.loads(
+    r"""{
+  "title" : "HALLink_href",
+  "anyOf" : [ {
+    "type" : "string",
+    "format" : "uri"
+  }, {
+    "type" : "string"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"HALLink_href": _hal_link_href_model_schema})
+
+_hal_links_model_schema = json.loads(
+    r"""{
+  "title" : "HALLinks",
+  "description" : "One or more links of the same HAL collection.",
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/HALLink"
+  }, {
+    "type" : "array",
+    "items" : {
+      "$ref" : "#/components/schemas/HALLink"
+    }
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"HALLinks": _hal_links_model_schema})
+
+_invocation_attributes_model_schema = json.loads(
+    r"""{
+  "title" : "InvocationAttributes",
+  "required" : [ "auth", "callback", "nodeContext", "rawDataContext", "taskContext" ],
+  "type" : "object",
+  "properties" : {
+    "auth" : {
+      "$ref" : "#/components/schemas/InvocationAttributes_auth"
+    },
+    "taskContext" : {
+      "title" : "taskContext",
+      "type" : "boolean",
+      "description" : "Indicates whether the task context attributes should be provided in `options.task`."
+    },
+    "nodeContext" : {
+      "title" : "nodeContext",
+      "type" : "boolean",
+      "description" : "Indicates whether the node context attributes should be provided in `options.node`."
+    },
+    "rawDataContext" : {
+      "title" : "rawDataContext",
+      "type" : "boolean",
+      "description" : "Indicates that the rawdata context attributes should be provided in `options.rawData`."
+    },
+    "callback" : {
+      "title" : "callback",
+      "type" : "boolean",
+      "description" : "Indicates that the plug implementer intends to use the callback mechanism."
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"InvocationAttributes": _invocation_attributes_model_schema})
+
+_invocation_attributes_auth_model_schema = json.loads(
+    r"""{
+  "title" : "InvocationAttributes_auth",
+  "type" : "string",
+  "description" : "Indicates what credentials are passed to provide a Waylay authorization context.",
+  "enum" : [ "waylay", "none" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "InvocationAttributes_auth": _invocation_attributes_auth_model_schema
+})
 
 _invoke_hal_link_model_schema = json.loads(
     r"""{
@@ -2324,6 +2464,7 @@ MODEL_DEFINITIONS.update({"JobCause": _job_cause_model_schema})
 
 _job_causes_model_schema = json.loads(
     r"""{
+  "title" : "JobCauses",
   "type" : "object",
   "properties" : {
     "build" : {
@@ -2600,7 +2741,7 @@ _job_events_hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "description" : "HAL links to related actions."
@@ -2612,13 +2753,14 @@ MODEL_DEFINITIONS.update({"JobEventsHALLink": _job_events_hal_link_model_schema}
 
 _job_hal_links_model_schema = json.loads(
     r"""{
+  "title" : "JobHALLinks",
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "description" : "HAL links to related actions."
@@ -2878,7 +3020,7 @@ _job_status_hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "description" : "HAL links to related actions."
@@ -3053,7 +3195,7 @@ _jobs_for_model_response_v2__links_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "model" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "additionalProperties" : false,
@@ -3100,7 +3242,7 @@ _jobs_for_plug_response_v2__links_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "plug" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "additionalProperties" : false,
@@ -3147,7 +3289,7 @@ _jobs_for_webscript_response_v2__links_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "webscript" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "additionalProperties" : false,
@@ -3447,10 +3589,10 @@ _model_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "model" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }
@@ -3466,13 +3608,13 @@ _model_1_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "model" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }
@@ -3488,10 +3630,10 @@ _model_2_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "model" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }
@@ -3575,10 +3717,10 @@ _plug_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "plug" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }
@@ -3594,13 +3736,13 @@ _plug_1_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "plug" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }
@@ -3616,10 +3758,10 @@ _plug_2_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "plug" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }
@@ -3949,6 +4091,68 @@ MODEL_DEFINITIONS.update({
     "PlugVersionsResponseV2": _plug_versions_response_v2_model_schema
 })
 
+_plug_with_invocation_response_v2_model_schema = json.loads(
+    r"""{
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "invocation", "plug", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
+  "type" : "object",
+  "properties" : {
+    "createdBy" : {
+      "type" : "string",
+      "description" : "The user that created this entity."
+    },
+    "createdAt" : {
+      "type" : "string",
+      "description" : "The timestamp at which this entity was created.",
+      "format" : "date-time"
+    },
+    "updatedBy" : {
+      "type" : "string",
+      "description" : "The user that last updated this entity."
+    },
+    "updatedAt" : {
+      "type" : "string",
+      "description" : "The timestamp at which this entity was last updated.",
+      "format" : "date-time"
+    },
+    "updates" : {
+      "type" : "array",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "items" : {
+        "$ref" : "#/components/schemas/UpdateRecord"
+      }
+    },
+    "status" : {
+      "$ref" : "#/components/schemas/Status"
+    },
+    "failureReason" : {
+      "$ref" : "#/components/schemas/FailureReason"
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/RuntimeAttributes"
+    },
+    "deprecated" : {
+      "type" : "boolean",
+      "description" : "If <code>true</code> this plug is removed from regular listings, as a result of a <code>DELETE</code> with <code>force=false</code>."
+    },
+    "draft" : {
+      "type" : "boolean",
+      "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "plug" : {
+      "$ref" : "#/components/schemas/PlugManifest"
+    },
+    "invocation" : {
+      "$ref" : "#/components/schemas/InvocationAttributes"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "PlugWithInvocationResponseV2": _plug_with_invocation_response_v2_model_schema
+})
+
 _post_model_job_async_response_v2_model_schema = json.loads(
     r"""{
   "required" : [ "_links", "entity", "message" ],
@@ -4267,6 +4471,21 @@ _rebuild_policy_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"RebuildPolicy": _rebuild_policy_model_schema})
 
+_rebuild_request_v2_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "deploy" : {
+      "$ref" : "#/components/schemas/FunctionDeployOverridesType"
+    }
+  },
+  "additionalProperties" : false
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"RebuildRequestV2": _rebuild_request_v2_model_schema})
+
 _rebuild_webscript_async_response_v2_model_schema = json.loads(
     r"""{
   "required" : [ "_links", "causes", "entity", "message" ],
@@ -4352,7 +4571,7 @@ _request_operation_model_schema = json.loads(
   "title" : "RequestOperation",
   "type" : "string",
   "description" : "A modifying operation on the function.",
-  "enum" : [ "create", "metadata-update", "assets-update", "rebuild", "verify", "publish", "deprecate", "undeploy" ]
+  "enum" : [ "create", "metadata-update", "assets-update", "rebuild", "verify", "publish", "deprecate", "undeploy", "undeprecate" ]
 }
 """,
     object_hook=with_example_provider,
@@ -4362,7 +4581,6 @@ MODEL_DEFINITIONS.update({"RequestOperation": _request_operation_model_schema})
 _resource_limits_model_schema = json.loads(
     r"""{
   "title" : "ResourceLimits",
-  "required" : [ "cpu", "memory" ],
   "type" : "object",
   "properties" : {
     "memory" : {
@@ -4777,6 +4995,7 @@ MODEL_DEFINITIONS.update({"Status": _status_model_schema})
 
 _status_any_model_schema = json.loads(
     r"""{
+  "title" : "StatusAny",
   "type" : "string",
   "description" : "Includes *all* statuses (including `undeployed`) as a filter",
   "enum" : [ "any" ]
@@ -4788,6 +5007,7 @@ MODEL_DEFINITIONS.update({"StatusAny": _status_any_model_schema})
 
 _status_exclude_model_schema = json.loads(
     r"""{
+  "title" : "StatusExclude",
   "pattern" : "^(registered|pending|deployed|unhealthy|failed|running|undeploying|undeployed)-$",
   "type" : "string",
   "description" : "Any status value with a `-` postfix appended, excludes that status as a filter.",
@@ -4817,6 +5037,7 @@ MODEL_DEFINITIONS.update({"StatusFilter": _status_filter_model_schema})
 
 _status_include_model_schema = json.loads(
     r"""{
+  "title" : "StatusInclude",
   "type" : "string",
   "description" : "Inlude a status as a filter.",
   "example" : "running",
@@ -5057,7 +5278,7 @@ MODEL_DEFINITIONS.update({"Undeploy_1": _undeploy_1_model_schema})
 _undeploy_args_model_schema = json.loads(
     r"""{
   "title" : "UndeployArgs",
-  "required" : [ "deleteEntity", "endpoint", "isNativePlug", "namespace", "revision", "runtimeName", "runtimeVersion" ],
+  "required" : [ "deleteEntity", "endpoint", "isNativePlug", "namespace", "resetEntity", "revision", "runtimeName", "runtimeVersion" ],
   "type" : "object",
   "properties" : {
     "namespace" : {
@@ -5088,6 +5309,10 @@ _undeploy_args_model_schema = json.loads(
     },
     "deleteEntity" : {
       "title" : "deleteEntity",
+      "type" : "boolean"
+    },
+    "resetEntity" : {
+      "title" : "resetEntity",
       "type" : "boolean"
     }
   },
@@ -5698,10 +5923,10 @@ _webscript_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "webscript" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }
@@ -5717,13 +5942,13 @@ _webscript_1_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "webscript" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }
@@ -5739,10 +5964,10 @@ _webscript_2_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "webscript" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }

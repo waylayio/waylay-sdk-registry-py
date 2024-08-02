@@ -30,10 +30,10 @@ plug_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "event" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     },
     "plug" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   }
 }

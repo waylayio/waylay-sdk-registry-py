@@ -25,6 +25,7 @@ except ImportError as exc:
 
 status_any_model_schema = json.loads(
     r"""{
+  "title" : "StatusAny",
   "type" : "string",
   "description" : "Includes *all* statuses (including `undeployed`) as a filter",
   "enum" : [ "any" ]

@@ -25,6 +25,7 @@ class RequestOperation(str, Enum):
     PUBLISH = "publish"
     DEPRECATE = "deprecate"
     UNDEPLOY = "undeploy"
+    UNDEPRECATE = "undeprecate"
 
     def __str__(self) -> str:
         return str(self.value)

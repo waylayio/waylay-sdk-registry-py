@@ -27,21 +27,25 @@ except ImportError as exc:
 
 function_deploy_overrides_type_model_schema = json.loads(
     r"""{
+  "title" : "FunctionDeployOverridesType",
   "type" : "object",
   "properties" : {
     "envVars" : {
+      "title" : "envVars",
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
       }
     },
     "labels" : {
+      "title" : "labels",
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"
       }
     },
     "annotations" : {
+      "title" : "annotations",
       "type" : "object",
       "additionalProperties" : {
         "type" : "string"

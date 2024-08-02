@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**job** | [**HALLink**](HALLink.md) |  | [optional] 
-**model** | [**HALLink**](HALLink.md) |  | 
+**job** | [**HALLinks**](HALLinks.md) |  | [optional] 
+**model** | [**HALLinks**](HALLinks.md) |  | 
 
 ## Example
 

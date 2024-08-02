@@ -42,10 +42,6 @@ deploy_spec_openfaas_spec_model_schema = json.loads(
       "title" : "namespace",
       "type" : "string"
     },
-    "envProcess" : {
-      "title" : "envProcess",
-      "type" : "string"
-    },
     "network" : {
       "title" : "network",
       "type" : "string"

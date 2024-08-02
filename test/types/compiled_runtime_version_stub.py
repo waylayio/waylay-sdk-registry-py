@@ -71,6 +71,9 @@ compiled_runtime_version_model_schema = json.loads(
     "assets" : {
       "$ref" : "#/components/schemas/AssetsConditions"
     },
+    "invocation" : {
+      "$ref" : "#/components/schemas/InvocationAttributes"
+    },
     "title" : {
       "title" : "title",
       "type" : "string"

@@ -50,6 +50,7 @@ if TYPE_CHECKING:
         LatestWebscriptsResponseV2,
         PostWebscriptJobAsyncResponseV2,
         PostWebscriptJobSyncResponseV2,
+        RebuildRequestV2,
         RebuildWebscriptAsyncResponseV2,
         RebuildWebscriptSyncResponseV2,
         RegistryErrorResponse,
@@ -88,6 +89,7 @@ try:
         LatestWebscriptsResponseV2,
         PostWebscriptJobAsyncResponseV2,
         PostWebscriptJobSyncResponseV2,
+        RebuildRequestV2,
         RebuildWebscriptAsyncResponseV2,
         RebuildWebscriptSyncResponseV2,
         RegistryErrorResponse,
@@ -161,6 +163,8 @@ except ImportError:
         PostWebscriptJobSyncResponseV2 = Model
 
         PostWebscriptJobAsyncResponseV2 = Model
+
+        RebuildRequestV2 = Model
 
         RebuildQuery = dict
         RebuildWebscriptSyncResponseV2 = Model
@@ -447,7 +451,7 @@ class WebscriptsApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(
+            body_adapter: Any = TypeAdapter(
                 Annotated[
                     Optional[Union[StrictBytes, StrictStr]],
                     Field(
@@ -1900,7 +1904,7 @@ class WebscriptsApi(WithApiClient):
         :type query['runtime']: List[str]
         :param query['latest'] (dict) <br> query.latest (Query) : When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter.
         :type query['latest']: bool
-        :param query['showRelated'] (dict) <br> query.show_related (Query) : Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. - `embed`: as full summary representation (in `_embedded`). - `link`: as HAL link in (in `_links`). - `none`: omitted.
+        :param query['showRelated'] (dict) <br> query.show_related (Query) : Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. Ignored (forced to `none`) when any of the _version filter_ query params are used. - `embed`: as full summary representation (in `_embedded`). - `link`: as HAL link in (in `_links`). - `none`: omitted.
         :type query['showRelated']: ShowRelatedType
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
@@ -2110,7 +2114,7 @@ class WebscriptsApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter = TypeAdapter(Optional[FunctionMeta])
+            body_adapter: Any = TypeAdapter(Optional[FunctionMeta])
             json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
         body_args["json"] = json
 
@@ -2336,6 +2340,7 @@ class WebscriptsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
+        json: RebuildRequestV2 | None = None,
         query: RebuildQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
@@ -2353,6 +2358,7 @@ class WebscriptsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
+        json: RebuildRequestV2 | None = None,
         query: RebuildQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
@@ -2370,6 +2376,7 @@ class WebscriptsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
+        json: RebuildRequestV2 | None = None,
         query: RebuildQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
@@ -2387,6 +2394,7 @@ class WebscriptsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
+        json: RebuildRequestV2 | None = None,
         query: RebuildQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
@@ -2404,6 +2412,7 @@ class WebscriptsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
+        json: RebuildRequestV2 | None = None,
         query: RebuildQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
@@ -2420,6 +2429,7 @@ class WebscriptsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
+        json: RebuildRequestV2 | None = None,
         query: RebuildQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
@@ -2441,6 +2451,8 @@ class WebscriptsApi(WithApiClient):
         :type name: str
         :param version: The version of the function. (required)
         :type version: str
+        :param json: The json request body.
+        :type json: RebuildRequestV2, optional
         :param query: URL Query parameters.
         :type query: RebuildQuery | QueryParamTypes, optional
         :param query['scaleToZero'] (dict) <br> query.scale_to_zero (Query) : Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.
@@ -2459,6 +2471,8 @@ class WebscriptsApi(WithApiClient):
         :type query['ignoreChecks']: bool
         :param query['skipRebuild'] (dict) <br> query.skip_rebuild (Query) : If set, the function will not be rebuild. Always uses the current runtime version when re-deploying/re-verifying the function.
         :type query['skipRebuild']: bool
+        :param query['skipVerify'] (dict) <br> query.skip_verify (Query) : If set, the function will not be validated: it transitions to `running` without verification of it's deployment health. When a `scaleToZero` is requested or implied, it is executed at the end of the deployment job, rather than as a separate job.
+        :type query['skipVerify']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -2490,6 +2504,10 @@ class WebscriptsApi(WithApiClient):
 
         ## named body parameters
         body_args: Dict[str, Any] = {}
+        if json is not None and validate_request:
+            body_adapter: Any = TypeAdapter(Optional[RebuildRequestV2])
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
 
         # query parameters
         if query is not None and MODELS_AVAILABLE and validate_request:
@@ -2635,8 +2653,10 @@ class WebscriptsApi(WithApiClient):
         :type query['async']: bool
         :param query['force'] (dict) <br> query.force (Query) : If <code>true</code>, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_.
         :type query['force']: bool
-        :param query['undeploy'] (dict) <br> query.undeploy (Query) : If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
+        :param query['undeploy'] (dict) <br> query.undeploy (Query) : If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  Setting this parameter is incompatible with `force=true` or `reset=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
         :type query['undeploy']: bool
+        :param query['reset'] (dict) <br> query.reset (Query) : If `true`, the function version will be immediately undeployed and reset to `registered` state as a _draft_. This is incompatible with `force=true` or `undeploy=false`.
+        :type query['reset']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -2793,8 +2813,10 @@ class WebscriptsApi(WithApiClient):
         :type query['async']: bool
         :param query['force'] (dict) <br> query.force (Query) : If <code>true</code>, the function version will be immediately undeployed and removed.  Otherwise, the removal will be delayed to allow current invocations to end. During that period, the function is marked _deprecated_.
         :type query['force']: bool
-        :param query['undeploy'] (dict) <br> query.undeploy (Query) : If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  This parameter is incompatible with `force=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
+        :param query['undeploy'] (dict) <br> query.undeploy (Query) : If `true`, the `DELETE` operation * undeploys the (openfaas) function: it becomes no longer available for invocation. * does NOT remove the function from registry: it stays in an `undeployed` status.  All assets and definitions are retained, so the version can be restored later with a  _rebuild_ action.  If `false`, the `DELETE` operation * _only_ marks the plug function as _deprecated_, the function remains active but is removed from the default listings.   This also applies to _draft_ versions.  Setting this parameter is incompatible with `force=true` or `reset=true`.  If not set the default behaviour applies: * _draft_ versions are _undeployed_ and _removed_ from registry. * non-_draft_ versions are marked _deprecated_ only.
         :type query['undeploy']: bool
+        :param query['reset'] (dict) <br> query.reset (Query) : If `true`, the function version will be immediately undeployed and reset to `registered` state as a _draft_. This is incompatible with `force=true` or `undeploy=false`.
+        :type query['reset']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.

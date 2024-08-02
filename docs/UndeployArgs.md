@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **revision** | **str** | The revision hash of the current (draft) function revision | 
 **is_native_plug** | **bool** | If true, the function is not expected to be deployed on openfaas. | 
 **delete_entity** | **bool** |  | 
+**reset_entity** | **bool** |  | 
 
 ## Example
 

@@ -46,6 +46,7 @@ class UndeployArgs(WaylayBaseModel):
         alias="isNativePlug",
     )
     delete_entity: StrictBool = Field(alias="deleteEntity")
+    reset_entity: StrictBool = Field(alias="resetEntity")
 
     @field_validator("runtime_version")
     @classmethod

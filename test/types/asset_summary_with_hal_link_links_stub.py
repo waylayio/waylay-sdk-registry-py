@@ -32,7 +32,7 @@ asset_summary_with_hal_link__links_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "asset" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/HALLinks"
     }
   },
   "description" : "HAL links to the asset"

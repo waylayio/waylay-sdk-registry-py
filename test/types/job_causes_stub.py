@@ -25,6 +25,7 @@ except ImportError as exc:
 
 job_causes_model_schema = json.loads(
     r"""{
+  "title" : "JobCauses",
   "type" : "object",
   "properties" : {
     "build" : {

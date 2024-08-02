@@ -21,8 +21,8 @@ from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 class ResourceLimits(WaylayBaseModel):
     """ResourceLimits."""
 
-    memory: StrictStr
-    cpu: StrictStr
+    memory: StrictStr | None = None
+    cpu: StrictStr | None = None
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"
