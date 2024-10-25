@@ -16,46 +16,54 @@ from pydantic import TypeAdapter
 from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
-    from waylay.services.registry.models.show_related_type import ShowRelatedType
+    from waylay.services.registry.models.runtime_tag_response import RuntimeTagResponse
 
-    ShowRelatedTypeAdapter = TypeAdapter(ShowRelatedType)
+    RuntimeTagResponseAdapter = TypeAdapter(RuntimeTagResponse)
     MODELS_AVAILABLE = True
 except ImportError as exc:
     MODELS_AVAILABLE = False
 
-show_related_type_model_schema = json.loads(
+runtime_tag_response_model_schema = json.loads(
     r"""{
-  "type" : "string",
-  "enum" : [ "embed", "link", "none" ]
+  "required" : [ "tag" ],
+  "type" : "object",
+  "properties" : {
+    "tag" : {
+      "$ref" : "#/components/schemas/RuntimeTag"
+    }
+  },
+  "description" : "Runtime Tag Found"
 }
 """,
     object_hook=with_example_provider,
 )
-show_related_type_model_schema.update({"definitions": MODEL_DEFINITIONS})
+runtime_tag_response_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
-show_related_type_faker = JSF(show_related_type_model_schema, allow_none_optionals=1)
+runtime_tag_response_faker = JSF(
+    runtime_tag_response_model_schema, allow_none_optionals=1
+)
 
 
-class ShowRelatedTypeStub:
-    """ShowRelatedType unit test stubs."""
+class RuntimeTagResponseStub:
+    """RuntimeTagResponse unit test stubs."""
 
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return show_related_type_faker.generate(use_defaults=True, use_examples=True)
+        return runtime_tag_response_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
-    def create_instance(cls) -> "ShowRelatedType":
-        """Create ShowRelatedType stub instance."""
+    def create_instance(cls) -> "RuntimeTagResponse":
+        """Create RuntimeTagResponse stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
-                ShowRelatedTypeAdapter.json_schema(), allow_none_optionals=1
+                RuntimeTagResponseAdapter.json_schema(), allow_none_optionals=1
             )
             json = backup_faker.generate(use_defaults=True, use_examples=True)
-        return ShowRelatedTypeAdapter.validate_python(
+        return RuntimeTagResponseAdapter.validate_python(
             json, context={"skip_validation": True}
         )

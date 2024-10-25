@@ -16,13 +16,14 @@ from pydantic import (
     Field,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
 class Tag(WaylayBaseModel):
     """One or more tags can be assigned to a function entity to facilitate grouping and searching.."""
 
-    name: StrictStr = Field(description="Name of the tag")
+    name: StrictStr = Field(description="A string that references a tag")
     color: StrictStr = Field(description="Color associated with the tag in an UI.")
 
     model_config = ConfigDict(

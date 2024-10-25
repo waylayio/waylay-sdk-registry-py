@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **description** | **str** |  | [optional] 
 **function_type** | [**FunctionType**](FunctionType.md) |  | 
 **archive_format** | [**ArchiveFormat**](ArchiveFormat.md) |  | 
+**tags** | **List[str]** |  | [optional] 
 **versions** | [**List[RuntimeVersionInfo]**](RuntimeVersionInfo.md) |  | 
 
 ## Example

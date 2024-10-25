@@ -30,7 +30,7 @@ except ImportError as exc:
 entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema = json.loads(
     r"""{
   "title" : "EntityWithLinks_IWebscriptResponseWithInvokeLinkV2_",
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "updates", "webscript" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "webscript" ],
   "type" : "object",
   "properties" : {
     "_embedded" : {
@@ -64,7 +64,7 @@ entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema = json.
     "updates" : {
       "title" : "updates",
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -129,7 +129,7 @@ class EntityWithLinksIWebscriptResponseWithInvokeLinkV2Stub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 EntityWithLinksIWebscriptResponseWithInvokeLinkV2Adapter.json_schema(),

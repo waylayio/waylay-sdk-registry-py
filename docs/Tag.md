@@ -6,7 +6,7 @@ One or more tags can be assigned to a function entity to facilitate grouping and
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **str** | Name of the tag | 
+**name** | **str** | A string that references a tag | 
 **color** | **str** | Color associated with the tag in an UI. | 
 
 ## Example

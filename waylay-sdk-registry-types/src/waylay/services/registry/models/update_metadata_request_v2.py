@@ -18,9 +18,10 @@ from pydantic import (
     Field,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.tag import Tag
+from ..models.tag_or_tag_reference import TagOrTagReference
 
 
 class UpdateMetadataRequestV2(WaylayBaseModel):
@@ -41,18 +42,9 @@ class UpdateMetadataRequestV2(WaylayBaseModel):
         default=None,
         description="A category for this function (Deprecated: use tags to categorise your functions)",
     )
-    documentation_url: StrictStr | None = Field(
+    tags: List[TagOrTagReference] | None = Field(
         default=None,
-        description="External url that document this function.",
-        alias="documentationURL",
-    )
-    tags: List[Tag] | None = Field(
-        default=None, description="Tags associated with this function."
-    )
-    friendly_name: StrictStr | None = Field(
-        default=None,
-        description="Display title for this function.",
-        alias="friendlyName",
+        description="During update, a (reference to a) tag - that does not yet exist, is created (using default attributes if not specified) - that does exist is not updated (even if tag attributes like `color` differ)",
     )
 
     model_config = ConfigDict(

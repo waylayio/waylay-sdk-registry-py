@@ -30,11 +30,14 @@ get_plug_response_v2__links_model_schema = json.loads(
   "title" : "GetPlugResponseV2__links",
   "type" : "object",
   "properties" : {
+    "content" : {
+      "$ref" : "#/components/schemas/HALLink"
+    },
     "draft" : {
-      "$ref" : "#/components/schemas/GetPlugResponseV2__links_draft"
+      "$ref" : "#/components/schemas/AltVersionHALLink_draft"
     },
     "published" : {
-      "$ref" : "#/components/schemas/GetPlugResponseV2__links_published"
+      "$ref" : "#/components/schemas/AltVersionHALLink_published"
     },
     "jobs" : {
       "$ref" : "#/components/schemas/HALLink"
@@ -68,7 +71,7 @@ class GetPlugResponseV2LinksStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 GetPlugResponseV2LinksAdapter.json_schema(), allow_none_optionals=1

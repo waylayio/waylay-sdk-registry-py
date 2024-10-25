@@ -6,6 +6,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**embedded** | [**RuntimeSummaryResponseEmbedded**](RuntimeSummaryResponseEmbedded.md) |  | [optional] 
 **runtime** | [**CompiledRuntimeVersion**](CompiledRuntimeVersion.md) |  | 
 
 ## Example

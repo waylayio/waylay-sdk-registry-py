@@ -17,6 +17,7 @@ from pydantic import (
     ConfigDict,
     Field,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.plug_property_format_type import PlugPropertyFormatType
@@ -25,7 +26,7 @@ from ..models.plug_property_format_type import PlugPropertyFormatType
 class PlugPropertyFormat(WaylayBaseModel):
     """PlugPropertyFormat."""
 
-    type: PlugPropertyFormatType | None = None
+    type: PlugPropertyFormatType
     values: List[Any] | None = Field(
         default=None,
         description='The enumerated value domain when <code>type="enum"</code>',

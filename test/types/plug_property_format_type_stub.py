@@ -29,7 +29,7 @@ plug_property_format_type_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Value domain for a plug input or output property.",
-  "enum" : [ "enum", "resource", "vault", "duration", "code", "url", "date", "template" ]
+  "enum" : [ "enum", "resource", "vault", "duration", "code", "url", "date", "template", "aiPluginDescriptor", "aiTemplateDescriptor" ]
 }
 """,
     object_hook=with_example_provider,
@@ -57,7 +57,7 @@ class PlugPropertyFormatTypeStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 PlugPropertyFormatTypeAdapter.json_schema(), allow_none_optionals=1

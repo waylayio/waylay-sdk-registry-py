@@ -6,8 +6,9 @@ HAL links to related jobs and plugs
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**draft** | [**GetPlugResponseV2LinksDraft**](GetPlugResponseV2LinksDraft.md) |  | [optional] 
-**published** | [**GetPlugResponseV2LinksPublished**](GetPlugResponseV2LinksPublished.md) |  | [optional] 
+**content** | [**HALLink**](HALLink.md) |  | [optional] 
+**draft** | [**AltVersionHALLinkDraft**](AltVersionHALLinkDraft.md) |  | [optional] 
+**published** | [**AltVersionHALLinkPublished**](AltVersionHALLinkPublished.md) |  | [optional] 
 **jobs** | [**HALLink**](HALLink.md) |  | [optional] 
 
 ## Example

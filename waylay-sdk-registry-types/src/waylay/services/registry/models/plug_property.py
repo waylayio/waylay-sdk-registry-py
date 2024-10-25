@@ -19,6 +19,7 @@ from pydantic import (
     StrictBool,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.plug_property_data_type import PlugPropertyDataType

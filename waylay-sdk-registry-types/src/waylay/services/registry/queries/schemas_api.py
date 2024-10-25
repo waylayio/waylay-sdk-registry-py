@@ -13,6 +13,7 @@ from __future__ import annotations  # for Python 3.7–3.9
 from pydantic import (
     ConfigDict,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 

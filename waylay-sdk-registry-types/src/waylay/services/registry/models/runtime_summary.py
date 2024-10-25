@@ -18,6 +18,7 @@ from pydantic import (
     Field,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.archive_format import ArchiveFormat
@@ -33,6 +34,7 @@ class RuntimeSummary(WaylayBaseModel):
     description: StrictStr | None = None
     function_type: FunctionType = Field(alias="functionType")
     archive_format: ArchiveFormat = Field(alias="archiveFormat")
+    tags: List[StrictStr] | None = None
     versions: List[RuntimeVersionInfo]
 
     model_config = ConfigDict(

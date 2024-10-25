@@ -48,6 +48,19 @@ kf_serving_manifest_model_schema = json.loads(
     },
     "metadata" : {
       "$ref" : "#/components/schemas/FunctionMeta"
+    },
+    "protected" : {
+      "title" : "protected",
+      "type" : "boolean",
+      "description" : "Indicates whether the function's script and other assets should be protected."
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Tags associated with this entity.",
+      "items" : {
+        "$ref" : "#/components/schemas/TagOrTagReference"
+      }
     }
   }
 }
@@ -75,7 +88,7 @@ class KFServingManifestStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 KFServingManifestAdapter.json_schema(), allow_none_optionals=1

@@ -20,6 +20,7 @@ from pydantic import (
     StrictInt,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.job_status_progress import JobStatusProgress

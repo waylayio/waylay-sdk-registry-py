@@ -11,6 +11,8 @@ Name | Type | Description | Notes
 **runtime** | **str** |  | 
 **runtime_version** | [**SemanticVersionRange**](SemanticVersionRange.md) |  | [optional] 
 **metadata** | [**PlugMeta**](PlugMeta.md) |  | 
+**protected** | **bool** | Indicates whether the function&#39;s script and other assets should be protected. | [optional] 
+**tags** | [**List[TagOrTagReference]**](TagOrTagReference.md) | Tags associated with this entity. | [optional] 
 **type** | [**PlugType**](PlugType.md) |  | 
 **interface** | [**PlugInterface**](PlugInterface.md) |  | 
 

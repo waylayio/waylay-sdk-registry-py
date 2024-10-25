@@ -31,7 +31,7 @@ plug_interface_model_schema = json.loads(
     "states" : {
       "title" : "states",
       "type" : "array",
-      "description" : "The states of a plug as implemented in the plug code.",
+      "description" : "The states of a plug as implemented in the plug code. Required and supported for `type=sensor` plugs _only_.",
       "items" : {
         "type" : "string"
       }
@@ -39,7 +39,7 @@ plug_interface_model_schema = json.loads(
     "input" : {
       "title" : "input",
       "type" : "array",
-      "description" : "The named input parameters of a plug",
+      "description" : "The named input parameters of a plug. Supported for `type=sensor` plugs; fixed with input attributes `data` and `resource` for `type=transformer`plugs.",
       "items" : {
         "$ref" : "#/components/schemas/PlugProperty"
       }
@@ -47,7 +47,7 @@ plug_interface_model_schema = json.loads(
     "output" : {
       "title" : "output",
       "type" : "array",
-      "description" : "The named output parameters of a plug",
+      "description" : "The named output parameters of a plug. Supported for all plug types.",
       "items" : {
         "$ref" : "#/components/schemas/PlugProperty"
       }
@@ -76,7 +76,7 @@ class PlugInterfaceStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 PlugInterfaceAdapter.json_schema(), allow_none_optionals=1

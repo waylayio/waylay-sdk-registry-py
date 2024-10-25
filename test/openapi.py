@@ -145,10 +145,10 @@ _alt_version_hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "draft" : {
-      "$ref" : "#/components/schemas/GetPlugResponseV2__links_draft"
+      "$ref" : "#/components/schemas/AltVersionHALLink_draft"
     },
     "published" : {
-      "$ref" : "#/components/schemas/GetPlugResponseV2__links_published"
+      "$ref" : "#/components/schemas/AltVersionHALLink_published"
     }
   }
 }
@@ -156,6 +156,74 @@ _alt_version_hal_link_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"AltVersionHALLink": _alt_version_hal_link_model_schema})
+
+_alt_version_hal_link_draft_model_schema = json.loads(
+    r"""{
+  "title" : "AltVersionHALLink_draft",
+  "required" : [ "deprecated", "draft", "href", "version" ],
+  "type" : "object",
+  "properties" : {
+    "draft" : {
+      "type" : "boolean"
+    },
+    "href" : {
+      "$ref" : "#/components/schemas/HALLink_href"
+    },
+    "version" : {
+      "type" : "string"
+    },
+    "deprecated" : {
+      "type" : "boolean"
+    }
+  },
+  "description" : "Link to the lastest draft version.",
+  "example" : {
+    "href" : "https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1",
+    "version" : "1.0.1",
+    "draft" : true,
+    "deprecated" : false
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AltVersionHALLink_draft": _alt_version_hal_link_draft_model_schema
+})
+
+_alt_version_hal_link_published_model_schema = json.loads(
+    r"""{
+  "title" : "AltVersionHALLink_published",
+  "required" : [ "deprecated", "draft", "href", "version" ],
+  "type" : "object",
+  "properties" : {
+    "draft" : {
+      "type" : "boolean"
+    },
+    "href" : {
+      "$ref" : "#/components/schemas/HALLink_href"
+    },
+    "version" : {
+      "type" : "string"
+    },
+    "deprecated" : {
+      "type" : "boolean"
+    }
+  },
+  "description" : "Link to the lastest published version.",
+  "example" : {
+    "href" : "https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1",
+    "version" : "1.2.0",
+    "draft" : false,
+    "deprecated" : false
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AltVersionHALLink_published": _alt_version_hal_link_published_model_schema
+})
 
 _any_job_for_function_model_schema = json.loads(
     r"""{
@@ -247,6 +315,7 @@ MODEL_DEFINITIONS.update({"AnyJobStatusSummary": _any_job_status_summary_model_s
 
 _archive_format_model_schema = json.loads(
     r"""{
+  "title" : "ArchiveFormat",
   "type" : "string",
   "enum" : [ "node", "python", "golang", "byoml", "native" ]
 }
@@ -254,6 +323,30 @@ _archive_format_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"ArchiveFormat": _archive_format_model_schema})
+
+_archive_format_exclude_model_schema = json.loads(
+    r"""{
+  "title" : "ArchiveFormatExclude",
+  "type" : "string",
+  "enum" : [ "node-", "python-", "golang-", "byoml-", "native-" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"ArchiveFormatExclude": _archive_format_exclude_model_schema})
+
+_archive_format_filter_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/ArchiveFormat"
+  }, {
+    "$ref" : "#/components/schemas/ArchiveFormatExclude"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"ArchiveFormatFilter": _archive_format_filter_model_schema})
 
 _asset_condition_model_schema = json.loads(
     r"""{
@@ -465,6 +558,23 @@ _batch_model_schema = json.loads(
       "description" : "The creation time of this job",
       "format" : "date-time"
     },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has finished processing.",
+      "format" : "date-time"
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "createdBy" : {
       "title" : "createdBy",
       "type" : "string",
@@ -659,6 +769,23 @@ _build_1_model_schema = json.loads(
       "description" : "The creation time of this job",
       "format" : "date-time"
     },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has finished processing.",
+      "format" : "date-time"
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "createdBy" : {
       "title" : "createdBy",
       "type" : "string",
@@ -804,6 +931,10 @@ _build_spec_model_schema = json.loads(
       "title" : "context",
       "type" : "string"
     },
+    "file" : {
+      "title" : "file",
+      "type" : "string"
+    },
     "args" : {
       "title" : "args",
       "type" : "object",
@@ -863,8 +994,7 @@ _compiled_runtime_version_model_schema = json.loads(
       "description" : "If true, a newer runtime for this function is available using the `rebuild` API."
     },
     "name" : {
-      "title" : "name",
-      "type" : "string"
+      "$ref" : "#/components/schemas/TagReference"
     },
     "functionType" : {
       "$ref" : "#/components/schemas/FunctionType"
@@ -894,6 +1024,14 @@ _compiled_runtime_version_model_schema = json.loads(
     },
     "invocation" : {
       "$ref" : "#/components/schemas/InvocationAttributes"
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Tags used for grouping or filtering.",
+      "items" : {
+        "$ref" : "#/components/schemas/TagReference"
+      }
     },
     "title" : {
       "title" : "title",
@@ -1134,6 +1272,23 @@ _deploy_1_model_schema = json.loads(
       "type" : "string",
       "description" : "The creation time of this job",
       "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has finished processing.",
+      "format" : "date-time"
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
     },
     "createdBy" : {
       "title" : "createdBy",
@@ -1574,7 +1729,7 @@ MODEL_DEFINITIONS.update({
 _entity_with_links_i_kfserving_response_v2__model_schema = json.loads(
     r"""{
   "title" : "EntityWithLinks_IKfservingResponseV2_",
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "model", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "model", "runtime", "status", "updatedAt", "updatedBy" ],
   "type" : "object",
   "properties" : {
     "_embedded" : {
@@ -1608,7 +1763,7 @@ _entity_with_links_i_kfserving_response_v2__model_schema = json.loads(
     "updates" : {
       "title" : "updates",
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -1647,7 +1802,7 @@ MODEL_DEFINITIONS.update({
 _entity_with_links_i_plug_response_v2__model_schema = json.loads(
     r"""{
   "title" : "EntityWithLinks_IPlugResponseV2_",
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "plug", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "plug", "runtime", "status", "updatedAt", "updatedBy" ],
   "type" : "object",
   "properties" : {
     "_embedded" : {
@@ -1681,7 +1836,7 @@ _entity_with_links_i_plug_response_v2__model_schema = json.loads(
     "updates" : {
       "title" : "updates",
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -1720,7 +1875,7 @@ MODEL_DEFINITIONS.update({
 _entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema = json.loads(
     r"""{
   "title" : "EntityWithLinks_IWebscriptResponseWithInvokeLinkV2_",
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "updates", "webscript" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "webscript" ],
   "type" : "object",
   "properties" : {
     "_embedded" : {
@@ -1754,7 +1909,7 @@ _entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema = json
     "updates" : {
       "title" : "updates",
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -1793,6 +1948,26 @@ _entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema = json
 )
 MODEL_DEFINITIONS.update({
     "EntityWithLinks_IWebscriptResponseWithInvokeLinkV2_": _entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema
+})
+
+_error_and_status_response_model_schema = json.loads(
+    r"""{
+  "required" : [ "error", "statusCode" ],
+  "type" : "object",
+  "properties" : {
+    "error" : {
+      "type" : "string"
+    },
+    "statusCode" : {
+      "type" : "number"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "ErrorAndStatusResponse": _error_and_status_response_model_schema
 })
 
 _event_ack_model_schema = json.loads(
@@ -2105,8 +2280,44 @@ _function_ref_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"FunctionRef": _function_ref_model_schema})
 
+_function_tag_response_model_schema = json.loads(
+    r"""{
+  "required" : [ "tag" ],
+  "type" : "object",
+  "properties" : {
+    "tag" : {
+      "$ref" : "#/components/schemas/Tag"
+    }
+  },
+  "description" : "Function Tag Found"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"FunctionTagResponse": _function_tag_response_model_schema})
+
+_function_tags_response_model_schema = json.loads(
+    r"""{
+  "required" : [ "tags" ],
+  "type" : "object",
+  "properties" : {
+    "tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/Tag"
+      }
+    }
+  },
+  "description" : "Function Tags Found"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"FunctionTagsResponse": _function_tags_response_model_schema})
+
 _function_type_model_schema = json.loads(
     r"""{
+  "title" : "FunctionType",
   "type" : "string",
   "description" : "Type of functions supported by the registry service.",
   "enum" : [ "plugs", "webscripts", "kfserving" ]
@@ -2116,11 +2327,38 @@ _function_type_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"FunctionType": _function_type_model_schema})
 
+_function_type_exclude_model_schema = json.loads(
+    r"""{
+  "title" : "FunctionTypeExclude",
+  "type" : "string",
+  "enum" : [ "plugs-", "webscripts-", "kfserving-" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"FunctionTypeExclude": _function_type_exclude_model_schema})
+
+_function_type_filter_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/FunctionType"
+  }, {
+    "$ref" : "#/components/schemas/FunctionTypeExclude"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"FunctionTypeFilter": _function_type_filter_model_schema})
+
 _get_model_response_v2_model_schema = json.loads(
     r"""{
   "required" : [ "_links", "entity" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/GetPlugResponseV2__embedded"
+    },
     "entity" : {
       "$ref" : "#/components/schemas/KfservingResponseV2"
     },
@@ -2140,6 +2378,9 @@ _get_plug_response_v2_model_schema = json.loads(
   "required" : [ "_links", "entity" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/GetPlugResponseV2__embedded"
+    },
     "entity" : {
       "$ref" : "#/components/schemas/PlugWithInvocationResponseV2"
     },
@@ -2154,16 +2395,42 @@ _get_plug_response_v2_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"GetPlugResponseV2": _get_plug_response_v2_model_schema})
 
+_get_plug_response_v2__embedded_model_schema = json.loads(
+    r"""{
+  "title" : "GetPlugResponseV2__embedded",
+  "type" : "object",
+  "properties" : {
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Record of <tag key, tag representation> pairs.",
+      "items" : {
+        "$ref" : "#/components/schemas/Tag"
+      }
+    }
+  },
+  "description" : "Embedded representations of the referenced tags."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetPlugResponseV2__embedded": _get_plug_response_v2__embedded_model_schema
+})
+
 _get_plug_response_v2__links_model_schema = json.loads(
     r"""{
   "title" : "GetPlugResponseV2__links",
   "type" : "object",
   "properties" : {
+    "content" : {
+      "$ref" : "#/components/schemas/HALLink"
+    },
     "draft" : {
-      "$ref" : "#/components/schemas/GetPlugResponseV2__links_draft"
+      "$ref" : "#/components/schemas/AltVersionHALLink_draft"
     },
     "published" : {
-      "$ref" : "#/components/schemas/GetPlugResponseV2__links_published"
+      "$ref" : "#/components/schemas/AltVersionHALLink_published"
     },
     "jobs" : {
       "$ref" : "#/components/schemas/HALLink"
@@ -2178,79 +2445,14 @@ MODEL_DEFINITIONS.update({
     "GetPlugResponseV2__links": _get_plug_response_v2__links_model_schema
 })
 
-_get_plug_response_v2__links_draft_model_schema = json.loads(
-    r"""{
-  "title" : "GetPlugResponseV2__links_draft",
-  "required" : [ "deprecated", "draft", "href", "version" ],
-  "type" : "object",
-  "properties" : {
-    "draft" : {
-      "type" : "boolean"
-    },
-    "href" : {
-      "$ref" : "#/components/schemas/HALLink_href"
-    },
-    "version" : {
-      "type" : "string"
-    },
-    "deprecated" : {
-      "type" : "boolean"
-    }
-  },
-  "description" : "Link to the lastest draft version.",
-  "example" : {
-    "href" : "https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1",
-    "version" : "1.0.1",
-    "draft" : true,
-    "deprecated" : false
-  }
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "GetPlugResponseV2__links_draft": _get_plug_response_v2__links_draft_model_schema
-})
-
-_get_plug_response_v2__links_published_model_schema = json.loads(
-    r"""{
-  "title" : "GetPlugResponseV2__links_published",
-  "required" : [ "deprecated", "draft", "href", "version" ],
-  "type" : "object",
-  "properties" : {
-    "draft" : {
-      "type" : "boolean"
-    },
-    "href" : {
-      "$ref" : "#/components/schemas/HALLink_href"
-    },
-    "version" : {
-      "type" : "string"
-    },
-    "deprecated" : {
-      "type" : "boolean"
-    }
-  },
-  "description" : "Link to the lastest published version.",
-  "example" : {
-    "href" : "https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1",
-    "version" : "1.2.0",
-    "draft" : false,
-    "deprecated" : false
-  }
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "GetPlugResponseV2__links_published": _get_plug_response_v2__links_published_model_schema
-})
-
 _get_webscript_response_v2_model_schema = json.loads(
     r"""{
   "required" : [ "_links", "entity" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/GetPlugResponseV2__embedded"
+    },
     "entity" : {
       "$ref" : "#/components/schemas/WebscriptResponseV2"
     },
@@ -2272,6 +2474,9 @@ _get_webscript_response_v2__links_model_schema = json.loads(
   "title" : "GetWebscriptResponseV2__links",
   "type" : "object",
   "properties" : {
+    "content" : {
+      "$ref" : "#/components/schemas/HALLink"
+    },
     "invoke" : {
       "$ref" : "#/components/schemas/HALLink"
     },
@@ -2290,7 +2495,6 @@ MODEL_DEFINITIONS.update({
 
 _hal_link_model_schema = json.loads(
     r"""{
-  "title" : "HALLink",
   "required" : [ "href" ],
   "type" : "object",
   "properties" : {
@@ -2321,7 +2525,6 @@ MODEL_DEFINITIONS.update({"HALLink_href": _hal_link_href_model_schema})
 
 _hal_links_model_schema = json.loads(
     r"""{
-  "title" : "HALLinks",
   "description" : "One or more links of the same HAL collection.",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/HALLink"
@@ -2823,6 +3026,8 @@ _job_state_model_schema = json.loads(
     "$ref" : "#/components/schemas/JobStateWaiting"
   }, {
     "$ref" : "#/components/schemas/JobStateWaitingChildren"
+  }, {
+    "$ref" : "#/components/schemas/JobStatePrioritized"
   } ]
 }
 """,
@@ -2892,6 +3097,18 @@ _job_state_finished_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"JobStateFinished": _job_state_finished_model_schema})
+
+_job_state_prioritized_model_schema = json.loads(
+    r"""{
+  "title" : "JobStatePrioritized",
+  "type" : "string",
+  "description" : "The job has been queued for execution with priority, but might be waiting because of rate limiting.",
+  "enum" : [ "prioritized" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"JobStatePrioritized": _job_state_prioritized_model_schema})
 
 _job_state_result_model_schema = json.loads(
     r"""{
@@ -3351,6 +3568,19 @@ _kf_serving_manifest_model_schema = json.loads(
     },
     "metadata" : {
       "$ref" : "#/components/schemas/FunctionMeta"
+    },
+    "protected" : {
+      "title" : "protected",
+      "type" : "boolean",
+      "description" : "Indicates whether the function's script and other assets should be protected."
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Tags associated with this entity.",
+      "items" : {
+        "$ref" : "#/components/schemas/TagOrTagReference"
+      }
     }
   }
 }
@@ -3381,7 +3611,7 @@ MODEL_DEFINITIONS.update({"KeepAliveEventSSE": _keep_alive_event_sse_model_schem
 
 _kfserving_response_v2_model_schema = json.loads(
     r"""{
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "model", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "model", "runtime", "status", "updatedAt", "updatedBy" ],
   "type" : "object",
   "properties" : {
     "createdBy" : {
@@ -3404,7 +3634,7 @@ _kfserving_response_v2_model_schema = json.loads(
     },
     "updates" : {
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -3474,6 +3704,9 @@ _latest_models_response_v2_model_schema = json.loads(
   "required" : [ "count", "entities" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/GetPlugResponseV2__embedded"
+    },
     "limit" : {
       "type" : "number",
       "description" : "The page size used for this query result."
@@ -3508,6 +3741,9 @@ _latest_plugs_response_v2_model_schema = json.loads(
   "required" : [ "count", "entities" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/GetPlugResponseV2__embedded"
+    },
     "limit" : {
       "type" : "number",
       "description" : "The page size used for this query result."
@@ -3553,6 +3789,9 @@ _latest_webscripts_response_v2_model_schema = json.loads(
   "required" : [ "count", "entities" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/GetPlugResponseV2__embedded"
+    },
     "limit" : {
       "type" : "number",
       "description" : "The page size used for this query result."
@@ -3580,6 +3819,24 @@ _latest_webscripts_response_v2_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "LatestWebscriptsResponseV2": _latest_webscripts_response_v2_model_schema
+})
+
+_list_runtimes_tags_parameter_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/RuntimeTagFilter"
+  }, {
+    "type" : "array",
+    "items" : {
+      "$ref" : "#/components/schemas/RuntimeTagFilter"
+    }
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "list_runtimes_tags_parameter": _list_runtimes_tags_parameter_model_schema
 })
 
 _model_model_schema = json.loads(
@@ -3647,6 +3904,9 @@ _model_versions_response_v2_model_schema = json.loads(
   "required" : [ "count", "entities" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/GetPlugResponseV2__embedded"
+    },
     "limit" : {
       "type" : "number",
       "description" : "The page size used for this query result."
@@ -3778,7 +4038,7 @@ _plug_interface_model_schema = json.loads(
     "states" : {
       "title" : "states",
       "type" : "array",
-      "description" : "The states of a plug as implemented in the plug code.",
+      "description" : "The states of a plug as implemented in the plug code. Required and supported for `type=sensor` plugs _only_.",
       "items" : {
         "type" : "string"
       }
@@ -3786,7 +4046,7 @@ _plug_interface_model_schema = json.loads(
     "input" : {
       "title" : "input",
       "type" : "array",
-      "description" : "The named input parameters of a plug",
+      "description" : "The named input parameters of a plug. Supported for `type=sensor` plugs; fixed with input attributes `data` and `resource` for `type=transformer`plugs.",
       "items" : {
         "$ref" : "#/components/schemas/PlugProperty"
       }
@@ -3794,7 +4054,7 @@ _plug_interface_model_schema = json.loads(
     "output" : {
       "title" : "output",
       "type" : "array",
-      "description" : "The named output parameters of a plug",
+      "description" : "The named output parameters of a plug. Supported for all plug types.",
       "items" : {
         "$ref" : "#/components/schemas/PlugProperty"
       }
@@ -3831,6 +4091,19 @@ _plug_manifest_model_schema = json.loads(
     },
     "metadata" : {
       "$ref" : "#/components/schemas/PlugMeta"
+    },
+    "protected" : {
+      "title" : "protected",
+      "type" : "boolean",
+      "description" : "Indicates whether the function's script and other assets should be protected."
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Tags associated with this entity.",
+      "items" : {
+        "$ref" : "#/components/schemas/TagOrTagReference"
+      }
     },
     "type" : {
       "$ref" : "#/components/schemas/PlugType"
@@ -3876,25 +4149,23 @@ _plug_meta_model_schema = json.loads(
       "type" : "string",
       "description" : "External url that document this function."
     },
-    "tags" : {
-      "title" : "tags",
-      "type" : "array",
-      "description" : "Tags associated with this function.",
-      "example" : [ {
-        "name" : "awaiting-review",
-        "color" : "#4153ea"
-      }, {
-        "name" : "demo",
-        "color" : "#e639a4"
-      } ],
-      "items" : {
-        "$ref" : "#/components/schemas/Tag"
-      }
-    },
     "friendlyName" : {
       "title" : "friendlyName",
       "type" : "string",
       "description" : "Display title for this function."
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Tag references or tag objects associated with this function. See `showTags` query parameter on how referenced tags are displayed. During update, a (reference to a) tag\n- that does not yet exist, is created (using default attributes if not specified)\n- that does exist is not updated (even if tag attributes like `color` differ)",
+      "example" : [ "awaiting-review", {
+        "name" : "demo",
+        "color" : "#e639a4"
+      } ],
+      "deprecated" : false,
+      "items" : {
+        "$ref" : "#/components/schemas/TagOrTagReference"
+      }
     },
     "documentation" : {
       "$ref" : "#/components/schemas/Documentation"
@@ -3944,7 +4215,7 @@ _plug_property_data_type_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Datatype supported in plug input or output properties.",
-  "enum" : [ "string", "integer", "long", "float", "double", "boolean", "object" ]
+  "enum" : [ "string", "integer", "long", "float", "double", "boolean", "object", "array" ]
 }
 """,
     object_hook=with_example_provider,
@@ -3956,6 +4227,7 @@ MODEL_DEFINITIONS.update({
 _plug_property_format_model_schema = json.loads(
     r"""{
   "title" : "PlugPropertyFormat",
+  "required" : [ "type" ],
   "type" : "object",
   "properties" : {
     "type" : {
@@ -3981,7 +4253,7 @@ _plug_property_format_type_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Value domain for a plug input or output property.",
-  "enum" : [ "enum", "resource", "vault", "duration", "code", "url", "date", "template" ]
+  "enum" : [ "enum", "resource", "vault", "duration", "code", "url", "date", "template", "aiPluginDescriptor", "aiTemplateDescriptor" ]
 }
 """,
     object_hook=with_example_provider,
@@ -3992,7 +4264,7 @@ MODEL_DEFINITIONS.update({
 
 _plug_response_v2_model_schema = json.loads(
     r"""{
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "plug", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "plug", "runtime", "status", "updatedAt", "updatedBy" ],
   "type" : "object",
   "properties" : {
     "createdBy" : {
@@ -4015,7 +4287,7 @@ _plug_response_v2_model_schema = json.loads(
     },
     "updates" : {
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -4062,6 +4334,9 @@ _plug_versions_response_v2_model_schema = json.loads(
   "required" : [ "count", "entities" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/GetPlugResponseV2__embedded"
+    },
     "limit" : {
       "type" : "number",
       "description" : "The page size used for this query result."
@@ -4093,7 +4368,7 @@ MODEL_DEFINITIONS.update({
 
 _plug_with_invocation_response_v2_model_schema = json.loads(
     r"""{
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "invocation", "plug", "runtime", "status", "updatedAt", "updatedBy", "updates" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "invocation", "plug", "runtime", "status", "updatedAt", "updatedBy" ],
   "type" : "object",
   "properties" : {
     "createdBy" : {
@@ -4116,7 +4391,7 @@ _plug_with_invocation_response_v2_model_schema = json.loads(
     },
     "updates" : {
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -4286,6 +4561,31 @@ _post_webscript_job_sync_response_v2_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "PostWebscriptJobSyncResponseV2": _post_webscript_job_sync_response_v2_model_schema
+})
+
+_protect_by_name_response_v2_model_schema = json.loads(
+    r"""{
+  "required" : [ "message", "versions" ],
+  "type" : "object",
+  "properties" : {
+    "message" : {
+      "type" : "string"
+    },
+    "versions" : {
+      "type" : "array",
+      "description" : "The versions that were protected or unprotected.",
+      "items" : {
+        "$ref" : "#/components/schemas/SemanticVersion"
+      }
+    }
+  },
+  "description" : "Protection changed."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "ProtectByNameResponseV2": _protect_by_name_response_v2_model_schema
 })
 
 _provided_dependency_model_schema = json.loads(
@@ -4571,7 +4871,7 @@ _request_operation_model_schema = json.loads(
   "title" : "RequestOperation",
   "type" : "string",
   "description" : "A modifying operation on the function.",
-  "enum" : [ "create", "metadata-update", "assets-update", "rebuild", "verify", "publish", "deprecate", "undeploy", "undeprecate" ]
+  "enum" : [ "create", "metadata-update", "assets-update", "rebuild", "verify", "publish", "deprecate", "undeploy", "undeprecate", "protect", "unprotect" ]
 }
 """,
     object_hook=with_example_provider,
@@ -4675,6 +4975,12 @@ _runtime_summary_model_schema = json.loads(
     "archiveFormat" : {
       "$ref" : "#/components/schemas/ArchiveFormat"
     },
+    "tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/TagReference"
+      }
+    },
     "versions" : {
       "type" : "array",
       "items" : {
@@ -4694,6 +5000,9 @@ _runtime_summary_response_model_schema = json.loads(
   "required" : [ "runtimes" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/RuntimeSummaryResponse__embedded"
+    },
     "runtimes" : {
       "type" : "array",
       "items" : {
@@ -4709,6 +5018,103 @@ _runtime_summary_response_model_schema = json.loads(
 MODEL_DEFINITIONS.update({
     "RuntimeSummaryResponse": _runtime_summary_response_model_schema
 })
+
+_runtime_summary_response__embedded_model_schema = json.loads(
+    r"""{
+  "title" : "RuntimeSummaryResponse__embedded",
+  "type" : "object",
+  "properties" : {
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Record of <tag key, tag representation> pairs.",
+      "items" : {
+        "$ref" : "#/components/schemas/RuntimeTag"
+      }
+    }
+  },
+  "description" : "Embedded representations of the referenced tags."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "RuntimeSummaryResponse__embedded": _runtime_summary_response__embedded_model_schema
+})
+
+_runtime_tag_model_schema = json.loads(
+    r"""{
+  "title" : "RuntimeTag",
+  "required" : [ "color", "name" ],
+  "type" : "object",
+  "properties" : {
+    "name" : {
+      "$ref" : "#/components/schemas/TagReference"
+    },
+    "color" : {
+      "title" : "color",
+      "type" : "string",
+      "description" : "Color associated with the tag in an UI."
+    },
+    "description" : {
+      "title" : "description",
+      "type" : "string",
+      "description" : "Description of the tag"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"RuntimeTag": _runtime_tag_model_schema})
+
+_runtime_tag_filter_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/RuntimeIncludeTag"
+  }, {
+    "$ref" : "#/components/schemas/RuntimeExcludeTag"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"RuntimeTagFilter": _runtime_tag_filter_model_schema})
+
+_runtime_tag_response_model_schema = json.loads(
+    r"""{
+  "required" : [ "tag" ],
+  "type" : "object",
+  "properties" : {
+    "tag" : {
+      "$ref" : "#/components/schemas/RuntimeTag"
+    }
+  },
+  "description" : "Runtime Tag Found"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"RuntimeTagResponse": _runtime_tag_response_model_schema})
+
+_runtime_tags_response_model_schema = json.loads(
+    r"""{
+  "required" : [ "tags" ],
+  "type" : "object",
+  "properties" : {
+    "tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/RuntimeTag"
+      }
+    }
+  },
+  "description" : "Runtime Tags Found"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"RuntimeTagsResponse": _runtime_tags_response_model_schema})
 
 _runtime_version_info_model_schema = json.loads(
     r"""{
@@ -4736,6 +5142,13 @@ _runtime_version_info_model_schema = json.loads(
     "description" : {
       "title" : "description",
       "type" : "string"
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/TagReference"
+      }
     }
   },
   "description" : "A summary of a selected version for a runtime"
@@ -4750,6 +5163,9 @@ _runtime_version_response_model_schema = json.loads(
   "required" : [ "runtime" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/RuntimeSummaryResponse__embedded"
+    },
     "runtime" : {
       "$ref" : "#/components/schemas/CompiledRuntimeVersion"
     }
@@ -4843,6 +5259,23 @@ _scale_1_model_schema = json.loads(
       "type" : "string",
       "description" : "The creation time of this job",
       "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has finished processing.",
+      "format" : "date-time"
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
     },
     "createdBy" : {
       "title" : "createdBy",
@@ -4971,15 +5404,69 @@ _semantic_version_range_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"SemanticVersionRange": _semantic_version_range_model_schema})
 
-_show_related_type_model_schema = json.loads(
+_show_embedding_model_schema = json.loads(
     r"""{
   "type" : "string",
-  "enum" : [ "embed", "link", "none" ]
+  "enum" : [ "embed", "none" ]
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"ShowRelatedType": _show_related_type_model_schema})
+MODEL_DEFINITIONS.update({"ShowEmbedding": _show_embedding_model_schema})
+
+_show_inline_or_embedding_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/ShowEmbedding"
+  }, {
+    "$ref" : "#/components/schemas/ShowInlineOrEmbedding_anyOf"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "ShowInlineOrEmbedding": _show_inline_or_embedding_model_schema
+})
+
+_show_inline_or_embedding_any_of_model_schema = json.loads(
+    r"""{
+  "title" : "ShowInlineOrEmbedding_anyOf",
+  "type" : "string",
+  "enum" : [ "inline" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "ShowInlineOrEmbedding_anyOf": _show_inline_or_embedding_any_of_model_schema
+})
+
+_show_link_or_embedding_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/ShowEmbedding"
+  }, {
+    "$ref" : "#/components/schemas/ShowLinkOrEmbedding_anyOf"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"ShowLinkOrEmbedding": _show_link_or_embedding_model_schema})
+
+_show_link_or_embedding_any_of_model_schema = json.loads(
+    r"""{
+  "title" : "ShowLinkOrEmbedding_anyOf",
+  "type" : "string",
+  "enum" : [ "link" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "ShowLinkOrEmbedding_anyOf": _show_link_or_embedding_any_of_model_schema
+})
 
 _status_model_schema = json.loads(
     r"""{
@@ -5099,9 +5586,7 @@ _tag_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "name" : {
-      "title" : "name",
-      "type" : "string",
-      "description" : "Name of the tag"
+      "$ref" : "#/components/schemas/TagReference"
     },
     "color" : {
       "title" : "color",
@@ -5115,6 +5600,31 @@ _tag_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"Tag": _tag_model_schema})
+
+_tag_or_tag_reference_model_schema = json.loads(
+    r"""{
+  "title" : "TagOrTagReference",
+  "description" : "A reference to a tag, or tag object.",
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/TagReference"
+  }, {
+    "$ref" : "#/components/schemas/Tag"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"TagOrTagReference": _tag_or_tag_reference_model_schema})
+
+_tagging_scope_option_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "enum" : [ "any", "all" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"TaggingScopeOption": _tagging_scope_option_model_schema})
 
 _tags_filter_model_schema = json.loads(
     r"""{
@@ -5256,6 +5766,23 @@ _undeploy_1_model_schema = json.loads(
       "type" : "string",
       "description" : "The creation time of this job",
       "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has finished processing.",
+      "format" : "date-time"
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
     },
     "createdBy" : {
       "title" : "createdBy",
@@ -5442,7 +5969,7 @@ _undeployed_response_v2_model_schema = json.loads(
     },
     "versions" : {
       "type" : "array",
-      "description" : "The versions that where deprecated, undeployed and/or removed.",
+      "description" : "The versions that were deprecated, undeployed and/or removed.",
       "items" : {
         "$ref" : "#/components/schemas/SemanticVersion"
       }
@@ -5476,27 +6003,17 @@ _update_metadata_request_v2_model_schema = json.loads(
       "description" : "A category for this function (Deprecated: use tags to categorise your functions)",
       "deprecated" : true
     },
-    "documentationURL" : {
-      "type" : "string",
-      "description" : "External url that document this function."
-    },
     "tags" : {
       "type" : "array",
-      "description" : "Tags associated with this function.",
-      "example" : [ {
-        "name" : "awaiting-review",
-        "color" : "#4153ea"
-      }, {
+      "description" : "During update, a (reference to a) tag\n- that does not yet exist, is created (using default attributes if not specified)\n- that does exist is not updated (even if tag attributes like `color` differ)",
+      "example" : [ "awaiting-review", {
         "name" : "demo",
         "color" : "#e639a4"
       } ],
+      "deprecated" : false,
       "items" : {
-        "$ref" : "#/components/schemas/Tag"
+        "$ref" : "#/components/schemas/TagOrTagReference"
       }
-    },
-    "friendlyName" : {
-      "type" : "string",
-      "description" : "Display title for this function."
     }
   },
   "additionalProperties" : false
@@ -5506,6 +6023,57 @@ _update_metadata_request_v2_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "UpdateMetadataRequestV2": _update_metadata_request_v2_model_schema
+})
+
+_update_plug_metadata_request_v2_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "author" : {
+      "type" : "string",
+      "description" : "The author of the function."
+    },
+    "description" : {
+      "type" : "string",
+      "description" : "A description of the function"
+    },
+    "iconURL" : {
+      "type" : "string",
+      "description" : "An url to an icon that represents this function."
+    },
+    "category" : {
+      "type" : "string",
+      "description" : "A category for this function (Deprecated: use tags to categorise your functions)",
+      "deprecated" : true
+    },
+    "documentationURL" : {
+      "type" : "string",
+      "description" : "External url that document this function."
+    },
+    "friendlyName" : {
+      "type" : "string",
+      "description" : "Display title for this function."
+    },
+    "tags" : {
+      "type" : "array",
+      "description" : "During update, a (reference to a) tag\n- that does not yet exist, is created (using default attributes if not specified)\n- that does exist is not updated (even if tag attributes like `color` differ)",
+      "example" : [ "awaiting-review", {
+        "name" : "demo",
+        "color" : "#e639a4"
+      } ],
+      "deprecated" : false,
+      "items" : {
+        "$ref" : "#/components/schemas/TagOrTagReference"
+      }
+    }
+  },
+  "additionalProperties" : false
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdatePlugMetadataRequestV2": _update_plug_metadata_request_v2_model_schema
 })
 
 _update_record_model_schema = json.loads(
@@ -5547,6 +6115,30 @@ _update_record_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"UpdateRecord": _update_record_model_schema})
+
+_update_tags_request_v2_model_schema = json.loads(
+    r"""{
+  "required" : [ "tags" ],
+  "type" : "object",
+  "properties" : {
+    "tags" : {
+      "type" : "array",
+      "description" : "During update, a (reference to a) tag\n- that does not yet exist, is created (using default attributes if not specified)\n- that does exist is **not** updated (even if tag attributes like `color` differ)",
+      "example" : [ "awaiting-review", {
+        "name" : "demo",
+        "color" : "#e639a4"
+      } ],
+      "items" : {
+        "$ref" : "#/components/schemas/TagOrTagReference"
+      }
+    }
+  },
+  "additionalProperties" : false
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"UpdateTagsRequestV2": _update_tags_request_v2_model_schema})
 
 _verify_model_schema = json.loads(
     r"""{
@@ -5628,6 +6220,23 @@ _verify_1_model_schema = json.loads(
       "type" : "string",
       "description" : "The creation time of this job",
       "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has finished processing.",
+      "format" : "date-time"
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
     },
     "createdBy" : {
       "title" : "createdBy",
@@ -6002,6 +6611,19 @@ _webscript_manifest_model_schema = json.loads(
     "metadata" : {
       "$ref" : "#/components/schemas/FunctionMeta"
     },
+    "protected" : {
+      "title" : "protected",
+      "type" : "boolean",
+      "description" : "Indicates whether the function's script and other assets should be protected."
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Tags associated with this entity.",
+      "items" : {
+        "$ref" : "#/components/schemas/TagOrTagReference"
+      }
+    },
     "private" : {
       "title" : "private",
       "type" : "boolean",
@@ -6021,7 +6643,7 @@ MODEL_DEFINITIONS.update({"WebscriptManifest": _webscript_manifest_model_schema}
 
 _webscript_response_v2_model_schema = json.loads(
     r"""{
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "updates", "webscript" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "webscript" ],
   "type" : "object",
   "properties" : {
     "createdBy" : {
@@ -6044,7 +6666,7 @@ _webscript_response_v2_model_schema = json.loads(
     },
     "updates" : {
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -6082,7 +6704,7 @@ MODEL_DEFINITIONS.update({"WebscriptResponseV2": _webscript_response_v2_model_sc
 
 _webscript_response_with_invoke_link_v2_model_schema = json.loads(
     r"""{
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "updates", "webscript" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "webscript" ],
   "type" : "object",
   "properties" : {
     "createdBy" : {
@@ -6105,7 +6727,7 @@ _webscript_response_with_invoke_link_v2_model_schema = json.loads(
     },
     "updates" : {
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -6151,6 +6773,9 @@ _webscript_versions_response_v2_model_schema = json.loads(
   "required" : [ "count", "entities" ],
   "type" : "object",
   "properties" : {
+    "_embedded" : {
+      "$ref" : "#/components/schemas/GetPlugResponseV2__embedded"
+    },
     "limit" : {
       "type" : "number",
       "description" : "The page size used for this query result."

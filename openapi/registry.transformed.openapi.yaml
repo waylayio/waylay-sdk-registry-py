@@ -1,14 +1,12 @@
 openapi: 3.0.3
 info:
   title: Waylay Function Registry
-  version: 2.14.2
-  x-visibility: stable
+  version: 2.17.1
+  x-visibility:
+    status: stable
   description: >-
     V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML
     models).
-  x-visiblity:
-    status: stable
-    title: Since v2.8.0
 components:
   securitySchemes:
     waylayApiKeySecret:
@@ -38,6 +36,10 @@ components:
         - scale
         - cleanup
         - notify
+    FunctionTypeFilter:
+      anyOf:
+        - $ref: '#/components/schemas/FunctionType'
+        - $ref: '#/components/schemas/FunctionTypeExclude'
     FunctionType:
       type: string
       enum:
@@ -45,6 +47,16 @@ components:
         - webscripts
         - kfserving
       description: Type of functions supported by the registry service.
+    FunctionTypeExclude:
+      type: string
+      enum:
+        - plugs-
+        - webscripts-
+        - kfserving-
+    ArchiveFormatFilter:
+      anyOf:
+        - $ref: '#/components/schemas/ArchiveFormat'
+        - $ref: '#/components/schemas/ArchiveFormatExclude'
     ArchiveFormat:
       type: string
       enum:
@@ -53,6 +65,14 @@ components:
         - golang
         - byoml
         - native
+    ArchiveFormatExclude:
+      type: string
+      enum:
+        - node-
+        - python-
+        - golang-
+        - byoml-
+        - native-
     SemanticVersionRange:
       anyOf:
         - type: string
@@ -74,6 +94,19 @@ components:
         - 'true'
         - 'false'
       description: Level of latest versions that should be included.
+    RuntimeTagFilter:
+      anyOf:
+        - $ref: '#/components/schemas/RuntimeIncludeTag'
+        - $ref: '#/components/schemas/RuntimeExcludeTag'
+    RuntimeIncludeTag:
+      type: string
+    RuntimeExcludeTag:
+      type: string
+    ShowEmbedding:
+      type: string
+      enum:
+        - embed
+        - none
     Runtime:
       type: string
     StatusFilter:
@@ -153,6 +186,18 @@ components:
       description: An ISO8601 date expression.
       pattern: \d{4}-\d{2}-\d{2}(Z|([+-]\d\d:\d\d))?
       format: date
+    TagsFilter:
+      anyOf:
+        - type: array
+          items:
+            type: string
+        - type: string
+    ShowInlineOrEmbedding:
+      anyOf:
+        - $ref: '#/components/schemas/ShowEmbedding'
+        - type: string
+          enum:
+            - inline
     NamedVersion:
       type: string
       description: A function version reference represented as `<name>@<version>`.
@@ -163,18 +208,12 @@ components:
         - sensor
         - actuator
         - transformer
-    TagsFilter:
+    ShowLinkOrEmbedding:
       anyOf:
-        - type: array
-          items:
-            type: string
+        - $ref: '#/components/schemas/ShowEmbedding'
         - type: string
-    ShowRelatedType:
-      type: string
-      enum:
-        - embed
-        - link
-        - none
+          enum:
+            - link
     RebuildPolicy:
       type: string
       enum:
@@ -222,7 +261,108 @@ components:
       anyOf:
         - $ref: '#/components/schemas/RebuildRequestV2'
           nullable: true
+    UpdateTagsRequestV2:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: >-
+            During update, a (reference to a) tag
+
+            - that does not yet exist, is created (using default attributes if
+            not specified)
+
+            - that does exist is **not** updated (even if tag attributes like
+            `color` differ)
+          example:
+            - awaiting-review
+            - name: demo
+              color: '#e639a4'
+      required:
+        - tags
+      additionalProperties: false
+    TagOrTagReference:
+      anyOf:
+        - $ref: '#/components/schemas/TagReference'
+        - $ref: '#/components/schemas/Tag'
+      description: A reference to a tag, or tag object.
+    Tag:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TagReference'
+          description: Name of the tag
+        color:
+          type: string
+          description: Color associated with the tag in an UI.
+      required:
+        - name
+        - color
+      description: >-
+        One or more tags can be assigned to a function entity to facilitate
+        grouping and searching.
+    TagReference:
+      type: string
+      description: A string that references a tag
     UpdateMetadataRequestV2:
+      type: object
+      properties:
+        author:
+          type: string
+          description: The author of the function.
+        description:
+          type: string
+          description: A description of the function
+        iconURL:
+          type: string
+          description: An url to an icon that represents this function.
+        category:
+          type: string
+          description: >-
+            A category for this function (Deprecated: use tags to categorise
+            your functions)
+          deprecated: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: >-
+            During update, a (reference to a) tag
+
+            - that does not yet exist, is created (using default attributes if
+            not specified)
+
+            - that does exist is not updated (even if tag attributes like
+            `color` differ)
+          deprecated: >-
+            The functionality to change tag associations will move to a
+            dedicated operation.
+          example:
+            - awaiting-review
+            - name: demo
+              color: '#e639a4'
+      additionalProperties: false
+    FunctionMeta:
+      type: object
+      properties:
+        author:
+          type: string
+          description: The author of the function.
+        description:
+          type: string
+          description: A description of the function
+        iconURL:
+          type: string
+          description: An url to an icon that represents this function.
+        category:
+          type: string
+          description: >-
+            A category for this function (Deprecated: use tags to categorise
+            your functions)
+          deprecated: true
+    UpdatePlugMetadataRequestV2:
       type: object
       additionalProperties: false
       properties:
@@ -244,52 +384,28 @@ components:
         documentationURL:
           type: string
           description: External url that document this function.
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/Tag'
-          description: Tags associated with this function.
-          example:
-            - name: awaiting-review
-              color: '#4153ea'
-            - name: demo
-              color: '#e639a4'
         friendlyName:
           type: string
           description: Display title for this function.
-    FunctionMeta:
-      type: object
-      properties:
-        author:
-          type: string
-          description: The author of the function.
-        description:
-          type: string
-          description: A description of the function
-        iconURL:
-          type: string
-          description: An url to an icon that represents this function.
-        category:
-          type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
           description: >-
-            A category for this function (Deprecated: use tags to categorise
-            your functions)
-          deprecated: true
-    Tag:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the tag
-        color:
-          type: string
-          description: Color associated with the tag in an UI.
-      required:
-        - name
-        - color
-      description: >-
-        One or more tags can be assigned to a function entity to facilitate
-        grouping and searching.
+            During update, a (reference to a) tag
+
+            - that does not yet exist, is created (using default attributes if
+            not specified)
+
+            - that does exist is not updated (even if tag attributes like
+            `color` differ)
+          deprecated: >-
+            The functionality to change tag associations will move to a
+            dedicated operation.
+          example:
+            - awaiting-review
+            - name: demo
+              color: '#e639a4'
     DeprecatePreviousPolicy:
       anyOf:
         - type: string
@@ -331,6 +447,85 @@ components:
         - script
         - other
       description: Classification of assets with regard to their role.
+    HALLink:
+      type: object
+      properties:
+        href:
+          anyOf:
+            - type: string
+              format: uri
+            - type: string
+      required:
+        - href
+    AltVersionHALLink:
+      type: object
+      properties:
+        draft:
+          type: object
+          properties:
+            draft:
+              type: boolean
+              enum:
+                - true
+            href:
+              anyOf:
+                - type: string
+                  format: uri
+                - type: string
+            version:
+              type: string
+            deprecated:
+              type: boolean
+          required:
+            - deprecated
+            - draft
+            - href
+            - version
+          description: Link to the lastest draft version.
+          example:
+            href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
+            version: 1.0.1
+            draft: true
+            deprecated: false
+        published:
+          type: object
+          properties:
+            draft:
+              type: boolean
+              enum:
+                - false
+            href:
+              anyOf:
+                - type: string
+                  format: uri
+                - type: string
+            version:
+              type: string
+            deprecated:
+              type: boolean
+          required:
+            - deprecated
+            - draft
+            - href
+            - version
+          description: Link to the lastest published version.
+          example:
+            href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
+            version: 1.2.0
+            draft: false
+            deprecated: false
+    HALLinks:
+      anyOf:
+        - $ref: '#/components/schemas/HALLink'
+        - type: array
+          items:
+            $ref: '#/components/schemas/HALLink'
+      description: One or more links of the same HAL collection.
+    TaggingScopeOption:
+      type: string
+      enum:
+        - any
+        - all
     JobTypeSchema:
       anyOf:
         - $ref: '#/components/schemas/JobTypeBuild'
@@ -389,6 +584,7 @@ components:
         - $ref: '#/components/schemas/JobStateDelayed'
         - $ref: '#/components/schemas/JobStateWaiting'
         - $ref: '#/components/schemas/JobStateWaitingChildren'
+        - $ref: '#/components/schemas/JobStatePrioritized'
       description: Allowed job states
     JobStateFinished:
       anyOf:
@@ -427,6 +623,13 @@ components:
       description: The job is waiting for child jobs to be completed.
       enum:
         - waiting-children
+    JobStatePrioritized:
+      type: string
+      description: >-
+        The job has been queued for execution with priority, but might be
+        waiting because of rate limiting.
+      enum:
+        - prioritized
     JobStateUnknown:
       type: string
       description: The job state is unknown (undocument or inconsistent).
@@ -474,6 +677,7 @@ components:
         - double
         - boolean
         - object
+        - array
       description: Datatype supported in plug input or output properties.
     PlugPropertyFormatType:
       type: string
@@ -486,6 +690,8 @@ components:
         - url
         - date
         - template
+        - aiPluginDescriptor
+        - aiTemplateDescriptor
       description: Value domain for a plug input or output property.
     EnumValue: {}
     DefaultValue: {}
@@ -502,6 +708,10 @@ components:
           $ref: '#/components/schemas/FunctionType'
         archiveFormat:
           $ref: '#/components/schemas/ArchiveFormat'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagReference'
         versions:
           type: array
           items:
@@ -530,6 +740,10 @@ components:
           type: string
         description:
           type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagReference'
       required:
         - deprecated
         - title
@@ -539,6 +753,15 @@ components:
     RuntimeSummaryResponse:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/RuntimeTag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         runtimes:
           type: array
           items:
@@ -546,9 +769,33 @@ components:
       required:
         - runtimes
       description: Runtimes Found
+    RuntimeTag:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TagReference'
+          description: Name of the tag
+        color:
+          type: string
+          description: Color associated with the tag in an UI.
+        description:
+          type: string
+          description: Description of the tag
+      required:
+        - color
+        - name
     RuntimeVersionResponse:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/RuntimeTag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         runtime:
           $ref: '#/components/schemas/CompiledRuntimeVersion'
       required:
@@ -566,7 +813,7 @@ components:
             If true, a newer runtime for this function is available using the
             `rebuild` API.
         name:
-          type: string
+          $ref: '#/components/schemas/TagReference'
         functionType:
           $ref: '#/components/schemas/FunctionType'
         archiveFormat:
@@ -577,7 +824,7 @@ components:
           $ref: '#/components/schemas/DeploySpec'
         language:
           $ref: '#/components/schemas/LanguageRelease'
-          description: Description of the language release
+          description: Description of the language release.
         providedDependencies:
           type: array
           items:
@@ -588,7 +835,12 @@ components:
           description: Restrictions on the assets in the function archive.
         invocation:
           $ref: '#/components/schemas/InvocationAttributes'
-          description: The default invocation attributes
+          description: The default invocation attributes.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagReference'
+          description: Tags used for grouping or filtering.
         title:
           type: string
         description:
@@ -611,6 +863,8 @@ components:
       type: object
       properties:
         context:
+          type: string
+        file:
           type: string
         args:
           type: object
@@ -827,6 +1081,24 @@ components:
         - nodeContext
         - rawDataContext
         - callback
+    RuntimeTagsResponse:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuntimeTag'
+      required:
+        - tags
+      description: Runtime Tags Found
+    RuntimeTagResponse:
+      type: object
+      properties:
+        tag:
+          $ref: '#/components/schemas/RuntimeTag'
+      required:
+        - tag
+      description: Runtime Tag Found
     PlugResponseV2:
       type: object
       properties:
@@ -850,7 +1122,7 @@ components:
             $ref: '#/components/schemas/UpdateRecord'
           description: >-
             The audit logs corresponding to the latest modifying operations on
-            this entity.
+            this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/Status'
           description: The current status of this function entity.
@@ -887,7 +1159,6 @@ components:
         - status
         - updatedAt
         - updatedBy
-        - updates
     UpdateRecord:
       type: object
       properties:
@@ -927,6 +1198,8 @@ components:
         - deprecate
         - undeploy
         - undeprecate
+        - protect
+        - unprotect
       description: A modifying operation on the function.
     Status:
       type: string
@@ -1015,6 +1288,16 @@ components:
             Metadata describing the function. Note that, after deployment, this
             metadata can be patched for the deployed plug, as long it does not
             affect the runtime behaviour.
+        protected:
+          type: boolean
+          description: >-
+            Indicates whether the function's script and other assets should be
+            protected.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: Tags associated with this entity.
         type:
           $ref: '#/components/schemas/PlugType'
           description: Type of the plug.
@@ -1037,17 +1320,22 @@ components:
           type: array
           items:
             type: string
-          description: The states of a plug as implemented in the plug code.
+          description: >-
+            The states of a plug as implemented in the plug code. Required and
+            supported for `type=sensor` plugs _only_.
         input:
           type: array
           items:
             $ref: '#/components/schemas/PlugProperty'
-          description: The named input parameters of a plug
+          description: >-
+            The named input parameters of a plug. Supported for `type=sensor`
+            plugs; fixed with input attributes `data` and `resource` for
+            `type=transformer`plugs.
         output:
           type: array
           items:
             $ref: '#/components/schemas/PlugProperty'
-          description: The named output parameters of a plug
+          description: The named output parameters of a plug. Supported for all plug types.
     PlugProperty:
       type: object
       properties:
@@ -1085,6 +1373,8 @@ components:
           example:
             - low
             - high
+      required:
+        - type
     PlugMeta:
       type: object
       properties:
@@ -1106,19 +1396,28 @@ components:
         documentationURL:
           type: string
           description: External url that document this function.
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/Tag'
-          description: Tags associated with this function.
-          example:
-            - name: awaiting-review
-              color: '#4153ea'
-            - name: demo
-              color: '#e639a4'
         friendlyName:
           type: string
           description: Display title for this function.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: >-
+            Tag references or tag objects associated with this function. See
+            `showTags` query parameter on how referenced tags are displayed.
+            During update, a (reference to a) tag
+
+            - that does not yet exist, is created (using default attributes if
+            not specified)
+
+            - that does exist is not updated (even if tag attributes like
+            `color` differ)
+          deprecated: tags are to be specified in root of the manifest.
+          example:
+            - awaiting-review
+            - name: demo
+              color: '#e639a4'
         documentation:
           $ref: '#/components/schemas/Documentation'
           description: Documentation of the plug interface.
@@ -1145,7 +1444,7 @@ components:
             $ref: '#/components/schemas/UpdateRecord'
           description: >-
             The audit logs corresponding to the latest modifying operations on
-            this entity.
+            this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/Status'
           description: The current status of this function entity.
@@ -1186,7 +1485,6 @@ components:
         - status
         - updatedAt
         - updatedBy
-        - updates
     KfservingResponseV2:
       type: object
       properties:
@@ -1210,7 +1508,7 @@ components:
             $ref: '#/components/schemas/UpdateRecord'
           description: >-
             The audit logs corresponding to the latest modifying operations on
-            this entity.
+            this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/Status'
           description: The current status of this function entity.
@@ -1247,7 +1545,6 @@ components:
         - status
         - updatedAt
         - updatedBy
-        - updates
     KFServingManifest:
       type: object
       properties:
@@ -1281,6 +1578,16 @@ components:
             Metadata describing the function. Note that, after deployment, this
             metadata can be updated for the deployed function, without affecting
             the runtime behaviour of the function itself.
+        protected:
+          type: boolean
+          description: >-
+            Indicates whether the function's script and other assets should be
+            protected.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: Tags associated with this entity.
       required:
         - metadata
         - name
@@ -1309,7 +1616,7 @@ components:
             $ref: '#/components/schemas/UpdateRecord'
           description: >-
             The audit logs corresponding to the latest modifying operations on
-            this entity.
+            this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/Status'
           description: The current status of this function entity.
@@ -1350,7 +1657,6 @@ components:
         - status
         - updatedAt
         - updatedBy
-        - updates
         - webscript
     WebscriptManifest:
       type: object
@@ -1385,6 +1691,16 @@ components:
             Metadata describing the function. Note that, after deployment, this
             metadata can be updated for the deployed function, without affecting
             the runtime behaviour of the function itself.
+        protected:
+          type: boolean
+          description: >-
+            Indicates whether the function's script and other assets should be
+            protected.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: Tags associated with this entity.
         private:
           type: boolean
           description: If <code>true</code> this webscript will require authentication.
@@ -1424,7 +1740,7 @@ components:
             $ref: '#/components/schemas/UpdateRecord'
           description: >-
             The audit logs corresponding to the latest modifying operations on
-            this entity.
+            this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/Status'
           description: The current status of this function entity.
@@ -1468,7 +1784,6 @@ components:
         - status
         - updatedAt
         - updatedBy
-        - updates
         - webscript
     InvokeHALLink:
       type: object
@@ -1478,16 +1793,6 @@ components:
           description: HAL link to the endpoint where the webscript is exposed.
           example:
             href: https://api-aws-dev.waylay.io/functions/v1/<TENANT>/myWebscript
-    HALLink:
-      type: object
-      properties:
-        href:
-          anyOf:
-            - type: string
-              format: uri
-            - type: string
-      required:
-        - href
     UndeploySubmittedResponseV2:
       type: object
       properties:
@@ -1531,13 +1836,6 @@ components:
             href: >-
               https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
       description: HAL links to related actions.
-    HALLinks:
-      anyOf:
-        - $ref: '#/components/schemas/HALLink'
-        - type: array
-          items:
-            $ref: '#/components/schemas/HALLink'
-      description: One or more links of the same HAL collection.
     JobEventsHALLink:
       type: object
       properties:
@@ -1557,7 +1855,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SemanticVersion'
-          description: The versions that where deprecated, undeployed and/or removed.
+          description: The versions that were deprecated, undeployed and/or removed.
       required:
         - message
         - versions
@@ -1599,15 +1897,43 @@ components:
       required:
         - _links
         - name
+    ProtectByNameResponseV2:
+      type: object
+      properties:
+        message:
+          type: string
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SemanticVersion'
+          description: The versions that were protected or unprotected.
+      required:
+        - message
+        - versions
+      description: Protection changed.
     GetPlugResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         entity:
           $ref: '#/components/schemas/PlugWithInvocationResponseV2'
           description: The specification and deployment status of the function
         _links:
           type: object
           properties:
+            content:
+              $ref: '#/components/schemas/HALLink'
+              description: >-
+                HAL link to the endpoint where the function's content is
+                exposed.
             draft:
               type: object
               properties:
@@ -1672,66 +1998,18 @@ components:
         - _links
         - entity
       description: Plug Found
-    AltVersionHALLink:
-      type: object
-      properties:
-        draft:
-          type: object
-          properties:
-            draft:
-              type: boolean
-              enum:
-                - true
-            href:
-              anyOf:
-                - type: string
-                  format: uri
-                - type: string
-            version:
-              type: string
-            deprecated:
-              type: boolean
-          required:
-            - deprecated
-            - draft
-            - href
-            - version
-          description: Link to the lastest draft version.
-          example:
-            href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
-            version: 1.0.1
-            draft: true
-            deprecated: false
-        published:
-          type: object
-          properties:
-            draft:
-              type: boolean
-              enum:
-                - false
-            href:
-              anyOf:
-                - type: string
-                  format: uri
-                - type: string
-            version:
-              type: string
-            deprecated:
-              type: boolean
-          required:
-            - deprecated
-            - draft
-            - href
-            - version
-          description: Link to the lastest published version.
-          example:
-            href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
-            version: 1.2.0
-            draft: false
-            deprecated: false
     LatestPlugsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -1780,7 +2058,7 @@ components:
             $ref: '#/components/schemas/UpdateRecord'
           description: >-
             The audit logs corresponding to the latest modifying operations on
-            this entity.
+            this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/Status'
           description: The current status of this function entity.
@@ -1817,7 +2095,6 @@ components:
         - status
         - updatedAt
         - updatedBy
-        - updates
     AltEmbeddedVersion_IPlugResponseV2_:
       type: object
       properties:
@@ -1831,6 +2108,15 @@ components:
     PlugVersionsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -2469,9 +2755,9 @@ components:
         requests:
           $ref: '#/components/schemas/ResourceLimits'
       required:
+        - service
         - image
         - namespace
-        - service
     VerifyArgs:
       type: object
       properties:
@@ -2581,12 +2867,26 @@ components:
     GetModelResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         entity:
           $ref: '#/components/schemas/KfservingResponseV2'
           description: The specification and deployment status of the function
         _links:
           type: object
           properties:
+            content:
+              $ref: '#/components/schemas/HALLink'
+              description: >-
+                HAL link to the endpoint where the function's content is
+                exposed.
             draft:
               type: object
               properties:
@@ -2654,6 +2954,15 @@ components:
     LatestModelsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -2702,7 +3011,7 @@ components:
             $ref: '#/components/schemas/UpdateRecord'
           description: >-
             The audit logs corresponding to the latest modifying operations on
-            this entity.
+            this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/Status'
           description: The current status of this function entity.
@@ -2739,7 +3048,6 @@ components:
         - status
         - updatedAt
         - updatedBy
-        - updates
     AltEmbeddedVersion_IKfservingResponseV2_:
       type: object
       properties:
@@ -2753,6 +3061,15 @@ components:
     ModelVersionsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -2888,12 +3205,26 @@ components:
     GetWebscriptResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         entity:
           $ref: '#/components/schemas/WebscriptResponseV2'
           description: The specification and deployment status of the function
         _links:
           type: object
           properties:
+            content:
+              $ref: '#/components/schemas/HALLink'
+              description: >-
+                HAL link to the endpoint where the function's content is
+                exposed.
             invoke:
               $ref: '#/components/schemas/HALLink'
               description: HAL link to the endpoint where the webscript is exposed.
@@ -2911,6 +3242,15 @@ components:
     LatestWebscriptsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -2962,7 +3302,7 @@ components:
             $ref: '#/components/schemas/UpdateRecord'
           description: >-
             The audit logs corresponding to the latest modifying operations on
-            this entity.
+            this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/Status'
           description: The current status of this function entity.
@@ -3003,7 +3343,6 @@ components:
         - status
         - updatedAt
         - updatedBy
-        - updates
         - webscript
     AltEmbeddedVersion_IWebscriptResponseWithInvokeLinkV2_:
       type: object
@@ -3018,6 +3357,15 @@ components:
     WebscriptVersionsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -3150,6 +3498,24 @@ components:
         - function
         - jobs
       description: Webscript Jobs Found
+    FunctionTagsResponse:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+      required:
+        - tags
+      description: Function Tags Found
+    FunctionTagResponse:
+      type: object
+      properties:
+        tag:
+          $ref: '#/components/schemas/Tag'
+      required:
+        - tag
+      description: Function Tag Found
     BuildJobStatus:
       type: object
       properties:
@@ -3523,6 +3889,17 @@ components:
               type: string
               format: date-time
               description: The creation time of this job
+            processedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has begun processing.
+            finishedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has finished processing.
+            attemptsMade:
+              type: number
+              description: The number of retries that were attempted.
             createdBy:
               type: string
               description: The user that initiated this job
@@ -3565,6 +3942,17 @@ components:
               type: string
               format: date-time
               description: The creation time of this job
+            processedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has begun processing.
+            finishedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has finished processing.
+            attemptsMade:
+              type: number
+              description: The number of retries that were attempted.
             createdBy:
               type: string
               description: The user that initiated this job
@@ -3607,6 +3995,17 @@ components:
               type: string
               format: date-time
               description: The creation time of this job
+            processedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has begun processing.
+            finishedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has finished processing.
+            attemptsMade:
+              type: number
+              description: The number of retries that were attempted.
             createdBy:
               type: string
               description: The user that initiated this job
@@ -3649,6 +4048,17 @@ components:
               type: string
               format: date-time
               description: The creation time of this job
+            processedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has begun processing.
+            finishedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has finished processing.
+            attemptsMade:
+              type: number
+              description: The number of retries that were attempted.
             createdBy:
               type: string
               description: The user that initiated this job
@@ -3691,6 +4101,17 @@ components:
               type: string
               format: date-time
               description: The creation time of this job
+            processedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has begun processing.
+            finishedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has finished processing.
+            attemptsMade:
+              type: number
+              description: The number of retries that were attempted.
             createdBy:
               type: string
               description: The user that initiated this job
@@ -3733,6 +4154,17 @@ components:
               type: string
               format: date-time
               description: The creation time of this job
+            processedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has begun processing.
+            finishedAt:
+              type: string
+              format: date-time
+              description: The timestamp of when the job has finished processing.
+            attemptsMade:
+              type: number
+              description: The number of retries that were attempted.
             createdBy:
               type: string
               description: The user that initiated this job
@@ -4339,6 +4771,16 @@ components:
     PlugHtmlResponse:
       type: string
       description: Successful Response
+    ErrorAndStatusResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        statusCode:
+          type: number
+      required:
+        - error
+        - statusCode
 paths:
   /registry/v2/:
     get:
@@ -4536,6 +4978,17 @@ paths:
       description: List the runtimes that function registry supports.
       parameters:
         - schema:
+            $ref: '#/components/schemas/ShowEmbedding'
+            default: none
+          in: query
+          name: showTags
+          required: false
+          description: |-
+            Sets the representation of related tags in the response.
+            - `embed`: as full summary representation (in `_embedded`).
+            - `none`: omitted.
+          x-showExample: true
+        - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
             default: '*'
           in: query
@@ -4581,6 +5034,19 @@ paths:
           description: If set to `true`, deprecated runtimes will be included in the query.
           x-showExample: true
         - schema:
+            anyOf:
+              - $ref: '#/components/schemas/RuntimeTagFilter'
+              - type: array
+                items:
+                  $ref: '#/components/schemas/RuntimeTagFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            If set, filters on the <code>tags</code> of a runtime __version__.
+            Filter values with a `-` postfix exclude the tag.
+          x-showExample: false
+        - schema:
             type: string
           example: node*
           in: query
@@ -4594,7 +5060,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/FunctionType'
+              $ref: '#/components/schemas/FunctionTypeFilter'
           example: plugs
           in: query
           name: functionType
@@ -4607,7 +5073,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/ArchiveFormat'
+              $ref: '#/components/schemas/ArchiveFormatFilter'
           example: node
           in: query
           name: archiveFormat
@@ -4641,6 +5107,17 @@ paths:
       description: Get a representation of the default runtime version by name.
       parameters:
         - schema:
+            $ref: '#/components/schemas/ShowEmbedding'
+            default: none
+          in: query
+          name: showTags
+          required: false
+          description: |-
+            Sets the representation of related tags in the response.
+            - `embed`: as full summary representation (in `_embedded`).
+            - `none`: omitted.
+          x-showExample: true
+        - schema:
             $ref: '#/components/schemas/SemanticVersionRange'
             default: '*'
           in: query
@@ -4659,9 +5136,22 @@ paths:
           description: If set to `true`, deprecated runtimes will be included in the query.
           x-showExample: true
         - schema:
+            anyOf:
+              - $ref: '#/components/schemas/RuntimeTagFilter'
+              - type: array
+                items:
+                  $ref: '#/components/schemas/RuntimeTagFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            If set, filters on the <code>tags</code> of a runtime __version__.
+            Filter values with a `-` postfix exclude the tag.
+          x-showExample: false
+        - schema:
             type: array
             items:
-              $ref: '#/components/schemas/FunctionType'
+              $ref: '#/components/schemas/FunctionTypeFilter'
           example: plugs
           in: query
           name: functionType
@@ -4674,7 +5164,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/ArchiveFormat'
+              $ref: '#/components/schemas/ArchiveFormatFilter'
           example: node
           in: query
           name: archiveFormat
@@ -4760,9 +5250,22 @@ paths:
           description: If set to `true`, deprecated runtimes will be included in the query.
           x-showExample: true
         - schema:
+            anyOf:
+              - $ref: '#/components/schemas/RuntimeTagFilter'
+              - type: array
+                items:
+                  $ref: '#/components/schemas/RuntimeTagFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            If set, filters on the <code>tags</code> of a runtime __version__.
+            Filter values with a `-` postfix exclude the tag.
+          x-showExample: false
+        - schema:
             type: array
             items:
-              $ref: '#/components/schemas/FunctionType'
+              $ref: '#/components/schemas/FunctionTypeFilter'
           example: plugs
           in: query
           name: functionType
@@ -4775,7 +5278,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/ArchiveFormat'
+              $ref: '#/components/schemas/ArchiveFormatFilter'
           example: node
           in: query
           name: archiveFormat
@@ -4784,6 +5287,17 @@ paths:
             If set, filters on the <code>archiveFormat</code> of a runtime. Uses
             an exact match.
           x-example: '''node'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowEmbedding'
+            default: none
+          in: query
+          name: showTags
+          required: false
+          description: |-
+            Sets the representation of related tags in the response.
+            - `embed`: as full summary representation (in `_embedded`).
+            - `none`: omitted.
           x-showExample: true
         - schema:
             $ref: '#/components/schemas/Runtime'
@@ -4815,6 +5329,17 @@ paths:
         - Runtimes
       description: Get a representation of the default runtime version by name.
       parameters:
+        - schema:
+            $ref: '#/components/schemas/ShowEmbedding'
+            default: none
+          in: query
+          name: showTags
+          required: false
+          description: |-
+            Sets the representation of related tags in the response.
+            - `embed`: as full summary representation (in `_embedded`).
+            - `none`: omitted.
+          x-showExample: true
         - schema:
             type: boolean
             default: true
@@ -4870,6 +5395,17 @@ paths:
             If set to `true`, the result will be a listing of the files in the
             asset, annotated with metadata and validation report from the asset
             conditions of the functions runtime.
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowEmbedding'
+            default: none
+          in: query
+          name: showTags
+          required: false
+          description: |-
+            Sets the representation of related tags in the response.
+            - `embed`: as full summary representation (in `_embedded`).
+            - `none`: omitted.
           x-showExample: true
         - schema:
             type: boolean
@@ -4964,6 +5500,17 @@ paths:
             conditions of the functions runtime.
           x-showExample: true
         - schema:
+            $ref: '#/components/schemas/ShowEmbedding'
+            default: none
+          in: query
+          name: showTags
+          required: false
+          description: |-
+            Sets the representation of related tags in the response.
+            - `embed`: as full summary representation (in `_embedded`).
+            - `none`: omitted.
+          x-showExample: true
+        - schema:
             type: boolean
             default: true
           in: query
@@ -5039,6 +5586,81 @@ paths:
       security:
         - waylayApiKeySecret: []
       x-py-method: get_example_asset
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/runtimeTags/:
+    get:
+      operationId: tags_runtimes
+      summary: List Runtime Tags
+      tags:
+        - Runtimes
+      description: List the tags that are referenced by runtimes.
+      parameters:
+        - schema:
+            type: string
+          example: '*-demo-??'
+          in: query
+          name: name
+          required: false
+          description: >-
+            If set, filters on the <code>name</code> of a tag. Supports
+            <code>*</code> and <code>?</code> wildcards and is case-insensitive.
+          x-example: '''*-demo-??'''
+          x-showExample: true
+        - schema:
+            type: string
+          example: '#4153ea'
+          in: query
+          name: color
+          required: false
+          description: >-
+            If set, filters on the <code>color</code> of a tag. Uses an exact
+            match.
+          x-example: '''#4153ea'''
+          x-showExample: true
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: tags
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/runtimeTags/{tagName}:
+    get:
+      operationId: tag_runtimes
+      summary: Get Runtime Tag
+      tags:
+        - Runtimes
+      description: Get the metadata of a Runtime Tag by name.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuntimeTagResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: tag
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: false
@@ -5123,7 +5745,7 @@ paths:
 
         > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`,
         `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`,
-        `nameVersion`, `deprecated`, `draft`
+        `nameVersion`, `deprecated`, `draft`, `tags`, `wql`
       parameters:
         - schema:
             type: number
@@ -5192,6 +5814,125 @@ paths:
             Filter on exact `{name}@{version}` functions. Using this filter
             implies a `latest=false` default, returning multiple versions of the
             same named versions if they are filtered.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TagsFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            Filter on the tags of the item. Can be a single tag, or a list of
+            tags. When multiple tags are specified, an item must have all of the
+            tags to be selected.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: wql
+          required: false
+          description: >-
+            Query filter using the 'wql' query language.
+
+
+            This is a unstable preview feature, currently supporting the
+            following _match terms_:
+
+            * `tag:<name>` entity has a tag that fully matches `<name>` (case
+            insensitive).
+
+            * `tag:<name1>,<name2>` entity has a tag that fully matches any of
+            `<name1>`, `<name2>` (case insensitive).
+
+            * `tag:inIgnoreCase(<name1>,<name2>)` is the fully specified format
+            for the previous statements.   `inIgnoreCase` is the _default match
+            predicate_.
+
+            * `tag:in(<name1>,<name2>)` entity has a tag matches one of
+            `<name1>`,`<name2>` (case sensitive)
+
+            * `tag:equals(<name>)` entity has a tag matches `<name>` (case
+            sensitive)
+
+            * `tag:like(<pattern>)` entity has a tag that matches `<pattern>`
+            (case insensitive),    where `<pattern>` can contain `*` (multiple
+            characters) and `?` (single character) wildcards.
+
+
+            Each _argument_ of a _match term_ (like `<name>` above) can either
+            be a
+
+            * a _quoted match argument_, quoted using `"`, can contain any
+            character except `"`: `tag:"Status:In Review"`.
+
+            * a _safe match argument_ can only contain alpha-numeric characters
+            or `_`: `tag:Status_In_Review`.
+
+
+            Multiple _match term_s can be combined in a boolean predicate using
+            the `AND`, `OR` and `NOT` operators:
+
+            * `tag:abc AND tag:"My Demo" AND tag:like("prj:*")`: entity has a
+            tag matching `abc` **AND** a tag matching `"My Demo"` **AND**    a
+            tag that has the `prj:` prefix
+
+            * `tag:abc tag:"My Demo" tag:like("prj:*")`: same as the previous
+            statement: a (space-deliminated) list of terms is     implicitly
+            combined with `AND`.
+
+            * `tag:abc OR tag:"My Demo"`: entity has a tag matching `abc` **OR**
+            a tag matching `"My Demo"`
+
+            * `NOT tag:abc`: entity **does not have** a tag matching `abc`
+
+
+            Round brackets can be used to combine predicates with different
+            operators:
+
+            * `(tag:abc OR tag:"My Demo") AND tag:like("prj:*")`: entity has a
+            tag `abc` or a tag `My Demo`, and a tag with prefix `prj:*`
+
+
+            For a _multi-valued attribute_ like `tag`, each _match term_ tests
+            the existence of a matching tag assigned to the entity. When
+            _multiple match predicates on the **same** tag_ need to be
+            specified, the boolean operators `not`, `all`, `any` can be used
+            _within_ the match term:
+
+
+            * `tag:all(like("prj:*"),not(like("*:Done")))`: entity has a tag
+            that starts with `prj:` and does NOT end with `:Done`.
+
+            * `tag:not(Done)`: entity has a tag that does not match `Done` (this
+            excludes entities without tags, and with a single `Done` tag!).
+
+            * `NOT tag:not(in(abc,def))`: each tag of the entity is in `abc` or
+            `def` (matches entities without tags!)
+
+            * `tag:any(like("prj:*"),not(done)))`: entity has a tag that either
+            starts with `prj:` or does not match `done`.
           x-showExample: false
         - schema:
             type: string
@@ -5293,7 +6034,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/ArchiveFormat'
+              $ref: '#/components/schemas/ArchiveFormatFilter'
           in: query
           name: archiveFormat
           required: false
@@ -5320,7 +6061,7 @@ paths:
             selected with the `nameVersion` filter.
           x-showExample: true
         - schema:
-            $ref: '#/components/schemas/ShowRelatedType'
+            $ref: '#/components/schemas/ShowLinkOrEmbedding'
           in: query
           name: showRelated
           required: false
@@ -5334,7 +6075,7 @@ paths:
             - `link`: as HAL link in (in `_links`).
 
             - `none`: omitted.
-          x-showExample: true
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -5722,6 +6463,39 @@ paths:
           description: Filter on the draft status of the function.
           x-showExample: true
         - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TagsFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            Filter on the tags of the item. Can be a single tag, or a list of
+            tags. When multiple tags are specified, an item must have all of the
+            tags to be selected.
+          x-showExample: false
+        - schema:
             type: string
           in: query
           name: version
@@ -5811,7 +6585,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/ArchiveFormat'
+              $ref: '#/components/schemas/ArchiveFormatFilter'
           in: query
           name: archiveFormat
           required: false
@@ -5856,6 +6630,29 @@ paths:
         - Webscripts
       description: Get the webscript version.
       parameters:
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
         - schema:
             type: string
           in: path
@@ -6022,11 +6819,12 @@ paths:
         - Webscripts
       description: Rebuild and deploy a webscript with the original or updated base image.
       requestBody:
-        x-force-dataType: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RebuildRequestBodyV2'
+              x-force-dataType: true
+        x-force-dataType: true
       parameters:
         - schema:
             type: boolean
@@ -6065,6 +6863,29 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
           x-showExample: true
         - schema:
             $ref: '#/components/schemas/RebuildPolicy'
@@ -6212,6 +7033,29 @@ paths:
             considered when no other versions are available. If set to `true`,
             deprecated versions are **included**. If set to `false`, deprecated
             versions are **excluded**.
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
           x-showExample: true
         - schema:
             type: string
@@ -6369,7 +7213,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FunctionMeta'
+              $ref: '#/components/schemas/UpdateMetadataRequestV2'
       parameters:
         - schema:
             type: string
@@ -6378,6 +7222,29 @@ paths:
           required: false
           description: An optional user-specified comment corresponding to the operation.
           x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
         - schema:
             type: string
           in: path
@@ -6406,6 +7273,193 @@ paths:
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: true
+      x-consumes-other: false
+  /registry/v2/webscripts/{name}/versions/{version}/protect:
+    post:
+      operationId: protect_webscripts
+      summary: Protect Webscript Version
+      tags:
+        - Webscripts
+      description: >-
+        Enable/disable protection for a <em>webscript</em> version. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: author
+          required: false
+          description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of a draft function is transferred to the current
+            user.
+          x-showExample: true
+        - schema:
+            type: string
+          in: query
+          name: comment
+          required: false
+          description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: enable
+          required: false
+          description: >-
+            If set to `true`, the function assets (including its code) will be
+            protected by requiring additional permissions. If set to `false`,
+            the function assets will no longer be protected.
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWebscriptResponseV2'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: protect
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/webscripts/{name}/protect:
+    post:
+      operationId: protectVersions_webscripts
+      summary: Protect Webscript
+      tags:
+        - Webscripts
+      description: >-
+        Enable/disable protection for all <em>webscript</em> versions. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: author
+          required: false
+          description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of a draft function is transferred to the current
+            user.
+          x-showExample: true
+        - schema:
+            type: string
+          in: query
+          name: comment
+          required: false
+          description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: enable
+          required: false
+          description: >-
+            If set to `true`, the function assets (including its code) will be
+            protected by requiring additional permissions. If set to `false`,
+            the function assets will no longer be protected.
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProtectByNameResponseV2'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: protect_versions
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
       x-consumes-other: false
   /registry/v2/webscripts/{name}/versions/{version}/content:
     get:
@@ -6624,8 +7678,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -6832,8 +7886,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -6977,8 +8031,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -7076,8 +8130,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -7259,6 +8313,29 @@ paths:
             only if it was not active before this command.
           x-showExample: true
         - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
             type: boolean
             default: true
           in: query
@@ -7302,6 +8379,625 @@ paths:
       security:
         - waylayApiKeySecret: []
       x-py-method: verify
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/webscripts/{name}/versions/{version}/tags:
+    get:
+      operationId: list_webscript_tags
+      summary: List Tags
+      tags:
+        - Webscript Tags
+      description: List tags used on a webscript version.
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: replace_webscript_tags
+      summary: Replace Tags
+      tags:
+        - Webscript Tags
+      description: Replace tags used on a webscript version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: replace
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    patch:
+      operationId: add_webscript_tags
+      summary: Add Tags
+      tags:
+        - Webscript Tags
+      description: Add tags used on a webscript version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: add
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    delete:
+      operationId: clear_webscript_tags
+      summary: Clear Tags
+      tags:
+        - Webscript Tags
+      description: Remove all tags used on a webscript version.
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: clear
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/webscripts/{name}/versions/{version}/tags/{tagName}:
+    get:
+      operationId: find_webscript_tags
+      summary: Find Tag
+      tags:
+        - Webscript Tags
+      description: Check the existence of a tag on a webscript version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: find
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: put_webscript_tags
+      summary: Put Tag
+      tags:
+        - Webscript Tags
+      description: Put a tag on a webscript version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: put
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    delete:
+      operationId: remove_webscript_tags
+      summary: Remove Tag
+      tags:
+        - Webscript Tags
+      description: Remove a tag from a webscript version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: remove
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/webscripts/{name}/tags:
+    get:
+      operationId: listAll_webscript_tags
+      summary: List Tags On Any/All
+      tags:
+        - Webscript Tags
+      description: |-
+        List tags used on any or all versions of a named webscript.
+                With 'from=all', only the tags that are set to all versions are returned.
+                
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: replaceAll_webscript_tags
+      summary: Replace Tags On Any/All
+      tags:
+        - Webscript Tags
+      description: |-
+        Replace tags used on any or all versions of a named webscript.
+                With 'from=all', only the tags that were set to all versions are replaced.
+                
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: replace_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    patch:
+      operationId: addAll_webscript_tags
+      summary: Add Tags On All
+      tags:
+        - Webscript Tags
+      description: Add tags to all versions of a named webscript version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: add_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    delete:
+      operationId: clearAll_webscript_tags
+      summary: Clear Tags On Any/All
+      tags:
+        - Webscript Tags
+      description: |-
+        Remove all tags used on any or all versions of a named webscript.
+                With 'from=all', a tag is only removed when it was set to all versions.
+                
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: clear_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/webscripts/{name}/tags/{tagName}:
+    get:
+      operationId: findAll_webscript_tags
+      summary: Find Tags On Any/All
+      tags:
+        - Webscript Tags
+      description: >-
+        Check the existence of a tag on any or all versions of a named
+        webscript.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: find_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: putAll_webscript_tags
+      summary: Put Tag On All
+      tags:
+        - Webscript Tags
+      description: Add a tag on on all versions of a webscript version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: put_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    delete:
+      operationId: removeAll_webscript_tags
+      summary: Remove Tag On Any/All
+      tags:
+        - Webscript Tags
+      description: |-
+        Remove a tag on any or all version from a webscript version.
+                With 'from=all', the tag is only removed when it exists on all versions.
+                
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: remove_all
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: false
@@ -7456,18 +9152,8 @@ paths:
 
         > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`,
         `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`,
-        `nameVersion`, `deprecated`, `draft`, `tags`
+        `nameVersion`, `deprecated`, `draft`, `tags`, `wql`
       parameters:
-        - schema:
-            $ref: '#/components/schemas/TagsFilter'
-          in: query
-          name: tags
-          required: false
-          description: >-
-            Filter on the tags of the item. Can be a single tag, or a list of
-            tags. When multiple tags are specified, an item must have all of the
-            tags to be selected.
-          x-showExample: false
         - schema:
             $ref: '#/components/schemas/PlugType'
           in: query
@@ -7542,6 +9228,125 @@ paths:
             Filter on exact `{name}@{version}` functions. Using this filter
             implies a `latest=false` default, returning multiple versions of the
             same named versions if they are filtered.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TagsFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            Filter on the tags of the item. Can be a single tag, or a list of
+            tags. When multiple tags are specified, an item must have all of the
+            tags to be selected.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: wql
+          required: false
+          description: >-
+            Query filter using the 'wql' query language.
+
+
+            This is a unstable preview feature, currently supporting the
+            following _match terms_:
+
+            * `tag:<name>` entity has a tag that fully matches `<name>` (case
+            insensitive).
+
+            * `tag:<name1>,<name2>` entity has a tag that fully matches any of
+            `<name1>`, `<name2>` (case insensitive).
+
+            * `tag:inIgnoreCase(<name1>,<name2>)` is the fully specified format
+            for the previous statements.   `inIgnoreCase` is the _default match
+            predicate_.
+
+            * `tag:in(<name1>,<name2>)` entity has a tag matches one of
+            `<name1>`,`<name2>` (case sensitive)
+
+            * `tag:equals(<name>)` entity has a tag matches `<name>` (case
+            sensitive)
+
+            * `tag:like(<pattern>)` entity has a tag that matches `<pattern>`
+            (case insensitive),    where `<pattern>` can contain `*` (multiple
+            characters) and `?` (single character) wildcards.
+
+
+            Each _argument_ of a _match term_ (like `<name>` above) can either
+            be a
+
+            * a _quoted match argument_, quoted using `"`, can contain any
+            character except `"`: `tag:"Status:In Review"`.
+
+            * a _safe match argument_ can only contain alpha-numeric characters
+            or `_`: `tag:Status_In_Review`.
+
+
+            Multiple _match term_s can be combined in a boolean predicate using
+            the `AND`, `OR` and `NOT` operators:
+
+            * `tag:abc AND tag:"My Demo" AND tag:like("prj:*")`: entity has a
+            tag matching `abc` **AND** a tag matching `"My Demo"` **AND**    a
+            tag that has the `prj:` prefix
+
+            * `tag:abc tag:"My Demo" tag:like("prj:*")`: same as the previous
+            statement: a (space-deliminated) list of terms is     implicitly
+            combined with `AND`.
+
+            * `tag:abc OR tag:"My Demo"`: entity has a tag matching `abc` **OR**
+            a tag matching `"My Demo"`
+
+            * `NOT tag:abc`: entity **does not have** a tag matching `abc`
+
+
+            Round brackets can be used to combine predicates with different
+            operators:
+
+            * `(tag:abc OR tag:"My Demo") AND tag:like("prj:*")`: entity has a
+            tag `abc` or a tag `My Demo`, and a tag with prefix `prj:*`
+
+
+            For a _multi-valued attribute_ like `tag`, each _match term_ tests
+            the existence of a matching tag assigned to the entity. When
+            _multiple match predicates on the **same** tag_ need to be
+            specified, the boolean operators `not`, `all`, `any` can be used
+            _within_ the match term:
+
+
+            * `tag:all(like("prj:*"),not(like("*:Done")))`: entity has a tag
+            that starts with `prj:` and does NOT end with `:Done`.
+
+            * `tag:not(Done)`: entity has a tag that does not match `Done` (this
+            excludes entities without tags, and with a single `Done` tag!).
+
+            * `NOT tag:not(in(abc,def))`: each tag of the entity is in `abc` or
+            `def` (matches entities without tags!)
+
+            * `tag:any(like("prj:*"),not(done)))`: entity has a tag that either
+            starts with `prj:` or does not match `done`.
           x-showExample: false
         - schema:
             type: string
@@ -7643,7 +9448,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/ArchiveFormat'
+              $ref: '#/components/schemas/ArchiveFormatFilter'
           in: query
           name: archiveFormat
           required: false
@@ -7670,7 +9475,7 @@ paths:
             selected with the `nameVersion` filter.
           x-showExample: true
         - schema:
-            $ref: '#/components/schemas/ShowRelatedType'
+            $ref: '#/components/schemas/ShowLinkOrEmbedding'
           in: query
           name: showRelated
           required: false
@@ -7684,7 +9489,7 @@ paths:
             - `link`: as HAL link in (in `_links`).
 
             - `none`: omitted.
-          x-showExample: true
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -8063,6 +9868,29 @@ paths:
           description: If set, filters on the type of plug.
           x-showExample: true
         - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
             type: boolean
           in: query
           name: includeDraft
@@ -8254,16 +10082,6 @@ paths:
       description: List all versions of a plug, including deprecated versions or not.
       parameters:
         - schema:
-            $ref: '#/components/schemas/TagsFilter'
-          in: query
-          name: tags
-          required: false
-          description: >-
-            Filter on the tags of the item. Can be a single tag, or a list of
-            tags. When multiple tags are specified, an item must have all of the
-            tags to be selected.
-          x-showExample: false
-        - schema:
             type: number
             minimum: 0
           in: query
@@ -8295,6 +10113,39 @@ paths:
           required: false
           description: Filter on the draft status of the function.
           x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TagsFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            Filter on the tags of the item. Can be a single tag, or a list of
+            tags. When multiple tags are specified, an item must have all of the
+            tags to be selected.
+          x-showExample: false
         - schema:
             type: string
           in: query
@@ -8385,7 +10236,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/ArchiveFormat'
+              $ref: '#/components/schemas/ArchiveFormatFilter'
           in: query
           name: archiveFormat
           required: false
@@ -8430,6 +10281,29 @@ paths:
         - Plugs
       description: Get a specific version of a plug.
       parameters:
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
         - schema:
             type: string
           in: path
@@ -8610,11 +10484,12 @@ paths:
         - Plugs
       description: Rebuild and deploy a plug with the original or updated base image.
       requestBody:
-        x-force-dataType: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RebuildRequestBodyV2'
+              x-force-dataType: true
+        x-force-dataType: true
       parameters:
         - schema:
             type: boolean
@@ -8653,6 +10528,29 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
           x-showExample: true
         - schema:
             $ref: '#/components/schemas/RebuildPolicy'
@@ -8970,8 +10868,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -9178,8 +11076,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -9323,8 +11221,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -9422,8 +11320,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -9519,6 +11417,29 @@ paths:
           description: An optional user-specified comment corresponding to the operation.
           x-showExample: false
         - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
             type: string
           in: path
           name: name
@@ -9558,7 +11479,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateMetadataRequestV2'
+              $ref: '#/components/schemas/UpdatePlugMetadataRequestV2'
       parameters:
         - schema:
             type: string
@@ -9567,6 +11488,29 @@ paths:
           required: false
           description: An optional user-specified comment corresponding to the operation.
           x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
         - schema:
             type: string
           in: path
@@ -9595,6 +11539,193 @@ paths:
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: true
+      x-consumes-other: false
+  /registry/v2/plugs/{name}/versions/{version}/protect:
+    post:
+      operationId: protect_plugs
+      summary: Protect Plug Version
+      tags:
+        - Plugs
+      description: >-
+        Enable/disable protection for a <em>plug</em> version. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: author
+          required: false
+          description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of a draft function is transferred to the current
+            user.
+          x-showExample: true
+        - schema:
+            type: string
+          in: query
+          name: comment
+          required: false
+          description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: enable
+          required: false
+          description: >-
+            If set to `true`, the function assets (including its code) will be
+            protected by requiring additional permissions. If set to `false`,
+            the function assets will no longer be protected.
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPlugResponseV2'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: protect
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/plugs/{name}/protect:
+    post:
+      operationId: protectVersions_plugs
+      summary: Protect Plug
+      tags:
+        - Plugs
+      description: >-
+        Enable/disable protection for all <em>plug</em> versions. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: author
+          required: false
+          description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of a draft function is transferred to the current
+            user.
+          x-showExample: true
+        - schema:
+            type: string
+          in: query
+          name: comment
+          required: false
+          description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: enable
+          required: false
+          description: >-
+            If set to `true`, the function assets (including its code) will be
+            protected by requiring additional permissions. If set to `false`,
+            the function assets will no longer be protected.
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProtectByNameResponseV2'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: protect_versions
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
       x-consumes-other: false
   /registry/v2/plugs/{name}/versions/{version}/jobs:
     get:
@@ -9703,6 +11834,29 @@ paths:
             only if it was not active before this command.
           x-showExample: true
         - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
             type: boolean
             default: true
           in: query
@@ -9746,6 +11900,623 @@ paths:
       security:
         - waylayApiKeySecret: []
       x-py-method: verify
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/plugs/{name}/versions/{version}/tags:
+    get:
+      operationId: list_plug_tags
+      summary: List Tags
+      tags:
+        - Plug Tags
+      description: List tags used on a plug version.
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: replace_plug_tags
+      summary: Replace Tags
+      tags:
+        - Plug Tags
+      description: Replace tags used on a plug version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: replace
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    patch:
+      operationId: add_plug_tags
+      summary: Add Tags
+      tags:
+        - Plug Tags
+      description: Add tags used on a plug version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: add
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    delete:
+      operationId: clear_plug_tags
+      summary: Clear Tags
+      tags:
+        - Plug Tags
+      description: Remove all tags used on a plug version.
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: clear
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/plugs/{name}/versions/{version}/tags/{tagName}:
+    get:
+      operationId: find_plug_tags
+      summary: Find Tag
+      tags:
+        - Plug Tags
+      description: Check the existence of a tag on a plug version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: find
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: put_plug_tags
+      summary: Put Tag
+      tags:
+        - Plug Tags
+      description: Put a tag on a plug version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: put
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    delete:
+      operationId: remove_plug_tags
+      summary: Remove Tag
+      tags:
+        - Plug Tags
+      description: Remove a tag from a plug version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: remove
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/plugs/{name}/tags:
+    get:
+      operationId: listAll_plug_tags
+      summary: List Tags On Any/All
+      tags:
+        - Plug Tags
+      description: |-
+        List tags used on any or all versions of a named plug.
+                With 'from=all', only the tags that are set to all versions are returned.
+                
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: replaceAll_plug_tags
+      summary: Replace Tags On Any/All
+      tags:
+        - Plug Tags
+      description: |-
+        Replace tags used on any or all versions of a named plug.
+                With 'from=all', only the tags that were set to all versions are replaced.
+                
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: replace_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    patch:
+      operationId: addAll_plug_tags
+      summary: Add Tags On All
+      tags:
+        - Plug Tags
+      description: Add tags to all versions of a named plug version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: add_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    delete:
+      operationId: clearAll_plug_tags
+      summary: Clear Tags On Any/All
+      tags:
+        - Plug Tags
+      description: |-
+        Remove all tags used on any or all versions of a named plug.
+                With 'from=all', a tag is only removed when it was set to all versions.
+                
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: clear_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/plugs/{name}/tags/{tagName}:
+    get:
+      operationId: findAll_plug_tags
+      summary: Find Tags On Any/All
+      tags:
+        - Plug Tags
+      description: Check the existence of a tag on any or all versions of a named plug.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: find_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: putAll_plug_tags
+      summary: Put Tag On All
+      tags:
+        - Plug Tags
+      description: Add a tag on on all versions of a plug version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: put_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    delete:
+      operationId: removeAll_plug_tags
+      summary: Remove Tag On Any/All
+      tags:
+        - Plug Tags
+      description: |-
+        Remove a tag on any or all version from a plug version.
+                With 'from=all', the tag is only removed when it exists on all versions.
+                
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: remove_all
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: false
@@ -9830,7 +12601,7 @@ paths:
 
         > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`,
         `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`,
-        `nameVersion`, `deprecated`, `draft`
+        `nameVersion`, `deprecated`, `draft`, `tags`, `wql`
       parameters:
         - schema:
             type: number
@@ -9899,6 +12670,125 @@ paths:
             Filter on exact `{name}@{version}` functions. Using this filter
             implies a `latest=false` default, returning multiple versions of the
             same named versions if they are filtered.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TagsFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            Filter on the tags of the item. Can be a single tag, or a list of
+            tags. When multiple tags are specified, an item must have all of the
+            tags to be selected.
+          x-showExample: false
+        - schema:
+            type: string
+          in: query
+          name: wql
+          required: false
+          description: >-
+            Query filter using the 'wql' query language.
+
+
+            This is a unstable preview feature, currently supporting the
+            following _match terms_:
+
+            * `tag:<name>` entity has a tag that fully matches `<name>` (case
+            insensitive).
+
+            * `tag:<name1>,<name2>` entity has a tag that fully matches any of
+            `<name1>`, `<name2>` (case insensitive).
+
+            * `tag:inIgnoreCase(<name1>,<name2>)` is the fully specified format
+            for the previous statements.   `inIgnoreCase` is the _default match
+            predicate_.
+
+            * `tag:in(<name1>,<name2>)` entity has a tag matches one of
+            `<name1>`,`<name2>` (case sensitive)
+
+            * `tag:equals(<name>)` entity has a tag matches `<name>` (case
+            sensitive)
+
+            * `tag:like(<pattern>)` entity has a tag that matches `<pattern>`
+            (case insensitive),    where `<pattern>` can contain `*` (multiple
+            characters) and `?` (single character) wildcards.
+
+
+            Each _argument_ of a _match term_ (like `<name>` above) can either
+            be a
+
+            * a _quoted match argument_, quoted using `"`, can contain any
+            character except `"`: `tag:"Status:In Review"`.
+
+            * a _safe match argument_ can only contain alpha-numeric characters
+            or `_`: `tag:Status_In_Review`.
+
+
+            Multiple _match term_s can be combined in a boolean predicate using
+            the `AND`, `OR` and `NOT` operators:
+
+            * `tag:abc AND tag:"My Demo" AND tag:like("prj:*")`: entity has a
+            tag matching `abc` **AND** a tag matching `"My Demo"` **AND**    a
+            tag that has the `prj:` prefix
+
+            * `tag:abc tag:"My Demo" tag:like("prj:*")`: same as the previous
+            statement: a (space-deliminated) list of terms is     implicitly
+            combined with `AND`.
+
+            * `tag:abc OR tag:"My Demo"`: entity has a tag matching `abc` **OR**
+            a tag matching `"My Demo"`
+
+            * `NOT tag:abc`: entity **does not have** a tag matching `abc`
+
+
+            Round brackets can be used to combine predicates with different
+            operators:
+
+            * `(tag:abc OR tag:"My Demo") AND tag:like("prj:*")`: entity has a
+            tag `abc` or a tag `My Demo`, and a tag with prefix `prj:*`
+
+
+            For a _multi-valued attribute_ like `tag`, each _match term_ tests
+            the existence of a matching tag assigned to the entity. When
+            _multiple match predicates on the **same** tag_ need to be
+            specified, the boolean operators `not`, `all`, `any` can be used
+            _within_ the match term:
+
+
+            * `tag:all(like("prj:*"),not(like("*:Done")))`: entity has a tag
+            that starts with `prj:` and does NOT end with `:Done`.
+
+            * `tag:not(Done)`: entity has a tag that does not match `Done` (this
+            excludes entities without tags, and with a single `Done` tag!).
+
+            * `NOT tag:not(in(abc,def))`: each tag of the entity is in `abc` or
+            `def` (matches entities without tags!)
+
+            * `tag:any(like("prj:*"),not(done)))`: entity has a tag that either
+            starts with `prj:` or does not match `done`.
           x-showExample: false
         - schema:
             type: string
@@ -10000,7 +12890,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/ArchiveFormat'
+              $ref: '#/components/schemas/ArchiveFormatFilter'
           in: query
           name: archiveFormat
           required: false
@@ -10027,7 +12917,7 @@ paths:
             selected with the `nameVersion` filter.
           x-showExample: true
         - schema:
-            $ref: '#/components/schemas/ShowRelatedType'
+            $ref: '#/components/schemas/ShowLinkOrEmbedding'
           in: query
           name: showRelated
           required: false
@@ -10041,7 +12931,7 @@ paths:
             - `link`: as HAL link in (in `_links`).
 
             - `none`: omitted.
-          x-showExample: true
+          x-showExample: false
       x-version: v2
       responses:
         '200':
@@ -10413,6 +13303,29 @@ paths:
           
       parameters:
         - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
             type: boolean
           in: query
           name: includeDraft
@@ -10622,6 +13535,39 @@ paths:
           description: Filter on the draft status of the function.
           x-showExample: true
         - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TagsFilter'
+          in: query
+          name: tags
+          required: false
+          description: >-
+            Filter on the tags of the item. Can be a single tag, or a list of
+            tags. When multiple tags are specified, an item must have all of the
+            tags to be selected.
+          x-showExample: false
+        - schema:
             type: string
           in: query
           name: version
@@ -10711,7 +13657,7 @@ paths:
         - schema:
             type: array
             items:
-              $ref: '#/components/schemas/ArchiveFormat'
+              $ref: '#/components/schemas/ArchiveFormatFilter'
           in: query
           name: archiveFormat
           required: false
@@ -10756,6 +13702,29 @@ paths:
         - Models
       description: Get a model by name and version.
       parameters:
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
         - schema:
             type: string
           in: path
@@ -11131,8 +14100,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -11339,8 +14308,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -11484,8 +14453,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -11583,8 +14552,8 @@ paths:
           name: chown
           required: false
           description: >-
-            If set, ownership of the draft function is transferred to the
-            current user.
+            If set, ownership of a draft function is transferred to the current
+            user.
           x-showExample: true
         - schema:
             type: string
@@ -11670,7 +14639,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FunctionMeta'
+              $ref: '#/components/schemas/UpdateMetadataRequestV2'
       parameters:
         - schema:
             type: string
@@ -11679,6 +14648,29 @@ paths:
           required: false
           description: An optional user-specified comment corresponding to the operation.
           x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
         - schema:
             type: string
           in: path
@@ -11707,6 +14699,193 @@ paths:
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: true
+      x-consumes-other: false
+  /registry/v2/models/{name}/versions/{version}/protect:
+    post:
+      operationId: protect_models
+      summary: Protect Model Version
+      tags:
+        - Models
+      description: >-
+        Enable/disable protection for a <em>model</em> version. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: author
+          required: false
+          description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of a draft function is transferred to the current
+            user.
+          x-showExample: true
+        - schema:
+            type: string
+          in: query
+          name: comment
+          required: false
+          description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: enable
+          required: false
+          description: >-
+            If set to `true`, the function assets (including its code) will be
+            protected by requiring additional permissions. If set to `false`,
+            the function assets will no longer be protected.
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetModelResponseV2'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: protect
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/models/{name}/protect:
+    post:
+      operationId: protectVersions_models
+      summary: Protect Model
+      tags:
+        - Models
+      description: >-
+        Enable/disable protection for all <em>model</em> versions. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: author
+          required: false
+          description: Optionally changes the author metadata when updating a function.
+          x-showExample: false
+        - schema:
+            type: boolean
+            default: false
+          in: query
+          name: chown
+          required: false
+          description: >-
+            If set, ownership of a draft function is transferred to the current
+            user.
+          x-showExample: true
+        - schema:
+            type: string
+          in: query
+          name: comment
+          required: false
+          description: An optional user-specified comment corresponding to the operation.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
+            type: boolean
+            default: true
+          in: query
+          name: enable
+          required: false
+          description: >-
+            If set to `true`, the function assets (including its code) will be
+            protected by requiring additional permissions. If set to `false`,
+            the function assets will no longer be protected.
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProtectByNameResponseV2'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: protect_versions
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
       x-consumes-other: false
   /registry/v2/models/{name}/versions/{version}/jobs:
     get:
@@ -11804,11 +14983,12 @@ paths:
         - Models
       description: Rebuild and deploy a model with the original or updated base image.
       requestBody:
-        x-force-dataType: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RebuildRequestBodyV2'
+              x-force-dataType: true
+        x-force-dataType: true
       parameters:
         - schema:
             type: boolean
@@ -11847,6 +15027,29 @@ paths:
             required job actions asynchronously and return a <code>202</code>
             <em>Accepted</em> response. If <code>false</code> the request will
             block until the job actions are completed, or a timeout occurs.
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
           x-showExample: true
         - schema:
             $ref: '#/components/schemas/RebuildPolicy'
@@ -11966,6 +15169,29 @@ paths:
             only if it was not active before this command.
           x-showExample: true
         - schema:
+            $ref: '#/components/schemas/ShowInlineOrEmbedding'
+          example: embed
+          in: query
+          name: showTags
+          required: false
+          description: >-
+            Instructs how tag (objects) should be rendered in responses. The
+            tags are show at the `tags` property of the manifest (legacy: the
+            `metadata.tags` property)
+
+            - `inline`: Show full tag objects in the manifest.
+
+            - `embed`: Show tag references in the manifest.          Referenced
+            full tag objects are included in a separate `_embedded` HAL section.
+
+            - `none`: Show tag references in the manifest. Do not render tag
+            objects.
+
+
+            The default behaviour depends on deployment settings.
+          x-example: '''embed'''
+          x-showExample: true
+        - schema:
             type: boolean
             default: true
           in: query
@@ -12013,16 +15239,739 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: false
+  /registry/v2/models/{name}/versions/{version}/tags:
+    get:
+      operationId: list_model_tags
+      summary: List Tags
+      tags:
+        - Model Tags
+      description: List tags used on a model version.
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: replace_model_tags
+      summary: Replace Tags
+      tags:
+        - Model Tags
+      description: Replace tags used on a model version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: replace
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    patch:
+      operationId: add_model_tags
+      summary: Add Tags
+      tags:
+        - Model Tags
+      description: Add tags used on a model version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: add
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    delete:
+      operationId: clear_model_tags
+      summary: Clear Tags
+      tags:
+        - Model Tags
+      description: Remove all tags used on a model version.
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: clear
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/models/{name}/versions/{version}/tags/{tagName}:
+    get:
+      operationId: find_model_tags
+      summary: Find Tag
+      tags:
+        - Model Tags
+      description: Check the existence of a tag on a model version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: find
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: put_model_tags
+      summary: Put Tag
+      tags:
+        - Model Tags
+      description: Put a tag on a model version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: put
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    delete:
+      operationId: remove_model_tags
+      summary: Remove Tag
+      tags:
+        - Model Tags
+      description: Remove a tag from a model version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+        - schema:
+            $ref: '#/components/schemas/SemanticVersion'
+          in: path
+          name: version
+          required: true
+          description: The version of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: remove
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/models/{name}/tags:
+    get:
+      operationId: listAll_model_tags
+      summary: List Tags On Any/All
+      tags:
+        - Model Tags
+      description: |-
+        List tags used on any or all versions of a named model.
+                With 'from=all', only the tags that are set to all versions are returned.
+                
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: replaceAll_model_tags
+      summary: Replace Tags On Any/All
+      tags:
+        - Model Tags
+      description: |-
+        Replace tags used on any or all versions of a named model.
+                With 'from=all', only the tags that were set to all versions are replaced.
+                
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: replace_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    patch:
+      operationId: addAll_model_tags
+      summary: Add Tags On All
+      tags:
+        - Model Tags
+      description: Add tags to all versions of a named model version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagsRequestV2'
+      parameters:
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: add_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: true
+      x-consumes-other: false
+    delete:
+      operationId: clearAll_model_tags
+      summary: Clear Tags On Any/All
+      tags:
+        - Model Tags
+      description: |-
+        Remove all tags used on any or all versions of a named model.
+                With 'from=all', a tag is only removed when it was set to all versions.
+                
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: clear_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/models/{name}/tags/{tagName}:
+    get:
+      operationId: findAll_model_tags
+      summary: Find Tags On Any/All
+      tags:
+        - Model Tags
+      description: Check the existence of a tag on any or all versions of a named model.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TaggingScopeOption'
+            default: all
+          in: query
+          name: scope
+          required: false
+          description: >-
+            Tagging operations on a _named_ function can either operate on
+
+            - `any` versions: operate on tags that are are associated on _any_
+            version (union)
+
+            - `all` versions: operate on tags that are are associated with _all_
+            versions (intersection)
+          x-showExample: true
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: find_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    put:
+      operationId: putAll_model_tags
+      summary: Put Tag On All
+      tags:
+        - Model Tags
+      description: Add a tag on on all versions of a model version.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: put_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    delete:
+      operationId: removeAll_model_tags
+      summary: Remove Tag On Any/All
+      tags:
+        - Model Tags
+      description: |-
+        Remove a tag on any or all version from a model version.
+                With 'from=all', the tag is only removed when it exists on all versions.
+                
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+        - schema:
+            type: string
+          in: path
+          name: name
+          required: true
+          description: The name of the function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorAndStatusResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: remove_all
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/tags/:
+    get:
+      operationId: list_tags
+      summary: List
+      tags:
+        - Tags
+      description: List tags used on any plug, webscript or model.
+      parameters:
+        - schema:
+            type: string
+          example: '*-demo-??'
+          in: query
+          name: name
+          required: false
+          description: >-
+            If set, filters on the <code>name</code> of a tag. Supports
+            <code>*</code> and <code>?</code> wildcards and is case-insensitive.
+          x-example: '''*-demo-??'''
+          x-showExample: true
+        - schema:
+            type: string
+          example: '#4153ea'
+          in: query
+          name: color
+          required: false
+          description: >-
+            If set, filters on the <code>color</code> of a tag. Uses an exact
+            match.
+          x-example: '''#4153ea'''
+          x-showExample: true
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: list
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+    delete:
+      operationId: remove_tags
+      summary: Remove Unused
+      tags:
+        - Tags
+      description: |-
+        Remove tags that are not referenced by any plug, webscript or model.
+        This is normally executed as background task.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagsResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: remove
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
+  /registry/v2/tags/{tagName}:
+    get:
+      operationId: get_tags
+      summary: Get
+      tags:
+        - Tags
+      description: Get the metadata of a function Tag by name.
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/TagReference'
+          in: path
+          name: tagName
+          required: true
+          description: The name of the tag that might be applied to a function.
+          x-showExample: false
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FunctionTagResponse'
+      security:
+        - waylayApiKeySecret: []
+      x-py-method: get
+      x-consumes-multipart: false
+      x-consumes-urlencoded: false
+      x-consumes-json: false
+      x-consumes-other: false
 tags:
+  - name: Plugs
+    description: Plug(in)s are functions that can be used in the rule engine.
+  - name: Webscripts
+    description: Webscripts are functions that are securely exposed to an http endpoint.
   - name: Models
     description: BYOML Models are functions that wrap a machine learning model.
     externalDocs:
       url: https://docs.waylay.io/#/features/byoml/
       description: Waylay Documentation
-  - name: Plugs
-    description: Plugs are functions that can be used in the rule engine.
-  - name: Webscripts
-    description: Webscripts are functions that are securely exposed to an http endpoint.
+  - name: Plug Tags
+    description: Tagging operations on rule plugins.
+  - name: Webscript Tags
+    description: Tagging operations on webscripts.
+  - name: Model Tags
+    description: Tagging operations on models.
+  - name: Tags
+    description: Tag object operations.
   - name: Jobs
     description: >-
       Jobs represent the ongoing asynchronous operations in the function

@@ -18,10 +18,11 @@ from pydantic import (
     Field,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.documentation import Documentation
-from ..models.tag import Tag
+from ..models.tag_or_tag_reference import TagOrTagReference
 
 
 class PlugMeta(WaylayBaseModel):
@@ -47,13 +48,14 @@ class PlugMeta(WaylayBaseModel):
         description="External url that document this function.",
         alias="documentationURL",
     )
-    tags: List[Tag] | None = Field(
-        default=None, description="Tags associated with this function."
-    )
     friendly_name: StrictStr | None = Field(
         default=None,
         description="Display title for this function.",
         alias="friendlyName",
+    )
+    tags: List[TagOrTagReference] | None = Field(
+        default=None,
+        description="Tag references or tag objects associated with this function. See `showTags` query parameter on how referenced tags are displayed. During update, a (reference to a) tag - that does not yet exist, is created (using default attributes if not specified) - that does exist is not updated (even if tag attributes like `color` differ)",
     )
     documentation: Documentation | None = None
 

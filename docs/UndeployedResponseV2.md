@@ -7,7 +7,7 @@ Undeployed
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **message** | **str** |  | 
-**versions** | **List[str]** | The versions that where deprecated, undeployed and/or removed. | 
+**versions** | **List[str]** | The versions that were deprecated, undeployed and/or removed. | 
 
 ## Example
 

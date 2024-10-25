@@ -16,6 +16,7 @@ from pydantic import (
     StrictBytes,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 

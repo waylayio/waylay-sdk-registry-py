@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **version** | **str** | A semantic version with _exactly_ a &#x60;major&#x60;, &#x60;minor&#x60; and &#x60;patch&#x60; specifier. No &#x60;pre-release&#x60; or &#x60;build&#x60; identifiers are allowed. See https://semver.org | 
 **title** | **str** |  | 
 **description** | **str** |  | [optional] 
+**tags** | **List[str]** |  | [optional] 
 
 ## Example
 

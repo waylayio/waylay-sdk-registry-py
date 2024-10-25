@@ -21,6 +21,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
@@ -29,7 +30,7 @@ class UndeployedResponseV2(WaylayBaseModel):
 
     message: StrictStr
     versions: List[Annotated[str, Field(strict=True)]] = Field(
-        description="The versions that where deprecated, undeployed and/or removed."
+        description="The versions that were deprecated, undeployed and/or removed."
     )
 
     model_config = ConfigDict(

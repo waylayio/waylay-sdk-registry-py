@@ -21,16 +21,20 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.archive_format import ArchiveFormat
-from ..models.function_type import FunctionType
+from ..models.archive_format_filter import ArchiveFormatFilter
+from ..models.function_type_filter import FunctionTypeFilter
 from ..models.latest_version_level import LatestVersionLevel
+from ..models.show_embedding import ShowEmbedding
 
 
 def _example_archive_query_alias_for(field_name: str) -> str:
     if field_name == "ls":
         return "ls"
+    if field_name == "show_tags":
+        return "showTags"
     if field_name == "include_deprecated":
         return "includeDeprecated"
     return field_name
@@ -43,6 +47,12 @@ class ExampleArchiveQuery(WaylayBaseModel):
         StrictBool | None,
         Field(
             description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime."
+        ),
+    ] = None
+    show_tags: Annotated[
+        ShowEmbedding | None,
+        Field(
+            description="Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted."
         ),
     ] = None
     include_deprecated: Annotated[
@@ -63,6 +73,8 @@ class ExampleArchiveQuery(WaylayBaseModel):
 def _get_example_asset_query_alias_for(field_name: str) -> str:
     if field_name == "ls":
         return "ls"
+    if field_name == "show_tags":
+        return "showTags"
     if field_name == "include_deprecated":
         return "includeDeprecated"
     return field_name
@@ -75,6 +87,12 @@ class GetExampleAssetQuery(WaylayBaseModel):
         StrictBool | None,
         Field(
             description="If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime."
+        ),
+    ] = None
+    show_tags: Annotated[
+        ShowEmbedding | None,
+        Field(
+            description="Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted."
         ),
     ] = None
     include_deprecated: Annotated[
@@ -93,10 +111,14 @@ class GetExampleAssetQuery(WaylayBaseModel):
 
 
 def _get_latest_query_alias_for(field_name: str) -> str:
+    if field_name == "show_tags":
+        return "showTags"
     if field_name == "version":
         return "version"
     if field_name == "include_deprecated":
         return "includeDeprecated"
+    if field_name == "tags":
+        return "tags"
     if field_name == "function_type":
         return "functionType"
     if field_name == "archive_format":
@@ -107,6 +129,12 @@ def _get_latest_query_alias_for(field_name: str) -> str:
 class GetLatestQuery(WaylayBaseModel):
     """Model for `get_latest` query parameters."""
 
+    show_tags: Annotated[
+        ShowEmbedding | None,
+        Field(
+            description="Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted."
+        ),
+    ] = None
     version: Annotated[
         Any | None,
         Field(
@@ -119,14 +147,20 @@ class GetLatestQuery(WaylayBaseModel):
             description="If set to `true`, deprecated runtimes will be included in the query."
         ),
     ] = None
+    tags: Annotated[
+        Any | None,
+        Field(
+            description="If set, filters on the <code>tags</code> of a runtime __version__. Filter values with a `-` postfix exclude the tag."
+        ),
+    ] = None
     function_type: Annotated[
-        List[FunctionType] | None,
+        List[FunctionTypeFilter] | None,
         Field(
             description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
         ),
     ] = None
     archive_format: Annotated[
-        List[ArchiveFormat] | None,
+        List[ArchiveFormatFilter] | None,
         Field(
             description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
         ),
@@ -141,6 +175,8 @@ class GetLatestQuery(WaylayBaseModel):
 
 
 def _get_query_alias_for(field_name: str) -> str:
+    if field_name == "show_tags":
+        return "showTags"
     if field_name == "include_deprecated":
         return "includeDeprecated"
     return field_name
@@ -149,6 +185,12 @@ def _get_query_alias_for(field_name: str) -> str:
 class GetQuery(WaylayBaseModel):
     """Model for `get` query parameters."""
 
+    show_tags: Annotated[
+        ShowEmbedding | None,
+        Field(
+            description="Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted."
+        ),
+    ] = None
     include_deprecated: Annotated[
         StrictBool | None,
         Field(
@@ -165,12 +207,16 @@ class GetQuery(WaylayBaseModel):
 
 
 def _list_query_alias_for(field_name: str) -> str:
+    if field_name == "show_tags":
+        return "showTags"
     if field_name == "version":
         return "version"
     if field_name == "latest":
         return "latest"
     if field_name == "include_deprecated":
         return "includeDeprecated"
+    if field_name == "tags":
+        return "tags"
     if field_name == "name":
         return "name"
     if field_name == "function_type":
@@ -183,6 +229,12 @@ def _list_query_alias_for(field_name: str) -> str:
 class ListQuery(WaylayBaseModel):
     """Model for `list` query parameters."""
 
+    show_tags: Annotated[
+        ShowEmbedding | None,
+        Field(
+            description="Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted."
+        ),
+    ] = None
     version: Annotated[
         Any | None,
         Field(
@@ -201,6 +253,12 @@ class ListQuery(WaylayBaseModel):
             description="If set to `true`, deprecated runtimes will be included in the query."
         ),
     ] = None
+    tags: Annotated[
+        Any | None,
+        Field(
+            description="If set, filters on the <code>tags</code> of a runtime __version__. Filter values with a `-` postfix exclude the tag."
+        ),
+    ] = None
     name: Annotated[
         StrictStr | None,
         Field(
@@ -208,13 +266,13 @@ class ListQuery(WaylayBaseModel):
         ),
     ] = None
     function_type: Annotated[
-        List[FunctionType] | None,
+        List[FunctionTypeFilter] | None,
         Field(
             description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
         ),
     ] = None
     archive_format: Annotated[
-        List[ArchiveFormat] | None,
+        List[ArchiveFormatFilter] | None,
         Field(
             description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
         ),
@@ -235,10 +293,14 @@ def _list_versions_query_alias_for(field_name: str) -> str:
         return "latest"
     if field_name == "include_deprecated":
         return "includeDeprecated"
+    if field_name == "tags":
+        return "tags"
     if field_name == "function_type":
         return "functionType"
     if field_name == "archive_format":
         return "archiveFormat"
+    if field_name == "show_tags":
+        return "showTags"
     return field_name
 
 
@@ -263,16 +325,28 @@ class ListVersionsQuery(WaylayBaseModel):
             description="If set to `true`, deprecated runtimes will be included in the query."
         ),
     ] = None
+    tags: Annotated[
+        Any | None,
+        Field(
+            description="If set, filters on the <code>tags</code> of a runtime __version__. Filter values with a `-` postfix exclude the tag."
+        ),
+    ] = None
     function_type: Annotated[
-        List[FunctionType] | None,
+        List[FunctionTypeFilter] | None,
         Field(
             description="If set, filters on the <code>functionType</code> of a runtime. Uses an exact match."
         ),
     ] = None
     archive_format: Annotated[
-        List[ArchiveFormat] | None,
+        List[ArchiveFormatFilter] | None,
         Field(
             description="If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match."
+        ),
+    ] = None
+    show_tags: Annotated[
+        ShowEmbedding | None,
+        Field(
+            description="Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted."
         ),
     ] = None
 
@@ -280,5 +354,52 @@ class ListVersionsQuery(WaylayBaseModel):
         protected_namespaces=(),
         extra="allow",
         alias_generator=_list_versions_query_alias_for,
+        populate_by_name=True,
+    )
+
+
+def _tag_query_alias_for(field_name: str) -> str:
+    return field_name
+
+
+class TagQuery(WaylayBaseModel):
+    """Model for `tag` query parameters."""
+
+    model_config = ConfigDict(
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_tag_query_alias_for,
+        populate_by_name=True,
+    )
+
+
+def _tags_query_alias_for(field_name: str) -> str:
+    if field_name == "name":
+        return "name"
+    if field_name == "color":
+        return "color"
+    return field_name
+
+
+class TagsQuery(WaylayBaseModel):
+    """Model for `tags` query parameters."""
+
+    name: Annotated[
+        StrictStr | None,
+        Field(
+            description="If set, filters on the <code>name</code> of a tag. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive."
+        ),
+    ] = None
+    color: Annotated[
+        StrictStr | None,
+        Field(
+            description="If set, filters on the <code>color</code> of a tag. Uses an exact match."
+        ),
+    ] = None
+
+    model_config = ConfigDict(
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_tags_query_alias_for,
         populate_by_name=True,
     )

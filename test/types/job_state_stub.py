@@ -37,6 +37,8 @@ job_state_model_schema = json.loads(
     "$ref" : "#/components/schemas/JobStateWaiting"
   }, {
     "$ref" : "#/components/schemas/JobStateWaitingChildren"
+  }, {
+    "$ref" : "#/components/schemas/JobStatePrioritized"
   } ]
 }
 """,
@@ -61,7 +63,7 @@ class JobStateStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(JobStateAdapter.json_schema(), allow_none_optionals=1)
             json = backup_faker.generate(use_defaults=True, use_examples=True)

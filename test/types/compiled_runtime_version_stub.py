@@ -42,8 +42,7 @@ compiled_runtime_version_model_schema = json.loads(
       "description" : "If true, a newer runtime for this function is available using the `rebuild` API."
     },
     "name" : {
-      "title" : "name",
-      "type" : "string"
+      "$ref" : "#/components/schemas/TagReference"
     },
     "functionType" : {
       "$ref" : "#/components/schemas/FunctionType"
@@ -73,6 +72,14 @@ compiled_runtime_version_model_schema = json.loads(
     },
     "invocation" : {
       "$ref" : "#/components/schemas/InvocationAttributes"
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Tags used for grouping or filtering.",
+      "items" : {
+        "$ref" : "#/components/schemas/TagReference"
+      }
     },
     "title" : {
       "title" : "title",
@@ -114,7 +121,7 @@ class CompiledRuntimeVersionStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 CompiledRuntimeVersionAdapter.json_schema(), allow_none_optionals=1

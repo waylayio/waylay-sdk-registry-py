@@ -24,6 +24,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.archive_format import ArchiveFormat
@@ -45,7 +46,7 @@ class CompiledRuntimeVersion(WaylayBaseModel):
     upgradable: StrictBool = Field(
         description="If true, a newer runtime for this function is available using the `rebuild` API."
     )
-    name: StrictStr
+    name: StrictStr = Field(description="A string that references a tag")
     function_type: FunctionType = Field(alias="functionType")
     archive_format: ArchiveFormat = Field(alias="archiveFormat")
     build: BuildSpec | None = None
@@ -58,6 +59,9 @@ class CompiledRuntimeVersion(WaylayBaseModel):
     )
     assets: AssetsConditions | None = None
     invocation: InvocationAttributes | None = None
+    tags: List[StrictStr] | None = Field(
+        default=None, description="Tags used for grouping or filtering."
+    )
     title: StrictStr
     description: StrictStr | None = None
     version: Annotated[str, Field(strict=True)] = Field(

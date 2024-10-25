@@ -19,8 +19,10 @@ from pydantic import (
     StrictFloat,
     StrictInt,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
+from ..models.get_plug_response_v2_embedded import GetPlugResponseV2Embedded
 from ..models.webscript_response_with_invoke_link_v2 import (
     WebscriptResponseWithInvokeLinkV2,
 )
@@ -29,6 +31,7 @@ from ..models.webscript_response_with_invoke_link_v2 import (
 class WebscriptVersionsResponseV2(WaylayBaseModel):
     """Webscript Versions Found."""
 
+    embedded: GetPlugResponseV2Embedded | None = Field(default=None, alias="_embedded")
     limit: StrictFloat | StrictInt | None = Field(
         default=None, description="The page size used for this query result."
     )

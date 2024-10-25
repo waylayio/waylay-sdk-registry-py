@@ -16,6 +16,7 @@ from pydantic import (
     Field,
     StrictBool,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.invocation_attributes_auth import InvocationAttributesAuth

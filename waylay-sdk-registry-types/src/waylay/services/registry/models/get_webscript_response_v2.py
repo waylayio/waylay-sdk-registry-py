@@ -15,8 +15,10 @@ from pydantic import (
     ConfigDict,
     Field,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
+from ..models.get_plug_response_v2_embedded import GetPlugResponseV2Embedded
 from ..models.get_webscript_response_v2_links import GetWebscriptResponseV2Links
 from ..models.webscript_response_v2 import WebscriptResponseV2
 
@@ -24,6 +26,7 @@ from ..models.webscript_response_v2 import WebscriptResponseV2
 class GetWebscriptResponseV2(WaylayBaseModel):
     """Webscript Found."""
 
+    embedded: GetPlugResponseV2Embedded | None = Field(default=None, alias="_embedded")
     entity: WebscriptResponseV2
     links: GetWebscriptResponseV2Links = Field(alias="_links")
 

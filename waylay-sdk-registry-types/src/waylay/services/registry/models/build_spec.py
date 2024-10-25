@@ -17,6 +17,7 @@ from pydantic import (
     ConfigDict,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
@@ -24,6 +25,7 @@ class BuildSpec(WaylayBaseModel):
     """BuildSpec."""
 
     context: StrictStr
+    file: StrictStr | None = None
     args: Dict[str, StrictStr]
 
     model_config = ConfigDict(

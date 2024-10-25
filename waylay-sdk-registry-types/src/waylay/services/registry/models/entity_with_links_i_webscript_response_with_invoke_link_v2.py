@@ -20,6 +20,7 @@ from pydantic import (
     StrictBool,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.alt_embedded_version_i_webscript_response_with_invoke_link_v2 import (
@@ -53,8 +54,9 @@ class EntityWithLinksIWebscriptResponseWithInvokeLinkV2(WaylayBaseModel):
         description="The timestamp at which this entity was last updated.",
         alias="updatedAt",
     )
-    updates: List[UpdateRecord] = Field(
-        description="The audit logs corresponding to the latest modifying operations on this entity."
+    updates: List[UpdateRecord] | None = Field(
+        default=None,
+        description="The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
     )
     status: Status
     failure_reason: FailureReason | None = Field(default=None, alias="failureReason")
