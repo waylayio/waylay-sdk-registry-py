@@ -27,7 +27,7 @@ except ImportError as exc:
 
 webscript_response_v2_model_schema = json.loads(
     r"""{
-  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "updates", "webscript" ],
+  "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "webscript" ],
   "type" : "object",
   "properties" : {
     "createdBy" : {
@@ -50,7 +50,7 @@ webscript_response_v2_model_schema = json.loads(
     },
     "updates" : {
       "type" : "array",
-      "description" : "The audit logs corresponding to the latest modifying operations on this entity.",
+      "description" : "The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations.",
       "items" : {
         "$ref" : "#/components/schemas/UpdateRecord"
       }
@@ -107,7 +107,7 @@ class WebscriptResponseV2Stub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 WebscriptResponseV2Adapter.json_schema(), allow_none_optionals=1

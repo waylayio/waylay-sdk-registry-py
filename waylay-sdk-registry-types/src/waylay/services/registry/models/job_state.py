@@ -22,6 +22,7 @@ from typing_extensions import (
 from ..models.job_state_active import JobStateActive
 from ..models.job_state_delayed import JobStateDelayed
 from ..models.job_state_finished import JobStateFinished
+from ..models.job_state_prioritized import JobStatePrioritized
 from ..models.job_state_waiting import JobStateWaiting
 from ..models.job_state_waiting_children import JobStateWaitingChildren
 
@@ -31,5 +32,6 @@ JobState = Union[
     Annotated[JobStateDelayed, ""],
     Annotated[JobStateWaiting, ""],
     Annotated[JobStateWaitingChildren, ""],
+    Annotated[JobStatePrioritized, ""],
 ]
 """Allowed job states."""

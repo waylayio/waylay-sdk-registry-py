@@ -49,6 +49,13 @@ runtime_version_info_model_schema = json.loads(
     "description" : {
       "title" : "description",
       "type" : "string"
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/components/schemas/TagReference"
+      }
     }
   },
   "description" : "A summary of a selected version for a runtime"
@@ -77,7 +84,7 @@ class RuntimeVersionInfoStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 RuntimeVersionInfoAdapter.json_schema(), allow_none_optionals=1

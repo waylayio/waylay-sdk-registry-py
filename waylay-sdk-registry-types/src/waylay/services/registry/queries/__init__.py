@@ -3,7 +3,7 @@
 
 This code was generated from the OpenAPI documentation of 'Waylay Function Registry'
 
-version: 2.14.2
+version: 2.17.1
 
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 

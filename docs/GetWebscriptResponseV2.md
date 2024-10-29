@@ -6,6 +6,7 @@ Webscript Found
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**embedded** | [**GetPlugResponseV2Embedded**](GetPlugResponseV2Embedded.md) |  | [optional] 
 **entity** | [**WebscriptResponseV2**](WebscriptResponseV2.md) |  | 
 **links** | [**GetWebscriptResponseV2Links**](GetWebscriptResponseV2Links.md) |  | 
 

@@ -14,12 +14,10 @@ from __future__ import annotations
 from enum import Enum
 
 
-class ShowRelatedType(str, Enum):
-    """ShowRelatedType."""
+class JobStatePrioritized(str, Enum):
+    """The job has been queued for execution with priority, but might be waiting because of rate limiting.."""
 
-    EMBED = "embed"
-    LINK = "link"
-    NONE = "none"
+    PRIORITIZED = "prioritized"
 
     def __str__(self) -> str:
         return str(self.value)

@@ -16,18 +16,18 @@ from pydantic import TypeAdapter
 from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
-    from waylay.services.registry.models.get_plug_response_v2_links_draft import (
-        GetPlugResponseV2LinksDraft,
+    from waylay.services.registry.models.alt_version_hal_link_published import (
+        AltVersionHALLinkPublished,
     )
 
-    GetPlugResponseV2LinksDraftAdapter = TypeAdapter(GetPlugResponseV2LinksDraft)
+    AltVersionHALLinkPublishedAdapter = TypeAdapter(AltVersionHALLinkPublished)
     MODELS_AVAILABLE = True
 except ImportError as exc:
     MODELS_AVAILABLE = False
 
-get_plug_response_v2__links_draft_model_schema = json.loads(
+alt_version_hal_link_published_model_schema = json.loads(
     r"""{
-  "title" : "GetPlugResponseV2__links_draft",
+  "title" : "AltVersionHALLink_published",
   "required" : [ "deprecated", "draft", "href", "version" ],
   "type" : "object",
   "properties" : {
@@ -44,48 +44,46 @@ get_plug_response_v2__links_draft_model_schema = json.loads(
       "type" : "boolean"
     }
   },
-  "description" : "Link to the lastest draft version.",
+  "description" : "Link to the lastest published version.",
   "example" : {
     "href" : "https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1",
-    "version" : "1.0.1",
-    "draft" : true,
+    "version" : "1.2.0",
+    "draft" : false,
     "deprecated" : false
   }
 }
 """,
     object_hook=with_example_provider,
 )
-get_plug_response_v2__links_draft_model_schema.update({
-    "definitions": MODEL_DEFINITIONS
-})
+alt_version_hal_link_published_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
-get_plug_response_v2__links_draft_faker = JSF(
-    get_plug_response_v2__links_draft_model_schema, allow_none_optionals=1
+alt_version_hal_link_published_faker = JSF(
+    alt_version_hal_link_published_model_schema, allow_none_optionals=1
 )
 
 
-class GetPlugResponseV2LinksDraftStub:
-    """GetPlugResponseV2LinksDraft unit test stubs."""
+class AltVersionHALLinkPublishedStub:
+    """AltVersionHALLinkPublished unit test stubs."""
 
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return get_plug_response_v2__links_draft_faker.generate(
+        return alt_version_hal_link_published_faker.generate(
             use_defaults=True, use_examples=True
         )
 
     @classmethod
-    def create_instance(cls) -> "GetPlugResponseV2LinksDraft":
-        """Create GetPlugResponseV2LinksDraft stub instance."""
+    def create_instance(cls) -> "AltVersionHALLinkPublished":
+        """Create AltVersionHALLinkPublished stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
-                GetPlugResponseV2LinksDraftAdapter.json_schema(), allow_none_optionals=1
+                AltVersionHALLinkPublishedAdapter.json_schema(), allow_none_optionals=1
             )
             json = backup_faker.generate(use_defaults=True, use_examples=True)
-        return GetPlugResponseV2LinksDraftAdapter.validate_python(
+        return AltVersionHALLinkPublishedAdapter.validate_python(
             json, context={"skip_validation": True}
         )

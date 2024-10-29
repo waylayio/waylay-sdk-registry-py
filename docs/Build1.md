@@ -10,6 +10,9 @@ Name | Type | Description | Notes
 **id** | **str** | The id of the background job, or the constant &#x60;_unknown_&#x60; | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **created_at** | **datetime** | The creation time of this job | 
+**processed_at** | **datetime** | The timestamp of when the job has begun processing. | [optional] 
+**finished_at** | **datetime** | The timestamp of when the job has finished processing. | [optional] 
+**attempts_made** | **float** | The number of retries that were attempted. | [optional] 
 **created_by** | **str** | The user that initiated this job | 
 **function** | [**FunctionRef**](FunctionRef.md) |  | [optional] 
 **links** | [**JobAndFunctionHALLink**](JobAndFunctionHALLink.md) |  | 

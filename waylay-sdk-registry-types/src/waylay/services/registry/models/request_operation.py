@@ -26,6 +26,8 @@ class RequestOperation(str, Enum):
     DEPRECATE = "deprecate"
     UNDEPLOY = "undeploy"
     UNDEPRECATE = "undeprecate"
+    PROTECT = "protect"
+    UNPROTECT = "unprotect"
 
     def __str__(self) -> str:
         return str(self.value)

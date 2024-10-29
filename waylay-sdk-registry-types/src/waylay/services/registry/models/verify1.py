@@ -16,8 +16,11 @@ from datetime import datetime
 from pydantic import (
     ConfigDict,
     Field,
+    StrictFloat,
+    StrictInt,
     StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.function_ref import FunctionRef
@@ -39,6 +42,21 @@ class Verify1(WaylayBaseModel):
     state: JobStateResult
     created_at: datetime = Field(
         description="The creation time of this job", alias="createdAt"
+    )
+    processed_at: datetime | None = Field(
+        default=None,
+        description="The timestamp of when the job has begun processing.",
+        alias="processedAt",
+    )
+    finished_at: datetime | None = Field(
+        default=None,
+        description="The timestamp of when the job has finished processing.",
+        alias="finishedAt",
+    )
+    attempts_made: StrictFloat | StrictInt | None = Field(
+        default=None,
+        description="The number of retries that were attempted.",
+        alias="attemptsMade",
     )
     created_by: StrictStr = Field(
         description="The user that initiated this job", alias="createdBy"

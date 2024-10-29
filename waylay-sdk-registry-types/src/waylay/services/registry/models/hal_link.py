@@ -14,6 +14,7 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.hal_link_href import HALLinkHref

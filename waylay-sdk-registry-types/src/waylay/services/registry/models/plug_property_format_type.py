@@ -25,6 +25,8 @@ class PlugPropertyFormatType(str, Enum):
     URL = "url"
     DATE = "date"
     TEMPLATE = "template"
+    AIPLUGINDESCRIPTOR = "aiPluginDescriptor"
+    AITEMPLATEDESCRIPTOR = "aiTemplateDescriptor"
 
     def __str__(self) -> str:
         return str(self.value)

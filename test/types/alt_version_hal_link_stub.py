@@ -28,10 +28,10 @@ alt_version_hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "draft" : {
-      "$ref" : "#/components/schemas/GetPlugResponseV2__links_draft"
+      "$ref" : "#/components/schemas/AltVersionHALLink_draft"
     },
     "published" : {
-      "$ref" : "#/components/schemas/GetPlugResponseV2__links_published"
+      "$ref" : "#/components/schemas/AltVersionHALLink_published"
     }
   }
 }
@@ -59,7 +59,7 @@ class AltVersionHALLinkStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 AltVersionHALLinkAdapter.json_schema(), allow_none_optionals=1

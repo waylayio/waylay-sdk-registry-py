@@ -19,16 +19,19 @@ from pydantic import (
     StrictFloat,
     StrictInt,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.entity_with_links_i_kfserving_response_v2 import (
     EntityWithLinksIKfservingResponseV2,
 )
+from ..models.get_plug_response_v2_embedded import GetPlugResponseV2Embedded
 
 
 class LatestModelsResponseV2(WaylayBaseModel):
     """Models Found."""
 
+    embedded: GetPlugResponseV2Embedded | None = Field(default=None, alias="_embedded")
     limit: StrictFloat | StrictInt | None = Field(
         default=None, description="The page size used for this query result."
     )

@@ -15,6 +15,7 @@ from pydantic import (
     ConfigDict,
     Field,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.deploy_spec_openfaas_spec import DeploySpecOpenfaasSpec

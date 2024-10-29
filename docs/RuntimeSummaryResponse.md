@@ -6,6 +6,7 @@ Runtimes Found
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**embedded** | [**RuntimeSummaryResponseEmbedded**](RuntimeSummaryResponseEmbedded.md) |  | [optional] 
 **runtimes** | [**List[RuntimeSummary]**](RuntimeSummary.md) |  | 
 
 ## Example

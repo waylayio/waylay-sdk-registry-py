@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | [**PlugPropertyFormatType**](PlugPropertyFormatType.md) |  | [optional] 
+**type** | [**PlugPropertyFormatType**](PlugPropertyFormatType.md) |  | 
 **values** | **List[object]** | The enumerated value domain when &lt;code&gt;type&#x3D;\&quot;enum\&quot;&lt;/code&gt; | [optional] 
 
 ## Example

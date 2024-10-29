@@ -5,9 +5,9 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**states** | **List[str]** | The states of a plug as implemented in the plug code. | [optional] 
-**input** | [**List[PlugProperty]**](PlugProperty.md) | The named input parameters of a plug | [optional] 
-**output** | [**List[PlugProperty]**](PlugProperty.md) | The named output parameters of a plug | [optional] 
+**states** | **List[str]** | The states of a plug as implemented in the plug code. Required and supported for &#x60;type&#x3D;sensor&#x60; plugs _only_. | [optional] 
+**input** | [**List[PlugProperty]**](PlugProperty.md) | The named input parameters of a plug. Supported for &#x60;type&#x3D;sensor&#x60; plugs; fixed with input attributes &#x60;data&#x60; and &#x60;resource&#x60; for &#x60;type&#x3D;transformer&#x60;plugs. | [optional] 
+**output** | [**List[PlugProperty]**](PlugProperty.md) | The named output parameters of a plug. Supported for all plug types. | [optional] 
 
 ## Example
 

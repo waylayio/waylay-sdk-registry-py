@@ -2,7 +2,7 @@
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
 This Python package is automatically generated based on the 
-Waylay Registry OpenAPI specification (API version: 2.14.2)
+Waylay Registry OpenAPI specification (API version: 2.17.1)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/registry.html).
 
 It consists of two sub-packages that are both plugins for the waylay-sdk-core package.
@@ -62,6 +62,20 @@ Class | Method | HTTP request | Description
 *JobsApi* | [**events**](docs/JobsApi.md#events) | **GET** /registry/v2/jobs/events | Stream Events
 *JobsApi* | [**get**](docs/JobsApi.md#get) | **GET** /registry/v2/jobs/{type}/{id} | Get Job
 *JobsApi* | [**list**](docs/JobsApi.md#list) | **GET** /registry/v2/jobs/ | List Jobs
+*ModelTagsApi* | [**add_all**](docs/ModelTagsApi.md#add_all) | **PATCH** /registry/v2/models/{name}/tags | Add Tags On All
+*ModelTagsApi* | [**add**](docs/ModelTagsApi.md#add) | **PATCH** /registry/v2/models/{name}/versions/{version}/tags | Add Tags
+*ModelTagsApi* | [**clear_all**](docs/ModelTagsApi.md#clear_all) | **DELETE** /registry/v2/models/{name}/tags | Clear Tags On Any/All
+*ModelTagsApi* | [**clear**](docs/ModelTagsApi.md#clear) | **DELETE** /registry/v2/models/{name}/versions/{version}/tags | Clear Tags
+*ModelTagsApi* | [**find_all**](docs/ModelTagsApi.md#find_all) | **GET** /registry/v2/models/{name}/tags/{tagName} | Find Tags On Any/All
+*ModelTagsApi* | [**find**](docs/ModelTagsApi.md#find) | **GET** /registry/v2/models/{name}/versions/{version}/tags/{tagName} | Find Tag
+*ModelTagsApi* | [**list_all**](docs/ModelTagsApi.md#list_all) | **GET** /registry/v2/models/{name}/tags | List Tags On Any/All
+*ModelTagsApi* | [**list**](docs/ModelTagsApi.md#list) | **GET** /registry/v2/models/{name}/versions/{version}/tags | List Tags
+*ModelTagsApi* | [**put_all**](docs/ModelTagsApi.md#put_all) | **PUT** /registry/v2/models/{name}/tags/{tagName} | Put Tag On All
+*ModelTagsApi* | [**put**](docs/ModelTagsApi.md#put) | **PUT** /registry/v2/models/{name}/versions/{version}/tags/{tagName} | Put Tag
+*ModelTagsApi* | [**remove_all**](docs/ModelTagsApi.md#remove_all) | **DELETE** /registry/v2/models/{name}/tags/{tagName} | Remove Tag On Any/All
+*ModelTagsApi* | [**remove**](docs/ModelTagsApi.md#remove) | **DELETE** /registry/v2/models/{name}/versions/{version}/tags/{tagName} | Remove Tag
+*ModelTagsApi* | [**replace_all**](docs/ModelTagsApi.md#replace_all) | **PUT** /registry/v2/models/{name}/tags | Replace Tags On Any/All
+*ModelTagsApi* | [**replace**](docs/ModelTagsApi.md#replace) | **PUT** /registry/v2/models/{name}/versions/{version}/tags | Replace Tags
 *ModelsApi* | [**create**](docs/ModelsApi.md#create) | **POST** /registry/v2/models/ | Create Model
 *ModelsApi* | [**delete_asset**](docs/ModelsApi.md#delete_asset) | **DELETE** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Delete Model Asset
 *ModelsApi* | [**get_archive**](docs/ModelsApi.md#get_archive) | **GET** /registry/v2/models/{name}/versions/{version}/content | Get Model Archive
@@ -72,6 +86,8 @@ Class | Method | HTTP request | Description
 *ModelsApi* | [**list**](docs/ModelsApi.md#list) | **GET** /registry/v2/models/ | List Models
 *ModelsApi* | [**list_versions**](docs/ModelsApi.md#list_versions) | **GET** /registry/v2/models/{name}/versions | List Model Versions
 *ModelsApi* | [**patch_metadata**](docs/ModelsApi.md#patch_metadata) | **PATCH** /registry/v2/models/{name}/versions/{version}/metadata | Patch Model Metadata
+*ModelsApi* | [**protect**](docs/ModelsApi.md#protect) | **POST** /registry/v2/models/{name}/versions/{version}/protect | Protect Model Version
+*ModelsApi* | [**protect_versions**](docs/ModelsApi.md#protect_versions) | **POST** /registry/v2/models/{name}/protect | Protect Model
 *ModelsApi* | [**publish**](docs/ModelsApi.md#publish) | **POST** /registry/v2/models/{name}/versions/{version}/publish | Publish Draft Model
 *ModelsApi* | [**rebuild**](docs/ModelsApi.md#rebuild) | **POST** /registry/v2/models/{name}/versions/{version}/rebuild | Rebuild Model
 *ModelsApi* | [**remove_version**](docs/ModelsApi.md#remove_version) | **DELETE** /registry/v2/models/{name}/versions/{version} | Remove Model Version
@@ -79,6 +95,20 @@ Class | Method | HTTP request | Description
 *ModelsApi* | [**update_asset**](docs/ModelsApi.md#update_asset) | **PUT** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Update Model Asset
 *ModelsApi* | [**update_assets**](docs/ModelsApi.md#update_assets) | **PUT** /registry/v2/models/{name}/versions/{version}/content | Update Model Assets
 *ModelsApi* | [**verify**](docs/ModelsApi.md#verify) | **POST** /registry/v2/models/{name}/versions/{version}/verify | Verify Health Of Model
+*PlugTagsApi* | [**add_all**](docs/PlugTagsApi.md#add_all) | **PATCH** /registry/v2/plugs/{name}/tags | Add Tags On All
+*PlugTagsApi* | [**add**](docs/PlugTagsApi.md#add) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/tags | Add Tags
+*PlugTagsApi* | [**clear_all**](docs/PlugTagsApi.md#clear_all) | **DELETE** /registry/v2/plugs/{name}/tags | Clear Tags On Any/All
+*PlugTagsApi* | [**clear**](docs/PlugTagsApi.md#clear) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/tags | Clear Tags
+*PlugTagsApi* | [**find_all**](docs/PlugTagsApi.md#find_all) | **GET** /registry/v2/plugs/{name}/tags/{tagName} | Find Tags On Any/All
+*PlugTagsApi* | [**find**](docs/PlugTagsApi.md#find) | **GET** /registry/v2/plugs/{name}/versions/{version}/tags/{tagName} | Find Tag
+*PlugTagsApi* | [**list_all**](docs/PlugTagsApi.md#list_all) | **GET** /registry/v2/plugs/{name}/tags | List Tags On Any/All
+*PlugTagsApi* | [**list**](docs/PlugTagsApi.md#list) | **GET** /registry/v2/plugs/{name}/versions/{version}/tags | List Tags
+*PlugTagsApi* | [**put_all**](docs/PlugTagsApi.md#put_all) | **PUT** /registry/v2/plugs/{name}/tags/{tagName} | Put Tag On All
+*PlugTagsApi* | [**put**](docs/PlugTagsApi.md#put) | **PUT** /registry/v2/plugs/{name}/versions/{version}/tags/{tagName} | Put Tag
+*PlugTagsApi* | [**remove_all**](docs/PlugTagsApi.md#remove_all) | **DELETE** /registry/v2/plugs/{name}/tags/{tagName} | Remove Tag On Any/All
+*PlugTagsApi* | [**remove**](docs/PlugTagsApi.md#remove) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/tags/{tagName} | Remove Tag
+*PlugTagsApi* | [**replace_all**](docs/PlugTagsApi.md#replace_all) | **PUT** /registry/v2/plugs/{name}/tags | Replace Tags On Any/All
+*PlugTagsApi* | [**replace**](docs/PlugTagsApi.md#replace) | **PUT** /registry/v2/plugs/{name}/versions/{version}/tags | Replace Tags
 *PlugsApi* | [**create**](docs/PlugsApi.md#create) | **POST** /registry/v2/plugs/ | Create Plug
 *PlugsApi* | [**delete_asset**](docs/PlugsApi.md#delete_asset) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Delete Plug Asset
 *PlugsApi* | [**get_archive**](docs/PlugsApi.md#get_archive) | **GET** /registry/v2/plugs/{name}/versions/{version}/content | Get Plug Archive
@@ -90,6 +120,8 @@ Class | Method | HTTP request | Description
 *PlugsApi* | [**list_versions**](docs/PlugsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Plug Versions
 *PlugsApi* | [**patch_interface**](docs/PlugsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Plug Interface
 *PlugsApi* | [**patch_metadata**](docs/PlugsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Plug Metadata
+*PlugsApi* | [**protect**](docs/PlugsApi.md#protect) | **POST** /registry/v2/plugs/{name}/versions/{version}/protect | Protect Plug Version
+*PlugsApi* | [**protect_versions**](docs/PlugsApi.md#protect_versions) | **POST** /registry/v2/plugs/{name}/protect | Protect Plug
 *PlugsApi* | [**publish**](docs/PlugsApi.md#publish) | **POST** /registry/v2/plugs/{name}/versions/{version}/publish | Publish Draft Plug
 *PlugsApi* | [**rebuild**](docs/PlugsApi.md#rebuild) | **POST** /registry/v2/plugs/{name}/versions/{version}/rebuild | Rebuild Plug
 *PlugsApi* | [**remove_version**](docs/PlugsApi.md#remove_version) | **DELETE** /registry/v2/plugs/{name}/versions/{version} | Remove Plug Version
@@ -103,8 +135,27 @@ Class | Method | HTTP request | Description
 *RuntimesApi* | [**get**](docs/RuntimesApi.md#get) | **GET** /registry/v2/runtimes/{name}/versions/{version} | Get Runtime Version
 *RuntimesApi* | [**list**](docs/RuntimesApi.md#list) | **GET** /registry/v2/runtimes/ | List Runtimes
 *RuntimesApi* | [**list_versions**](docs/RuntimesApi.md#list_versions) | **GET** /registry/v2/runtimes/{name}/versions | List Runtime Versions
+*RuntimesApi* | [**tag**](docs/RuntimesApi.md#tag) | **GET** /registry/v2/runtimeTags/{tagName} | Get Runtime Tag
+*RuntimesApi* | [**tags**](docs/RuntimesApi.md#tags) | **GET** /registry/v2/runtimeTags/ | List Runtime Tags
 *SchemasApi* | [**get_by_role**](docs/SchemasApi.md#get_by_role) | **GET** /registry/v2/schemas/{functionType}/{role}/schema | Get Asset Schema
 *SchemasApi* | [**get**](docs/SchemasApi.md#get) | **GET** /registry/v2/schemas/{schemaId} | Get Asset Schema
+*TagsApi* | [**get**](docs/TagsApi.md#get) | **GET** /registry/v2/tags/{tagName} | Get
+*TagsApi* | [**list**](docs/TagsApi.md#list) | **GET** /registry/v2/tags/ | List
+*TagsApi* | [**remove**](docs/TagsApi.md#remove) | **DELETE** /registry/v2/tags/ | Remove Unused
+*WebscriptTagsApi* | [**add_all**](docs/WebscriptTagsApi.md#add_all) | **PATCH** /registry/v2/webscripts/{name}/tags | Add Tags On All
+*WebscriptTagsApi* | [**add**](docs/WebscriptTagsApi.md#add) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/tags | Add Tags
+*WebscriptTagsApi* | [**clear_all**](docs/WebscriptTagsApi.md#clear_all) | **DELETE** /registry/v2/webscripts/{name}/tags | Clear Tags On Any/All
+*WebscriptTagsApi* | [**clear**](docs/WebscriptTagsApi.md#clear) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/tags | Clear Tags
+*WebscriptTagsApi* | [**find_all**](docs/WebscriptTagsApi.md#find_all) | **GET** /registry/v2/webscripts/{name}/tags/{tagName} | Find Tags On Any/All
+*WebscriptTagsApi* | [**find**](docs/WebscriptTagsApi.md#find) | **GET** /registry/v2/webscripts/{name}/versions/{version}/tags/{tagName} | Find Tag
+*WebscriptTagsApi* | [**list_all**](docs/WebscriptTagsApi.md#list_all) | **GET** /registry/v2/webscripts/{name}/tags | List Tags On Any/All
+*WebscriptTagsApi* | [**list**](docs/WebscriptTagsApi.md#list) | **GET** /registry/v2/webscripts/{name}/versions/{version}/tags | List Tags
+*WebscriptTagsApi* | [**put_all**](docs/WebscriptTagsApi.md#put_all) | **PUT** /registry/v2/webscripts/{name}/tags/{tagName} | Put Tag On All
+*WebscriptTagsApi* | [**put**](docs/WebscriptTagsApi.md#put) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/tags/{tagName} | Put Tag
+*WebscriptTagsApi* | [**remove_all**](docs/WebscriptTagsApi.md#remove_all) | **DELETE** /registry/v2/webscripts/{name}/tags/{tagName} | Remove Tag On Any/All
+*WebscriptTagsApi* | [**remove**](docs/WebscriptTagsApi.md#remove) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/tags/{tagName} | Remove Tag
+*WebscriptTagsApi* | [**replace_all**](docs/WebscriptTagsApi.md#replace_all) | **PUT** /registry/v2/webscripts/{name}/tags | Replace Tags On Any/All
+*WebscriptTagsApi* | [**replace**](docs/WebscriptTagsApi.md#replace) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/tags | Replace Tags
 *WebscriptsApi* | [**create**](docs/WebscriptsApi.md#create) | **POST** /registry/v2/webscripts/ | Create Webscript Version
 *WebscriptsApi* | [**delete_asset**](docs/WebscriptsApi.md#delete_asset) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Delete Webscript Asset
 *WebscriptsApi* | [**get_archive**](docs/WebscriptsApi.md#get_archive) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content | Get Webscript Archive
@@ -115,6 +166,8 @@ Class | Method | HTTP request | Description
 *WebscriptsApi* | [**list_versions**](docs/WebscriptsApi.md#list_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Webscript Versions
 *WebscriptsApi* | [**list**](docs/WebscriptsApi.md#list) | **GET** /registry/v2/webscripts/ | List Webscripts
 *WebscriptsApi* | [**patch_metadata**](docs/WebscriptsApi.md#patch_metadata) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/metadata | Patch Webscript Metadata
+*WebscriptsApi* | [**protect_versions**](docs/WebscriptsApi.md#protect_versions) | **POST** /registry/v2/webscripts/{name}/protect | Protect Webscript
+*WebscriptsApi* | [**protect**](docs/WebscriptsApi.md#protect) | **POST** /registry/v2/webscripts/{name}/versions/{version}/protect | Protect Webscript Version
 *WebscriptsApi* | [**publish**](docs/WebscriptsApi.md#publish) | **POST** /registry/v2/webscripts/{name}/versions/{version}/publish | Publish Draft Webscript
 *WebscriptsApi* | [**rebuild**](docs/WebscriptsApi.md#rebuild) | **POST** /registry/v2/webscripts/{name}/versions/{version}/rebuild | Rebuild Webscript
 *WebscriptsApi* | [**remove_version**](docs/WebscriptsApi.md#remove_version) | **DELETE** /registry/v2/webscripts/{name}/versions/{version} | Remove Webscript Version
@@ -133,11 +186,15 @@ Class | Method | HTTP request | Description
  - [AltEmbeddedVersionIPlugResponseV2](docs/AltEmbeddedVersionIPlugResponseV2.md)
  - [AltEmbeddedVersionIWebscriptResponseWithInvokeLinkV2](docs/AltEmbeddedVersionIWebscriptResponseWithInvokeLinkV2.md)
  - [AltVersionHALLink](docs/AltVersionHALLink.md)
+ - [AltVersionHALLinkDraft](docs/AltVersionHALLinkDraft.md)
+ - [AltVersionHALLinkPublished](docs/AltVersionHALLinkPublished.md)
  - [AnyJobForFunction](docs/AnyJobForFunction.md)
  - [AnyJobResult](docs/AnyJobResult.md)
  - [AnyJobStatus](docs/AnyJobStatus.md)
  - [AnyJobStatusSummary](docs/AnyJobStatusSummary.md)
  - [ArchiveFormat](docs/ArchiveFormat.md)
+ - [ArchiveFormatExclude](docs/ArchiveFormatExclude.md)
+ - [ArchiveFormatFilter](docs/ArchiveFormatFilter.md)
  - [AssetCondition](docs/AssetCondition.md)
  - [AssetConditionContentType](docs/AssetConditionContentType.md)
  - [AssetConditionPattern](docs/AssetConditionPattern.md)
@@ -186,6 +243,7 @@ Class | Method | HTTP request | Description
  - [EntityWithLinksIKfservingResponseV2](docs/EntityWithLinksIKfservingResponseV2.md)
  - [EntityWithLinksIPlugResponseV2](docs/EntityWithLinksIPlugResponseV2.md)
  - [EntityWithLinksIWebscriptResponseWithInvokeLinkV2](docs/EntityWithLinksIWebscriptResponseWithInvokeLinkV2.md)
+ - [ErrorAndStatusResponse](docs/ErrorAndStatusResponse.md)
  - [EventAck](docs/EventAck.md)
  - [EventClose](docs/EventClose.md)
  - [EventKeepAlive](docs/EventKeepAlive.md)
@@ -200,12 +258,15 @@ Class | Method | HTTP request | Description
  - [FunctionDeployOverridesType](docs/FunctionDeployOverridesType.md)
  - [FunctionMeta](docs/FunctionMeta.md)
  - [FunctionRef](docs/FunctionRef.md)
+ - [FunctionTagResponse](docs/FunctionTagResponse.md)
+ - [FunctionTagsResponse](docs/FunctionTagsResponse.md)
  - [FunctionType](docs/FunctionType.md)
+ - [FunctionTypeExclude](docs/FunctionTypeExclude.md)
+ - [FunctionTypeFilter](docs/FunctionTypeFilter.md)
  - [GetModelResponseV2](docs/GetModelResponseV2.md)
  - [GetPlugResponseV2](docs/GetPlugResponseV2.md)
+ - [GetPlugResponseV2Embedded](docs/GetPlugResponseV2Embedded.md)
  - [GetPlugResponseV2Links](docs/GetPlugResponseV2Links.md)
- - [GetPlugResponseV2LinksDraft](docs/GetPlugResponseV2LinksDraft.md)
- - [GetPlugResponseV2LinksPublished](docs/GetPlugResponseV2LinksPublished.md)
  - [GetWebscriptResponseV2](docs/GetWebscriptResponseV2.md)
  - [GetWebscriptResponseV2Links](docs/GetWebscriptResponseV2Links.md)
  - [HALLink](docs/HALLink.md)
@@ -235,6 +296,7 @@ Class | Method | HTTP request | Description
  - [JobStateDelayed](docs/JobStateDelayed.md)
  - [JobStateFailed](docs/JobStateFailed.md)
  - [JobStateFinished](docs/JobStateFinished.md)
+ - [JobStatePrioritized](docs/JobStatePrioritized.md)
  - [JobStateResult](docs/JobStateResult.md)
  - [JobStateUnknown](docs/JobStateUnknown.md)
  - [JobStateWaiting](docs/JobStateWaiting.md)
@@ -267,6 +329,7 @@ Class | Method | HTTP request | Description
  - [LatestPlugsResponseV2](docs/LatestPlugsResponseV2.md)
  - [LatestVersionLevel](docs/LatestVersionLevel.md)
  - [LatestWebscriptsResponseV2](docs/LatestWebscriptsResponseV2.md)
+ - [ListRuntimesTagsParameter](docs/ListRuntimesTagsParameter.md)
  - [Model](docs/Model.md)
  - [Model1](docs/Model1.md)
  - [Model2](docs/Model2.md)
@@ -293,6 +356,7 @@ Class | Method | HTTP request | Description
  - [PostPlugJobSyncResponseV2](docs/PostPlugJobSyncResponseV2.md)
  - [PostWebscriptJobAsyncResponseV2](docs/PostWebscriptJobAsyncResponseV2.md)
  - [PostWebscriptJobSyncResponseV2](docs/PostWebscriptJobSyncResponseV2.md)
+ - [ProtectByNameResponseV2](docs/ProtectByNameResponseV2.md)
  - [ProvidedDependency](docs/ProvidedDependency.md)
  - [QueueEvents](docs/QueueEvents.md)
  - [RebuildModelAsyncResponseV2](docs/RebuildModelAsyncResponseV2.md)
@@ -310,6 +374,11 @@ Class | Method | HTTP request | Description
  - [RuntimeAttributes](docs/RuntimeAttributes.md)
  - [RuntimeSummary](docs/RuntimeSummary.md)
  - [RuntimeSummaryResponse](docs/RuntimeSummaryResponse.md)
+ - [RuntimeSummaryResponseEmbedded](docs/RuntimeSummaryResponseEmbedded.md)
+ - [RuntimeTag](docs/RuntimeTag.md)
+ - [RuntimeTagFilter](docs/RuntimeTagFilter.md)
+ - [RuntimeTagResponse](docs/RuntimeTagResponse.md)
+ - [RuntimeTagsResponse](docs/RuntimeTagsResponse.md)
  - [RuntimeVersionInfo](docs/RuntimeVersionInfo.md)
  - [RuntimeVersionResponse](docs/RuntimeVersionResponse.md)
  - [Scale](docs/Scale.md)
@@ -318,7 +387,11 @@ Class | Method | HTTP request | Description
  - [ScaleJobStatus](docs/ScaleJobStatus.md)
  - [ScaleType](docs/ScaleType.md)
  - [SemanticVersionRange](docs/SemanticVersionRange.md)
- - [ShowRelatedType](docs/ShowRelatedType.md)
+ - [ShowEmbedding](docs/ShowEmbedding.md)
+ - [ShowInlineOrEmbedding](docs/ShowInlineOrEmbedding.md)
+ - [ShowInlineOrEmbeddingAnyOf](docs/ShowInlineOrEmbeddingAnyOf.md)
+ - [ShowLinkOrEmbedding](docs/ShowLinkOrEmbedding.md)
+ - [ShowLinkOrEmbeddingAnyOf](docs/ShowLinkOrEmbeddingAnyOf.md)
  - [Status](docs/Status.md)
  - [StatusAny](docs/StatusAny.md)
  - [StatusExclude](docs/StatusExclude.md)
@@ -327,6 +400,8 @@ Class | Method | HTTP request | Description
  - [StreamClosing](docs/StreamClosing.md)
  - [StreamReady](docs/StreamReady.md)
  - [Tag](docs/Tag.md)
+ - [TagOrTagReference](docs/TagOrTagReference.md)
+ - [TaggingScopeOption](docs/TaggingScopeOption.md)
  - [TagsFilter](docs/TagsFilter.md)
  - [TimestampAbsolute](docs/TimestampAbsolute.md)
  - [TimestampAge](docs/TimestampAge.md)
@@ -340,7 +415,9 @@ Class | Method | HTTP request | Description
  - [UndeployType](docs/UndeployType.md)
  - [UndeployedResponseV2](docs/UndeployedResponseV2.md)
  - [UpdateMetadataRequestV2](docs/UpdateMetadataRequestV2.md)
+ - [UpdatePlugMetadataRequestV2](docs/UpdatePlugMetadataRequestV2.md)
  - [UpdateRecord](docs/UpdateRecord.md)
+ - [UpdateTagsRequestV2](docs/UpdateTagsRequestV2.md)
  - [Verify](docs/Verify.md)
  - [Verify1](docs/Verify1.md)
  - [VerifyArgs](docs/VerifyArgs.md)

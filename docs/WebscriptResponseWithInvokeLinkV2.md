@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **created_at** | **datetime** | The timestamp at which this entity was created. | 
 **updated_by** | **str** | The user that last updated this entity. | 
 **updated_at** | **datetime** | The timestamp at which this entity was last updated. | 
-**updates** | [**List[UpdateRecord]**](UpdateRecord.md) | The audit logs corresponding to the latest modifying operations on this entity. | 
+**updates** | [**List[UpdateRecord]**](UpdateRecord.md) | The audit logs corresponding to the latest modifying operations on this entity. Omitted in listing operations. | [optional] 
 **status** | [**Status**](Status.md) |  | 
 **failure_reason** | [**FailureReason**](FailureReason.md) |  | [optional] 
 **runtime** | [**RuntimeAttributes**](RuntimeAttributes.md) |  | 

@@ -6,6 +6,7 @@ Plug Found
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**embedded** | [**GetPlugResponseV2Embedded**](GetPlugResponseV2Embedded.md) |  | [optional] 
 **entity** | [**PlugWithInvocationResponseV2**](PlugWithInvocationResponseV2.md) |  | 
 **links** | [**GetPlugResponseV2Links**](GetPlugResponseV2Links.md) |  | 
 

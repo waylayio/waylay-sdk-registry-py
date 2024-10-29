@@ -11,6 +11,8 @@ Name | Type | Description | Notes
 **runtime** | **str** |  | 
 **runtime_version** | [**SemanticVersionRange**](SemanticVersionRange.md) |  | [optional] 
 **metadata** | [**FunctionMeta**](FunctionMeta.md) |  | 
+**protected** | **bool** | Indicates whether the function&#39;s script and other assets should be protected. | [optional] 
+**tags** | [**List[TagOrTagReference]**](TagOrTagReference.md) | Tags associated with this entity. | [optional] 
 **private** | **bool** | If &lt;code&gt;true&lt;/code&gt; this webscript will require authentication. | 
 **allow_hmac** | **bool** | If &lt;code&gt;true&lt;/code&gt; this webscript will support authentication with a &lt;em&gt;HMAC&lt;/em&gt; key, available as the &lt;code&gt;secret&lt;/code&gt; attribute of the deployed webscript entity. | 
 

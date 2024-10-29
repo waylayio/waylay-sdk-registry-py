@@ -19,6 +19,7 @@ from pydantic import (
     StrictFloat,
     StrictInt,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.any_job_status_summary import AnyJobStatusSummary

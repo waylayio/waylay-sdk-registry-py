@@ -46,27 +46,17 @@ update_metadata_request_v2_model_schema = json.loads(
       "description" : "A category for this function (Deprecated: use tags to categorise your functions)",
       "deprecated" : true
     },
-    "documentationURL" : {
-      "type" : "string",
-      "description" : "External url that document this function."
-    },
     "tags" : {
       "type" : "array",
-      "description" : "Tags associated with this function.",
-      "example" : [ {
-        "name" : "awaiting-review",
-        "color" : "#4153ea"
-      }, {
+      "description" : "During update, a (reference to a) tag\n- that does not yet exist, is created (using default attributes if not specified)\n- that does exist is not updated (even if tag attributes like `color` differ)",
+      "example" : [ "awaiting-review", {
         "name" : "demo",
         "color" : "#e639a4"
       } ],
+      "deprecated" : false,
       "items" : {
-        "$ref" : "#/components/schemas/Tag"
+        "$ref" : "#/components/schemas/TagOrTagReference"
       }
-    },
-    "friendlyName" : {
-      "type" : "string",
-      "description" : "Display title for this function."
     }
   },
   "additionalProperties" : false
@@ -97,7 +87,7 @@ class UpdateMetadataRequestV2Stub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 UpdateMetadataRequestV2Adapter.json_schema(), allow_none_optionals=1

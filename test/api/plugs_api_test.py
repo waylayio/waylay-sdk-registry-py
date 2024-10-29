@@ -32,13 +32,16 @@ from ..types.jobs_for_plug_response_v2_stub import JobsForPlugResponseV2Stub
 from ..types.latest_plugs_response_v2_stub import LatestPlugsResponseV2Stub
 from ..types.plug_versions_response_v2_stub import PlugVersionsResponseV2Stub
 from ..types.post_plug_job_sync_response_v2_stub import PostPlugJobSyncResponseV2Stub
+from ..types.protect_by_name_response_v2_stub import ProtectByNameResponseV2Stub
 from ..types.rebuild_plug_sync_response_v2_stub import RebuildPlugSyncResponseV2Stub
 from ..types.rebuild_request_v2_stub import RebuildRequestV2Stub
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
+from ..types.show_inline_or_embedding_stub import ShowInlineOrEmbeddingStub
+from ..types.show_link_or_embedding_stub import ShowLinkOrEmbeddingStub
 from ..types.tags_filter_stub import TagsFilterStub
 from ..types.timestamp_spec_stub import TimestampSpecStub
 from ..types.undeployed_response_v2_stub import UndeployedResponseV2Stub
-from ..types.update_metadata_request_v2_stub import UpdateMetadataRequestV2Stub
+from ..types.update_plug_metadata_request_v2_stub import UpdatePlugMetadataRequestV2Stub
 from ..types.verify_plug_sync_response_v2_stub import VerifyPlugSyncResponseV2Stub
 
 MODELS_AVAILABLE = (
@@ -53,6 +56,7 @@ if MODELS_AVAILABLE:
         PlugVersionsResponseV2,
         PostPlugJobAsyncResponseV2,
         PostPlugJobSyncResponseV2,
+        ProtectByNameResponseV2,
         RebuildPlugAsyncResponseV2,
         RebuildPlugSyncResponseV2,
         UndeployedResponseV2,
@@ -65,11 +69,14 @@ if MODELS_AVAILABLE:
         GetArchiveQuery,
         GetAssetQuery,
         GetLatestQuery,
+        GetQuery,
         JobsQuery,
         ListQuery,
         ListVersionsQuery,
         PatchInterfaceQuery,
         PatchMetadataQuery,
+        ProtectQuery,
+        ProtectVersionsQuery,
         PublishQuery,
         RebuildQuery,
         RemoveVersionQuery,
@@ -450,6 +457,7 @@ async def test_get_latest(
         # optionally use GetLatestQuery to validate and reuse parameters
         "query": GetLatestQuery(
             type="sensor",
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
             include_draft=True,
             include_deprecated=True,
         ),
@@ -473,6 +481,7 @@ async def test_get_latest_without_types(
     kwargs = {
         "query": {
             "type": "sensor",
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "includeDraft": True,
             "includeDeprecated": True,
         },
@@ -508,7 +517,12 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
 
     version = "version_example"
 
-    kwargs = {}
+    kwargs = {
+        # optionally use GetQuery to validate and reuse parameters
+        "query": GetQuery(
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
+        ),
+    }
     _get_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
@@ -529,7 +543,11 @@ async def test_get_without_types(
 
     version = "version_example"
 
-    kwargs = {}
+    kwargs = {
+        "query": {
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
+        },
+    }
     _get_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
@@ -632,7 +650,6 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
     kwargs = {
         # optionally use ListQuery to validate and reuse parameters
         "query": ListQuery(
-            tags=TagsFilterStub.create_json(),
             type="sensor",
             limit=3.4,
             page=3.4,
@@ -641,6 +658,9 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
             deprecated=True,
             draft=True,
             name_version=[],
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
+            tags=TagsFilterStub.create_json(),
+            wql="wql_example",
             version="version_example",
             status=[],
             runtime_version=SemanticVersionRangeStub.create_json(),
@@ -654,7 +674,7 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
             archive_format=[],
             runtime=[],
             latest=True,
-            show_related="embed",
+            show_related=ShowLinkOrEmbeddingStub.create_json(),
         ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
@@ -673,7 +693,6 @@ async def test_list_without_types(
     # set path params
     kwargs = {
         "query": {
-            "tags": TagsFilterStub.create_json(),
             "type": "sensor",
             "limit": 3.4,
             "page": 3.4,
@@ -682,6 +701,9 @@ async def test_list_without_types(
             "deprecated": True,
             "draft": True,
             "nameVersion": [],
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
+            "tags": TagsFilterStub.create_json(),
+            "wql": "wql_example",
             "version": "version_example",
             "status": [],
             "runtimeVersion": SemanticVersionRangeStub.create_json(),
@@ -695,7 +717,7 @@ async def test_list_without_types(
             "archiveFormat": [],
             "runtime": [],
             "latest": True,
-            "showRelated": "embed",
+            "showRelated": ShowLinkOrEmbeddingStub.create_json(),
         },
     }
     _list_set_mock_response(httpx_mock, gateway_url)
@@ -730,11 +752,12 @@ async def test_list_versions(
     kwargs = {
         # optionally use ListVersionsQuery to validate and reuse parameters
         "query": ListVersionsQuery(
-            tags=TagsFilterStub.create_json(),
             limit=3.4,
             page=3.4,
             deprecated=True,
             draft=True,
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
+            tags=TagsFilterStub.create_json(),
             version="version_example",
             status=[],
             runtime_version=SemanticVersionRangeStub.create_json(),
@@ -766,11 +789,12 @@ async def test_list_versions_without_types(
 
     kwargs = {
         "query": {
-            "tags": TagsFilterStub.create_json(),
             "limit": 3.4,
             "page": 3.4,
             "deprecated": True,
             "draft": True,
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
+            "tags": TagsFilterStub.create_json(),
             "version": "version_example",
             "status": [],
             "runtimeVersion": SemanticVersionRangeStub.create_json(),
@@ -821,6 +845,7 @@ async def test_patch_interface(
         # optionally use PatchInterfaceQuery to validate and reuse parameters
         "query": PatchInterfaceQuery(
             comment="comment_example",
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
         ),
         "json": DocumentationStub.create_instance(),
     }
@@ -847,6 +872,7 @@ async def test_patch_interface_without_types(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
         },
         "json": DocumentationStub.create_json(),
     }
@@ -889,8 +915,9 @@ async def test_patch_metadata(
         # optionally use PatchMetadataQuery to validate and reuse parameters
         "query": PatchMetadataQuery(
             comment="comment_example",
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
         ),
-        "json": UpdateMetadataRequestV2Stub.create_instance(),
+        "json": UpdatePlugMetadataRequestV2Stub.create_instance(),
     }
     _patch_metadata_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
@@ -915,13 +942,152 @@ async def test_patch_metadata_without_types(
     kwargs = {
         "query": {
             "comment": "comment_example",
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
         },
-        "json": UpdateMetadataRequestV2Stub.create_json(),
+        "json": UpdatePlugMetadataRequestV2Stub.create_json(),
     }
     _patch_metadata_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.plugs.patch_metadata(name, version, **kwargs)
+    check_type(resp, Model)
+
+
+def _protect_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = GetPlugResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/plugs/{name}/versions/{version}/protect(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_protect(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for protect
+    Protect Plug Version
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        # optionally use ProtectQuery to validate and reuse parameters
+        "query": ProtectQuery(
+            author="author_example",
+            chown=False,
+            comment="comment_example",
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
+            enable=True,
+        ),
+    }
+    _protect_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.plugs.protect(name, version, **kwargs)
+    check_type(resp, Union[GetPlugResponseV2,])
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_protect_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for protect with models not installed
+    Protect Plug Version
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "author": "author_example",
+            "chown": False,
+            "comment": "comment_example",
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
+            "enable": True,
+        },
+    }
+    _protect_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.plugs.protect(name, version, **kwargs)
+    check_type(resp, Model)
+
+
+def _protect_versions_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str
+):
+    mock_response = ProtectByNameResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(f"^{gateway_url}/registry/v2/plugs/{name}/protect(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_protect_versions(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for protect_versions
+    Protect Plug
+    """
+    # set path params
+    name = "name_example"
+
+    kwargs = {
+        # optionally use ProtectVersionsQuery to validate and reuse parameters
+        "query": ProtectVersionsQuery(
+            author="author_example",
+            chown=False,
+            comment="comment_example",
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
+            enable=True,
+        ),
+    }
+    _protect_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.plugs.protect_versions(name, **kwargs)
+    check_type(resp, Union[ProtectByNameResponseV2,])
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_protect_versions_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for protect_versions with models not installed
+    Protect Plug
+    """
+    # set path params
+    name = "name_example"
+
+    kwargs = {
+        "query": {
+            "author": "author_example",
+            "chown": False,
+            "comment": "comment_example",
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
+            "enable": True,
+        },
+    }
+    _protect_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
+    resp = await service.plugs.protect_versions(name, **kwargs)
     check_type(resp, Model)
 
 
@@ -1040,6 +1206,7 @@ async def test_rebuild(
             comment="comment_example",
             dry_run=True,
             var_async=True,
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
             upgrade="patch",
             force_version="force_version_example",
             ignore_checks=True,
@@ -1080,6 +1247,7 @@ async def test_rebuild_without_types(
             "comment": "comment_example",
             "dryRun": True,
             "async": True,
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "upgrade": "patch",
             "forceVersion": "force_version_example",
             "ignoreChecks": True,
@@ -1469,6 +1637,7 @@ async def test_verify(
         # optionally use VerifyQuery to validate and reuse parameters
         "query": VerifyQuery(
             scale_to_zero=True,
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
             var_async=True,
         ),
     }
@@ -1501,6 +1670,7 @@ async def test_verify_without_types(
     kwargs = {
         "query": {
             "scaleToZero": True,
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "async": True,
         },
     }

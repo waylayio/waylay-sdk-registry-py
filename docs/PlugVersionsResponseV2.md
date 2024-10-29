@@ -6,6 +6,7 @@ Plugs Versions Found
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**embedded** | [**GetPlugResponseV2Embedded**](GetPlugResponseV2Embedded.md) |  | [optional] 
 **limit** | **float** | The page size used for this query result. | [optional] 
 **count** | **float** | The total count of matching items, from which this result is one page. | 
 **page** | **float** | The page number of a paged query result. | [optional] 

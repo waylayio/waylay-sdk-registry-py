@@ -16,6 +16,7 @@ from typing import List
 from pydantic import (
     ConfigDict,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.asset_summary_with_hal_link import AssetSummaryWithHALLink

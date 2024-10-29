@@ -29,7 +29,7 @@ plug_property_data_type_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Datatype supported in plug input or output properties.",
-  "enum" : [ "string", "integer", "long", "float", "double", "boolean", "object" ]
+  "enum" : [ "string", "integer", "long", "float", "double", "boolean", "object", "array" ]
 }
 """,
     object_hook=with_example_provider,
@@ -57,7 +57,7 @@ class PlugPropertyDataTypeStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 PlugPropertyDataTypeAdapter.json_schema(), allow_none_optionals=1

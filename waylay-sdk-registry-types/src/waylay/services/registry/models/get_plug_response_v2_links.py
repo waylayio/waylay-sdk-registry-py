@@ -14,20 +14,20 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.get_plug_response_v2_links_draft import GetPlugResponseV2LinksDraft
-from ..models.get_plug_response_v2_links_published import (
-    GetPlugResponseV2LinksPublished,
-)
+from ..models.alt_version_hal_link_draft import AltVersionHALLinkDraft
+from ..models.alt_version_hal_link_published import AltVersionHALLinkPublished
 from ..models.hal_link import HALLink
 
 
 class GetPlugResponseV2Links(WaylayBaseModel):
     """HAL links to related jobs and plugs."""
 
-    draft: GetPlugResponseV2LinksDraft | None = None
-    published: GetPlugResponseV2LinksPublished | None = None
+    content: HALLink | None = None
+    draft: AltVersionHALLinkDraft | None = None
+    published: AltVersionHALLinkPublished | None = None
     jobs: HALLink | None = None
 
     model_config = ConfigDict(

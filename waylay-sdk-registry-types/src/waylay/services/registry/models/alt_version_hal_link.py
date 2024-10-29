@@ -14,19 +14,18 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.get_plug_response_v2_links_draft import GetPlugResponseV2LinksDraft
-from ..models.get_plug_response_v2_links_published import (
-    GetPlugResponseV2LinksPublished,
-)
+from ..models.alt_version_hal_link_draft import AltVersionHALLinkDraft
+from ..models.alt_version_hal_link_published import AltVersionHALLinkPublished
 
 
 class AltVersionHALLink(WaylayBaseModel):
     """AltVersionHALLink."""
 
-    draft: GetPlugResponseV2LinksDraft | None = None
-    published: GetPlugResponseV2LinksPublished | None = None
+    draft: AltVersionHALLinkDraft | None = None
+    published: AltVersionHALLinkPublished | None = None
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

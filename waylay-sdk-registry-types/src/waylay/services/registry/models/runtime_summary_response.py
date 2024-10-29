@@ -15,15 +15,21 @@ from typing import List
 
 from pydantic import (
     ConfigDict,
+    Field,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.runtime_summary import RuntimeSummary
+from ..models.runtime_summary_response_embedded import RuntimeSummaryResponseEmbedded
 
 
 class RuntimeSummaryResponse(WaylayBaseModel):
     """Runtimes Found."""
 
+    embedded: RuntimeSummaryResponseEmbedded | None = Field(
+        default=None, alias="_embedded"
+    )
     runtimes: List[RuntimeSummary]
 
     model_config = ConfigDict(

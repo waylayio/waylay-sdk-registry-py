@@ -15,8 +15,10 @@ from pydantic import (
     ConfigDict,
     Field,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
+from ..models.get_plug_response_v2_embedded import GetPlugResponseV2Embedded
 from ..models.get_plug_response_v2_links import GetPlugResponseV2Links
 from ..models.kfserving_response_v2 import KfservingResponseV2
 
@@ -24,6 +26,7 @@ from ..models.kfserving_response_v2 import KfservingResponseV2
 class GetModelResponseV2(WaylayBaseModel):
     """Model Found."""
 
+    embedded: GetPlugResponseV2Embedded | None = Field(default=None, alias="_embedded")
     entity: KfservingResponseV2
     links: GetPlugResponseV2Links = Field(alias="_links")
 

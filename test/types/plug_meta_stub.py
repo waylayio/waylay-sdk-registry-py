@@ -54,25 +54,23 @@ plug_meta_model_schema = json.loads(
       "type" : "string",
       "description" : "External url that document this function."
     },
-    "tags" : {
-      "title" : "tags",
-      "type" : "array",
-      "description" : "Tags associated with this function.",
-      "example" : [ {
-        "name" : "awaiting-review",
-        "color" : "#4153ea"
-      }, {
-        "name" : "demo",
-        "color" : "#e639a4"
-      } ],
-      "items" : {
-        "$ref" : "#/components/schemas/Tag"
-      }
-    },
     "friendlyName" : {
       "title" : "friendlyName",
       "type" : "string",
       "description" : "Display title for this function."
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Tag references or tag objects associated with this function. See `showTags` query parameter on how referenced tags are displayed. During update, a (reference to a) tag\n- that does not yet exist, is created (using default attributes if not specified)\n- that does exist is not updated (even if tag attributes like `color` differ)",
+      "example" : [ "awaiting-review", {
+        "name" : "demo",
+        "color" : "#e639a4"
+      } ],
+      "deprecated" : false,
+      "items" : {
+        "$ref" : "#/components/schemas/TagOrTagReference"
+      }
     },
     "documentation" : {
       "$ref" : "#/components/schemas/Documentation"
@@ -101,7 +99,7 @@ class PlugMetaStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(PlugMetaAdapter.json_schema(), allow_none_optionals=1)
             json = backup_faker.generate(use_defaults=True, use_examples=True)

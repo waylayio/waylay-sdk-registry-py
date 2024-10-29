@@ -13,21 +13,17 @@ from __future__ import annotations
 
 from pydantic import (
     ConfigDict,
-    StrictBool,
-    StrictStr,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.hal_link_href import HALLinkHref
+from ..models.runtime_tag import RuntimeTag
 
 
-class GetPlugResponseV2LinksDraft(WaylayBaseModel):
-    """Link to the lastest draft version.."""
+class RuntimeTagResponse(WaylayBaseModel):
+    """Runtime Tag Found."""
 
-    draft: StrictBool
-    href: HALLinkHref
-    version: StrictStr
-    deprecated: StrictBool
+    tag: RuntimeTag
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

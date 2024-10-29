@@ -15,6 +15,8 @@ Method | HTTP request | Description
 [**list_versions**](PlugsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Plug Versions
 [**patch_interface**](PlugsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Plug Interface
 [**patch_metadata**](PlugsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Plug Metadata
+[**protect**](PlugsApi.md#protect) | **POST** /registry/v2/plugs/{name}/versions/{version}/protect | Protect Plug Version
+[**protect_versions**](PlugsApi.md#protect_versions) | **POST** /registry/v2/plugs/{name}/protect | Protect Plug
 [**publish**](PlugsApi.md#publish) | **POST** /registry/v2/plugs/{name}/versions/{version}/publish | Publish Draft Plug
 [**rebuild**](PlugsApi.md#rebuild) | **POST** /registry/v2/plugs/{name}/versions/{version}/rebuild | Rebuild Plug
 [**remove_version**](PlugsApi.md#remove_version) | **DELETE** /registry/v2/plugs/{name}/versions/{version} | Remove Plug Version
@@ -188,7 +190,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately. | [optional] [default False]
 **query['deploy']** (dict) <br> **query.deploy** (Query) | **bool** | query parameter `"deploy"` | Indicates that a function should be _deployed_ when its assets are valid.  * If &#x60;true&#x60; (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If &#x60;false&#x60;, the uploaded assets are stored and the function is created/updated in &#x60;registered&#x60; state. Asset validation errors are only returned as warning, and stored as &#x60;failureReason&#x60; on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage. | [optional] [default True]
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
@@ -408,6 +410,7 @@ try:
         # query parameters:
         query = {
             'type': 'sensor'
+            'showTags': 'embed'
             'includeDraft': True
             'includeDeprecated': True
         },
@@ -429,6 +432,7 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['type']** (dict) <br> **query.type** (Query) | [**PlugType**](.md) | query parameter `"type"` | If set, filters on the type of plug. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['includeDraft']** (dict) <br> **query.include_draft** (Query) | **bool** | query parameter `"includeDraft"` | Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to &#x60;true&#x60;, draft versions are **included**. If set to &#x60;false&#x60;, draft versions are **excluded**. | [optional] 
 **query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions are **included**. If set to &#x60;false&#x60;, deprecated versions are **excluded**. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
@@ -458,6 +462,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > get(
 > name: str,
 > version: str,
+> query: GetQuery,
 > headers
 > ) -> GetPlugResponseV2
 
@@ -485,6 +490,10 @@ try:
     api_response = await waylay_client.registry.plugs.get(
         'name_example', # name | path param "name"
         'version_example', # version | path param "version"
+        # query parameters:
+        query = {
+            'showTags': 'embed'
+        },
     )
     print("The response of registry.plugs.get:\n")
     pprint(api_response)
@@ -502,6 +511,8 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -618,7 +629,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 List Plugs
 
-List the (latest) versions of available <em>plugs</em>.  ### List Latest Plug Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>plug</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no version filters are used, each listed <em>plug version</em> contains representations of the latest draft (`entities[]._links.draft`)  or latest published (`entities[]._links.published`) version (if existing and different).   Use the query parameter `showRelated` to include only a link (default `showRelated=link`) or a full representation (`showRelated=embed`).  ### List Latest Plug Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>plug</em> that satisfy the filters, but **without links**.  ### List All Plug Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>plugs</em> versions that satisfy the query, possibly multiple versions per named <em>plugs</em>. No HAL links are provided.  #### Filter on _status_ By default <em>plug versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>plug</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags` 
+List the (latest) versions of available <em>plugs</em>.  ### List Latest Plug Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>plug</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no version filters are used, each listed <em>plug version</em> contains representations of the latest draft (`entities[]._links.draft`)  or latest published (`entities[]._links.published`) version (if existing and different).   Use the query parameter `showRelated` to include only a link (default `showRelated=link`) or a full representation (`showRelated=embed`).  ### List Latest Plug Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>plug</em> that satisfy the filters, but **without links**.  ### List All Plug Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>plugs</em> versions that satisfy the query, possibly multiple versions per named <em>plugs</em>. No HAL links are provided.  #### Filter on _status_ By default <em>plug versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>plug</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags`, `wql` 
 
 ### Example
 
@@ -633,10 +644,9 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.archive_format import ArchiveFormat
+from waylay.services.registry.models.archive_format_filter import ArchiveFormatFilter
 from waylay.services.registry.models.latest_plugs_response_v2 import LatestPlugsResponseV2
 from waylay.services.registry.models.plug_type import PlugType
-from waylay.services.registry.models.show_related_type import ShowRelatedType
 from waylay.services.registry.models.status_filter import StatusFilter
 try:
     # List Plugs
@@ -649,10 +659,10 @@ try:
             'includeDeprecated': True
             'deprecated': True
             'draft': True
+            'showTags': 'embed'
             'createdBy': '@me'
             'updatedBy': '@me'
             'latest': True
-            'showRelated': 'embed'
         },
     )
     print("The response of registry.plugs.list:\n")
@@ -670,7 +680,6 @@ GET /registry/v2/plugs/
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['tags']** (dict) <br> **query.tags** (Query) | [**TagsFilter**](.md) | query parameter `"tags"` | Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected. | [optional] 
 **query['type']** (dict) <br> **query.type** (Query) | [**PlugType**](.md) | query parameter `"type"` | If set, filters on the type of plug. | [optional] 
 **query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
 **query['page']** (dict) <br> **query.page** (Query) | **float** | query parameter `"page"` | The number of pages to skip when returning result to this query. | [optional] 
@@ -679,6 +688,9 @@ Name     | Type  | API binding   | Description   | Notes
 **query['deprecated']** (dict) <br> **query.deprecated** (Query) | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
 **query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
 **query['nameVersion']** (dict) <br> **query.name_version** (Query) | [**List[str]**](str.md) | query parameter `"nameVersion"` | Filter on exact &#x60;{name}@{version}&#x60; functions. Using this filter implies a &#x60;latest&#x3D;false&#x60; default, returning multiple versions of the same named versions if they are filtered. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['tags']** (dict) <br> **query.tags** (Query) | [**TagsFilter**](.md) | query parameter `"tags"` | Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected. | [optional] 
+**query['wql']** (dict) <br> **query.wql** (Query) | **str** | query parameter `"wql"` | Query filter using the &#39;wql&#39; query language.  This is a unstable preview feature, currently supporting the following _match terms_: * &#x60;tag:&lt;name&gt;&#x60; entity has a tag that fully matches &#x60;&lt;name&gt;&#x60; (case insensitive). * &#x60;tag:&lt;name1&gt;,&lt;name2&gt;&#x60; entity has a tag that fully matches any of &#x60;&lt;name1&gt;&#x60;, &#x60;&lt;name2&gt;&#x60; (case insensitive). * &#x60;tag:inIgnoreCase(&lt;name1&gt;,&lt;name2&gt;)&#x60; is the fully specified format for the previous statements.   &#x60;inIgnoreCase&#x60; is the _default match predicate_. * &#x60;tag:in(&lt;name1&gt;,&lt;name2&gt;)&#x60; entity has a tag matches one of &#x60;&lt;name1&gt;&#x60;,&#x60;&lt;name2&gt;&#x60; (case sensitive) * &#x60;tag:equals(&lt;name&gt;)&#x60; entity has a tag matches &#x60;&lt;name&gt;&#x60; (case sensitive) * &#x60;tag:like(&lt;pattern&gt;)&#x60; entity has a tag that matches &#x60;&lt;pattern&gt;&#x60; (case insensitive),    where &#x60;&lt;pattern&gt;&#x60; can contain &#x60;*&#x60; (multiple characters) and &#x60;?&#x60; (single character) wildcards.  Each _argument_ of a _match term_ (like &#x60;&lt;name&gt;&#x60; above) can either be a * a _quoted match argument_, quoted using &#x60;\&quot;&#x60;, can contain any character except &#x60;\&quot;&#x60;: &#x60;tag:\&quot;Status:In Review\&quot;&#x60;. * a _safe match argument_ can only contain alpha-numeric characters or &#x60;_&#x60;: &#x60;tag:Status_In_Review&#x60;.  Multiple _match term_s can be combined in a boolean predicate using the &#x60;AND&#x60;, &#x60;OR&#x60; and &#x60;NOT&#x60; operators: * &#x60;tag:abc AND tag:\&quot;My Demo\&quot; AND tag:like(\&quot;prj:*\&quot;)&#x60;: entity has a tag matching &#x60;abc&#x60; **AND** a tag matching &#x60;\&quot;My Demo\&quot;&#x60; **AND**    a tag that has the &#x60;prj:&#x60; prefix * &#x60;tag:abc tag:\&quot;My Demo\&quot; tag:like(\&quot;prj:*\&quot;)&#x60;: same as the previous statement: a (space-deliminated) list of terms is     implicitly combined with &#x60;AND&#x60;. * &#x60;tag:abc OR tag:\&quot;My Demo\&quot;&#x60;: entity has a tag matching &#x60;abc&#x60; **OR** a tag matching &#x60;\&quot;My Demo\&quot;&#x60; * &#x60;NOT tag:abc&#x60;: entity **does not have** a tag matching &#x60;abc&#x60;  Round brackets can be used to combine predicates with different operators: * &#x60;(tag:abc OR tag:\&quot;My Demo\&quot;) AND tag:like(\&quot;prj:*\&quot;)&#x60;: entity has a tag &#x60;abc&#x60; or a tag &#x60;My Demo&#x60;, and a tag with prefix &#x60;prj:*&#x60;  For a _multi-valued attribute_ like &#x60;tag&#x60;, each _match term_ tests the existence of a matching tag assigned to the entity. When _multiple match predicates on the **same** tag_ need to be specified, the boolean operators &#x60;not&#x60;, &#x60;all&#x60;, &#x60;any&#x60; can be used _within_ the match term:  * &#x60;tag:all(like(\&quot;prj:*\&quot;),not(like(\&quot;*:Done\&quot;)))&#x60;: entity has a tag that starts with &#x60;prj:&#x60; and does NOT end with &#x60;:Done&#x60;. * &#x60;tag:not(Done)&#x60;: entity has a tag that does not match &#x60;Done&#x60; (this excludes entities without tags, and with a single &#x60;Done&#x60; tag!). * &#x60;NOT tag:not(in(abc,def))&#x60;: each tag of the entity is in &#x60;abc&#x60; or &#x60;def&#x60; (matches entities without tags!) * &#x60;tag:any(like(\&quot;prj:*\&quot;),not(done)))&#x60;: entity has a tag that either starts with &#x60;prj:&#x60; or does not match &#x60;done&#x60;. | [optional] 
 **query['version']** (dict) <br> **query.version** (Query) | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
 **query['status']** (dict) <br> **query.status** (Query) | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
 **query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
@@ -689,10 +701,10 @@ Name     | Type  | API binding   | Description   | Notes
 **query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
 **query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
 **query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` | Filter on the name of the function. This is case-insensitive and supports wild-cards &#x60;?&#x60; (any one character) and &#x60;*&#x60; (any sequence of characters). | [optional] 
-**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormatFilter]**](ArchiveFormatFilter.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
 **query['runtime']** (dict) <br> **query.runtime** (Query) | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
 **query['latest']** (dict) <br> **query.latest** (Query) | **bool** | query parameter `"latest"` | When &#x60;true&#x60;, only the latest version per function name is returned. If set to &#x60;false&#x60;, multiple versions per named function can be returned. Defaults to &#x60;true&#x60;, except when specific versions are selected with the &#x60;nameVersion&#x60; filter. | [optional] 
-**query['showRelated']** (dict) <br> **query.show_related** (Query) | [**ShowRelatedType**](.md) | query parameter `"showRelated"` | Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. Ignored (forced to &#x60;none&#x60;) when any of the _version filter_ query params are used. - &#x60;embed&#x60;: as full summary representation (in &#x60;_embedded&#x60;). - &#x60;link&#x60;: as HAL link in (in &#x60;_links&#x60;). - &#x60;none&#x60;: omitted. | [optional] 
+**query['showRelated']** (dict) <br> **query.show_related** (Query) | [**ShowLinkOrEmbedding**](.md) | query parameter `"showRelated"` | Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. Ignored (forced to &#x60;none&#x60;) when any of the _version filter_ query params are used. - &#x60;embed&#x60;: as full summary representation (in &#x60;_embedded&#x60;). - &#x60;link&#x60;: as HAL link in (in &#x60;_links&#x60;). - &#x60;none&#x60;: omitted. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -740,7 +752,7 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.archive_format import ArchiveFormat
+from waylay.services.registry.models.archive_format_filter import ArchiveFormatFilter
 from waylay.services.registry.models.plug_versions_response_v2 import PlugVersionsResponseV2
 from waylay.services.registry.models.status_filter import StatusFilter
 try:
@@ -752,6 +764,7 @@ try:
         query = {
             'deprecated': True
             'draft': True
+            'showTags': 'embed'
             'createdBy': '@me'
             'updatedBy': '@me'
         },
@@ -772,11 +785,12 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['tags']** (dict) <br> **query.tags** (Query) | [**TagsFilter**](.md) | query parameter `"tags"` | Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected. | [optional] 
 **query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
 **query['page']** (dict) <br> **query.page** (Query) | **float** | query parameter `"page"` | The number of pages to skip when returning result to this query. | [optional] 
 **query['deprecated']** (dict) <br> **query.deprecated** (Query) | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
 **query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['tags']** (dict) <br> **query.tags** (Query) | [**TagsFilter**](.md) | query parameter `"tags"` | Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected. | [optional] 
 **query['version']** (dict) <br> **query.version** (Query) | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
 **query['status']** (dict) <br> **query.status** (Query) | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
 **query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
@@ -786,7 +800,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
 **query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
 **query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
-**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormat]**](ArchiveFormat.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
+**query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormatFilter]**](ArchiveFormatFilter.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
 **query['runtime']** (dict) <br> **query.runtime** (Query) | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -846,6 +860,7 @@ try:
         'version_example', # version | path param "version"
         # query parameters:
         query = {
+            'showTags': 'embed'
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json = waylay.services.registry.Documentation() # Documentation |  (optional)
@@ -869,6 +884,7 @@ Name     | Type  | API binding   | Description   | Notes
 **json** | [**Documentation**](Documentation.md) | json request body |  | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -918,7 +934,7 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.get_plug_response_v2 import GetPlugResponseV2
-from waylay.services.registry.models.update_metadata_request_v2 import UpdateMetadataRequestV2
+from waylay.services.registry.models.update_plug_metadata_request_v2 import UpdatePlugMetadataRequestV2
 try:
     # Patch Plug Metadata
     # calls `PATCH /registry/v2/plugs/{name}/versions/{version}/metadata`
@@ -927,9 +943,10 @@ try:
         'version_example', # version | path param "version"
         # query parameters:
         query = {
+            'showTags': 'embed'
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.registry.UpdateMetadataRequestV2() # UpdateMetadataRequestV2 |  (optional)
+        json = waylay.services.registry.UpdatePlugMetadataRequestV2() # UpdatePlugMetadataRequestV2 |  (optional)
     )
     print("The response of registry.plugs.patch_metadata:\n")
     pprint(api_response)
@@ -947,9 +964,10 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
-**json** | [**UpdateMetadataRequestV2**](UpdateMetadataRequestV2.md) | json request body |  | [optional] 
+**json** | [**UpdatePlugMetadataRequestV2**](UpdatePlugMetadataRequestV2.md) | json request body |  | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -963,6 +981,171 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 ### HTTP request headers
 
  - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Default Response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **protect**
+> protect(
+> name: str,
+> version: str,
+> query: ProtectQuery,
+> headers
+> ) -> GetPlugResponseV2
+
+Protect Plug Version
+
+Enable/disable protection for a <em>plug</em> version. Enabling protection requires ownership for draft versions.
+
+### Example
+
+```python
+from pprint import pprint
+
+# Import the waylay-client from the waylay-sdk-core package
+from waylay.sdk.client import WaylayClient
+from waylay.sdk.api.api_exceptions import ApiError
+
+# Intialize a waylay client instance
+waylay_client = WaylayClient.from_profile()
+
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
+from waylay.services.registry.models.get_plug_response_v2 import GetPlugResponseV2
+try:
+    # Protect Plug Version
+    # calls `POST /registry/v2/plugs/{name}/versions/{version}/protect`
+    api_response = await waylay_client.registry.plugs.protect(
+        'name_example', # name | path param "name"
+        'version_example', # version | path param "version"
+        # query parameters:
+        query = {
+            'chown': False
+            'showTags': 'embed'
+            'enable': True
+        },
+    )
+    print("The response of registry.plugs.protect:\n")
+    pprint(api_response)
+except ApiError as e:
+    print("Exception when calling registry.plugs.protect: %s\n" % e)
+```
+
+### Endpoint
+```
+POST /registry/v2/plugs/{name}/versions/{version}/protect
+```
+### Parameters
+
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**name** | **str** | path parameter `"name"` | The name of the function. | 
+**version** | **str** | path parameter `"version"` | The version of the function. | 
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['enable']** (dict) <br> **query.enable** (Query) | **bool** | query parameter `"enable"` | If set to &#x60;true&#x60;, the function assets (including its code) will be protected by requiring additional permissions. If set to &#x60;false&#x60;, the function assets will no longer be protected. | [optional] [default True]
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
+
+### Return type
+
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`GetPlugResponseV2`** |  | [GetPlugResponseV2](GetPlugResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Default Response |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **protect_versions**
+> protect_versions(
+> name: str,
+> query: ProtectVersionsQuery,
+> headers
+> ) -> ProtectByNameResponseV2
+
+Protect Plug
+
+Enable/disable protection for all <em>plug</em> versions. Enabling protection requires ownership for draft versions.
+
+### Example
+
+```python
+from pprint import pprint
+
+# Import the waylay-client from the waylay-sdk-core package
+from waylay.sdk.client import WaylayClient
+from waylay.sdk.api.api_exceptions import ApiError
+
+# Intialize a waylay client instance
+waylay_client = WaylayClient.from_profile()
+
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
+from waylay.services.registry.models.protect_by_name_response_v2 import ProtectByNameResponseV2
+try:
+    # Protect Plug
+    # calls `POST /registry/v2/plugs/{name}/protect`
+    api_response = await waylay_client.registry.plugs.protect_versions(
+        'name_example', # name | path param "name"
+        # query parameters:
+        query = {
+            'chown': False
+            'showTags': 'embed'
+            'enable': True
+        },
+    )
+    print("The response of registry.plugs.protect_versions:\n")
+    pprint(api_response)
+except ApiError as e:
+    print("Exception when calling registry.plugs.protect_versions: %s\n" % e)
+```
+
+### Endpoint
+```
+POST /registry/v2/plugs/{name}/protect
+```
+### Parameters
+
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**name** | **str** | path parameter `"name"` | The name of the function. | 
+**query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
+**query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
+**query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['enable']** (dict) <br> **query.enable** (Query) | **bool** | query parameter `"enable"` | If set to &#x60;true&#x60;, the function assets (including its code) will be protected by requiring additional permissions. If set to &#x60;false&#x60;, the function assets will no longer be protected. | [optional] [default True]
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
+
+### Return type
+
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`ProtectByNameResponseV2`** |  | [ProtectByNameResponseV2](ProtectByNameResponseV2.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 ### HTTP response details
@@ -1029,7 +1212,7 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['deprecatePrevious']** (dict) <br> **query.deprecate_previous** (Query) | [**DeprecatePreviousPolicy**](.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions. | [optional] 
@@ -1097,6 +1280,7 @@ try:
             'scaleToZero': True
             'dryRun': True
             'async': True
+            'showTags': 'embed'
             'upgrade': 'patch'
             'ignoreChecks': True
             'skipRebuild': True
@@ -1127,6 +1311,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['dryRun']** (dict) <br> **query.dry_run** (Query) | **bool** | query parameter `"dryRun"` | If set to &lt;code&gt;true&lt;/code&gt;, checks whether rebuild jobs are needed, but do not start any jobs. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['upgrade']** (dict) <br> **query.upgrade** (Query) | [**RebuildPolicy**](.md) | query parameter `"upgrade"` | If set, force a rebuild with the given &lt;em&gt;runtime&lt;/em&gt; version selection policy. &lt;ul&gt;  &lt;li&gt;&lt;code&gt;same&lt;/code&gt; &lt;b&gt;patch&lt;/b&gt; version.   This should only include backward compatible upgrades.  &lt;/li&gt;  &lt;li&gt;&lt;code&gt;minor&lt;/code&gt; &lt;b&gt;major&lt;/b&gt; version.   This might include an upgrade of e.g. the language runtime and/or provided   dependencies that could break compatiblity with the function. .&lt;/li&gt; &lt;/ul&gt; | [optional] 
 **query['forceVersion']** (dict) <br> **query.force_version** (Query) | **str** | query parameter `"forceVersion"` | If set, force a rebuild with the given runtime version (including downgrades). This parameter is mutually exclusive to the &#x60;upgrade&#x60; parameter. | [optional] 
 **query['ignoreChecks']** (dict) <br> **query.ignore_checks** (Query) | **bool** | query parameter `"ignoreChecks"` | If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in &#x60;pending&#x60;, &#x60;running&#x60;, &#x60;failed&#x60; or &#x60;undeployed&#x60; * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the &#x60;dryRun&#x60; option | [optional] 
@@ -1396,7 +1581,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately. | [optional] [default False]
 **query['deploy']** (dict) <br> **query.deploy** (Query) | **bool** | query parameter `"deploy"` | Indicates that a function should be _deployed_ when its assets are valid.  * If &#x60;true&#x60; (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If &#x60;false&#x60;, the uploaded assets are stored and the function is created/updated in &#x60;registered&#x60; state. Asset validation errors are only returned as warning, and stored as &#x60;failureReason&#x60; on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage. | [optional] [default True]
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
@@ -1495,7 +1680,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately. | [optional] [default False]
 **query['deploy']** (dict) <br> **query.deploy** (Query) | **bool** | query parameter `"deploy"` | Indicates that a function should be _deployed_ when its assets are valid.  * If &#x60;true&#x60; (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If &#x60;false&#x60;, the uploaded assets are stored and the function is created/updated in &#x60;registered&#x60; state. Asset validation errors are only returned as warning, and stored as &#x60;failureReason&#x60; on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage. | [optional] [default True]
-**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of the draft function is transferred to the current user. | [optional] [default False]
+**query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
@@ -1560,6 +1745,7 @@ try:
         # query parameters:
         query = {
             'scaleToZero': True
+            'showTags': 'embed'
             'async': True
         },
     )
@@ -1581,6 +1767,7 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 

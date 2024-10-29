@@ -12,6 +12,7 @@ Do not edit the class manually.
 from __future__ import annotations
 
 import re
+from typing import List
 
 from pydantic import (
     ConfigDict,
@@ -23,6 +24,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
@@ -40,6 +42,7 @@ class RuntimeVersionInfo(WaylayBaseModel):
     )
     title: StrictStr
     description: StrictStr | None = None
+    tags: List[StrictStr] | None = None
 
     @field_validator("version")
     @classmethod

@@ -28,6 +28,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.9,
 )
+
 from waylay.sdk.api import (
     HeaderTypes,
     QueryParamTypes,
@@ -39,6 +40,8 @@ from waylay.sdk.plugin import WithApiClient
 if TYPE_CHECKING:
     from waylay.services.registry.models import (
         RuntimeSummaryResponse,
+        RuntimeTagResponse,
+        RuntimeTagsResponse,
         RuntimeVersionResponse,
         SemanticVersionRange,
     )
@@ -49,12 +52,16 @@ if TYPE_CHECKING:
         GetQuery,
         ListQuery,
         ListVersionsQuery,
+        TagQuery,
+        TagsQuery,
     )
 
 
 try:
     from waylay.services.registry.models import (
         RuntimeSummaryResponse,
+        RuntimeTagResponse,
+        RuntimeTagsResponse,
         RuntimeVersionResponse,
         SemanticVersionRange,
     )
@@ -65,6 +72,8 @@ try:
         GetQuery,
         ListQuery,
         ListVersionsQuery,
+        TagQuery,
+        TagsQuery,
     )
 
     MODELS_AVAILABLE = True
@@ -90,6 +99,12 @@ except ImportError:
 
         ListVersionsQuery = dict
         RuntimeSummaryResponse = Model
+
+        TagQuery = dict
+        RuntimeTagResponse = Model
+
+        TagsQuery = dict
+        RuntimeTagsResponse = Model
 
 
 T = TypeVar("T")
@@ -215,6 +230,8 @@ class RuntimesApi(WithApiClient):
         :type query: ExampleArchiveQuery | QueryParamTypes, optional
         :param query['ls'] (dict) <br> query.ls (Query) : If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
         :type query['ls']: bool
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted.
+        :type query['showTags']: ShowEmbedding
         :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
@@ -426,6 +443,8 @@ class RuntimesApi(WithApiClient):
         :type query: GetExampleAssetQuery | QueryParamTypes, optional
         :param query['ls'] (dict) <br> query.ls (Query) : If set to `true`, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime.
         :type query['ls']: bool
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted.
+        :type query['showTags']: ShowEmbedding
         :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
@@ -578,14 +597,18 @@ class RuntimesApi(WithApiClient):
         :type name: str
         :param query: URL Query parameters.
         :type query: GetLatestQuery | QueryParamTypes, optional
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted.
+        :type query['showTags']: ShowEmbedding
         :param query['version'] (dict) <br> query.version (Query) : If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
         :type query['version']: SemanticVersionRange
         :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
+        :param query['tags'] (dict) <br> query.tags (Query) : If set, filters on the <code>tags</code> of a runtime __version__. Filter values with a `-` postfix exclude the tag.
+        :type query['tags']: ListRuntimesTagsParameter
         :param query['functionType'] (dict) <br> query.function_type (Query) : If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
-        :type query['functionType']: List[FunctionType]
+        :type query['functionType']: List[FunctionTypeFilter]
         :param query['archiveFormat'] (dict) <br> query.archive_format (Query) : If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
-        :type query['archiveFormat']: List[ArchiveFormat]
+        :type query['archiveFormat']: List[ArchiveFormatFilter]
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -754,6 +777,8 @@ class RuntimesApi(WithApiClient):
         :type version: SemanticVersionRange
         :param query: URL Query parameters.
         :type query: GetQuery | QueryParamTypes, optional
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted.
+        :type query['showTags']: ShowEmbedding
         :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
@@ -897,18 +922,22 @@ class RuntimesApi(WithApiClient):
         List the runtimes that function registry supports.
         :param query: URL Query parameters.
         :type query: ListQuery | QueryParamTypes, optional
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted.
+        :type query['showTags']: ShowEmbedding
         :param query['version'] (dict) <br> query.version (Query) : If set, filters on the <code>version</code> of a runtime. Supports [version ranges](https://devhints.io/semver).
         :type query['version']: SemanticVersionRange
         :param query['latest'] (dict) <br> query.latest (Query) : If set, filters on the level of latest versions that will be included in the query. * `major`: include at most one latest version per name and major release. * `minor`: include at most one latest version per name and minor release. * `patch`: include each matching patch version. * `true`: include the latest matching version. * `false`: include any matching version (same as `patch`).  This filter is applied after all other selection criteria.
         :type query['latest']: LatestVersionLevel
         :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
+        :param query['tags'] (dict) <br> query.tags (Query) : If set, filters on the <code>tags</code> of a runtime __version__. Filter values with a `-` postfix exclude the tag.
+        :type query['tags']: ListRuntimesTagsParameter
         :param query['name'] (dict) <br> query.name (Query) : If set, filters on the <code>name</code> of a runtime. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive.
         :type query['name']: str
         :param query['functionType'] (dict) <br> query.function_type (Query) : If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
-        :type query['functionType']: List[FunctionType]
+        :type query['functionType']: List[FunctionTypeFilter]
         :param query['archiveFormat'] (dict) <br> query.archive_format (Query) : If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
-        :type query['archiveFormat']: List[ArchiveFormat]
+        :type query['archiveFormat']: List[ArchiveFormatFilter]
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -1061,10 +1090,14 @@ class RuntimesApi(WithApiClient):
         :type query['latest']: LatestVersionLevel
         :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : If set to `true`, deprecated runtimes will be included in the query.
         :type query['includeDeprecated']: bool
+        :param query['tags'] (dict) <br> query.tags (Query) : If set, filters on the <code>tags</code> of a runtime __version__. Filter values with a `-` postfix exclude the tag.
+        :type query['tags']: ListRuntimesTagsParameter
         :param query['functionType'] (dict) <br> query.function_type (Query) : If set, filters on the <code>functionType</code> of a runtime. Uses an exact match.
-        :type query['functionType']: List[FunctionType]
+        :type query['functionType']: List[FunctionTypeFilter]
         :param query['archiveFormat'] (dict) <br> query.archive_format (Query) : If set, filters on the <code>archiveFormat</code> of a runtime. Uses an exact match.
-        :type query['archiveFormat']: List[ArchiveFormat]
+        :type query['archiveFormat']: List[ArchiveFormatFilter]
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Sets the representation of related tags in the response. - `embed`: as full summary representation (in `_embedded`). - `none`: omitted.
+        :type query['showTags']: ShowEmbedding
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -1114,6 +1147,326 @@ class RuntimesApi(WithApiClient):
         return await self.api_client.request(
             method="GET",
             resource_path="/registry/v2/runtimes/{name}/versions",
+            path_params=path_params,
+            params=query,
+            **body_args,
+            headers=headers,
+            **kwargs,
+            response_type=response_types_map,
+            select_path=select_path,
+            raw_response=raw_response,
+        )
+
+    @overload
+    async def tag(
+        self,
+        tag_name: Annotated[
+            StrictStr,
+            Field(
+                description="The name of the tag that might be applied to a function."
+            ),
+        ],
+        *,
+        query: TagQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> RuntimeTagResponse: ...
+
+    @overload
+    async def tag(
+        self,
+        tag_name: Annotated[
+            StrictStr,
+            Field(
+                description="The name of the tag that might be applied to a function."
+            ),
+        ],
+        *,
+        query: TagQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    @overload
+    async def tag(
+        self,
+        tag_name: Annotated[
+            StrictStr,
+            Field(
+                description="The name of the tag that might be applied to a function."
+            ),
+        ],
+        *,
+        query: TagQuery | QueryParamTypes | None = None,
+        raw_response: Literal[True],
+        select_path: Literal["_not_used_"] = "_not_used_",
+        response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Response: ...
+
+    @overload
+    async def tag(
+        self,
+        tag_name: Annotated[
+            StrictStr,
+            Field(
+                description="The name of the tag that might be applied to a function."
+            ),
+        ],
+        *,
+        query: TagQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Model: ...
+
+    @overload
+    async def tag(
+        self,
+        tag_name: Annotated[
+            StrictStr,
+            Field(
+                description="The name of the tag that might be applied to a function."
+            ),
+        ],
+        *,
+        query: TagQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    async def tag(
+        self,
+        tag_name: Annotated[
+            StrictStr,
+            Field(
+                description="The name of the tag that might be applied to a function."
+            ),
+        ],
+        *,
+        query: TagQuery | QueryParamTypes | None = None,
+        raw_response: StrictBool = False,
+        select_path: str = "",
+        response_type: T | None = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> RuntimeTagResponse | T | Response | Model:
+        """Get Runtime Tag.
+
+        Get the metadata of a Runtime Tag by name.
+        :param tag_name: The name of the tag that might be applied to a function. (required)
+        :type tag_name: str
+        :param query: URL Query parameters.
+        :type query: TagQuery | QueryParamTypes, optional
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
+                Set it to the empty string `""` to receive the full response object.
+        :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
+        :param headers: Header parameters for this request
+        :type headers: dict, optional
+        :param `**kwargs`: Additional parameters passed on to the http client.
+            See below.
+        :Keyword Arguments:
+            * timeout: a single numeric timeout in seconds,
+                or a tuple of _connect_, _read_, _write_ and _pool_ timeouts.
+            * stream: if true, the response will be in streaming mode
+            * cookies
+            * extensions
+            * auth
+            * follow_redirects: bool
+
+        :return: Returns the result object if the http request succeeded with status code '2XX'.
+        :raises APIError: If the http request has a status code different from `2XX`. This
+            object wraps both the http Response and any parsed data.
+        """
+
+        # path parameters
+        path_params: Dict[str, str] = {
+            "tagName": str(tag_name),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and MODELS_AVAILABLE and validate_request:
+            query = TypeAdapter(TagQuery).validate_python(query)
+
+        response_types_map: Dict[str, Any] = (
+            {"2XX": response_type}
+            if response_type is not None
+            else {
+                "200": RuntimeTagResponse if not select_path else Model,
+            }
+        )
+        non_200_response_types_map: Dict[str, Any] = {}
+        response_types_map.update(non_200_response_types_map)
+
+        ## peform request
+        return await self.api_client.request(
+            method="GET",
+            resource_path="/registry/v2/runtimeTags/{tagName}",
+            path_params=path_params,
+            params=query,
+            **body_args,
+            headers=headers,
+            **kwargs,
+            response_type=response_types_map,
+            select_path=select_path,
+            raw_response=raw_response,
+        )
+
+    @overload
+    async def tags(
+        self,
+        *,
+        query: TagsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> RuntimeTagsResponse: ...
+
+    @overload
+    async def tags(
+        self,
+        *,
+        query: TagsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    @overload
+    async def tags(
+        self,
+        *,
+        query: TagsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[True],
+        select_path: Literal["_not_used_"] = "_not_used_",
+        response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Response: ...
+
+    @overload
+    async def tags(
+        self,
+        *,
+        query: TagsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Model: ...
+
+    @overload
+    async def tags(
+        self,
+        *,
+        query: TagsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    async def tags(
+        self,
+        *,
+        query: TagsQuery | QueryParamTypes | None = None,
+        raw_response: StrictBool = False,
+        select_path: str = "",
+        response_type: T | None = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> RuntimeTagsResponse | T | Response | Model:
+        """List Runtime Tags.
+
+        List the tags that are referenced by runtimes.
+        :param query: URL Query parameters.
+        :type query: TagsQuery | QueryParamTypes, optional
+        :param query['name'] (dict) <br> query.name (Query) : If set, filters on the <code>name</code> of a tag. Supports <code>*</code> and <code>?</code> wildcards and is case-insensitive.
+        :type query['name']: str
+        :param query['color'] (dict) <br> query.color (Query) : If set, filters on the <code>color</code> of a tag. Uses an exact match.
+        :type query['color']: str
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
+                Set it to the empty string `""` to receive the full response object.
+        :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
+        :param headers: Header parameters for this request
+        :type headers: dict, optional
+        :param `**kwargs`: Additional parameters passed on to the http client.
+            See below.
+        :Keyword Arguments:
+            * timeout: a single numeric timeout in seconds,
+                or a tuple of _connect_, _read_, _write_ and _pool_ timeouts.
+            * stream: if true, the response will be in streaming mode
+            * cookies
+            * extensions
+            * auth
+            * follow_redirects: bool
+
+        :return: Returns the result object if the http request succeeded with status code '2XX'.
+        :raises APIError: If the http request has a status code different from `2XX`. This
+            object wraps both the http Response and any parsed data.
+        """
+
+        # path parameters
+        path_params: Dict[str, str] = {}
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and MODELS_AVAILABLE and validate_request:
+            query = TypeAdapter(TagsQuery).validate_python(query)
+
+        response_types_map: Dict[str, Any] = (
+            {"2XX": response_type}
+            if response_type is not None
+            else {
+                "200": RuntimeTagsResponse if not select_path else Model,
+            }
+        )
+        non_200_response_types_map: Dict[str, Any] = {}
+        response_types_map.update(non_200_response_types_map)
+
+        ## peform request
+        return await self.api_client.request(
+            method="GET",
+            resource_path="/registry/v2/runtimeTags/",
             path_params=path_params,
             params=query,
             **body_args,

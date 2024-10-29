@@ -12,6 +12,7 @@ Do not edit the class manually.
 from __future__ import annotations
 
 import re
+from typing import List
 
 from pydantic import (
     ConfigDict,
@@ -23,11 +24,13 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.function_deploy_overrides_type import FunctionDeployOverridesType
 from ..models.function_meta import FunctionMeta
 from ..models.semantic_version_range import SemanticVersionRange
+from ..models.tag_or_tag_reference import TagOrTagReference
 
 
 class WebscriptManifest(WaylayBaseModel):
@@ -43,6 +46,13 @@ class WebscriptManifest(WaylayBaseModel):
         default=None, alias="runtimeVersion"
     )
     metadata: FunctionMeta
+    protected: StrictBool | None = Field(
+        default=None,
+        description="Indicates whether the function's script and other assets should be protected.",
+    )
+    tags: List[TagOrTagReference] | None = Field(
+        default=None, description="Tags associated with this entity."
+    )
     private: StrictBool = Field(
         description="If <code>true</code> this webscript will require authentication."
     )

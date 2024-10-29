@@ -24,6 +24,7 @@ class PlugPropertyDataType(str, Enum):
     DOUBLE = "double"
     BOOLEAN = "boolean"
     OBJECT = "object"
+    ARRAY = "array"
 
     def __str__(self) -> str:
         return str(self.value)

@@ -31,6 +31,7 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.9,
 )
+
 from waylay.sdk.api import (
     HeaderTypes,
     QueryParamTypes,
@@ -44,19 +45,20 @@ from waylay.sdk.plugin import WithApiClient
 if TYPE_CHECKING:
     from waylay.services.registry.models import (
         FileUpload,
-        FunctionMeta,
         GetModelResponseV2,
         JobsForModelResponseV2,
         LatestModelsResponseV2,
         ModelVersionsResponseV2,
         PostModelJobAsyncResponseV2,
         PostModelJobSyncResponseV2,
+        ProtectByNameResponseV2,
         RebuildModelAsyncResponseV2,
         RebuildModelSyncResponseV2,
         RebuildRequestV2,
         RegistryErrorResponse,
         UndeployedResponseV2,
         UndeploySubmittedResponseV2,
+        UpdateMetadataRequestV2,
         VerifyModelSyncResponseV2,
     )
     from waylay.services.registry.queries.models_api import (
@@ -70,6 +72,8 @@ if TYPE_CHECKING:
         ListQuery,
         ListVersionsQuery,
         PatchMetadataQuery,
+        ProtectQuery,
+        ProtectVersionsQuery,
         PublishQuery,
         RebuildQuery,
         RemoveVersionQuery,
@@ -83,19 +87,20 @@ if TYPE_CHECKING:
 try:
     from waylay.services.registry.models import (
         FileUpload,
-        FunctionMeta,
         GetModelResponseV2,
         JobsForModelResponseV2,
         LatestModelsResponseV2,
         ModelVersionsResponseV2,
         PostModelJobAsyncResponseV2,
         PostModelJobSyncResponseV2,
+        ProtectByNameResponseV2,
         RebuildModelAsyncResponseV2,
         RebuildModelSyncResponseV2,
         RebuildRequestV2,
         RegistryErrorResponse,
         UndeployedResponseV2,
         UndeploySubmittedResponseV2,
+        UpdateMetadataRequestV2,
         VerifyModelSyncResponseV2,
     )
     from waylay.services.registry.queries.models_api import (
@@ -109,6 +114,8 @@ try:
         ListQuery,
         ListVersionsQuery,
         PatchMetadataQuery,
+        ProtectQuery,
+        ProtectVersionsQuery,
         PublishQuery,
         RebuildQuery,
         RemoveVersionQuery,
@@ -154,10 +161,16 @@ except ImportError:
         ListVersionsQuery = dict
         ModelVersionsResponseV2 = Model
 
-        FunctionMeta = Model
+        UpdateMetadataRequestV2 = Model
 
         PatchMetadataQuery = dict
         GetModelResponseV2 = Model
+
+        ProtectQuery = dict
+        GetModelResponseV2 = Model
+
+        ProtectVersionsQuery = dict
+        ProtectByNameResponseV2 = Model
 
         PublishQuery = dict
         PostModelJobSyncResponseV2 = Model
@@ -642,7 +655,7 @@ class ModelsApi(WithApiClient):
         :type query['scaleToZero']: bool
         :param query['deploy'] (dict) <br> query.deploy (Query) : Indicates that a function should be _deployed_ when its assets are valid.  * If `true` (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If `false`, the uploaded assets are stored and the function is created/updated in `registered` state. Asset validation errors are only returned as warning, and stored as `failureReason` on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage.
         :type query['deploy']: bool
-        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user.
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of a draft function is transferred to the current user.
         :type query['chown']: bool
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
@@ -1184,6 +1197,8 @@ class ModelsApi(WithApiClient):
         :type name: str
         :param query: URL Query parameters.
         :type query: GetLatestQuery | QueryParamTypes, optional
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings.
+        :type query['showTags']: ShowInlineOrEmbedding
         :param query['includeDraft'] (dict) <br> query.include_draft (Query) : Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to `true`, draft versions are **included**. If set to `false`, draft versions are **excluded**.
         :type query['includeDraft']: bool
         :param query['includeDeprecated'] (dict) <br> query.include_deprecated (Query) : Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to `true`, deprecated versions are **included**. If set to `false`, deprecated versions are **excluded**.
@@ -1356,6 +1371,8 @@ class ModelsApi(WithApiClient):
         :type version: str
         :param query: URL Query parameters.
         :type query: GetQuery | QueryParamTypes, optional
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings.
+        :type query['showTags']: ShowInlineOrEmbedding
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -1675,7 +1692,7 @@ class ModelsApi(WithApiClient):
     ) -> LatestModelsResponseV2 | T | Response | Model:
         """List Models.
 
-        List the (latest) versions of available <em>models</em>.  ### List Latest Model Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>model</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no version filters are used, each listed <em>model version</em> contains representations of the latest draft (`entities[]._links.draft`)  or latest published (`entities[]._links.published`) version (if existing and different).   Use the query parameter `showRelated` to include only a link (default `showRelated=link`) or a full representation (`showRelated=embed`).  ### List Latest Model Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>model</em> that satisfy the filters, but **without links**.  ### List All Model Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>models</em> versions that satisfy the query, possibly multiple versions per named <em>models</em>. No HAL links are provided.  #### Filter on _status_ By default <em>model versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>model</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`
+        List the (latest) versions of available <em>models</em>.  ### List Latest Model Versions By default, the result includes the latest non-deprecated, non-draft version for each <em>model</em> name. If there is no such version, the latest _deprecated_ or the latest _draft_ version is included, with the former taking precedence.     Use the boolean query parameters <code>includeDeprecated</code> or <code>includeDraft</code> to change this behaviour:   <ul>   <li><code>includeDeprecated=true</code>: do not prefer non-deprecated versions as a latest version: if the latest version is a deprecated one, it will be shown, even if there are older non-deprecated versions.</li>   <li><code>includeDraft=true</code>: do not prefer non-draft versions as a latest version: if the latest version is a draft, it will be shown, even if there are older non-draft versions.</li>   </ul>   As long as no version filters are used, each listed <em>model version</em> contains representations of the latest draft (`entities[]._links.draft`)  or latest published (`entities[]._links.published`) version (if existing and different).   Use the query parameter `showRelated` to include only a link (default `showRelated=link`) or a full representation (`showRelated=embed`).  ### List Latest Model Versions (with filter) When any of the _version filter_ query parameters are used, the response contains the _latest_ version per named <em>model</em> that satisfy the filters, but **without links**.  ### List All Model Versions When using `latest=false` (default when using the `namedVersion` filter), the listing contains _all_  <em>models</em> versions that satisfy the query, possibly multiple versions per named <em>models</em>. No HAL links are provided.  #### Filter on _status_ By default <em>model versions</em> with status  `undeployed` are **excluded** in all cases. Use the _version filter_ `status` to include/exclude a status from the results. By example,  > `?status=any&includeDeprecated=true&includeDraft=true&latest=false`  will list _ALL_ versions known to the function registry.  #### Version filter parameters The following query parameters are _version filters_ for the <em>model</em> listing: > `version`, `status`, `runtimeVersion`, `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`, `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags`, `wql`
         :param query: URL Query parameters.
         :type query: ListQuery | QueryParamTypes, optional
         :param query['limit'] (dict) <br> query.limit (Query) : The maximum number of items to be return from this query. Has a deployment-defined default and maximum value.
@@ -1692,6 +1709,12 @@ class ModelsApi(WithApiClient):
         :type query['draft']: bool
         :param query['nameVersion'] (dict) <br> query.name_version (Query) : Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered.
         :type query['nameVersion']: List[str]
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings.
+        :type query['showTags']: ShowInlineOrEmbedding
+        :param query['tags'] (dict) <br> query.tags (Query) : Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected.
+        :type query['tags']: TagsFilter
+        :param query['wql'] (dict) <br> query.wql (Query) : Query filter using the 'wql' query language.  This is a unstable preview feature, currently supporting the following _match terms_: * `tag:<name>` entity has a tag that fully matches `<name>` (case insensitive). * `tag:<name1>,<name2>` entity has a tag that fully matches any of `<name1>`, `<name2>` (case insensitive). * `tag:inIgnoreCase(<name1>,<name2>)` is the fully specified format for the previous statements.   `inIgnoreCase` is the _default match predicate_. * `tag:in(<name1>,<name2>)` entity has a tag matches one of `<name1>`,`<name2>` (case sensitive) * `tag:equals(<name>)` entity has a tag matches `<name>` (case sensitive) * `tag:like(<pattern>)` entity has a tag that matches `<pattern>` (case insensitive),    where `<pattern>` can contain `*` (multiple characters) and `?` (single character) wildcards.  Each _argument_ of a _match term_ (like `<name>` above) can either be a * a _quoted match argument_, quoted using `\"`, can contain any character except `\"`: `tag:\"Status:In Review\"`. * a _safe match argument_ can only contain alpha-numeric characters or `_`: `tag:Status_In_Review`.  Multiple _match term_s can be combined in a boolean predicate using the `AND`, `OR` and `NOT` operators: * `tag:abc AND tag:\"My Demo\" AND tag:like(\"prj:*\")`: entity has a tag matching `abc` **AND** a tag matching `\"My Demo\"` **AND**    a tag that has the `prj:` prefix * `tag:abc tag:\"My Demo\" tag:like(\"prj:*\")`: same as the previous statement: a (space-deliminated) list of terms is     implicitly combined with `AND`. * `tag:abc OR tag:\"My Demo\"`: entity has a tag matching `abc` **OR** a tag matching `\"My Demo\"` * `NOT tag:abc`: entity **does not have** a tag matching `abc`  Round brackets can be used to combine predicates with different operators: * `(tag:abc OR tag:\"My Demo\") AND tag:like(\"prj:*\")`: entity has a tag `abc` or a tag `My Demo`, and a tag with prefix `prj:*`  For a _multi-valued attribute_ like `tag`, each _match term_ tests the existence of a matching tag assigned to the entity. When _multiple match predicates on the **same** tag_ need to be specified, the boolean operators `not`, `all`, `any` can be used _within_ the match term:  * `tag:all(like(\"prj:*\"),not(like(\"*:Done\")))`: entity has a tag that starts with `prj:` and does NOT end with `:Done`. * `tag:not(Done)`: entity has a tag that does not match `Done` (this excludes entities without tags, and with a single `Done` tag!). * `NOT tag:not(in(abc,def))`: each tag of the entity is in `abc` or `def` (matches entities without tags!) * `tag:any(like(\"prj:*\"),not(done)))`: entity has a tag that either starts with `prj:` or does not match `done`.
+        :type query['wql']: str
         :param query['version'] (dict) <br> query.version (Query) : Filter on the version of the function (case-sensitive, supports wildcards).
         :type query['version']: str
         :param query['status'] (dict) <br> query.status (Query) : Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.
@@ -1713,13 +1736,13 @@ class ModelsApi(WithApiClient):
         :param query['name'] (dict) <br> query.name (Query) : Filter on the name of the function. This is case-insensitive and supports wild-cards `?` (any one character) and `*` (any sequence of characters).
         :type query['name']: str
         :param query['archiveFormat'] (dict) <br> query.archive_format (Query) : Filter on the archive format of the function.
-        :type query['archiveFormat']: List[ArchiveFormat]
+        :type query['archiveFormat']: List[ArchiveFormatFilter]
         :param query['runtime'] (dict) <br> query.runtime (Query) : Filter on the runtime of the function.
         :type query['runtime']: List[str]
         :param query['latest'] (dict) <br> query.latest (Query) : When `true`, only the latest version per function name is returned. If set to `false`, multiple versions per named function can be returned. Defaults to `true`, except when specific versions are selected with the `nameVersion` filter.
         :type query['latest']: bool
         :param query['showRelated'] (dict) <br> query.show_related (Query) : Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. Ignored (forced to `none`) when any of the _version filter_ query params are used. - `embed`: as full summary representation (in `_embedded`). - `link`: as HAL link in (in `_links`). - `none`: omitted.
-        :type query['showRelated']: ShowRelatedType
+        :type query['showRelated']: ShowLinkOrEmbedding
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -1874,6 +1897,10 @@ class ModelsApi(WithApiClient):
         :type query['deprecated']: bool
         :param query['draft'] (dict) <br> query.draft (Query) : Filter on the draft status of the function.
         :type query['draft']: bool
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings.
+        :type query['showTags']: ShowInlineOrEmbedding
+        :param query['tags'] (dict) <br> query.tags (Query) : Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected.
+        :type query['tags']: TagsFilter
         :param query['version'] (dict) <br> query.version (Query) : Filter on the version of the function (case-sensitive, supports wildcards).
         :type query['version']: str
         :param query['status'] (dict) <br> query.status (Query) : Filter on the status of the plug. Filter values with a `-` postfix exclude the status. Use the `any` filter value to include all states. When not specified, a default `undeployed-` filter excludes _undeployed_ functions.
@@ -1893,7 +1920,7 @@ class ModelsApi(WithApiClient):
         :param query['updatedAfter'] (dict) <br> query.updated_after (Query) : Filter on funtions that were updated after the given timestamp or age.
         :type query['updatedAfter']: TimestampSpec
         :param query['archiveFormat'] (dict) <br> query.archive_format (Query) : Filter on the archive format of the function.
-        :type query['archiveFormat']: List[ArchiveFormat]
+        :type query['archiveFormat']: List[ArchiveFormatFilter]
         :param query['runtime'] (dict) <br> query.runtime (Query) : Filter on the runtime of the function.
         :type query['runtime']: List[str]
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
@@ -1963,7 +1990,7 @@ class ModelsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
@@ -1981,7 +2008,7 @@ class ModelsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: Literal[""] = "",
@@ -1999,7 +2026,7 @@ class ModelsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[True],
         select_path: Literal["_not_used_"] = "_not_used_",
@@ -2017,7 +2044,7 @@ class ModelsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
@@ -2035,7 +2062,7 @@ class ModelsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: Literal[False] = False,
         select_path: str,
@@ -2052,7 +2079,7 @@ class ModelsApi(WithApiClient):
             str, Field(strict=True, description="The version of the function.")
         ],
         *,
-        json: FunctionMeta | None = None,
+        json: UpdateMetadataRequestV2 | None = None,
         query: PatchMetadataQuery | QueryParamTypes | None = None,
         raw_response: StrictBool = False,
         select_path: str = "",
@@ -2069,11 +2096,13 @@ class ModelsApi(WithApiClient):
         :param version: The version of the function. (required)
         :type version: str
         :param json: The json request body.
-        :type json: FunctionMeta, optional
+        :type json: UpdateMetadataRequestV2, optional
         :param query: URL Query parameters.
         :type query: PatchMetadataQuery | QueryParamTypes, optional
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings.
+        :type query['showTags']: ShowInlineOrEmbedding
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -2106,7 +2135,7 @@ class ModelsApi(WithApiClient):
         ## named body parameters
         body_args: Dict[str, Any] = {}
         if json is not None and validate_request:
-            body_adapter: Any = TypeAdapter(Optional[FunctionMeta])
+            body_adapter: Any = TypeAdapter(Optional[UpdateMetadataRequestV2])
             json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
         body_args["json"] = json
 
@@ -2128,6 +2157,343 @@ class ModelsApi(WithApiClient):
         return await self.api_client.request(
             method="PATCH",
             resource_path="/registry/v2/models/{name}/versions/{version}/metadata",
+            path_params=path_params,
+            params=query,
+            **body_args,
+            headers=headers,
+            **kwargs,
+            response_type=response_types_map,
+            select_path=select_path,
+            raw_response=raw_response,
+        )
+
+    @overload
+    async def protect(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        query: ProtectQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> GetModelResponseV2: ...
+
+    @overload
+    async def protect(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        query: ProtectQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    @overload
+    async def protect(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        query: ProtectQuery | QueryParamTypes | None = None,
+        raw_response: Literal[True],
+        select_path: Literal["_not_used_"] = "_not_used_",
+        response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Response: ...
+
+    @overload
+    async def protect(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        query: ProtectQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Model: ...
+
+    @overload
+    async def protect(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        query: ProtectQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    async def protect(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        version: Annotated[
+            str, Field(strict=True, description="The version of the function.")
+        ],
+        *,
+        query: ProtectQuery | QueryParamTypes | None = None,
+        raw_response: StrictBool = False,
+        select_path: str = "",
+        response_type: T | None = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> GetModelResponseV2 | T | Response | Model:
+        """Protect Model Version.
+
+        Enable/disable protection for a <em>model</em> version. Enabling protection requires ownership for draft versions.
+        :param name: The name of the function. (required)
+        :type name: str
+        :param version: The version of the function. (required)
+        :type version: str
+        :param query: URL Query parameters.
+        :type query: ProtectQuery | QueryParamTypes, optional
+        :param query['author'] (dict) <br> query.author (Query) : Optionally changes the author metadata when updating a function.
+        :type query['author']: str
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of a draft function is transferred to the current user.
+        :type query['chown']: bool
+        :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings.
+        :type query['showTags']: ShowInlineOrEmbedding
+        :param query['enable'] (dict) <br> query.enable (Query) : If set to `true`, the function assets (including its code) will be protected by requiring additional permissions. If set to `false`, the function assets will no longer be protected.
+        :type query['enable']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
+                Set it to the empty string `""` to receive the full response object.
+        :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
+        :param headers: Header parameters for this request
+        :type headers: dict, optional
+        :param `**kwargs`: Additional parameters passed on to the http client.
+            See below.
+        :Keyword Arguments:
+            * timeout: a single numeric timeout in seconds,
+                or a tuple of _connect_, _read_, _write_ and _pool_ timeouts.
+            * stream: if true, the response will be in streaming mode
+            * cookies
+            * extensions
+            * auth
+            * follow_redirects: bool
+
+        :return: Returns the result object if the http request succeeded with status code '2XX'.
+        :raises APIError: If the http request has a status code different from `2XX`. This
+            object wraps both the http Response and any parsed data.
+        """
+
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": str(name),
+            "version": str(version),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and MODELS_AVAILABLE and validate_request:
+            query = TypeAdapter(ProtectQuery).validate_python(query)
+
+        response_types_map: Dict[str, Any] = (
+            {"2XX": response_type}
+            if response_type is not None
+            else {
+                "200": GetModelResponseV2 if not select_path else Model,
+            }
+        )
+        non_200_response_types_map: Dict[str, Any] = {}
+        response_types_map.update(non_200_response_types_map)
+
+        ## peform request
+        return await self.api_client.request(
+            method="POST",
+            resource_path="/registry/v2/models/{name}/versions/{version}/protect",
+            path_params=path_params,
+            params=query,
+            **body_args,
+            headers=headers,
+            **kwargs,
+            response_type=response_types_map,
+            select_path=select_path,
+            raw_response=raw_response,
+        )
+
+    @overload
+    async def protect_versions(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        *,
+        query: ProtectVersionsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> ProtectByNameResponseV2: ...
+
+    @overload
+    async def protect_versions(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        *,
+        query: ProtectVersionsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    @overload
+    async def protect_versions(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        *,
+        query: ProtectVersionsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[True],
+        select_path: Literal["_not_used_"] = "_not_used_",
+        response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Response: ...
+
+    @overload
+    async def protect_versions(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        *,
+        query: ProtectVersionsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Model: ...
+
+    @overload
+    async def protect_versions(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        *,
+        query: ProtectVersionsQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: T,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    async def protect_versions(
+        self,
+        name: Annotated[StrictStr, Field(description="The name of the function.")],
+        *,
+        query: ProtectVersionsQuery | QueryParamTypes | None = None,
+        raw_response: StrictBool = False,
+        select_path: str = "",
+        response_type: T | None = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> ProtectByNameResponseV2 | T | Response | Model:
+        """Protect Model.
+
+        Enable/disable protection for all <em>model</em> versions. Enabling protection requires ownership for draft versions.
+        :param name: The name of the function. (required)
+        :type name: str
+        :param query: URL Query parameters.
+        :type query: ProtectVersionsQuery | QueryParamTypes, optional
+        :param query['author'] (dict) <br> query.author (Query) : Optionally changes the author metadata when updating a function.
+        :type query['author']: str
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of a draft function is transferred to the current user.
+        :type query['chown']: bool
+        :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
+        :type query['comment']: str
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings.
+        :type query['showTags']: ShowInlineOrEmbedding
+        :param query['enable'] (dict) <br> query.enable (Query) : If set to `true`, the function assets (including its code) will be protected by requiring additional permissions. If set to `false`, the function assets will no longer be protected.
+        :type query['enable']: bool
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
+                Set it to the empty string `""` to receive the full response object.
+        :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
+        :param headers: Header parameters for this request
+        :type headers: dict, optional
+        :param `**kwargs`: Additional parameters passed on to the http client.
+            See below.
+        :Keyword Arguments:
+            * timeout: a single numeric timeout in seconds,
+                or a tuple of _connect_, _read_, _write_ and _pool_ timeouts.
+            * stream: if true, the response will be in streaming mode
+            * cookies
+            * extensions
+            * auth
+            * follow_redirects: bool
+
+        :return: Returns the result object if the http request succeeded with status code '2XX'.
+        :raises APIError: If the http request has a status code different from `2XX`. This
+            object wraps both the http Response and any parsed data.
+        """
+
+        # path parameters
+        path_params: Dict[str, str] = {
+            "name": str(name),
+        }
+
+        ## named body parameters
+        body_args: Dict[str, Any] = {}
+
+        # query parameters
+        if query is not None and MODELS_AVAILABLE and validate_request:
+            query = TypeAdapter(ProtectVersionsQuery).validate_python(query)
+
+        response_types_map: Dict[str, Any] = (
+            {"2XX": response_type}
+            if response_type is not None
+            else {
+                "200": ProtectByNameResponseV2 if not select_path else Model,
+            }
+        )
+        non_200_response_types_map: Dict[str, Any] = {}
+        response_types_map.update(non_200_response_types_map)
+
+        ## peform request
+        return await self.api_client.request(
+            method="POST",
+            resource_path="/registry/v2/models/{name}/protect",
             path_params=path_params,
             params=query,
             **body_args,
@@ -2249,7 +2615,7 @@ class ModelsApi(WithApiClient):
         :type version: str
         :param query: URL Query parameters.
         :type query: PublishQuery | QueryParamTypes, optional
-        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user.
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of a draft function is transferred to the current user.
         :type query['chown']: bool
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
@@ -2447,6 +2813,8 @@ class ModelsApi(WithApiClient):
         :type query['dryRun']: bool
         :param query['async'] (dict) <br> query.var_async (Query) : Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings.
+        :type query['showTags']: ShowInlineOrEmbedding
         :param query['upgrade'] (dict) <br> query.upgrade (Query) : If set, force a rebuild with the given <em>runtime</em> version selection policy. <ul>  <li><code>same</code> <b>patch</b> version.   This should only include backward compatible upgrades.  </li>  <li><code>minor</code> <b>major</b> version.   This might include an upgrade of e.g. the language runtime and/or provided   dependencies that could break compatiblity with the function. .</li> </ul>
         :type query['upgrade']: RebuildPolicy
         :param query['forceVersion'] (dict) <br> query.force_version (Query) : If set, force a rebuild with the given runtime version (including downgrades). This parameter is mutually exclusive to the `upgrade` parameter.
@@ -3034,7 +3402,7 @@ class ModelsApi(WithApiClient):
         :type query['scaleToZero']: bool
         :param query['deploy'] (dict) <br> query.deploy (Query) : Indicates that a function should be _deployed_ when its assets are valid.  * If `true` (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If `false`, the uploaded assets are stored and the function is created/updated in `registered` state. Asset validation errors are only returned as warning, and stored as `failureReason` on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage.
         :type query['deploy']: bool
-        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user.
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of a draft function is transferred to the current user.
         :type query['chown']: bool
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
@@ -3280,7 +3648,7 @@ class ModelsApi(WithApiClient):
         :type query['scaleToZero']: bool
         :param query['deploy'] (dict) <br> query.deploy (Query) : Indicates that a function should be _deployed_ when its assets are valid.  * If `true` (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If `false`, the uploaded assets are stored and the function is created/updated in `registered` state. Asset validation errors are only returned as warning, and stored as `failureReason` on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage.
         :type query['deploy']: bool
-        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of the draft function is transferred to the current user.
+        :param query['chown'] (dict) <br> query.chown (Query) : If set, ownership of a draft function is transferred to the current user.
         :type query['chown']: bool
         :param query['comment'] (dict) <br> query.comment (Query) : An optional user-specified comment corresponding to the operation.
         :type query['comment']: str
@@ -3464,6 +3832,8 @@ class ModelsApi(WithApiClient):
         :type query: VerifyQuery | QueryParamTypes, optional
         :param query['scaleToZero'] (dict) <br> query.scale_to_zero (Query) : Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command.
         :type query['scaleToZero']: bool
+        :param query['showTags'] (dict) <br> query.show_tags (Query) : Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings.
+        :type query['showTags']: ShowInlineOrEmbedding
         :param query['async'] (dict) <br> query.var_async (Query) : Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs.
         :type query['async']: bool
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.

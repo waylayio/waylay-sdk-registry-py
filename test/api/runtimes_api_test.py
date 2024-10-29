@@ -22,7 +22,10 @@ from waylay.sdk.api._models import Model
 from waylay.services.registry.api import RuntimesApi
 from waylay.services.registry.service import RegistryService
 
+from ..types.list_runtimes_tags_parameter_stub import ListRuntimesTagsParameterStub
 from ..types.runtime_summary_response_stub import RuntimeSummaryResponseStub
+from ..types.runtime_tag_response_stub import RuntimeTagResponseStub
+from ..types.runtime_tags_response_stub import RuntimeTagsResponseStub
 from ..types.runtime_version_response_stub import RuntimeVersionResponseStub
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
 
@@ -33,6 +36,8 @@ MODELS_AVAILABLE = (
 if MODELS_AVAILABLE:
     from waylay.services.registry.models import (
         RuntimeSummaryResponse,
+        RuntimeTagResponse,
+        RuntimeTagsResponse,
         RuntimeVersionResponse,
     )
     from waylay.services.registry.queries.runtimes_api import (
@@ -42,6 +47,7 @@ if MODELS_AVAILABLE:
         GetQuery,
         ListQuery,
         ListVersionsQuery,
+        TagsQuery,
     )
 
 
@@ -91,6 +97,7 @@ async def test_example_archive(
         # optionally use ExampleArchiveQuery to validate and reuse parameters
         "query": ExampleArchiveQuery(
             ls=False,
+            show_tags="embed",
             include_deprecated=True,
         ),
     }
@@ -117,6 +124,7 @@ async def test_example_archive_without_types(
     kwargs = {
         "query": {
             "ls": False,
+            "showTags": "embed",
             "includeDeprecated": True,
         },
     }
@@ -161,6 +169,7 @@ async def test_get_example_asset(
         # optionally use GetExampleAssetQuery to validate and reuse parameters
         "query": GetExampleAssetQuery(
             ls=False,
+            show_tags="embed",
             include_deprecated=True,
         ),
     }
@@ -193,6 +202,7 @@ async def test_get_example_asset_without_types(
     kwargs = {
         "query": {
             "ls": False,
+            "showTags": "embed",
             "includeDeprecated": True,
         },
     }
@@ -232,8 +242,10 @@ async def test_get_latest(
     kwargs = {
         # optionally use GetLatestQuery to validate and reuse parameters
         "query": GetLatestQuery(
+            show_tags="embed",
             version=SemanticVersionRangeStub.create_json(),
             include_deprecated=False,
+            tags=ListRuntimesTagsParameterStub.create_json(),
             function_type=[],
             archive_format=[],
         ),
@@ -256,8 +268,10 @@ async def test_get_latest_without_types(
 
     kwargs = {
         "query": {
+            "showTags": "embed",
             "version": SemanticVersionRangeStub.create_json(),
             "includeDeprecated": False,
+            "tags": ListRuntimesTagsParameterStub.create_json(),
             "functionType": [],
             "archiveFormat": [],
         },
@@ -296,6 +310,7 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
     kwargs = {
         # optionally use GetQuery to validate and reuse parameters
         "query": GetQuery(
+            show_tags="embed",
             include_deprecated=True,
         ),
     }
@@ -321,6 +336,7 @@ async def test_get_without_types(
 
     kwargs = {
         "query": {
+            "showTags": "embed",
             "includeDeprecated": True,
         },
     }
@@ -352,9 +368,11 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
     kwargs = {
         # optionally use ListQuery to validate and reuse parameters
         "query": ListQuery(
+            show_tags="embed",
             version=SemanticVersionRangeStub.create_json(),
             latest="major",
             include_deprecated=False,
+            tags=ListRuntimesTagsParameterStub.create_json(),
             name="node*",
             function_type=[],
             archive_format=[],
@@ -376,9 +394,11 @@ async def test_list_without_types(
     # set path params
     kwargs = {
         "query": {
+            "showTags": "embed",
             "version": SemanticVersionRangeStub.create_json(),
             "latest": "major",
             "includeDeprecated": False,
+            "tags": ListRuntimesTagsParameterStub.create_json(),
             "name": "node*",
             "functionType": [],
             "archiveFormat": [],
@@ -421,8 +441,10 @@ async def test_list_versions(
             version=SemanticVersionRangeStub.create_json(),
             latest="major",
             include_deprecated=False,
+            tags=ListRuntimesTagsParameterStub.create_json(),
             function_type=[],
             archive_format=[],
+            show_tags="embed",
         ),
     }
     _list_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
@@ -446,10 +468,105 @@ async def test_list_versions_without_types(
             "version": SemanticVersionRangeStub.create_json(),
             "latest": "major",
             "includeDeprecated": False,
+            "tags": ListRuntimesTagsParameterStub.create_json(),
             "functionType": [],
             "archiveFormat": [],
+            "showTags": "embed",
         },
     }
     _list_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.runtimes.list_versions(name, **kwargs)
+    check_type(resp, Model)
+
+
+def _tag_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, tagName: str):
+    mock_response = RuntimeTagResponseStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(f"^{gateway_url}/registry/v2/runtimeTags/{tagName}(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_tag(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for tag
+    Get Runtime Tag
+    """
+    # set path params
+    tagName = "tag_name_example"
+
+    kwargs = {}
+    _tag_set_mock_response(httpx_mock, gateway_url, quote(str(tagName)))
+    resp = await service.runtimes.tag(tagName, **kwargs)
+    check_type(resp, Union[RuntimeTagResponse,])
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_tag_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for tag with models not installed
+    Get Runtime Tag
+    """
+    # set path params
+    tagName = "tag_name_example"
+
+    kwargs = {}
+    _tag_set_mock_response(httpx_mock, gateway_url, quote(str(tagName)))
+    resp = await service.runtimes.tag(tagName, **kwargs)
+    check_type(resp, Model)
+
+
+def _tags_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
+    mock_response = RuntimeTagsResponseStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(f"^{gateway_url}/registry/v2/runtimeTags/(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_tags(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for tags
+    List Runtime Tags
+    """
+    # set path params
+    kwargs = {
+        # optionally use TagsQuery to validate and reuse parameters
+        "query": TagsQuery(
+            name="*-demo-??",
+            color="#4153ea",
+        ),
+    }
+    _tags_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.runtimes.tags(**kwargs)
+    check_type(resp, Union[RuntimeTagsResponse,])
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_tags_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for tags with models not installed
+    List Runtime Tags
+    """
+    # set path params
+    kwargs = {
+        "query": {
+            "name": "*-demo-??",
+            "color": "#4153ea",
+        },
+    }
+    _tags_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.runtimes.tags(**kwargs)
     check_type(resp, Model)

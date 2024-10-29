@@ -51,6 +51,23 @@ build_1_model_schema = json.loads(
       "description" : "The creation time of this job",
       "format" : "date-time"
     },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has finished processing.",
+      "format" : "date-time"
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "createdBy" : {
       "title" : "createdBy",
       "type" : "string",
@@ -86,7 +103,7 @@ class Build1Stub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(Build1Adapter.json_schema(), allow_none_optionals=1)
             json = backup_faker.generate(use_defaults=True, use_examples=True)

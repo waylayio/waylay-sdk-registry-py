@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**draft** | [**GetPlugResponseV2LinksDraft**](GetPlugResponseV2LinksDraft.md) |  | [optional] 
-**published** | [**GetPlugResponseV2LinksPublished**](GetPlugResponseV2LinksPublished.md) |  | [optional] 
+**draft** | [**AltVersionHALLinkDraft**](AltVersionHALLinkDraft.md) |  | [optional] 
+**published** | [**AltVersionHALLinkPublished**](AltVersionHALLinkPublished.md) |  | [optional] 
 
 ## Example
 

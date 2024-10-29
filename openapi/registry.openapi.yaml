@@ -1,13 +1,11 @@
 openapi: 3.1.0
 info:
   title: Waylay Function Registry
-  version: 2.14.2
-  x-visibility: stable
+  version: 2.17.1
+  x-visibility:
+    status: stable
   description: V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML
     models).
-  x-visiblity:
-    status: stable
-    title: Since v2.8.0
 components:
   securitySchemes:
     waylayApiKeySecret:
@@ -36,6 +34,10 @@ components:
       - scale
       - cleanup
       - notify
+    FunctionTypeFilter:
+      anyOf:
+      - $ref: '#/components/schemas/EFunctionType'
+      - $ref: '#/components/schemas/FunctionTypeExclude'
     EFunctionType:
       type: string
       enum:
@@ -43,6 +45,16 @@ components:
       - webscripts
       - kfserving
       description: Type of functions supported by the registry service.
+    FunctionTypeExclude:
+      type: string
+      enum:
+      - plugs-
+      - webscripts-
+      - kfserving-
+    ArchiveFormatFilter:
+      anyOf:
+      - $ref: '#/components/schemas/EArchiveFormat'
+      - $ref: '#/components/schemas/ArchiveFormatExclude'
     EArchiveFormat:
       type: string
       enum:
@@ -51,6 +63,14 @@ components:
       - golang
       - byoml
       - native
+    ArchiveFormatExclude:
+      type: string
+      enum:
+      - node-
+      - python-
+      - golang-
+      - byoml-
+      - native-
     SemanticVersionRange:
       anyOf:
       - type: string
@@ -70,6 +90,19 @@ components:
       - 'true'
       - 'false'
       description: Level of latest versions that should be included.
+    RuntimeTagFilter:
+      anyOf:
+      - $ref: '#/components/schemas/RuntimeIncludeTag'
+      - $ref: '#/components/schemas/RuntimeExcludeTag'
+    RuntimeIncludeTag:
+      type: string
+    RuntimeExcludeTag:
+      type: string
+    EShowEmbedding:
+      type: string
+      enum:
+      - embed
+      - none
     ERuntime:
       type: string
     EStatusFilter:
@@ -91,9 +124,8 @@ components:
       - undeploying
       - undeployed
       description: Inlude a status as a filter.
-      examples:
-      - running
       title: Status Inclusion Filter
+      example: running
     EStatusExclude:
       type: string
       enum:
@@ -107,10 +139,9 @@ components:
       - undeployed-
       description: Any status value with a `-` postfix appended, excludes that status
         as a filter.
-      examples:
-      - running-
       title: Status Exclusion Filter
       pattern: ^(registered|pending|deployed|unhealthy|failed|running|undeploying|undeployed)-$
+      example: running-
     EStatusAny:
       type: string
       description: Includes *all* statuses (including `undeployed`) as a filter
@@ -158,6 +189,18 @@ components:
       pattern: \d{4}-\d{2}-\d{2}(Z|([+-]\d\d:\d\d))?
       format: date
       title: ISO8601 Date
+    TagsFilter:
+      anyOf:
+      - type: array
+        items:
+          type: string
+      - type: string
+    EShowInlineOrEmbedding:
+      anyOf:
+      - $ref: '#/components/schemas/EShowEmbedding'
+      - type: string
+        enum:
+        - inline
     NamedVersion:
       type: string
       description: A function version reference represented as `<name>@<version>`.
@@ -168,18 +211,12 @@ components:
       - sensor
       - actuator
       - transformer
-    TagsFilter:
+    EShowLinkOrEmbedding:
       anyOf:
-      - type: array
-        items:
-          type: string
+      - $ref: '#/components/schemas/EShowEmbedding'
       - type: string
-    ShowRelatedType:
-      type: string
-      enum:
-      - embed
-      - link
-      - none
+        enum:
+        - link
     ERebuildPolicy:
       type: string
       enum:
@@ -226,7 +263,102 @@ components:
       anyOf:
       - $ref: '#/components/schemas/IRebuildRequestV2'
       - type: 'null'
+    IUpdateTagsRequestV2:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: 'During update, a (reference to a) tag
+
+            - that does not yet exist, is created (using default attributes if not
+            specified)
+
+            - that does exist is **not** updated (even if tag attributes like `color`
+            differ)'
+          example:
+          - awaiting-review
+          - name: demo
+            color: '#e639a4'
+      required:
+      - tags
+      additionalProperties: false
+    TagOrTagReference:
+      anyOf:
+      - $ref: '#/components/schemas/TagReference'
+      - $ref: '#/components/schemas/ITag'
+      description: A reference to a tag, or tag object.
+    ITag:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TagReference'
+          description: Name of the tag
+        color:
+          type: string
+          description: Color associated with the tag in an UI.
+      required:
+      - name
+      - color
+      description: One or more tags can be assigned to a function entity to facilitate
+        grouping and searching.
+    TagReference:
+      type: string
+      description: A string that references a tag
     IUpdateMetadataRequestV2:
+      type: object
+      properties:
+        author:
+          type: string
+          description: The author of the function.
+        description:
+          type: string
+          description: A description of the function
+        iconURL:
+          type: string
+          description: An url to an icon that represents this function.
+        category:
+          type: string
+          description: 'A category for this function (Deprecated: use tags to categorise
+            your functions)'
+          deprecated: true
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: 'During update, a (reference to a) tag
+
+            - that does not yet exist, is created (using default attributes if not
+            specified)
+
+            - that does exist is not updated (even if tag attributes like `color`
+            differ)'
+          deprecated: The functionality to change tag associations will move to a
+            dedicated operation.
+          example:
+          - awaiting-review
+          - name: demo
+            color: '#e639a4'
+      additionalProperties: false
+    IFunctionMeta:
+      type: object
+      properties:
+        author:
+          type: string
+          description: The author of the function.
+        description:
+          type: string
+          description: A description of the function
+        iconURL:
+          type: string
+          description: An url to an icon that represents this function.
+        category:
+          type: string
+          description: 'A category for this function (Deprecated: use tags to categorise
+            your functions)'
+          deprecated: true
+    IUpdatePlugMetadataRequestV2:
       type: object
       additionalProperties: false
       properties:
@@ -247,50 +379,26 @@ components:
         documentationURL:
           type: string
           description: External url that document this function.
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/ITag'
-          description: Tags associated with this function.
-          examples:
-          - - name: awaiting-review
-              color: '#4153ea'
-            - name: demo
-              color: '#e639a4'
         friendlyName:
           type: string
           description: Display title for this function.
-    IFunctionMeta:
-      type: object
-      properties:
-        author:
-          type: string
-          description: The author of the function.
-        description:
-          type: string
-          description: A description of the function
-        iconURL:
-          type: string
-          description: An url to an icon that represents this function.
-        category:
-          type: string
-          description: 'A category for this function (Deprecated: use tags to categorise
-            your functions)'
-          deprecated: true
-    ITag:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the tag
-        color:
-          type: string
-          description: Color associated with the tag in an UI.
-      required:
-      - name
-      - color
-      description: One or more tags can be assigned to a function entity to facilitate
-        grouping and searching.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: 'During update, a (reference to a) tag
+
+            - that does not yet exist, is created (using default attributes if not
+            specified)
+
+            - that does exist is not updated (even if tag attributes like `color`
+            differ)'
+          deprecated: The functionality to change tag associations will move to a
+            dedicated operation.
+          example:
+          - awaiting-review
+          - name: demo
+            color: '#e639a4'
     DeprecatePreviousPolicy:
       anyOf:
       - type: string
@@ -343,6 +451,85 @@ components:
       - script
       - other
       description: Classification of assets with regard to their role.
+    IHALLink:
+      type: object
+      properties:
+        href:
+          anyOf:
+          - type: string
+            format: uri
+          - type: string
+      required:
+      - href
+    IAltVersionHALLink:
+      type: object
+      properties:
+        draft:
+          type: object
+          properties:
+            draft:
+              type: boolean
+              enum:
+              - true
+            href:
+              anyOf:
+              - type: string
+                format: uri
+              - type: string
+            version:
+              type: string
+            deprecated:
+              type: boolean
+          required:
+          - deprecated
+          - draft
+          - href
+          - version
+          description: Link to the lastest draft version.
+          example:
+            href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
+            version: 1.0.1
+            draft: true
+            deprecated: false
+        published:
+          type: object
+          properties:
+            draft:
+              type: boolean
+              enum:
+              - false
+            href:
+              anyOf:
+              - type: string
+                format: uri
+              - type: string
+            version:
+              type: string
+            deprecated:
+              type: boolean
+          required:
+          - deprecated
+          - draft
+          - href
+          - version
+          description: Link to the lastest published version.
+          example:
+            href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
+            version: 1.2.0
+            draft: false
+            deprecated: false
+    HALLinks:
+      anyOf:
+      - $ref: '#/components/schemas/IHALLink'
+      - type: array
+        items:
+          $ref: '#/components/schemas/IHALLink'
+      description: One or more links of the same HAL collection.
+    TaggingScopeOption:
+      type: string
+      enum:
+      - any
+      - all
     JobTypeSchema:
       anyOf:
       - $ref: '#/components/schemas/JobTypeBuild'
@@ -409,6 +596,7 @@ components:
       - $ref: '#/components/schemas/JobStateDelayed'
       - $ref: '#/components/schemas/JobStateWaiting'
       - $ref: '#/components/schemas/JobStateWaitingChildren'
+      - $ref: '#/components/schemas/JobStatePrioritized'
       description: Allowed job states
       title: Job States
     JobStateFinished:
@@ -454,6 +642,13 @@ components:
       title: Waiting Children
       enum:
       - waiting-children
+    JobStatePrioritized:
+      type: string
+      description: The job has been queued for execution with priority, but might
+        be waiting because of rate limiting.
+      title: Prioritized
+      enum:
+      - prioritized
     JobStateUnknown:
       type: string
       description: The job state is unknown (undocument or inconsistent).
@@ -502,6 +697,7 @@ components:
       - double
       - boolean
       - object
+      - array
       description: Datatype supported in plug input or output properties.
     EPlugPropertyFormatType:
       type: string
@@ -514,6 +710,8 @@ components:
       - url
       - date
       - template
+      - aiPluginDescriptor
+      - aiTemplateDescriptor
       description: Value domain for a plug input or output property.
     EnumValue:
       title: An allowed value for the property
@@ -532,6 +730,10 @@ components:
           $ref: '#/components/schemas/EFunctionType'
         archiveFormat:
           $ref: '#/components/schemas/EArchiveFormat'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagReference'
         versions:
           type: array
           items:
@@ -560,6 +762,10 @@ components:
           type: string
         description:
           type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagReference'
       required:
       - deprecated
       - title
@@ -569,6 +775,15 @@ components:
     IRuntimeSummaryResponse:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/IRuntimeTag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         runtimes:
           type: array
           items:
@@ -576,9 +791,33 @@ components:
       required:
       - runtimes
       description: Runtimes Found
+    IRuntimeTag:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/TagReference'
+          description: Name of the tag
+        color:
+          type: string
+          description: Color associated with the tag in an UI.
+        description:
+          type: string
+          description: Description of the tag
+      required:
+      - color
+      - name
     IRuntimeVersionResponse:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/IRuntimeTag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         runtime:
           $ref: '#/components/schemas/CompiledRuntimeVersion'
       required:
@@ -595,7 +834,7 @@ components:
           description: If true, a newer runtime for this function is available using
             the `rebuild` API.
         name:
-          type: string
+          $ref: '#/components/schemas/TagReference'
         functionType:
           $ref: '#/components/schemas/EFunctionType'
         archiveFormat:
@@ -606,7 +845,7 @@ components:
           $ref: '#/components/schemas/DeploySpec'
         language:
           $ref: '#/components/schemas/LanguageRelease'
-          description: Description of the language release
+          description: Description of the language release.
         providedDependencies:
           type: array
           items:
@@ -617,7 +856,12 @@ components:
           description: Restrictions on the assets in the function archive.
         invocation:
           $ref: '#/components/schemas/IInvocationAttributes'
-          description: The default invocation attributes
+          description: The default invocation attributes.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagReference'
+          description: Tags used for grouping or filtering.
         title:
           type: string
         description:
@@ -639,6 +883,8 @@ components:
       type: object
       properties:
         context:
+          type: string
+        file:
           type: string
         args:
           type: object
@@ -792,15 +1038,13 @@ components:
           type: number
           description: The minimal number of files that must match this pattern. Use
             `0` for an optional file.
-          examples:
-          - 0
+          example: 0
         max:
           type: number
           description: The maximal number of files that can match this pattern. Use
             `0` for a disallowed file. This condition only raises an error if there
             are no other conditions that
-          examples:
-          - 1
+          example: 1
         maxSize:
           type: string
           description: The maximum size for each file matching this pattern (in bytes,
@@ -844,6 +1088,24 @@ components:
       - nodeContext
       - rawDataContext
       - callback
+    IRuntimeTagsResponse:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/IRuntimeTag'
+      required:
+      - tags
+      description: Runtime Tags Found
+    IRuntimeTagResponse:
+      type: object
+      properties:
+        tag:
+          $ref: '#/components/schemas/IRuntimeTag'
+      required:
+      - tag
+      description: Runtime Tag Found
     IPlugResponseV2:
       type: object
       properties:
@@ -866,7 +1128,7 @@ components:
           items:
             $ref: '#/components/schemas/IUpdateRecord'
           description: The audit logs corresponding to the latest modifying operations
-            on this entity.
+            on this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/EStatus'
           description: The current status of this function entity.
@@ -900,7 +1162,6 @@ components:
       - status
       - updatedAt
       - updatedBy
-      - updates
     IUpdateRecord:
       type: object
       properties:
@@ -939,6 +1200,8 @@ components:
       - deprecate
       - undeploy
       - undeprecate
+      - protect
+      - unprotect
       description: A modifying operation on the function.
     EStatus:
       type: string
@@ -1026,6 +1289,15 @@ components:
           description: Metadata describing the function. Note that, after deployment,
             this metadata can be patched for the deployed plug, as long it does not
             affect the runtime behaviour.
+        protected:
+          type: boolean
+          description: Indicates whether the function's script and other assets should
+            be protected.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: Tags associated with this entity.
         type:
           $ref: '#/components/schemas/EPlugType'
           description: Type of the plug.
@@ -1047,17 +1319,20 @@ components:
           type: array
           items:
             type: string
-          description: The states of a plug as implemented in the plug code.
+          description: The states of a plug as implemented in the plug code. Required
+            and supported for `type=sensor` plugs _only_.
         input:
           type: array
           items:
             $ref: '#/components/schemas/IPlugProperty'
-          description: The named input parameters of a plug
+          description: The named input parameters of a plug. Supported for `type=sensor`
+            plugs; fixed with input attributes `data` and `resource` for `type=transformer`plugs.
         output:
           type: array
           items:
             $ref: '#/components/schemas/IPlugProperty'
-          description: The named output parameters of a plug
+          description: The named output parameters of a plug. Supported for all plug
+            types.
     IPlugProperty:
       type: object
       properties:
@@ -1070,8 +1345,7 @@ components:
         mandatory:
           type: boolean
           description: If <code>true</code> this property is required.
-          examples:
-          - true
+          example: true
         format:
           $ref: '#/components/schemas/IPlugPropertyFormat'
           description: If present, refines the value domain of the property.
@@ -1087,16 +1361,17 @@ components:
         type:
           $ref: '#/components/schemas/EPlugPropertyFormatType'
           description: The value domain type for a plug property.
-          examples:
-          - enum
+          example: enum
         values:
           type: array
           items:
             $ref: '#/components/schemas/EnumValue'
           description: The enumerated value domain when <code>type="enum"</code>
-          examples:
-          - - low
-            - high
+          example:
+          - low
+          - high
+      required:
+      - type
     IPlugMeta:
       type: object
       properties:
@@ -1117,19 +1392,27 @@ components:
         documentationURL:
           type: string
           description: External url that document this function.
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/ITag'
-          description: Tags associated with this function.
-          examples:
-          - - name: awaiting-review
-              color: '#4153ea'
-            - name: demo
-              color: '#e639a4'
         friendlyName:
           type: string
           description: Display title for this function.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: 'Tag references or tag objects associated with this function.
+            See `showTags` query parameter on how referenced tags are displayed. During
+            update, a (reference to a) tag
+
+            - that does not yet exist, is created (using default attributes if not
+            specified)
+
+            - that does exist is not updated (even if tag attributes like `color`
+            differ)'
+          deprecated: tags are to be specified in root of the manifest.
+          example:
+          - awaiting-review
+          - name: demo
+            color: '#e639a4'
         documentation:
           $ref: '#/components/schemas/IDocumentation'
           description: Documentation of the plug interface.
@@ -1155,7 +1438,7 @@ components:
           items:
             $ref: '#/components/schemas/IUpdateRecord'
           description: The audit logs corresponding to the latest modifying operations
-            on this entity.
+            on this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/EStatus'
           description: The current status of this function entity.
@@ -1193,7 +1476,6 @@ components:
       - status
       - updatedAt
       - updatedBy
-      - updates
     IKfservingResponseV2:
       type: object
       properties:
@@ -1216,7 +1498,7 @@ components:
           items:
             $ref: '#/components/schemas/IUpdateRecord'
           description: The audit logs corresponding to the latest modifying operations
-            on this entity.
+            on this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/EStatus'
           description: The current status of this function entity.
@@ -1250,7 +1532,6 @@ components:
       - status
       - updatedAt
       - updatedBy
-      - updates
     IKFServingManifest:
       type: object
       properties:
@@ -1280,6 +1561,15 @@ components:
           description: Metadata describing the function. Note that, after deployment,
             this metadata can be updated for the deployed function, without affecting
             the runtime behaviour of the function itself.
+        protected:
+          type: boolean
+          description: Indicates whether the function's script and other assets should
+            be protected.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: Tags associated with this entity.
       required:
       - metadata
       - name
@@ -1307,7 +1597,7 @@ components:
           items:
             $ref: '#/components/schemas/IUpdateRecord'
           description: The audit logs corresponding to the latest modifying operations
-            on this entity.
+            on this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/EStatus'
           description: The current status of this function entity.
@@ -1344,7 +1634,6 @@ components:
       - status
       - updatedAt
       - updatedBy
-      - updates
       - webscript
     IWebscriptManifest:
       type: object
@@ -1375,6 +1664,15 @@ components:
           description: Metadata describing the function. Note that, after deployment,
             this metadata can be updated for the deployed function, without affecting
             the runtime behaviour of the function itself.
+        protected:
+          type: boolean
+          description: Indicates whether the function's script and other assets should
+            be protected.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagOrTagReference'
+          description: Tags associated with this entity.
         private:
           type: boolean
           description: If <code>true</code> this webscript will require authentication.
@@ -1412,7 +1710,7 @@ components:
           items:
             $ref: '#/components/schemas/IUpdateRecord'
           description: The audit logs corresponding to the latest modifying operations
-            on this entity.
+            on this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/EStatus'
           description: The current status of this function entity.
@@ -1452,7 +1750,6 @@ components:
       - status
       - updatedAt
       - updatedBy
-      - updates
       - webscript
     IInvokeHALLink:
       type: object
@@ -1460,18 +1757,8 @@ components:
         invoke:
           $ref: '#/components/schemas/IHALLink'
           description: HAL link to the endpoint where the webscript is exposed.
-          examples:
-          - href: https://api-aws-dev.waylay.io/functions/v1/<TENANT>/myWebscript
-    IHALLink:
-      type: object
-      properties:
-        href:
-          anyOf:
-          - type: string
-            format: uri
-          - type: string
-      required:
-      - href
+          example:
+            href: https://api-aws-dev.waylay.io/functions/v1/<TENANT>/myWebscript
     IUndeploySubmittedResponseV2:
       type: object
       properties:
@@ -1495,13 +1782,13 @@ components:
         event:
           $ref: '#/components/schemas/HALLinks'
           description: Link to an SSE stream of job events for the submitted job(s).
-          examples:
-          - href: https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
+          example:
+            href: https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
         job:
           $ref: '#/components/schemas/HALLinks'
           description: Link to the job status page for the related entity.
-          examples:
-          - href: https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
+          example:
+            href: https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
       description: HAL links to related actions.
     IJobStatusHALLink:
       type: object
@@ -1509,24 +1796,17 @@ components:
         job:
           $ref: '#/components/schemas/HALLinks'
           description: Link to the job status page for the related entity.
-          examples:
-          - href: https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
+          example:
+            href: https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht
       description: HAL links to related actions.
-    HALLinks:
-      anyOf:
-      - $ref: '#/components/schemas/IHALLink'
-      - type: array
-        items:
-          $ref: '#/components/schemas/IHALLink'
-      description: One or more links of the same HAL collection.
     IJobEventsHALLink:
       type: object
       properties:
         event:
           $ref: '#/components/schemas/HALLinks'
           description: Link to an SSE stream of job events for the submitted job(s).
-          examples:
-          - href: https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
+          example:
+            href: https://api.waylay.io/registry/v2/jobs/events?type=undeploy&id=6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht&children=true
       description: HAL links to related actions.
     IUndeployedResponseV2:
       type: object
@@ -1537,7 +1817,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SemanticVersion'
-          description: The versions that where deprecated, undeployed and/or removed.
+          description: The versions that were deprecated, undeployed and/or removed.
       required:
       - message
       - versions
@@ -1561,8 +1841,8 @@ components:
             asset:
               $ref: '#/components/schemas/HALLinks'
               description: Link to the asset content page for the related entity.
-              examples:
-              - href: https://api.waylay.io/registry/v2/plugs/myPlug/versions/1.0.0/content/index.js
+              example:
+                href: https://api.waylay.io/registry/v2/plugs/myPlug/versions/1.0.0/content/index.js
           required:
           - asset
           description: HAL links to the asset
@@ -1578,15 +1858,42 @@ components:
       required:
       - _links
       - name
+    IProtectByNameResponseV2:
+      type: object
+      properties:
+        message:
+          type: string
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SemanticVersion'
+          description: The versions that were protected or unprotected.
+      required:
+      - message
+      - versions
+      description: Protection changed.
     IGetPlugResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/ITag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         entity:
           $ref: '#/components/schemas/IPlugWithInvocationResponseV2'
           description: The specification and deployment status of the function
         _links:
           type: object
           properties:
+            content:
+              $ref: '#/components/schemas/IHALLink'
+              description: HAL link to the endpoint where the function's content is
+                exposed.
             draft:
               type: object
               properties:
@@ -1609,8 +1916,8 @@ components:
               - href
               - version
               description: Link to the lastest draft version.
-              examples:
-              - href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
+              example:
+                href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
                 version: 1.0.1
                 draft: true
                 deprecated: false
@@ -1636,8 +1943,8 @@ components:
               - href
               - version
               description: Link to the lastest published version.
-              examples:
-              - href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
+              example:
+                href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
                 version: 1.2.0
                 draft: false
                 deprecated: false
@@ -1649,66 +1956,18 @@ components:
       - _links
       - entity
       description: Plug Found
-    IAltVersionHALLink:
-      type: object
-      properties:
-        draft:
-          type: object
-          properties:
-            draft:
-              type: boolean
-              enum:
-              - true
-            href:
-              anyOf:
-              - type: string
-                format: uri
-              - type: string
-            version:
-              type: string
-            deprecated:
-              type: boolean
-          required:
-          - deprecated
-          - draft
-          - href
-          - version
-          description: Link to the lastest draft version.
-          examples:
-          - href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
-            version: 1.0.1
-            draft: true
-            deprecated: false
-        published:
-          type: object
-          properties:
-            draft:
-              type: boolean
-              enum:
-              - false
-            href:
-              anyOf:
-              - type: string
-                format: uri
-              - type: string
-            version:
-              type: string
-            deprecated:
-              type: boolean
-          required:
-          - deprecated
-          - draft
-          - href
-          - version
-          description: Link to the lastest published version.
-          examples:
-          - href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
-            version: 1.2.0
-            draft: false
-            deprecated: false
     ILatestPlugsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/ITag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -1755,7 +2014,7 @@ components:
           items:
             $ref: '#/components/schemas/IUpdateRecord'
           description: The audit logs corresponding to the latest modifying operations
-            on this entity.
+            on this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/EStatus'
           description: The current status of this function entity.
@@ -1789,7 +2048,6 @@ components:
       - status
       - updatedAt
       - updatedBy
-      - updates
     IAltEmbeddedVersion_IPlugResponseV2_:
       type: object
       properties:
@@ -1803,6 +2061,15 @@ components:
     IPlugVersionsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/ITag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -2432,9 +2699,9 @@ components:
         requests:
           $ref: '#/components/schemas/ResourceLimits'
       required:
+      - service
       - image
       - namespace
-      - service
     IVerifyArgs:
       type: object
       properties:
@@ -2549,12 +2816,25 @@ components:
     IGetModelResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/ITag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         entity:
           $ref: '#/components/schemas/IKfservingResponseV2'
           description: The specification and deployment status of the function
         _links:
           type: object
           properties:
+            content:
+              $ref: '#/components/schemas/IHALLink'
+              description: HAL link to the endpoint where the function's content is
+                exposed.
             draft:
               type: object
               properties:
@@ -2577,8 +2857,8 @@ components:
               - href
               - version
               description: Link to the lastest draft version.
-              examples:
-              - href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
+              example:
+                href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
                 version: 1.0.1
                 draft: true
                 deprecated: false
@@ -2604,8 +2884,8 @@ components:
               - href
               - version
               description: Link to the lastest published version.
-              examples:
-              - href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
+              example:
+                href: https://api.waylay.io/registry/v2/models/modelName/versions/1.0.1
                 version: 1.2.0
                 draft: false
                 deprecated: false
@@ -2620,6 +2900,15 @@ components:
     ILatestModelsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/ITag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -2666,7 +2955,7 @@ components:
           items:
             $ref: '#/components/schemas/IUpdateRecord'
           description: The audit logs corresponding to the latest modifying operations
-            on this entity.
+            on this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/EStatus'
           description: The current status of this function entity.
@@ -2700,7 +2989,6 @@ components:
       - status
       - updatedAt
       - updatedBy
-      - updates
     IAltEmbeddedVersion_IKfservingResponseV2_:
       type: object
       properties:
@@ -2714,6 +3002,15 @@ components:
     IModelVersionsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/ITag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -2842,17 +3139,30 @@ components:
     IGetWebscriptResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/ITag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         entity:
           $ref: '#/components/schemas/IWebscriptResponseV2'
           description: The specification and deployment status of the function
         _links:
           type: object
           properties:
+            content:
+              $ref: '#/components/schemas/IHALLink'
+              description: HAL link to the endpoint where the function's content is
+                exposed.
             invoke:
               $ref: '#/components/schemas/IHALLink'
               description: HAL link to the endpoint where the webscript is exposed.
-              examples:
-              - href: https://api-aws-dev.waylay.io/functions/v1/<TENANT>/myWebscript
+              example:
+                href: https://api-aws-dev.waylay.io/functions/v1/<TENANT>/myWebscript
             jobs:
               $ref: '#/components/schemas/IHALLink'
               description: HAL link to all active jobs for this function (if any)
@@ -2864,6 +3174,15 @@ components:
     ILatestWebscriptsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/ITag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -2911,7 +3230,7 @@ components:
           items:
             $ref: '#/components/schemas/IUpdateRecord'
           description: The audit logs corresponding to the latest modifying operations
-            on this entity.
+            on this entity. Omitted in listing operations.
         status:
           $ref: '#/components/schemas/EStatus'
           description: The current status of this function entity.
@@ -2948,7 +3267,6 @@ components:
       - status
       - updatedAt
       - updatedBy
-      - updates
       - webscript
     IAltEmbeddedVersion_IWebscriptResponseWithInvokeLinkV2_:
       type: object
@@ -2963,6 +3281,15 @@ components:
     IWebscriptVersionsResponseV2:
       type: object
       properties:
+        _embedded:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/ITag'
+              description: Record of <tag key, tag representation> pairs.
+          description: Embedded representations of the referenced tags.
         limit:
           type: number
           description: The page size used for this query result.
@@ -3088,6 +3415,24 @@ components:
       - function
       - jobs
       description: Webscript Jobs Found
+    IFunctionTagsResponse:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/ITag'
+      required:
+      - tags
+      description: Function Tags Found
+    IFunctionTagResponse:
+      type: object
+      properties:
+        tag:
+          $ref: '#/components/schemas/ITag'
+      required:
+      - tag
+      description: Function Tag Found
     BuildJobStatus:
       type: object
       properties:
@@ -3463,6 +3808,17 @@ components:
             type: string
             format: date-time
             description: The creation time of this job
+          processedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has begun processing.
+          finishedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has finished processing.
+          attemptsMade:
+            type: number
+            description: The number of retries that were attempted.
           createdBy:
             type: string
             description: The user that initiated this job
@@ -3504,6 +3860,17 @@ components:
             type: string
             format: date-time
             description: The creation time of this job
+          processedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has begun processing.
+          finishedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has finished processing.
+          attemptsMade:
+            type: number
+            description: The number of retries that were attempted.
           createdBy:
             type: string
             description: The user that initiated this job
@@ -3545,6 +3912,17 @@ components:
             type: string
             format: date-time
             description: The creation time of this job
+          processedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has begun processing.
+          finishedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has finished processing.
+          attemptsMade:
+            type: number
+            description: The number of retries that were attempted.
           createdBy:
             type: string
             description: The user that initiated this job
@@ -3586,6 +3964,17 @@ components:
             type: string
             format: date-time
             description: The creation time of this job
+          processedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has begun processing.
+          finishedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has finished processing.
+          attemptsMade:
+            type: number
+            description: The number of retries that were attempted.
           createdBy:
             type: string
             description: The user that initiated this job
@@ -3626,6 +4015,17 @@ components:
             type: string
             format: date-time
             description: The creation time of this job
+          processedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has begun processing.
+          finishedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has finished processing.
+          attemptsMade:
+            type: number
+            description: The number of retries that were attempted.
           createdBy:
             type: string
             description: The user that initiated this job
@@ -3667,6 +4067,17 @@ components:
             type: string
             format: date-time
             description: The creation time of this job
+          processedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has begun processing.
+          finishedAt:
+            type: string
+            format: date-time
+            description: The timestamp of when the job has finished processing.
+          attemptsMade:
+            type: number
+            description: The number of retries that were attempted.
           createdBy:
             type: string
             description: The user that initiated this job
@@ -4264,6 +4675,16 @@ components:
     PlugHtmlResponse:
       type: string
       description: Successful Response
+    IErrorAndStatusResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        statusCode:
+          type: number
+      required:
+      - error
+      - statusCode
 paths:
   /registry/v2/:
     get:
@@ -4421,6 +4842,17 @@ paths:
       description: List the runtimes that function registry supports.
       parameters:
       - schema:
+          $ref: '#/components/schemas/EShowEmbedding'
+          default: none
+        in: query
+        name: showTags
+        required: false
+        description: 'Sets the representation of related tags in the response.
+
+          - `embed`: as full summary representation (in `_embedded`).
+
+          - `none`: omitted.'
+      - schema:
           $ref: '#/components/schemas/SemanticVersionRange'
           default: '*'
         in: query
@@ -4459,6 +4891,17 @@ paths:
         description: If set to `true`, deprecated runtimes will be included in the
           query.
       - schema:
+          anyOf:
+          - $ref: '#/components/schemas/RuntimeTagFilter'
+          - type: array
+            items:
+              $ref: '#/components/schemas/RuntimeTagFilter'
+        in: query
+        name: tags
+        required: false
+        description: If set, filters on the <code>tags</code> of a runtime __version__.
+          Filter values with a `-` postfix exclude the tag.
+      - schema:
           type: string
         example: node*
         in: query
@@ -4469,7 +4912,7 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EFunctionType'
+            $ref: '#/components/schemas/FunctionTypeFilter'
         example: plugs
         in: query
         name: functionType
@@ -4479,7 +4922,7 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EArchiveFormat'
+            $ref: '#/components/schemas/ArchiveFormatFilter'
         example: node
         in: query
         name: archiveFormat
@@ -4504,6 +4947,17 @@ paths:
       description: Get a representation of the default runtime version by name.
       parameters:
       - schema:
+          $ref: '#/components/schemas/EShowEmbedding'
+          default: none
+        in: query
+        name: showTags
+        required: false
+        description: 'Sets the representation of related tags in the response.
+
+          - `embed`: as full summary representation (in `_embedded`).
+
+          - `none`: omitted.'
+      - schema:
           $ref: '#/components/schemas/SemanticVersionRange'
           default: '*'
         in: query
@@ -4520,9 +4974,20 @@ paths:
         description: If set to `true`, deprecated runtimes will be included in the
           query.
       - schema:
+          anyOf:
+          - $ref: '#/components/schemas/RuntimeTagFilter'
+          - type: array
+            items:
+              $ref: '#/components/schemas/RuntimeTagFilter'
+        in: query
+        name: tags
+        required: false
+        description: If set, filters on the <code>tags</code> of a runtime __version__.
+          Filter values with a `-` postfix exclude the tag.
+      - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EFunctionType'
+            $ref: '#/components/schemas/FunctionTypeFilter'
         example: plugs
         in: query
         name: functionType
@@ -4532,7 +4997,7 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EArchiveFormat'
+            $ref: '#/components/schemas/ArchiveFormatFilter'
         example: node
         in: query
         name: archiveFormat
@@ -4601,9 +5066,20 @@ paths:
         description: If set to `true`, deprecated runtimes will be included in the
           query.
       - schema:
+          anyOf:
+          - $ref: '#/components/schemas/RuntimeTagFilter'
+          - type: array
+            items:
+              $ref: '#/components/schemas/RuntimeTagFilter'
+        in: query
+        name: tags
+        required: false
+        description: If set, filters on the <code>tags</code> of a runtime __version__.
+          Filter values with a `-` postfix exclude the tag.
+      - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EFunctionType'
+            $ref: '#/components/schemas/FunctionTypeFilter'
         example: plugs
         in: query
         name: functionType
@@ -4613,13 +5089,24 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EArchiveFormat'
+            $ref: '#/components/schemas/ArchiveFormatFilter'
         example: node
         in: query
         name: archiveFormat
         required: false
         description: If set, filters on the <code>archiveFormat</code> of a runtime.
           Uses an exact match.
+      - schema:
+          $ref: '#/components/schemas/EShowEmbedding'
+          default: none
+        in: query
+        name: showTags
+        required: false
+        description: 'Sets the representation of related tags in the response.
+
+          - `embed`: as full summary representation (in `_embedded`).
+
+          - `none`: omitted.'
       - schema:
           $ref: '#/components/schemas/ERuntime'
         in: path
@@ -4643,6 +5130,17 @@ paths:
       - Runtimes
       description: Get a representation of the default runtime version by name.
       parameters:
+      - schema:
+          $ref: '#/components/schemas/EShowEmbedding'
+          default: none
+        in: query
+        name: showTags
+        required: false
+        description: 'Sets the representation of related tags in the response.
+
+          - `embed`: as full summary representation (in `_embedded`).
+
+          - `none`: omitted.'
       - schema:
           type: boolean
           default: true
@@ -4689,6 +5187,17 @@ paths:
         description: If set to `true`, the result will be a listing of the files in
           the asset, annotated with metadata and validation report from the asset
           conditions of the functions runtime.
+      - schema:
+          $ref: '#/components/schemas/EShowEmbedding'
+          default: none
+        in: query
+        name: showTags
+        required: false
+        description: 'Sets the representation of related tags in the response.
+
+          - `embed`: as full summary representation (in `_embedded`).
+
+          - `none`: omitted.'
       - schema:
           type: boolean
           default: true
@@ -4772,6 +5281,17 @@ paths:
           the asset, annotated with metadata and validation report from the asset
           conditions of the functions runtime.
       - schema:
+          $ref: '#/components/schemas/EShowEmbedding'
+          default: none
+        in: query
+        name: showTags
+        required: false
+        description: 'Sets the representation of related tags in the response.
+
+          - `embed`: as full summary representation (in `_embedded`).
+
+          - `none`: omitted.'
+      - schema:
           type: boolean
           default: true
         in: query
@@ -4842,6 +5362,62 @@ paths:
               schema:
                 $ref: '#/components/schemas/IContentValidationListing'
       security: *id001
+  /registry/v2/runtimeTags/:
+    get:
+      operationId: tags_runtimes
+      summary: List Runtime Tags
+      tags:
+      - Runtimes
+      description: List the tags that are referenced by runtimes.
+      parameters:
+      - schema:
+          type: string
+        example: '*-demo-??'
+        in: query
+        name: name
+        required: false
+        description: If set, filters on the <code>name</code> of a tag. Supports <code>*</code>
+          and <code>?</code> wildcards and is case-insensitive.
+      - schema:
+          type: string
+        example: '#4153ea'
+        in: query
+        name: color
+        required: false
+        description: If set, filters on the <code>color</code> of a tag. Uses an exact
+          match.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRuntimeTagsResponse'
+      security: *id001
+  /registry/v2/runtimeTags/{tagName}:
+    get:
+      operationId: tag_runtimes
+      summary: Get Runtime Tag
+      tags:
+      - Runtimes
+      description: Get the metadata of a Runtime Tag by name.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IRuntimeTagResponse'
+      security: *id001
   /registry/v2/webscripts/:
     get:
       operationId: list_webscripts
@@ -4879,7 +5455,7 @@ paths:
         \ filter parameters\nThe following query parameters are _version filters_\
         \ for the <em>webscript</em> listing:\n> `version`, `status`, `runtimeVersion`,\
         \ `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`,\
-        \ `updatedAfter`, `nameVersion`, `deprecated`, `draft`\n"
+        \ `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags`, `wql`\n"
       parameters:
       - schema:
           type: number
@@ -4936,6 +5512,110 @@ paths:
         description: Filter on exact `{name}@{version}` functions. Using this filter
           implies a `latest=false` default, returning multiple versions of the same
           named versions if they are filtered.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          $ref: '#/components/schemas/TagsFilter'
+        in: query
+        name: tags
+        required: false
+        description: Filter on the tags of the item. Can be a single tag, or a list
+          of tags. When multiple tags are specified, an item must have all of the
+          tags to be selected.
+      - schema:
+          type: string
+        in: query
+        name: wql
+        required: false
+        description: 'Query filter using the ''wql'' query language.
+
+
+          This is a unstable preview feature, currently supporting the following _match
+          terms_:
+
+          * `tag:<name>` entity has a tag that fully matches `<name>` (case insensitive).
+
+          * `tag:<name1>,<name2>` entity has a tag that fully matches any of `<name1>`,
+          `<name2>` (case insensitive).
+
+          * `tag:inIgnoreCase(<name1>,<name2>)` is the fully specified format for
+          the previous statements.   `inIgnoreCase` is the _default match predicate_.
+
+          * `tag:in(<name1>,<name2>)` entity has a tag matches one of `<name1>`,`<name2>`
+          (case sensitive)
+
+          * `tag:equals(<name>)` entity has a tag matches `<name>` (case sensitive)
+
+          * `tag:like(<pattern>)` entity has a tag that matches `<pattern>` (case
+          insensitive),    where `<pattern>` can contain `*` (multiple characters)
+          and `?` (single character) wildcards.
+
+
+          Each _argument_ of a _match term_ (like `<name>` above) can either be a
+
+          * a _quoted match argument_, quoted using `"`, can contain any character
+          except `"`: `tag:"Status:In Review"`.
+
+          * a _safe match argument_ can only contain alpha-numeric characters or `_`:
+          `tag:Status_In_Review`.
+
+
+          Multiple _match term_s can be combined in a boolean predicate using the
+          `AND`, `OR` and `NOT` operators:
+
+          * `tag:abc AND tag:"My Demo" AND tag:like("prj:*")`: entity has a tag matching
+          `abc` **AND** a tag matching `"My Demo"` **AND**    a tag that has the `prj:`
+          prefix
+
+          * `tag:abc tag:"My Demo" tag:like("prj:*")`: same as the previous statement:
+          a (space-deliminated) list of terms is     implicitly combined with `AND`.
+
+          * `tag:abc OR tag:"My Demo"`: entity has a tag matching `abc` **OR** a tag
+          matching `"My Demo"`
+
+          * `NOT tag:abc`: entity **does not have** a tag matching `abc`
+
+
+          Round brackets can be used to combine predicates with different operators:
+
+          * `(tag:abc OR tag:"My Demo") AND tag:like("prj:*")`: entity has a tag `abc`
+          or a tag `My Demo`, and a tag with prefix `prj:*`
+
+
+          For a _multi-valued attribute_ like `tag`, each _match term_ tests the existence
+          of a matching tag assigned to the entity. When _multiple match predicates
+          on the **same** tag_ need to be specified, the boolean operators `not`,
+          `all`, `any` can be used _within_ the match term:
+
+
+          * `tag:all(like("prj:*"),not(like("*:Done")))`: entity has a tag that starts
+          with `prj:` and does NOT end with `:Done`.
+
+          * `tag:not(Done)`: entity has a tag that does not match `Done` (this excludes
+          entities without tags, and with a single `Done` tag!).
+
+          * `NOT tag:not(in(abc,def))`: each tag of the entity is in `abc` or `def`
+          (matches entities without tags!)
+
+          * `tag:any(like("prj:*"),not(done)))`: entity has a tag that either starts
+          with `prj:` or does not match `done`.'
       - schema:
           type: string
         in: query
@@ -5014,7 +5694,7 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EArchiveFormat'
+            $ref: '#/components/schemas/ArchiveFormatFilter'
         in: query
         name: archiveFormat
         required: false
@@ -5037,7 +5717,7 @@ paths:
           Defaults to `true`, except when specific versions are selected with the
           `nameVersion` filter.
       - schema:
-          $ref: '#/components/schemas/ShowRelatedType'
+          $ref: '#/components/schemas/EShowLinkOrEmbedding'
         in: query
         name: showRelated
         required: false
@@ -5340,6 +6020,33 @@ paths:
         required: false
         description: Filter on the draft status of the function.
       - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          $ref: '#/components/schemas/TagsFilter'
+        in: query
+        name: tags
+        required: false
+        description: Filter on the tags of the item. Can be a single tag, or a list
+          of tags. When multiple tags are specified, an item must have all of the
+          tags to be selected.
+      - schema:
           type: string
         in: query
         name: version
@@ -5409,7 +6116,7 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EArchiveFormat'
+            $ref: '#/components/schemas/ArchiveFormatFilter'
         in: query
         name: archiveFormat
         required: false
@@ -5445,6 +6152,25 @@ paths:
       - Webscripts
       description: Get the webscript version.
       parameters:
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           type: string
         in: path
@@ -5582,11 +6308,12 @@ paths:
       description: Rebuild and deploy a webscript with the original or updated base
         image.
       requestBody:
-        x-force-dataType: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RebuildRequestBodyV2'
+              x-force-dataType: true
+        x-force-dataType: true
       parameters:
       - schema:
           type: boolean
@@ -5619,6 +6346,25 @@ paths:
           the required job actions asynchronously and return a <code>202</code> <em>Accepted</em>
           response. If <code>false</code> the request will block until the job actions
           are completed, or a timeout occurs.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           $ref: '#/components/schemas/ERebuildPolicy'
         in: query
@@ -5736,6 +6482,25 @@ paths:
           latest versions per name. By default, deprecated versions are only considered
           when no other versions are available. If set to `true`, deprecated versions
           are **included**. If set to `false`, deprecated versions are **excluded**.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           type: string
         in: path
@@ -5863,7 +6628,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IFunctionMeta'
+              $ref: '#/components/schemas/IUpdateMetadataRequestV2'
       parameters:
       - schema:
           type: string
@@ -5871,6 +6636,25 @@ paths:
         name: comment
         required: false
         description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           type: string
         in: path
@@ -5891,6 +6675,156 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IGetWebscriptResponseV2'
+      security: *id001
+  /registry/v2/webscripts/{name}/versions/{version}/protect:
+    post:
+      operationId: protect_webscripts
+      summary: Protect Webscript Version
+      tags:
+      - Webscripts
+      description: Enable/disable protection for a <em>webscript</em> version. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
+          type: boolean
+          default: false
+        in: query
+        name: chown
+        required: false
+        description: If set, ownership of a draft function is transferred to the current
+          user.
+      - schema:
+          type: string
+        in: query
+        name: comment
+        required: false
+        description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          type: boolean
+          default: true
+        in: query
+        name: enable
+        required: false
+        description: If set to `true`, the function assets (including its code) will
+          be protected by requiring additional permissions. If set to `false`, the
+          function assets will no longer be protected.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IGetWebscriptResponseV2'
+      security: *id001
+  /registry/v2/webscripts/{name}/protect:
+    post:
+      operationId: protectVersions_webscripts
+      summary: Protect Webscript
+      tags:
+      - Webscripts
+      description: Enable/disable protection for all <em>webscript</em> versions.
+        Enabling protection requires ownership for draft versions.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
+          type: boolean
+          default: false
+        in: query
+        name: chown
+        required: false
+        description: If set, ownership of a draft function is transferred to the current
+          user.
+      - schema:
+          type: string
+        in: query
+        name: comment
+        required: false
+        description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          type: boolean
+          default: true
+        in: query
+        name: enable
+        required: false
+        description: If set to `true`, the function assets (including its code) will
+          be protected by requiring additional permissions. If set to `false`, the
+          function assets will no longer be protected.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IProtectByNameResponseV2'
       security: *id001
   /registry/v2/webscripts/{name}/versions/{version}/content:
     get:
@@ -6080,8 +7014,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -6257,8 +7191,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -6377,8 +7311,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -6459,8 +7393,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -6610,6 +7544,25 @@ paths:
           successful verification. If not set, the function is scaled to zero only
           if it was not active before this command.
       - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
           type: boolean
           default: true
         in: query
@@ -6646,6 +7599,505 @@ paths:
               schema:
                 $ref: '#/components/schemas/IPostWebscriptJobAsyncResponseV2'
                 description: Webscript Verification Initiated
+      security: *id001
+  /registry/v2/webscripts/{name}/versions/{version}/tags:
+    get:
+      operationId: list_webscript_tags
+      summary: List Tags
+      tags:
+      - Webscript Tags
+      description: List tags used on a webscript version.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    put:
+      operationId: replace_webscript_tags
+      summary: Replace Tags
+      tags:
+      - Webscript Tags
+      description: Replace tags used on a webscript version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    patch:
+      operationId: add_webscript_tags
+      summary: Add Tags
+      tags:
+      - Webscript Tags
+      description: Add tags used on a webscript version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    delete:
+      operationId: clear_webscript_tags
+      summary: Clear Tags
+      tags:
+      - Webscript Tags
+      description: Remove all tags used on a webscript version.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+  /registry/v2/webscripts/{name}/versions/{version}/tags/{tagName}:
+    get:
+      operationId: find_webscript_tags
+      summary: Find Tag
+      tags:
+      - Webscript Tags
+      description: Check the existence of a tag on a webscript version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+    put:
+      operationId: put_webscript_tags
+      summary: Put Tag
+      tags:
+      - Webscript Tags
+      description: Put a tag on a webscript version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+      security: *id001
+    delete:
+      operationId: remove_webscript_tags
+      summary: Remove Tag
+      tags:
+      - Webscript Tags
+      description: Remove a tag from a webscript version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+  /registry/v2/webscripts/{name}/tags:
+    get:
+      operationId: listAll_webscript_tags
+      summary: List Tags On Any/All
+      tags:
+      - Webscript Tags
+      description: "List tags used on any or all versions of a named webscript.\n\
+        \        With 'from=all', only the tags that are set to all versions are returned.\n\
+        \        "
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    put:
+      operationId: replaceAll_webscript_tags
+      summary: Replace Tags On Any/All
+      tags:
+      - Webscript Tags
+      description: "Replace tags used on any or all versions of a named webscript.\n\
+        \        With 'from=all', only the tags that were set to all versions are\
+        \ replaced.\n        "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    patch:
+      operationId: addAll_webscript_tags
+      summary: Add Tags On All
+      tags:
+      - Webscript Tags
+      description: Add tags to all versions of a named webscript version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    delete:
+      operationId: clearAll_webscript_tags
+      summary: Clear Tags On Any/All
+      tags:
+      - Webscript Tags
+      description: "Remove all tags used on any or all versions of a named webscript.\n\
+        \        With 'from=all', a tag is only removed when it was set to all versions.\n\
+        \        "
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+  /registry/v2/webscripts/{name}/tags/{tagName}:
+    get:
+      operationId: findAll_webscript_tags
+      summary: Find Tags On Any/All
+      tags:
+      - Webscript Tags
+      description: Check the existence of a tag on any or all versions of a named
+        webscript.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+    put:
+      operationId: putAll_webscript_tags
+      summary: Put Tag On All
+      tags:
+      - Webscript Tags
+      description: Add a tag on on all versions of a webscript version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+      security: *id001
+    delete:
+      operationId: removeAll_webscript_tags
+      summary: Remove Tag On Any/All
+      tags:
+      - Webscript Tags
+      description: "Remove a tag on any or all version from a webscript version.\n\
+        \        With 'from=all', the tag is only removed when it exists on all versions.\n\
+        \        "
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
       security: *id001
   /registry/v2/schemas/{functionType}/{role}/schema:
     get:
@@ -6738,16 +8190,8 @@ paths:
         \ filter parameters\nThe following query parameters are _version filters_\
         \ for the <em>plug</em> listing:\n> `version`, `status`, `runtimeVersion`,\
         \ `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`,\
-        \ `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags`\n"
+        \ `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags`, `wql`\n"
       parameters:
-      - schema:
-          $ref: '#/components/schemas/TagsFilter'
-        in: query
-        name: tags
-        required: false
-        description: Filter on the tags of the item. Can be a single tag, or a list
-          of tags. When multiple tags are specified, an item must have all of the
-          tags to be selected.
       - schema:
           $ref: '#/components/schemas/EPlugType'
         in: query
@@ -6809,6 +8253,110 @@ paths:
         description: Filter on exact `{name}@{version}` functions. Using this filter
           implies a `latest=false` default, returning multiple versions of the same
           named versions if they are filtered.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          $ref: '#/components/schemas/TagsFilter'
+        in: query
+        name: tags
+        required: false
+        description: Filter on the tags of the item. Can be a single tag, or a list
+          of tags. When multiple tags are specified, an item must have all of the
+          tags to be selected.
+      - schema:
+          type: string
+        in: query
+        name: wql
+        required: false
+        description: 'Query filter using the ''wql'' query language.
+
+
+          This is a unstable preview feature, currently supporting the following _match
+          terms_:
+
+          * `tag:<name>` entity has a tag that fully matches `<name>` (case insensitive).
+
+          * `tag:<name1>,<name2>` entity has a tag that fully matches any of `<name1>`,
+          `<name2>` (case insensitive).
+
+          * `tag:inIgnoreCase(<name1>,<name2>)` is the fully specified format for
+          the previous statements.   `inIgnoreCase` is the _default match predicate_.
+
+          * `tag:in(<name1>,<name2>)` entity has a tag matches one of `<name1>`,`<name2>`
+          (case sensitive)
+
+          * `tag:equals(<name>)` entity has a tag matches `<name>` (case sensitive)
+
+          * `tag:like(<pattern>)` entity has a tag that matches `<pattern>` (case
+          insensitive),    where `<pattern>` can contain `*` (multiple characters)
+          and `?` (single character) wildcards.
+
+
+          Each _argument_ of a _match term_ (like `<name>` above) can either be a
+
+          * a _quoted match argument_, quoted using `"`, can contain any character
+          except `"`: `tag:"Status:In Review"`.
+
+          * a _safe match argument_ can only contain alpha-numeric characters or `_`:
+          `tag:Status_In_Review`.
+
+
+          Multiple _match term_s can be combined in a boolean predicate using the
+          `AND`, `OR` and `NOT` operators:
+
+          * `tag:abc AND tag:"My Demo" AND tag:like("prj:*")`: entity has a tag matching
+          `abc` **AND** a tag matching `"My Demo"` **AND**    a tag that has the `prj:`
+          prefix
+
+          * `tag:abc tag:"My Demo" tag:like("prj:*")`: same as the previous statement:
+          a (space-deliminated) list of terms is     implicitly combined with `AND`.
+
+          * `tag:abc OR tag:"My Demo"`: entity has a tag matching `abc` **OR** a tag
+          matching `"My Demo"`
+
+          * `NOT tag:abc`: entity **does not have** a tag matching `abc`
+
+
+          Round brackets can be used to combine predicates with different operators:
+
+          * `(tag:abc OR tag:"My Demo") AND tag:like("prj:*")`: entity has a tag `abc`
+          or a tag `My Demo`, and a tag with prefix `prj:*`
+
+
+          For a _multi-valued attribute_ like `tag`, each _match term_ tests the existence
+          of a matching tag assigned to the entity. When _multiple match predicates
+          on the **same** tag_ need to be specified, the boolean operators `not`,
+          `all`, `any` can be used _within_ the match term:
+
+
+          * `tag:all(like("prj:*"),not(like("*:Done")))`: entity has a tag that starts
+          with `prj:` and does NOT end with `:Done`.
+
+          * `tag:not(Done)`: entity has a tag that does not match `Done` (this excludes
+          entities without tags, and with a single `Done` tag!).
+
+          * `NOT tag:not(in(abc,def))`: each tag of the entity is in `abc` or `def`
+          (matches entities without tags!)
+
+          * `tag:any(like("prj:*"),not(done)))`: entity has a tag that either starts
+          with `prj:` or does not match `done`.'
       - schema:
           type: string
         in: query
@@ -6887,7 +8435,7 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EArchiveFormat'
+            $ref: '#/components/schemas/ArchiveFormatFilter'
         in: query
         name: archiveFormat
         required: false
@@ -6910,7 +8458,7 @@ paths:
           Defaults to `true`, except when specific versions are selected with the
           `nameVersion` filter.
       - schema:
-          $ref: '#/components/schemas/ShowRelatedType'
+          $ref: '#/components/schemas/EShowLinkOrEmbedding'
         in: query
         name: showRelated
         required: false
@@ -7204,6 +8752,25 @@ paths:
         required: false
         description: If set, filters on the type of plug.
       - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
           type: boolean
         in: query
         name: includeDraft
@@ -7347,14 +8914,6 @@ paths:
       description: List all versions of a plug, including deprecated versions or not.
       parameters:
       - schema:
-          $ref: '#/components/schemas/TagsFilter'
-        in: query
-        name: tags
-        required: false
-        description: Filter on the tags of the item. Can be a single tag, or a list
-          of tags. When multiple tags are specified, an item must have all of the
-          tags to be selected.
-      - schema:
           type: number
           minimum: 0
         in: query
@@ -7381,6 +8940,33 @@ paths:
         name: draft
         required: false
         description: Filter on the draft status of the function.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          $ref: '#/components/schemas/TagsFilter'
+        in: query
+        name: tags
+        required: false
+        description: Filter on the tags of the item. Can be a single tag, or a list
+          of tags. When multiple tags are specified, an item must have all of the
+          tags to be selected.
       - schema:
           type: string
         in: query
@@ -7451,7 +9037,7 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EArchiveFormat'
+            $ref: '#/components/schemas/ArchiveFormatFilter'
         in: query
         name: archiveFormat
         required: false
@@ -7487,6 +9073,25 @@ paths:
       - Plugs
       description: Get a specific version of a plug.
       parameters:
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           type: string
         in: path
@@ -7624,11 +9229,12 @@ paths:
       - Plugs
       description: Rebuild and deploy a plug with the original or updated base image.
       requestBody:
-        x-force-dataType: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RebuildRequestBodyV2'
+              x-force-dataType: true
+        x-force-dataType: true
       parameters:
       - schema:
           type: boolean
@@ -7661,6 +9267,25 @@ paths:
           the required job actions asynchronously and return a <code>202</code> <em>Accepted</em>
           response. If <code>false</code> the request will block until the job actions
           are completed, or a timeout occurs.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           $ref: '#/components/schemas/ERebuildPolicy'
         in: query
@@ -7928,8 +9553,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -8105,8 +9730,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -8225,8 +9850,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -8306,8 +9931,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -8387,6 +10012,25 @@ paths:
         required: false
         description: An optional user-specified comment corresponding to the operation.
       - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
           type: string
         in: path
         name: name
@@ -8418,7 +10062,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IUpdateMetadataRequestV2'
+              $ref: '#/components/schemas/IUpdatePlugMetadataRequestV2'
       parameters:
       - schema:
           type: string
@@ -8426,6 +10070,25 @@ paths:
         name: comment
         required: false
         description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           type: string
         in: path
@@ -8446,6 +10109,156 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IGetPlugResponseV2'
+      security: *id001
+  /registry/v2/plugs/{name}/versions/{version}/protect:
+    post:
+      operationId: protect_plugs
+      summary: Protect Plug Version
+      tags:
+      - Plugs
+      description: Enable/disable protection for a <em>plug</em> version. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
+          type: boolean
+          default: false
+        in: query
+        name: chown
+        required: false
+        description: If set, ownership of a draft function is transferred to the current
+          user.
+      - schema:
+          type: string
+        in: query
+        name: comment
+        required: false
+        description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          type: boolean
+          default: true
+        in: query
+        name: enable
+        required: false
+        description: If set to `true`, the function assets (including its code) will
+          be protected by requiring additional permissions. If set to `false`, the
+          function assets will no longer be protected.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IGetPlugResponseV2'
+      security: *id001
+  /registry/v2/plugs/{name}/protect:
+    post:
+      operationId: protectVersions_plugs
+      summary: Protect Plug
+      tags:
+      - Plugs
+      description: Enable/disable protection for all <em>plug</em> versions. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
+          type: boolean
+          default: false
+        in: query
+        name: chown
+        required: false
+        description: If set, ownership of a draft function is transferred to the current
+          user.
+      - schema:
+          type: string
+        in: query
+        name: comment
+        required: false
+        description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          type: boolean
+          default: true
+        in: query
+        name: enable
+        required: false
+        description: If set to `true`, the function assets (including its code) will
+          be protected by requiring additional permissions. If set to `false`, the
+          function assets will no longer be protected.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IProtectByNameResponseV2'
       security: *id001
   /registry/v2/plugs/{name}/versions/{version}/jobs:
     get:
@@ -8537,6 +10350,25 @@ paths:
           successful verification. If not set, the function is scaled to zero only
           if it was not active before this command.
       - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
           type: boolean
           default: true
         in: query
@@ -8574,6 +10406,505 @@ paths:
                 $ref: '#/components/schemas/IPostPlugJobAsyncResponseV2'
                 description: Plug Verification Initiated
       security: *id001
+  /registry/v2/plugs/{name}/versions/{version}/tags:
+    get:
+      operationId: list_plug_tags
+      summary: List Tags
+      tags:
+      - Plug Tags
+      description: List tags used on a plug version.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    put:
+      operationId: replace_plug_tags
+      summary: Replace Tags
+      tags:
+      - Plug Tags
+      description: Replace tags used on a plug version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    patch:
+      operationId: add_plug_tags
+      summary: Add Tags
+      tags:
+      - Plug Tags
+      description: Add tags used on a plug version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    delete:
+      operationId: clear_plug_tags
+      summary: Clear Tags
+      tags:
+      - Plug Tags
+      description: Remove all tags used on a plug version.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+  /registry/v2/plugs/{name}/versions/{version}/tags/{tagName}:
+    get:
+      operationId: find_plug_tags
+      summary: Find Tag
+      tags:
+      - Plug Tags
+      description: Check the existence of a tag on a plug version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+    put:
+      operationId: put_plug_tags
+      summary: Put Tag
+      tags:
+      - Plug Tags
+      description: Put a tag on a plug version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+      security: *id001
+    delete:
+      operationId: remove_plug_tags
+      summary: Remove Tag
+      tags:
+      - Plug Tags
+      description: Remove a tag from a plug version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+  /registry/v2/plugs/{name}/tags:
+    get:
+      operationId: listAll_plug_tags
+      summary: List Tags On Any/All
+      tags:
+      - Plug Tags
+      description: "List tags used on any or all versions of a named plug.\n     \
+        \   With 'from=all', only the tags that are set to all versions are returned.\n\
+        \        "
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    put:
+      operationId: replaceAll_plug_tags
+      summary: Replace Tags On Any/All
+      tags:
+      - Plug Tags
+      description: "Replace tags used on any or all versions of a named plug.\n  \
+        \      With 'from=all', only the tags that were set to all versions are replaced.\n\
+        \        "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    patch:
+      operationId: addAll_plug_tags
+      summary: Add Tags On All
+      tags:
+      - Plug Tags
+      description: Add tags to all versions of a named plug version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    delete:
+      operationId: clearAll_plug_tags
+      summary: Clear Tags On Any/All
+      tags:
+      - Plug Tags
+      description: "Remove all tags used on any or all versions of a named plug.\n\
+        \        With 'from=all', a tag is only removed when it was set to all versions.\n\
+        \        "
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+  /registry/v2/plugs/{name}/tags/{tagName}:
+    get:
+      operationId: findAll_plug_tags
+      summary: Find Tags On Any/All
+      tags:
+      - Plug Tags
+      description: Check the existence of a tag on any or all versions of a named
+        plug.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+    put:
+      operationId: putAll_plug_tags
+      summary: Put Tag On All
+      tags:
+      - Plug Tags
+      description: Add a tag on on all versions of a plug version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+      security: *id001
+    delete:
+      operationId: removeAll_plug_tags
+      summary: Remove Tag On Any/All
+      tags:
+      - Plug Tags
+      description: "Remove a tag on any or all version from a plug version.\n    \
+        \    With 'from=all', the tag is only removed when it exists on all versions.\n\
+        \        "
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
   /registry/v2/models/:
     get:
       operationId: list_models
@@ -8610,7 +10941,7 @@ paths:
         \ filter parameters\nThe following query parameters are _version filters_\
         \ for the <em>model</em> listing:\n> `version`, `status`, `runtimeVersion`,\
         \ `createdBy`, `createdBefore`, `createdAfter`, `updatedBy`, `updatedBefore`,\
-        \ `updatedAfter`, `nameVersion`, `deprecated`, `draft`\n"
+        \ `updatedAfter`, `nameVersion`, `deprecated`, `draft`, `tags`, `wql`\n"
       parameters:
       - schema:
           type: number
@@ -8667,6 +10998,110 @@ paths:
         description: Filter on exact `{name}@{version}` functions. Using this filter
           implies a `latest=false` default, returning multiple versions of the same
           named versions if they are filtered.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          $ref: '#/components/schemas/TagsFilter'
+        in: query
+        name: tags
+        required: false
+        description: Filter on the tags of the item. Can be a single tag, or a list
+          of tags. When multiple tags are specified, an item must have all of the
+          tags to be selected.
+      - schema:
+          type: string
+        in: query
+        name: wql
+        required: false
+        description: 'Query filter using the ''wql'' query language.
+
+
+          This is a unstable preview feature, currently supporting the following _match
+          terms_:
+
+          * `tag:<name>` entity has a tag that fully matches `<name>` (case insensitive).
+
+          * `tag:<name1>,<name2>` entity has a tag that fully matches any of `<name1>`,
+          `<name2>` (case insensitive).
+
+          * `tag:inIgnoreCase(<name1>,<name2>)` is the fully specified format for
+          the previous statements.   `inIgnoreCase` is the _default match predicate_.
+
+          * `tag:in(<name1>,<name2>)` entity has a tag matches one of `<name1>`,`<name2>`
+          (case sensitive)
+
+          * `tag:equals(<name>)` entity has a tag matches `<name>` (case sensitive)
+
+          * `tag:like(<pattern>)` entity has a tag that matches `<pattern>` (case
+          insensitive),    where `<pattern>` can contain `*` (multiple characters)
+          and `?` (single character) wildcards.
+
+
+          Each _argument_ of a _match term_ (like `<name>` above) can either be a
+
+          * a _quoted match argument_, quoted using `"`, can contain any character
+          except `"`: `tag:"Status:In Review"`.
+
+          * a _safe match argument_ can only contain alpha-numeric characters or `_`:
+          `tag:Status_In_Review`.
+
+
+          Multiple _match term_s can be combined in a boolean predicate using the
+          `AND`, `OR` and `NOT` operators:
+
+          * `tag:abc AND tag:"My Demo" AND tag:like("prj:*")`: entity has a tag matching
+          `abc` **AND** a tag matching `"My Demo"` **AND**    a tag that has the `prj:`
+          prefix
+
+          * `tag:abc tag:"My Demo" tag:like("prj:*")`: same as the previous statement:
+          a (space-deliminated) list of terms is     implicitly combined with `AND`.
+
+          * `tag:abc OR tag:"My Demo"`: entity has a tag matching `abc` **OR** a tag
+          matching `"My Demo"`
+
+          * `NOT tag:abc`: entity **does not have** a tag matching `abc`
+
+
+          Round brackets can be used to combine predicates with different operators:
+
+          * `(tag:abc OR tag:"My Demo") AND tag:like("prj:*")`: entity has a tag `abc`
+          or a tag `My Demo`, and a tag with prefix `prj:*`
+
+
+          For a _multi-valued attribute_ like `tag`, each _match term_ tests the existence
+          of a matching tag assigned to the entity. When _multiple match predicates
+          on the **same** tag_ need to be specified, the boolean operators `not`,
+          `all`, `any` can be used _within_ the match term:
+
+
+          * `tag:all(like("prj:*"),not(like("*:Done")))`: entity has a tag that starts
+          with `prj:` and does NOT end with `:Done`.
+
+          * `tag:not(Done)`: entity has a tag that does not match `Done` (this excludes
+          entities without tags, and with a single `Done` tag!).
+
+          * `NOT tag:not(in(abc,def))`: each tag of the entity is in `abc` or `def`
+          (matches entities without tags!)
+
+          * `tag:any(like("prj:*"),not(done)))`: entity has a tag that either starts
+          with `prj:` or does not match `done`.'
       - schema:
           type: string
         in: query
@@ -8745,7 +11180,7 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EArchiveFormat'
+            $ref: '#/components/schemas/ArchiveFormatFilter'
         in: query
         name: archiveFormat
         required: false
@@ -8768,7 +11203,7 @@ paths:
           Defaults to `true`, except when specific versions are selected with the
           `nameVersion` filter.
       - schema:
-          $ref: '#/components/schemas/ShowRelatedType'
+          $ref: '#/components/schemas/EShowLinkOrEmbedding'
         in: query
         name: showRelated
         required: false
@@ -9056,6 +11491,25 @@ paths:
         \ _draft_ or latest _published_ version (if existing and different).\n  "
       parameters:
       - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
           type: boolean
         in: query
         name: includeDraft
@@ -9225,6 +11679,33 @@ paths:
         required: false
         description: Filter on the draft status of the function.
       - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          $ref: '#/components/schemas/TagsFilter'
+        in: query
+        name: tags
+        required: false
+        description: Filter on the tags of the item. Can be a single tag, or a list
+          of tags. When multiple tags are specified, an item must have all of the
+          tags to be selected.
+      - schema:
           type: string
         in: query
         name: version
@@ -9294,7 +11775,7 @@ paths:
       - schema:
           type: array
           items:
-            $ref: '#/components/schemas/EArchiveFormat'
+            $ref: '#/components/schemas/ArchiveFormatFilter'
         in: query
         name: archiveFormat
         required: false
@@ -9330,6 +11811,25 @@ paths:
       - Models
       description: Get a model by name and version.
       parameters:
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           type: string
         in: path
@@ -9646,8 +12146,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -9823,8 +12323,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -9943,8 +12443,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -10024,8 +12524,8 @@ paths:
         in: query
         name: chown
         required: false
-        description: If set, ownership of the draft function is transferred to the
-          current user.
+        description: If set, ownership of a draft function is transferred to the current
+          user.
       - schema:
           type: string
         in: query
@@ -10096,7 +12596,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IFunctionMeta'
+              $ref: '#/components/schemas/IUpdateMetadataRequestV2'
       parameters:
       - schema:
           type: string
@@ -10104,6 +12604,25 @@ paths:
         name: comment
         required: false
         description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           type: string
         in: path
@@ -10124,6 +12643,156 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IGetModelResponseV2'
+      security: *id001
+  /registry/v2/models/{name}/versions/{version}/protect:
+    post:
+      operationId: protect_models
+      summary: Protect Model Version
+      tags:
+      - Models
+      description: Enable/disable protection for a <em>model</em> version. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
+          type: boolean
+          default: false
+        in: query
+        name: chown
+        required: false
+        description: If set, ownership of a draft function is transferred to the current
+          user.
+      - schema:
+          type: string
+        in: query
+        name: comment
+        required: false
+        description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          type: boolean
+          default: true
+        in: query
+        name: enable
+        required: false
+        description: If set to `true`, the function assets (including its code) will
+          be protected by requiring additional permissions. If set to `false`, the
+          function assets will no longer be protected.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IGetModelResponseV2'
+      security: *id001
+  /registry/v2/models/{name}/protect:
+    post:
+      operationId: protectVersions_models
+      summary: Protect Model
+      tags:
+      - Models
+      description: Enable/disable protection for all <em>model</em> versions. Enabling
+        protection requires ownership for draft versions.
+      parameters:
+      - schema:
+          type: string
+        in: query
+        name: author
+        required: false
+        description: Optionally changes the author metadata when updating a function.
+      - schema:
+          type: boolean
+          default: false
+        in: query
+        name: chown
+        required: false
+        description: If set, ownership of a draft function is transferred to the current
+          user.
+      - schema:
+          type: string
+        in: query
+        name: comment
+        required: false
+        description: An optional user-specified comment corresponding to the operation.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
+          type: boolean
+          default: true
+        in: query
+        name: enable
+        required: false
+        description: If set to `true`, the function assets (including its code) will
+          be protected by requiring additional permissions. If set to `false`, the
+          function assets will no longer be protected.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IProtectByNameResponseV2'
       security: *id001
   /registry/v2/models/{name}/versions/{version}/jobs:
     get:
@@ -10206,11 +12875,12 @@ paths:
       - Models
       description: Rebuild and deploy a model with the original or updated base image.
       requestBody:
-        x-force-dataType: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/RebuildRequestBodyV2'
+              x-force-dataType: true
+        x-force-dataType: true
       parameters:
       - schema:
           type: boolean
@@ -10243,6 +12913,25 @@ paths:
           the required job actions asynchronously and return a <code>202</code> <em>Accepted</em>
           response. If <code>false</code> the request will block until the job actions
           are completed, or a timeout occurs.
+      - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
       - schema:
           $ref: '#/components/schemas/ERebuildPolicy'
         in: query
@@ -10339,6 +13028,25 @@ paths:
           successful verification. If not set, the function is scaled to zero only
           if it was not active before this command.
       - schema:
+          $ref: '#/components/schemas/EShowInlineOrEmbedding'
+        example: embed
+        in: query
+        name: showTags
+        required: false
+        description: 'Instructs how tag (objects) should be rendered in responses.
+          The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags`
+          property)
+
+          - `inline`: Show full tag objects in the manifest.
+
+          - `embed`: Show tag references in the manifest.          Referenced full
+          tag objects are included in a separate `_embedded` HAL section.
+
+          - `none`: Show tag references in the manifest. Do not render tag objects.
+
+
+          The default behaviour depends on deployment settings.'
+      - schema:
           type: boolean
           default: true
         in: query
@@ -10376,16 +13084,597 @@ paths:
                 $ref: '#/components/schemas/IPostModelJobAsyncResponseV2'
                 description: Model Verification Initiated
       security: *id001
+  /registry/v2/models/{name}/versions/{version}/tags:
+    get:
+      operationId: list_model_tags
+      summary: List Tags
+      tags:
+      - Model Tags
+      description: List tags used on a model version.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    put:
+      operationId: replace_model_tags
+      summary: Replace Tags
+      tags:
+      - Model Tags
+      description: Replace tags used on a model version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    patch:
+      operationId: add_model_tags
+      summary: Add Tags
+      tags:
+      - Model Tags
+      description: Add tags used on a model version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    delete:
+      operationId: clear_model_tags
+      summary: Clear Tags
+      tags:
+      - Model Tags
+      description: Remove all tags used on a model version.
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+  /registry/v2/models/{name}/versions/{version}/tags/{tagName}:
+    get:
+      operationId: find_model_tags
+      summary: Find Tag
+      tags:
+      - Model Tags
+      description: Check the existence of a tag on a model version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+    put:
+      operationId: put_model_tags
+      summary: Put Tag
+      tags:
+      - Model Tags
+      description: Put a tag on a model version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+      security: *id001
+    delete:
+      operationId: remove_model_tags
+      summary: Remove Tag
+      tags:
+      - Model Tags
+      description: Remove a tag from a model version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      - schema:
+          $ref: '#/components/schemas/SemanticVersion'
+        in: path
+        name: version
+        required: true
+        description: The version of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+  /registry/v2/models/{name}/tags:
+    get:
+      operationId: listAll_model_tags
+      summary: List Tags On Any/All
+      tags:
+      - Model Tags
+      description: "List tags used on any or all versions of a named model.\n    \
+        \    With 'from=all', only the tags that are set to all versions are returned.\n\
+        \        "
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    put:
+      operationId: replaceAll_model_tags
+      summary: Replace Tags On Any/All
+      tags:
+      - Model Tags
+      description: "Replace tags used on any or all versions of a named model.\n \
+        \       With 'from=all', only the tags that were set to all versions are replaced.\n\
+        \        "
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    patch:
+      operationId: addAll_model_tags
+      summary: Add Tags On All
+      tags:
+      - Model Tags
+      description: Add tags to all versions of a named model version.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IUpdateTagsRequestV2'
+      parameters:
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    delete:
+      operationId: clearAll_model_tags
+      summary: Clear Tags On Any/All
+      tags:
+      - Model Tags
+      description: "Remove all tags used on any or all versions of a named model.\n\
+        \        With 'from=all', a tag is only removed when it was set to all versions.\n\
+        \        "
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+  /registry/v2/models/{name}/tags/{tagName}:
+    get:
+      operationId: findAll_model_tags
+      summary: Find Tags On Any/All
+      tags:
+      - Model Tags
+      description: Check the existence of a tag on any or all versions of a named
+        model.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TaggingScopeOption'
+          default: all
+        in: query
+        name: scope
+        required: false
+        description: 'Tagging operations on a _named_ function can either operate
+          on
+
+          - `any` versions: operate on tags that are are associated on _any_ version
+          (union)
+
+          - `all` versions: operate on tags that are are associated with _all_ versions
+          (intersection)'
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+    put:
+      operationId: putAll_model_tags
+      summary: Put Tag On All
+      tags:
+      - Model Tags
+      description: Add a tag on on all versions of a model version.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+      security: *id001
+    delete:
+      operationId: removeAll_model_tags
+      summary: Remove Tag On Any/All
+      tags:
+      - Model Tags
+      description: "Remove a tag on any or all version from a model version.\n   \
+        \     With 'from=all', the tag is only removed when it exists on all versions.\n\
+        \        "
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      - schema:
+          type: string
+        in: path
+        name: name
+        required: true
+        description: The name of the function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+        '404':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IErrorAndStatusResponse'
+      security: *id001
+  /registry/v2/tags/:
+    get:
+      operationId: list_tags
+      summary: List
+      tags:
+      - Tags
+      description: List tags used on any plug, webscript or model.
+      parameters:
+      - schema:
+          type: string
+        example: '*-demo-??'
+        in: query
+        name: name
+        required: false
+        description: If set, filters on the <code>name</code> of a tag. Supports <code>*</code>
+          and <code>?</code> wildcards and is case-insensitive.
+      - schema:
+          type: string
+        example: '#4153ea'
+        in: query
+        name: color
+        required: false
+        description: If set, filters on the <code>color</code> of a tag. Uses an exact
+          match.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+    delete:
+      operationId: remove_tags
+      summary: Remove Unused
+      tags:
+      - Tags
+      description: 'Remove tags that are not referenced by any plug, webscript or
+        model.
+
+        This is normally executed as background task.'
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagsResponse'
+      security: *id001
+  /registry/v2/tags/{tagName}:
+    get:
+      operationId: get_tags
+      summary: Get
+      tags:
+      - Tags
+      description: Get the metadata of a function Tag by name.
+      parameters:
+      - schema:
+          $ref: '#/components/schemas/TagReference'
+        in: path
+        name: tagName
+        required: true
+        description: The name of the tag that might be applied to a function.
+      x-version: v2
+      responses:
+        '200':
+          description: Default Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IFunctionTagResponse'
+      security: *id001
 tags:
+- name: Plugs
+  description: Plug(in)s are functions that can be used in the rule engine.
+- name: Webscripts
+  description: Webscripts are functions that are securely exposed to an http endpoint.
 - name: Models
   description: BYOML Models are functions that wrap a machine learning model.
   externalDocs:
     url: https://docs.waylay.io/#/features/byoml/
     description: Waylay Documentation
-- name: Plugs
-  description: Plugs are functions that can be used in the rule engine.
-- name: Webscripts
-  description: Webscripts are functions that are securely exposed to an http endpoint.
+- name: Plug Tags
+  description: Tagging operations on rule plugins.
+- name: Webscript Tags
+  description: Tagging operations on webscripts.
+- name: Model Tags
+  description: Tagging operations on models.
+- name: Tags
+  description: Tag object operations.
 - name: Jobs
   description: Jobs represent the ongoing asynchronous operations in the function
     registry.

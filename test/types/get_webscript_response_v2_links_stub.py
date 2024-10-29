@@ -30,6 +30,9 @@ get_webscript_response_v2__links_model_schema = json.loads(
   "title" : "GetWebscriptResponseV2__links",
   "type" : "object",
   "properties" : {
+    "content" : {
+      "$ref" : "#/components/schemas/HALLink"
+    },
     "invoke" : {
       "$ref" : "#/components/schemas/HALLink"
     },
@@ -65,7 +68,7 @@ class GetWebscriptResponseV2LinksStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 GetWebscriptResponseV2LinksAdapter.json_schema(), allow_none_optionals=1

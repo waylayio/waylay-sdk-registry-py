@@ -13,15 +13,21 @@ from __future__ import annotations
 
 from pydantic import (
     ConfigDict,
+    Field,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.compiled_runtime_version import CompiledRuntimeVersion
+from ..models.runtime_summary_response_embedded import RuntimeSummaryResponseEmbedded
 
 
 class RuntimeVersionResponse(WaylayBaseModel):
     """: Runtime Version Found."""
 
+    embedded: RuntimeSummaryResponseEmbedded | None = Field(
+        default=None, alias="_embedded"
+    )
     runtime: CompiledRuntimeVersion
 
     model_config = ConfigDict(

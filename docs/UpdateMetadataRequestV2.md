@@ -9,9 +9,7 @@ Name | Type | Description | Notes
 **description** | **str** | A description of the function | [optional] 
 **icon_url** | **str** | An url to an icon that represents this function. | [optional] 
 **category** | **str** | A category for this function (Deprecated: use tags to categorise your functions) | [optional] 
-**documentation_url** | **str** | External url that document this function. | [optional] 
-**tags** | [**List[Tag]**](Tag.md) | Tags associated with this function. | [optional] 
-**friendly_name** | **str** | Display title for this function. | [optional] 
+**tags** | [**List[TagOrTagReference]**](TagOrTagReference.md) | During update, a (reference to a) tag - that does not yet exist, is created (using default attributes if not specified) - that does exist is not updated (even if tag attributes like &#x60;color&#x60; differ) | [optional] 
 
 ## Example
 

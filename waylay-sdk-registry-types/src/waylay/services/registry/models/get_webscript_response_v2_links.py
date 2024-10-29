@@ -14,6 +14,7 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.hal_link import HALLink
@@ -22,6 +23,7 @@ from ..models.hal_link import HALLink
 class GetWebscriptResponseV2Links(WaylayBaseModel):
     """HAL links to related actions.."""
 
+    content: HALLink | None = None
     invoke: HALLink | None = None
     jobs: HALLink | None = None
 

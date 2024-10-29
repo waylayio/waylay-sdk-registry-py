@@ -21,15 +21,15 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.archive_format import ArchiveFormat
+from ..models.archive_format_filter import ArchiveFormatFilter
 from ..models.function_type import FunctionType
 from ..models.job_state_result import JobStateResult
 from ..models.job_type_schema import JobTypeSchema
 from ..models.plug_type import PlugType
 from ..models.rebuild_policy import RebuildPolicy
-from ..models.show_related_type import ShowRelatedType
 from ..models.status_filter import StatusFilter
 
 
@@ -179,7 +179,7 @@ class DeleteAssetQuery(WaylayBaseModel):
     chown: Annotated[
         StrictBool | None,
         Field(
-            description="If set, ownership of the draft function is transferred to the current user."
+            description="If set, ownership of a draft function is transferred to the current user."
         ),
     ] = None
     comment: Annotated[
@@ -260,6 +260,8 @@ class GetAssetQuery(WaylayBaseModel):
 def _get_latest_query_alias_for(field_name: str) -> str:
     if field_name == "type":
         return "type"
+    if field_name == "show_tags":
+        return "showTags"
     if field_name == "include_draft":
         return "includeDraft"
     if field_name == "include_deprecated":
@@ -272,6 +274,12 @@ class GetLatestQuery(WaylayBaseModel):
 
     type: Annotated[
         PlugType | None, Field(description="If set, filters on the type of plug.")
+    ] = None
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
+        ),
     ] = None
     include_draft: Annotated[
         StrictBool | None,
@@ -295,11 +303,20 @@ class GetLatestQuery(WaylayBaseModel):
 
 
 def _get_query_alias_for(field_name: str) -> str:
+    if field_name == "show_tags":
+        return "showTags"
     return field_name
 
 
 class GetQuery(WaylayBaseModel):
     """Model for `get` query parameters."""
+
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
+        ),
+    ] = None
 
     model_config = ConfigDict(
         protected_namespaces=(),
@@ -367,8 +384,6 @@ class JobsQuery(WaylayBaseModel):
 
 
 def _list_query_alias_for(field_name: str) -> str:
-    if field_name == "tags":
-        return "tags"
     if field_name == "type":
         return "type"
     if field_name == "limit":
@@ -385,6 +400,12 @@ def _list_query_alias_for(field_name: str) -> str:
         return "draft"
     if field_name == "name_version":
         return "nameVersion"
+    if field_name == "show_tags":
+        return "showTags"
+    if field_name == "tags":
+        return "tags"
+    if field_name == "wql":
+        return "wql"
     if field_name == "version":
         return "version"
     if field_name == "status":
@@ -419,12 +440,6 @@ def _list_query_alias_for(field_name: str) -> str:
 class ListQuery(WaylayBaseModel):
     """Model for `list` query parameters."""
 
-    tags: Annotated[
-        Any | None,
-        Field(
-            description="Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected."
-        ),
-    ] = None
     type: Annotated[
         PlugType | None, Field(description="If set, filters on the type of plug.")
     ] = None
@@ -468,6 +483,24 @@ class ListQuery(WaylayBaseModel):
         List[Annotated[str, Field(strict=True)]] | None,
         Field(
             description="Filter on exact `{name}@{version}` functions. Using this filter implies a `latest=false` default, returning multiple versions of the same named versions if they are filtered."
+        ),
+    ] = None
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
+        ),
+    ] = None
+    tags: Annotated[
+        Any | None,
+        Field(
+            description="Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected."
+        ),
+    ] = None
+    wql: Annotated[
+        StrictStr | None,
+        Field(
+            description='Query filter using the \'wql\' query language.  This is a unstable preview feature, currently supporting the following _match terms_: * `tag:<name>` entity has a tag that fully matches `<name>` (case insensitive). * `tag:<name1>,<name2>` entity has a tag that fully matches any of `<name1>`, `<name2>` (case insensitive). * `tag:inIgnoreCase(<name1>,<name2>)` is the fully specified format for the previous statements.   `inIgnoreCase` is the _default match predicate_. * `tag:in(<name1>,<name2>)` entity has a tag matches one of `<name1>`,`<name2>` (case sensitive) * `tag:equals(<name>)` entity has a tag matches `<name>` (case sensitive) * `tag:like(<pattern>)` entity has a tag that matches `<pattern>` (case insensitive),    where `<pattern>` can contain `*` (multiple characters) and `?` (single character) wildcards.  Each _argument_ of a _match term_ (like `<name>` above) can either be a * a _quoted match argument_, quoted using `"`, can contain any character except `"`: `tag:"Status:In Review"`. * a _safe match argument_ can only contain alpha-numeric characters or `_`: `tag:Status_In_Review`.  Multiple _match term_s can be combined in a boolean predicate using the `AND`, `OR` and `NOT` operators: * `tag:abc AND tag:"My Demo" AND tag:like("prj:*")`: entity has a tag matching `abc` **AND** a tag matching `"My Demo"` **AND**    a tag that has the `prj:` prefix * `tag:abc tag:"My Demo" tag:like("prj:*")`: same as the previous statement: a (space-deliminated) list of terms is     implicitly combined with `AND`. * `tag:abc OR tag:"My Demo"`: entity has a tag matching `abc` **OR** a tag matching `"My Demo"` * `NOT tag:abc`: entity **does not have** a tag matching `abc`  Round brackets can be used to combine predicates with different operators: * `(tag:abc OR tag:"My Demo") AND tag:like("prj:*")`: entity has a tag `abc` or a tag `My Demo`, and a tag with prefix `prj:*`  For a _multi-valued attribute_ like `tag`, each _match term_ tests the existence of a matching tag assigned to the entity. When _multiple match predicates on the **same** tag_ need to be specified, the boolean operators `not`, `all`, `any` can be used _within_ the match term:  * `tag:all(like("prj:*"),not(like("*:Done")))`: entity has a tag that starts with `prj:` and does NOT end with `:Done`. * `tag:not(Done)`: entity has a tag that does not match `Done` (this excludes entities without tags, and with a single `Done` tag!). * `NOT tag:not(in(abc,def))`: each tag of the entity is in `abc` or `def` (matches entities without tags!) * `tag:any(like("prj:*"),not(done)))`: entity has a tag that either starts with `prj:` or does not match `done`.'
         ),
     ] = None
     version: Annotated[
@@ -528,7 +561,7 @@ class ListQuery(WaylayBaseModel):
         ),
     ] = None
     archive_format: Annotated[
-        List[ArchiveFormat] | None,
+        List[ArchiveFormatFilter] | None,
         Field(description="Filter on the archive format of the function."),
     ] = None
     runtime: Annotated[
@@ -542,7 +575,7 @@ class ListQuery(WaylayBaseModel):
         ),
     ] = None
     show_related: Annotated[
-        ShowRelatedType | None,
+        Any | None,
         Field(
             description="Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. Ignored (forced to `none`) when any of the _version filter_ query params are used. - `embed`: as full summary representation (in `_embedded`). - `link`: as HAL link in (in `_links`). - `none`: omitted."
         ),
@@ -557,8 +590,6 @@ class ListQuery(WaylayBaseModel):
 
 
 def _list_versions_query_alias_for(field_name: str) -> str:
-    if field_name == "tags":
-        return "tags"
     if field_name == "limit":
         return "limit"
     if field_name == "page":
@@ -567,6 +598,10 @@ def _list_versions_query_alias_for(field_name: str) -> str:
         return "deprecated"
     if field_name == "draft":
         return "draft"
+    if field_name == "show_tags":
+        return "showTags"
+    if field_name == "tags":
+        return "tags"
     if field_name == "version":
         return "version"
     if field_name == "status":
@@ -595,12 +630,6 @@ def _list_versions_query_alias_for(field_name: str) -> str:
 class ListVersionsQuery(WaylayBaseModel):
     """Model for `list_versions` query parameters."""
 
-    tags: Annotated[
-        Any | None,
-        Field(
-            description="Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected."
-        ),
-    ] = None
     limit: Annotated[
         Annotated[float, Field(strict=True, ge=0)]
         | Annotated[int, Field(strict=True, ge=0)]
@@ -624,6 +653,18 @@ class ListVersionsQuery(WaylayBaseModel):
     draft: Annotated[
         StrictBool | None,
         Field(description="Filter on the draft status of the function."),
+    ] = None
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
+        ),
+    ] = None
+    tags: Annotated[
+        Any | None,
+        Field(
+            description="Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected."
+        ),
     ] = None
     version: Annotated[
         StrictStr | None,
@@ -677,7 +718,7 @@ class ListVersionsQuery(WaylayBaseModel):
         ),
     ] = None
     archive_format: Annotated[
-        List[ArchiveFormat] | None,
+        List[ArchiveFormatFilter] | None,
         Field(description="Filter on the archive format of the function."),
     ] = None
     runtime: Annotated[
@@ -696,6 +737,8 @@ class ListVersionsQuery(WaylayBaseModel):
 def _patch_interface_query_alias_for(field_name: str) -> str:
     if field_name == "comment":
         return "comment"
+    if field_name == "show_tags":
+        return "showTags"
     return field_name
 
 
@@ -706,6 +749,12 @@ class PatchInterfaceQuery(WaylayBaseModel):
         StrictStr | None,
         Field(
             description="An optional user-specified comment corresponding to the operation."
+        ),
+    ] = None
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
         ),
     ] = None
 
@@ -720,6 +769,8 @@ class PatchInterfaceQuery(WaylayBaseModel):
 def _patch_metadata_query_alias_for(field_name: str) -> str:
     if field_name == "comment":
         return "comment"
+    if field_name == "show_tags":
+        return "showTags"
     return field_name
 
 
@@ -732,11 +783,129 @@ class PatchMetadataQuery(WaylayBaseModel):
             description="An optional user-specified comment corresponding to the operation."
         ),
     ] = None
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
+        ),
+    ] = None
 
     model_config = ConfigDict(
         protected_namespaces=(),
         extra="allow",
         alias_generator=_patch_metadata_query_alias_for,
+        populate_by_name=True,
+    )
+
+
+def _protect_query_alias_for(field_name: str) -> str:
+    if field_name == "author":
+        return "author"
+    if field_name == "chown":
+        return "chown"
+    if field_name == "comment":
+        return "comment"
+    if field_name == "show_tags":
+        return "showTags"
+    if field_name == "enable":
+        return "enable"
+    return field_name
+
+
+class ProtectQuery(WaylayBaseModel):
+    """Model for `protect` query parameters."""
+
+    author: Annotated[
+        StrictStr | None,
+        Field(
+            description="Optionally changes the author metadata when updating a function."
+        ),
+    ] = None
+    chown: Annotated[
+        StrictBool | None,
+        Field(
+            description="If set, ownership of a draft function is transferred to the current user."
+        ),
+    ] = None
+    comment: Annotated[
+        StrictStr | None,
+        Field(
+            description="An optional user-specified comment corresponding to the operation."
+        ),
+    ] = None
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
+        ),
+    ] = None
+    enable: Annotated[
+        StrictBool | None,
+        Field(
+            description="If set to `true`, the function assets (including its code) will be protected by requiring additional permissions. If set to `false`, the function assets will no longer be protected."
+        ),
+    ] = None
+
+    model_config = ConfigDict(
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_protect_query_alias_for,
+        populate_by_name=True,
+    )
+
+
+def _protect_versions_query_alias_for(field_name: str) -> str:
+    if field_name == "author":
+        return "author"
+    if field_name == "chown":
+        return "chown"
+    if field_name == "comment":
+        return "comment"
+    if field_name == "show_tags":
+        return "showTags"
+    if field_name == "enable":
+        return "enable"
+    return field_name
+
+
+class ProtectVersionsQuery(WaylayBaseModel):
+    """Model for `protect_versions` query parameters."""
+
+    author: Annotated[
+        StrictStr | None,
+        Field(
+            description="Optionally changes the author metadata when updating a function."
+        ),
+    ] = None
+    chown: Annotated[
+        StrictBool | None,
+        Field(
+            description="If set, ownership of a draft function is transferred to the current user."
+        ),
+    ] = None
+    comment: Annotated[
+        StrictStr | None,
+        Field(
+            description="An optional user-specified comment corresponding to the operation."
+        ),
+    ] = None
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
+        ),
+    ] = None
+    enable: Annotated[
+        StrictBool | None,
+        Field(
+            description="If set to `true`, the function assets (including its code) will be protected by requiring additional permissions. If set to `false`, the function assets will no longer be protected."
+        ),
+    ] = None
+
+    model_config = ConfigDict(
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_protect_versions_query_alias_for,
         populate_by_name=True,
     )
 
@@ -761,7 +930,7 @@ class PublishQuery(WaylayBaseModel):
     chown: Annotated[
         StrictBool | None,
         Field(
-            description="If set, ownership of the draft function is transferred to the current user."
+            description="If set, ownership of a draft function is transferred to the current user."
         ),
     ] = None
     comment: Annotated[
@@ -806,6 +975,8 @@ def _rebuild_query_alias_for(field_name: str) -> str:
         return "dryRun"
     if field_name == "var_async":
         return "async"
+    if field_name == "show_tags":
+        return "showTags"
     if field_name == "upgrade":
         return "upgrade"
     if field_name == "force_version":
@@ -844,6 +1015,12 @@ class RebuildQuery(WaylayBaseModel):
         StrictBool | None,
         Field(
             description="Unless this is set to <code>false</code>, the server will start the required job actions asynchronously and return a <code>202</code> <em>Accepted</em> response. If <code>false</code> the request will block until the job actions are completed, or a timeout occurs."
+        ),
+    ] = None
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
         ),
     ] = None
     upgrade: Annotated[
@@ -1031,7 +1208,7 @@ class UpdateAssetQuery(WaylayBaseModel):
     chown: Annotated[
         StrictBool | None,
         Field(
-            description="If set, ownership of the draft function is transferred to the current user."
+            description="If set, ownership of a draft function is transferred to the current user."
         ),
     ] = None
     comment: Annotated[
@@ -1095,7 +1272,7 @@ class UpdateAssetsQuery(WaylayBaseModel):
     chown: Annotated[
         StrictBool | None,
         Field(
-            description="If set, ownership of the draft function is transferred to the current user."
+            description="If set, ownership of a draft function is transferred to the current user."
         ),
     ] = None
     comment: Annotated[
@@ -1128,6 +1305,8 @@ class UpdateAssetsQuery(WaylayBaseModel):
 def _verify_query_alias_for(field_name: str) -> str:
     if field_name == "scale_to_zero":
         return "scaleToZero"
+    if field_name == "show_tags":
+        return "showTags"
     if field_name == "var_async":
         return "async"
     return field_name
@@ -1140,6 +1319,12 @@ class VerifyQuery(WaylayBaseModel):
         StrictBool | None,
         Field(
             description="Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command."
+        ),
+    ] = None
+    show_tags: Annotated[
+        Any | None,
+        Field(
+            description="Instructs how tag (objects) should be rendered in responses. The tags are show at the `tags` property of the manifest (legacy: the `metadata.tags` property) - `inline`: Show full tag objects in the manifest. - `embed`: Show tag references in the manifest.          Referenced full tag objects are included in a separate `_embedded` HAL section. - `none`: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings."
         ),
     ] = None
     var_async: Annotated[
