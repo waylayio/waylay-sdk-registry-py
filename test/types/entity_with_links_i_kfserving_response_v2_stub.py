@@ -88,6 +88,11 @@ entity_with_links_i_kfserving_response_v2__model_schema = json.loads(
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
     },
+    "revision" : {
+      "title" : "revision",
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
+    },
     "model" : {
       "$ref" : "#/components/schemas/KFServingManifest"
     }

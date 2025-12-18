@@ -74,6 +74,10 @@ webscript_response_with_invoke_link_v2_model_schema = json.loads(
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
     },
+    "revision" : {
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
+    },
     "webscript" : {
       "$ref" : "#/components/schemas/WebscriptManifest"
     },

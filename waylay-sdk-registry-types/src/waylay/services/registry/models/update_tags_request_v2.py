@@ -17,7 +17,6 @@ from pydantic import (
     ConfigDict,
     Field,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.tag_or_tag_reference import TagOrTagReference

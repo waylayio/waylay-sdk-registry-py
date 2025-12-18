@@ -25,12 +25,15 @@ except ImportError as exc:
 
 documentation_model_schema = json.loads(
     r"""{
+  "title" : "Documentation",
   "type" : "object",
   "properties" : {
     "description" : {
+      "title" : "description",
       "type" : "string"
     },
     "states" : {
+      "title" : "states",
       "type" : "array",
       "description" : "Documentation of the plug states.",
       "items" : {
@@ -38,6 +41,7 @@ documentation_model_schema = json.loads(
       }
     },
     "input" : {
+      "title" : "input",
       "type" : "array",
       "description" : "Documentation of the plug input parameters.",
       "items" : {
@@ -45,10 +49,19 @@ documentation_model_schema = json.loads(
       }
     },
     "output" : {
+      "title" : "output",
       "type" : "array",
       "description" : "Documentation of the plug response parameters.",
       "items" : {
         "$ref" : "#/components/schemas/DocumentationProperty"
+      }
+    },
+    "examples" : {
+      "title" : "examples",
+      "type" : "array",
+      "description" : "Example scenarios for testing the plug.",
+      "items" : {
+        "$ref" : "#/components/schemas/DocumentationExample"
       }
     }
   }

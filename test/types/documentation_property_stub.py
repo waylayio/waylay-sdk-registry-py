@@ -27,16 +27,25 @@ except ImportError as exc:
 
 documentation_property_model_schema = json.loads(
     r"""{
+  "title" : "DocumentationProperty",
   "required" : [ "description", "name" ],
   "type" : "object",
   "properties" : {
     "name" : {
+      "title" : "name",
       "type" : "string",
       "description" : "Name of the documented property."
     },
     "description" : {
+      "title" : "description",
       "type" : "string",
       "description" : "Documentation of the property."
+    },
+    "examples" : {
+      "title" : "examples",
+      "type" : "array",
+      "description" : "Example values for the property.",
+      "items" : { }
     }
   }
 }

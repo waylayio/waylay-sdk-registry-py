@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** | Name of the documented property. | 
 **description** | **str** | Documentation of the property. | 
+**examples** | **List[object]** | Example values for the property. | [optional] 
 
 ## Example
 

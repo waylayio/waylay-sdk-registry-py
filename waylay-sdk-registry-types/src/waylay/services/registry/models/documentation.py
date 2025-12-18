@@ -18,9 +18,9 @@ from pydantic import (
     Field,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
+from ..models.documentation_example import DocumentationExample
 from ..models.documentation_property import DocumentationProperty
 
 
@@ -36,6 +36,9 @@ class Documentation(WaylayBaseModel):
     )
     output: List[DocumentationProperty] | None = Field(
         default=None, description="Documentation of the plug response parameters."
+    )
+    examples: List[DocumentationExample] | None = Field(
+        default=None, description="Example scenarios for testing the plug."
     )
 
     model_config = ConfigDict(

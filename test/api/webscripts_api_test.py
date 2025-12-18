@@ -11,7 +11,6 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import Union
 from urllib.parse import quote
 
 import pytest
@@ -22,13 +21,20 @@ from waylay.sdk.api._models import Model
 from waylay.services.registry.api import WebscriptsApi
 from waylay.services.registry.service import RegistryService
 
-from ..types.create_webscripts_copy_parameter_stub import (
-    CreateWebscriptsCopyParameterStub,
-)
+from ..types.archive_format_filter_stub import ArchiveFormatFilterStub
+from ..types.create_models_copy_parameter_stub import CreateModelsCopyParameterStub
 from ..types.deprecate_previous_policy_stub import DeprecatePreviousPolicyStub
+from ..types.get_asset_by_role_models_asset_role_parameter_stub import (
+    GetAssetByRoleModelsAssetRoleParameterStub,
+)
 from ..types.get_webscript_response_v2_stub import GetWebscriptResponseV2Stub
+from ..types.job_state_result_stub import JobStateResultStub
+from ..types.job_type_schema_stub import JobTypeSchemaStub
 from ..types.jobs_for_webscript_response_v2_stub import JobsForWebscriptResponseV2Stub
 from ..types.latest_webscripts_response_v2_stub import LatestWebscriptsResponseV2Stub
+from ..types.post_webscript_job_async_response_v2_stub import (
+    PostWebscriptJobAsyncResponseV2Stub,
+)
 from ..types.post_webscript_job_sync_response_v2_stub import (
     PostWebscriptJobSyncResponseV2Stub,
 )
@@ -40,6 +46,7 @@ from ..types.rebuild_webscript_sync_response_v2_stub import (
 from ..types.semantic_version_range_stub import SemanticVersionRangeStub
 from ..types.show_inline_or_embedding_stub import ShowInlineOrEmbeddingStub
 from ..types.show_link_or_embedding_stub import ShowLinkOrEmbeddingStub
+from ..types.status_filter_stub import StatusFilterStub
 from ..types.tags_filter_stub import TagsFilterStub
 from ..types.timestamp_spec_stub import TimestampSpecStub
 from ..types.undeployed_response_v2_stub import UndeployedResponseV2Stub
@@ -47,6 +54,7 @@ from ..types.update_metadata_request_v2_stub import UpdateMetadataRequestV2Stub
 from ..types.verify_webscript_sync_response_v2_stub import (
     VerifyWebscriptSyncResponseV2Stub,
 )
+from ..types.webscript_manifest_patch_stub import WebscriptManifestPatchStub
 from ..types.webscript_versions_response_v2_stub import WebscriptVersionsResponseV2Stub
 
 MODELS_AVAILABLE = (
@@ -72,12 +80,14 @@ if MODELS_AVAILABLE:
         CreateQuery,
         DeleteAssetQuery,
         GetArchiveQuery,
+        GetAssetByRoleQuery,
         GetAssetQuery,
         GetLatestQuery,
         GetQuery,
         JobsQuery,
         ListQuery,
         ListVersionsQuery,
+        PatchManifestQuery,
         PatchMetadataQuery,
         ProtectQuery,
         ProtectVersionsQuery,
@@ -85,6 +95,7 @@ if MODELS_AVAILABLE:
         RebuildQuery,
         RemoveVersionQuery,
         RemoveVersionsQuery,
+        UpdateAssetByRoleQuery,
         UpdateAssetQuery,
         UpdateAssetsQuery,
         VerifyQuery,
@@ -122,12 +133,13 @@ async def test_create(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for create
-    Create Webscript Version
+    Create Version
     """
     # set path params
     kwargs = {
         # optionally use CreateQuery to validate and reuse parameters
         "query": CreateQuery(
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
             deploy=True,
             author="author_example",
             comment="comment_example",
@@ -139,11 +151,11 @@ async def test_create(
             name="name_example",
             draft=False,
             runtime="runtime_example",
-            copy_from=CreateWebscriptsCopyParameterStub.create_json(),
+            copy_from=CreateModelsCopyParameterStub.create_json(),
         ),
         "json": None,
         "content": b"some_binary_content",
-        "headers": {"content-type": "application/octet-stream"},
+        "headers": {"content-type": "*/*+json"},
         "files": {
             "myFile1": b"...first file content...",
             "myFile2": b"...second file content...",
@@ -151,13 +163,7 @@ async def test_create(
     }
     _create_set_mock_response(httpx_mock, gateway_url)
     resp = await service.webscripts.create(**kwargs)
-    check_type(
-        resp,
-        Union[
-            PostWebscriptJobSyncResponseV2,
-            PostWebscriptJobAsyncResponseV2,
-        ],
-    )
+    check_type(resp, PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2)
 
 
 @pytest.mark.asyncio
@@ -166,11 +172,12 @@ async def test_create_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for create with models not installed
-    Create Webscript Version
+    Create Version
     """
     # set path params
     kwargs = {
         "query": {
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "deploy": True,
             "author": "author_example",
             "comment": "comment_example",
@@ -182,7 +189,7 @@ async def test_create_without_types(
             "name": "name_example",
             "draft": False,
             "runtime": "runtime_example",
-            "copy": CreateWebscriptsCopyParameterStub.create_json(),
+            "copy": CreateModelsCopyParameterStub.create_json(),
         },
         "files": {
             "myFile1": b"...first file content...",
@@ -190,7 +197,7 @@ async def test_create_without_types(
         },
         "json": None,
         "content": b"some_binary_content",
-        "headers": {"content-type": "application/octet-stream"},
+        "headers": {"content-type": "*/*+json"},
     }
     _create_set_mock_response(httpx_mock, gateway_url)
     resp = await service.webscripts.create(**kwargs)
@@ -218,7 +225,7 @@ async def test_delete_asset(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for delete_asset
-    Delete Webscript Asset
+    Delete Asset
     """
     # set path params
     name = "name_example"
@@ -230,6 +237,7 @@ async def test_delete_asset(
     kwargs = {
         # optionally use DeleteAssetQuery to validate and reuse parameters
         "query": DeleteAssetQuery(
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
             scale_to_zero=False,
             deploy=True,
             chown=False,
@@ -246,13 +254,7 @@ async def test_delete_asset(
         quote(str(wildcard)),
     )
     resp = await service.webscripts.delete_asset(name, version, wildcard, **kwargs)
-    check_type(
-        resp,
-        Union[
-            PostWebscriptJobSyncResponseV2,
-            PostWebscriptJobAsyncResponseV2,
-        ],
-    )
+    check_type(resp, PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2)
 
 
 @pytest.mark.asyncio
@@ -261,7 +263,7 @@ async def test_delete_asset_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for delete_asset with models not installed
-    Delete Webscript Asset
+    Delete Asset
     """
     # set path params
     name = "name_example"
@@ -272,6 +274,7 @@ async def test_delete_asset_without_types(
 
     kwargs = {
         "query": {
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "scaleToZero": False,
             "deploy": True,
             "chown": False,
@@ -312,7 +315,7 @@ async def test_get_archive(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for get_archive
-    Get Webscript Archive
+    Get Archive
     """
     # set path params
     name = "name_example"
@@ -338,7 +341,7 @@ async def test_get_archive_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for get_archive with models not installed
-    Get Webscript Archive
+    Get Archive
     """
     # set path params
     name = "name_example"
@@ -354,6 +357,88 @@ async def test_get_archive_without_types(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.get_archive(name, version, **kwargs)
+    check_type(resp, bytes)
+
+
+def _get_asset_by_role_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str, assetRole: str
+):
+    mock_response = bytes(b"blah")
+    httpx_mock_kwargs = {
+        "method": "GET",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/webscripts/{name}/versions/{version}/{assetRole}(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_get_asset_by_role(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for get_asset_by_role
+    Get Asset By Role
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    assetRole = GetAssetByRoleModelsAssetRoleParameterStub.create_json()
+
+    kwargs = {
+        # optionally use GetAssetByRoleQuery to validate and reuse parameters
+        "query": GetAssetByRoleQuery(
+            ls=False,
+        ),
+    }
+    _get_asset_by_role_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(assetRole)),
+    )
+    resp = await service.webscripts.get_asset_by_role(
+        name, version, assetRole, **kwargs
+    )
+    check_type(resp, bytes)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_get_asset_by_role_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for get_asset_by_role with models not installed
+    Get Asset By Role
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    assetRole = GetAssetByRoleModelsAssetRoleParameterStub.create_json()
+
+    kwargs = {
+        "query": {
+            "ls": False,
+        },
+    }
+    _get_asset_by_role_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(assetRole)),
+    )
+    resp = await service.webscripts.get_asset_by_role(
+        name, version, assetRole, **kwargs
+    )
     check_type(resp, bytes)
 
 
@@ -378,7 +463,7 @@ async def test_get_asset(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for get_asset
-    Get File From Webscript Archive
+    Get Asset
     """
     # set path params
     name = "name_example"
@@ -410,7 +495,7 @@ async def test_get_asset_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for get_asset with models not installed
-    Get File From Webscript Archive
+    Get Asset
     """
     # set path params
     name = "name_example"
@@ -452,7 +537,7 @@ async def test_get_latest(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for get_latest
-    Get Latest Webscript Version
+    Get Latest
     """
     # set path params
     name = "name_example"
@@ -462,12 +547,13 @@ async def test_get_latest(
         "query": GetLatestQuery(
             include_draft=True,
             include_deprecated=True,
+            include_undeployed=True,
             show_tags=ShowInlineOrEmbeddingStub.create_json(),
         ),
     }
     _get_latest_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.webscripts.get_latest(name, **kwargs)
-    check_type(resp, Union[GetWebscriptResponseV2,])
+    check_type(resp, GetWebscriptResponseV2)
 
 
 @pytest.mark.asyncio
@@ -476,7 +562,7 @@ async def test_get_latest_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for get_latest with models not installed
-    Get Latest Webscript Version
+    Get Latest
     """
     # set path params
     name = "name_example"
@@ -485,6 +571,7 @@ async def test_get_latest_without_types(
         "query": {
             "includeDraft": True,
             "includeDeprecated": True,
+            "includeUndeployed": True,
             "showTags": ShowInlineOrEmbeddingStub.create_json(),
         },
     }
@@ -512,7 +599,7 @@ def _get_set_mock_response(
 @pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for get
-    Get Webscript Version
+    Get Version
     """
     # set path params
     name = "name_example"
@@ -529,7 +616,7 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.get(name, version, **kwargs)
-    check_type(resp, Union[GetWebscriptResponseV2,])
+    check_type(resp, GetWebscriptResponseV2)
 
 
 @pytest.mark.asyncio
@@ -538,7 +625,7 @@ async def test_get_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for get with models not installed
-    Get Webscript Version
+    Get Version
     """
     # set path params
     name = "name_example"
@@ -576,7 +663,7 @@ def _jobs_set_mock_response(
 @pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for jobs
-    List Webscript Jobs
+    List Jobs
     """
     # set path params
     name = "name_example"
@@ -587,9 +674,9 @@ async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTP
         # optionally use JobsQuery to validate and reuse parameters
         "query": JobsQuery(
             limit=3.4,
-            type=[],
-            state=[],
-            function_type=[],
+            type=[JobTypeSchemaStub.create_json()],
+            state=[JobStateResultStub.create_json()],
+            function_type=["plugs"],
             created_before=TimestampSpecStub.create_json(),
             created_after=TimestampSpecStub.create_json(),
         ),
@@ -598,7 +685,7 @@ async def test_jobs(service: RegistryService, gateway_url: str, httpx_mock: HTTP
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.jobs(name, version, **kwargs)
-    check_type(resp, Union[JobsForWebscriptResponseV2,])
+    check_type(resp, JobsForWebscriptResponseV2)
 
 
 @pytest.mark.asyncio
@@ -607,7 +694,7 @@ async def test_jobs_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for jobs with models not installed
-    List Webscript Jobs
+    List Jobs
     """
     # set path params
     name = "name_example"
@@ -617,9 +704,9 @@ async def test_jobs_without_types(
     kwargs = {
         "query": {
             "limit": 3.4,
-            "type": [],
-            "state": [],
-            "functionType": [],
+            "type": [JobTypeSchemaStub.create_json()],
+            "state": [JobStateResultStub.create_json()],
+            "functionType": ["plugs"],
             "createdBefore": TimestampSpecStub.create_json(),
             "createdAfter": TimestampSpecStub.create_json(),
         },
@@ -652,7 +739,7 @@ async def test_list_versions(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for list_versions
-    List Webscript Versions
+    List Versions
     """
     # set path params
     name = "name_example"
@@ -664,10 +751,13 @@ async def test_list_versions(
             page=3.4,
             deprecated=True,
             draft=True,
+            status=[StatusFilterStub.create_json()],
             show_tags=ShowInlineOrEmbeddingStub.create_json(),
             tags=TagsFilterStub.create_json(),
+            include_draft=True,
+            include_deprecated=True,
+            include_undeployed=True,
             version="version_example",
-            status=[],
             runtime_version=SemanticVersionRangeStub.create_json(),
             created_by="@me",
             updated_by="@me",
@@ -675,13 +765,13 @@ async def test_list_versions(
             created_after=TimestampSpecStub.create_json(),
             updated_before=TimestampSpecStub.create_json(),
             updated_after=TimestampSpecStub.create_json(),
-            archive_format=[],
-            runtime=[],
+            archive_format=[ArchiveFormatFilterStub.create_json()],
+            runtime=[""],
         ),
     }
     _list_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.webscripts.list_versions(name, **kwargs)
-    check_type(resp, Union[WebscriptVersionsResponseV2,])
+    check_type(resp, WebscriptVersionsResponseV2)
 
 
 @pytest.mark.asyncio
@@ -690,7 +780,7 @@ async def test_list_versions_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for list_versions with models not installed
-    List Webscript Versions
+    List Versions
     """
     # set path params
     name = "name_example"
@@ -701,10 +791,13 @@ async def test_list_versions_without_types(
             "page": 3.4,
             "deprecated": True,
             "draft": True,
+            "status": [StatusFilterStub.create_json()],
             "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "tags": TagsFilterStub.create_json(),
+            "includeDraft": True,
+            "includeDeprecated": True,
+            "includeUndeployed": True,
             "version": "version_example",
-            "status": [],
             "runtimeVersion": SemanticVersionRangeStub.create_json(),
             "createdBy": "@me",
             "updatedBy": "@me",
@@ -712,8 +805,8 @@ async def test_list_versions_without_types(
             "createdAfter": TimestampSpecStub.create_json(),
             "updatedBefore": TimestampSpecStub.create_json(),
             "updatedAfter": TimestampSpecStub.create_json(),
-            "archiveFormat": [],
-            "runtime": [],
+            "archiveFormat": [ArchiveFormatFilterStub.create_json()],
+            "runtime": [""],
         },
     }
     _list_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
@@ -736,7 +829,7 @@ def _list_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
 @pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
 async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock):
     """Test case for list
-    List Webscripts
+    List
     """
     # set path params
     kwargs = {
@@ -744,16 +837,20 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
         "query": ListQuery(
             limit=3.4,
             page=3.4,
+            show_related=ShowLinkOrEmbeddingStub.create_json(),
             include_draft=True,
             include_deprecated=True,
+            include_undeployed=True,
             deprecated=True,
             draft=True,
-            name_version=[],
+            status=[StatusFilterStub.create_json()],
+            name_version=[
+                "k$>x u&K}qz^sEC(lJ)<,j@0.0.80085076206862933933397565068513910269129173272947860148202650912727550417577019298162864882916633"
+            ],
             show_tags=ShowInlineOrEmbeddingStub.create_json(),
             tags=TagsFilterStub.create_json(),
             wql="wql_example",
             version="version_example",
-            status=[],
             runtime_version=SemanticVersionRangeStub.create_json(),
             created_by="@me",
             updated_by="@me",
@@ -762,15 +859,14 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
             updated_before=TimestampSpecStub.create_json(),
             updated_after=TimestampSpecStub.create_json(),
             name="name_example",
-            archive_format=[],
-            runtime=[],
+            archive_format=[ArchiveFormatFilterStub.create_json()],
+            runtime=[""],
             latest=True,
-            show_related=ShowLinkOrEmbeddingStub.create_json(),
         ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.webscripts.list(**kwargs)
-    check_type(resp, Union[LatestWebscriptsResponseV2,])
+    check_type(resp, LatestWebscriptsResponseV2)
 
 
 @pytest.mark.asyncio
@@ -779,23 +875,27 @@ async def test_list_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for list with models not installed
-    List Webscripts
+    List
     """
     # set path params
     kwargs = {
         "query": {
             "limit": 3.4,
             "page": 3.4,
+            "showRelated": ShowLinkOrEmbeddingStub.create_json(),
             "includeDraft": True,
             "includeDeprecated": True,
+            "includeUndeployed": True,
             "deprecated": True,
             "draft": True,
-            "nameVersion": [],
+            "status": [StatusFilterStub.create_json()],
+            "nameVersion": [
+                "k$>x u&K}qz^sEC(lJ)<,j@0.0.80085076206862933933397565068513910269129173272947860148202650912727550417577019298162864882916633"
+            ],
             "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "tags": TagsFilterStub.create_json(),
             "wql": "wql_example",
             "version": "version_example",
-            "status": [],
             "runtimeVersion": SemanticVersionRangeStub.create_json(),
             "createdBy": "@me",
             "updatedBy": "@me",
@@ -804,14 +904,93 @@ async def test_list_without_types(
             "updatedBefore": TimestampSpecStub.create_json(),
             "updatedAfter": TimestampSpecStub.create_json(),
             "name": "name_example",
-            "archiveFormat": [],
-            "runtime": [],
+            "archiveFormat": [ArchiveFormatFilterStub.create_json()],
+            "runtime": [""],
             "latest": True,
-            "showRelated": ShowLinkOrEmbeddingStub.create_json(),
         },
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.webscripts.list(**kwargs)
+    check_type(resp, Model)
+
+
+def _patch_manifest_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str
+):
+    mock_response = PostWebscriptJobAsyncResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "PATCH",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/webscripts/{name}/versions/{version}/manifest(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 201,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_patch_manifest(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for patch_manifest
+    Patch Manifest
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        # optionally use PatchManifestQuery to validate and reuse parameters
+        "query": PatchManifestQuery(
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
+            scale_to_zero=False,
+            deploy=True,
+            chown=False,
+            comment="comment_example",
+            author="author_example",
+            var_async=True,
+        ),
+        "json": WebscriptManifestPatchStub.create_instance(),
+    }
+    _patch_manifest_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.webscripts.patch_manifest(name, version, **kwargs)
+    check_type(resp, PostWebscriptJobAsyncResponseV2 | PostWebscriptJobSyncResponseV2)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_patch_manifest_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for patch_manifest with models not installed
+    Patch Manifest
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    kwargs = {
+        "query": {
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
+            "scaleToZero": False,
+            "deploy": True,
+            "chown": False,
+            "comment": "comment_example",
+            "author": "author_example",
+            "async": True,
+        },
+        "json": WebscriptManifestPatchStub.create_json(),
+    }
+    _patch_manifest_set_mock_response(
+        httpx_mock, gateway_url, quote(str(name)), quote(str(version))
+    )
+    resp = await service.webscripts.patch_manifest(name, version, **kwargs)
     check_type(resp, Model)
 
 
@@ -836,7 +1015,7 @@ async def test_patch_metadata(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for patch_metadata
-    Patch Webscript Metadata
+    Patch Metadata
     """
     # set path params
     name = "name_example"
@@ -855,7 +1034,7 @@ async def test_patch_metadata(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.patch_metadata(name, version, **kwargs)
-    check_type(resp, Union[GetWebscriptResponseV2,])
+    check_type(resp, GetWebscriptResponseV2)
 
 
 @pytest.mark.asyncio
@@ -864,7 +1043,7 @@ async def test_patch_metadata_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for patch_metadata with models not installed
-    Patch Webscript Metadata
+    Patch Metadata
     """
     # set path params
     name = "name_example"
@@ -906,7 +1085,7 @@ async def test_protect_versions(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for protect_versions
-    Protect Webscript
+    Protect
     """
     # set path params
     name = "name_example"
@@ -923,7 +1102,7 @@ async def test_protect_versions(
     }
     _protect_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.webscripts.protect_versions(name, **kwargs)
-    check_type(resp, Union[ProtectByNameResponseV2,])
+    check_type(resp, ProtectByNameResponseV2)
 
 
 @pytest.mark.asyncio
@@ -932,7 +1111,7 @@ async def test_protect_versions_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for protect_versions with models not installed
-    Protect Webscript
+    Protect
     """
     # set path params
     name = "name_example"
@@ -972,7 +1151,7 @@ async def test_protect(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for protect
-    Protect Webscript Version
+    Protect Version
     """
     # set path params
     name = "name_example"
@@ -993,7 +1172,7 @@ async def test_protect(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.protect(name, version, **kwargs)
-    check_type(resp, Union[GetWebscriptResponseV2,])
+    check_type(resp, GetWebscriptResponseV2)
 
 
 @pytest.mark.asyncio
@@ -1002,7 +1181,7 @@ async def test_protect_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for protect with models not installed
-    Protect Webscript Version
+    Protect Version
     """
     # set path params
     name = "name_example"
@@ -1046,7 +1225,7 @@ async def test_publish(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for publish
-    Publish Draft Webscript
+    Publish Draft
     """
     # set path params
     name = "name_example"
@@ -1056,6 +1235,7 @@ async def test_publish(
     kwargs = {
         # optionally use PublishQuery to validate and reuse parameters
         "query": PublishQuery(
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
             chown=False,
             comment="comment_example",
             author="author_example",
@@ -1067,13 +1247,7 @@ async def test_publish(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.publish(name, version, **kwargs)
-    check_type(
-        resp,
-        Union[
-            PostWebscriptJobSyncResponseV2,
-            PostWebscriptJobAsyncResponseV2,
-        ],
-    )
+    check_type(resp, PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2)
 
 
 @pytest.mark.asyncio
@@ -1082,7 +1256,7 @@ async def test_publish_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for publish with models not installed
-    Publish Draft Webscript
+    Publish Draft
     """
     # set path params
     name = "name_example"
@@ -1091,6 +1265,7 @@ async def test_publish_without_types(
 
     kwargs = {
         "query": {
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "chown": False,
             "comment": "comment_example",
             "author": "author_example",
@@ -1126,7 +1301,7 @@ async def test_rebuild(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for rebuild
-    Rebuild Webscript
+    Rebuild
     """
     # set path params
     name = "name_example"
@@ -1143,6 +1318,7 @@ async def test_rebuild(
             show_tags=ShowInlineOrEmbeddingStub.create_json(),
             upgrade="patch",
             force_version="force_version_example",
+            force_deploy=True,
             ignore_checks=True,
             skip_rebuild=True,
             skip_verify=False,
@@ -1153,13 +1329,7 @@ async def test_rebuild(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.rebuild(name, version, **kwargs)
-    check_type(
-        resp,
-        Union[
-            RebuildWebscriptSyncResponseV2,
-            RebuildWebscriptAsyncResponseV2,
-        ],
-    )
+    check_type(resp, RebuildWebscriptSyncResponseV2 | RebuildWebscriptAsyncResponseV2)
 
 
 @pytest.mark.asyncio
@@ -1168,7 +1338,7 @@ async def test_rebuild_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for rebuild with models not installed
-    Rebuild Webscript
+    Rebuild
     """
     # set path params
     name = "name_example"
@@ -1184,6 +1354,7 @@ async def test_rebuild_without_types(
             "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "upgrade": "patch",
             "forceVersion": "force_version_example",
+            "forceDeploy": True,
             "ignoreChecks": True,
             "skipRebuild": True,
             "skipVerify": False,
@@ -1218,7 +1389,7 @@ async def test_remove_version(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for remove_version
-    Remove Webscript Version
+    Remove Version
     """
     # set path params
     name = "name_example"
@@ -1239,13 +1410,7 @@ async def test_remove_version(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.remove_version(name, version, **kwargs)
-    check_type(
-        resp,
-        Union[
-            UndeployedResponseV2,
-            UndeploySubmittedResponseV2,
-        ],
-    )
+    check_type(resp, UndeployedResponseV2 | UndeploySubmittedResponseV2)
 
 
 @pytest.mark.asyncio
@@ -1254,7 +1419,7 @@ async def test_remove_version_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for remove_version with models not installed
-    Remove Webscript Version
+    Remove Version
     """
     # set path params
     name = "name_example"
@@ -1296,7 +1461,7 @@ async def test_remove_versions(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for remove_versions
-    Remove Webscript
+    Remove
     """
     # set path params
     name = "name_example"
@@ -1313,13 +1478,7 @@ async def test_remove_versions(
     }
     _remove_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.webscripts.remove_versions(name, **kwargs)
-    check_type(
-        resp,
-        Union[
-            UndeployedResponseV2,
-            UndeploySubmittedResponseV2,
-        ],
-    )
+    check_type(resp, UndeployedResponseV2 | UndeploySubmittedResponseV2)
 
 
 @pytest.mark.asyncio
@@ -1328,7 +1487,7 @@ async def test_remove_versions_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for remove_versions with models not installed
-    Remove Webscript
+    Remove
     """
     # set path params
     name = "name_example"
@@ -1344,6 +1503,104 @@ async def test_remove_versions_without_types(
     }
     _remove_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.webscripts.remove_versions(name, **kwargs)
+    check_type(resp, Model)
+
+
+def _update_asset_by_role_set_mock_response(
+    httpx_mock: HTTPXMock, gateway_url: str, name: str, version: str, assetRole: str
+):
+    mock_response = PostWebscriptJobSyncResponseV2Stub.create_json()
+    httpx_mock_kwargs = {
+        "method": "PUT",
+        "url": re.compile(
+            f"^{gateway_url}/registry/v2/webscripts/{name}/versions/{version}/{assetRole}(\\?.*)?"
+        ),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 201,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_update_asset_by_role(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for update_asset_by_role
+    Update Asset By Role
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    assetRole = GetAssetByRoleModelsAssetRoleParameterStub.create_json()
+
+    kwargs = {
+        # optionally use UpdateAssetByRoleQuery to validate and reuse parameters
+        "query": UpdateAssetByRoleQuery(
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
+            scale_to_zero=False,
+            deploy=True,
+            chown=False,
+            comment="comment_example",
+            author="author_example",
+            var_async=True,
+        ),
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
+    }
+    _update_asset_by_role_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(assetRole)),
+    )
+    resp = await service.webscripts.update_asset_by_role(
+        name, version, assetRole, **kwargs
+    )
+    check_type(resp, PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_update_asset_by_role_without_types(
+    service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for update_asset_by_role with models not installed
+    Update Asset By Role
+    """
+    # set path params
+    name = "name_example"
+
+    version = "version_example"
+
+    assetRole = GetAssetByRoleModelsAssetRoleParameterStub.create_json()
+
+    kwargs = {
+        "query": {
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
+            "scaleToZero": False,
+            "deploy": True,
+            "chown": False,
+            "comment": "comment_example",
+            "author": "author_example",
+            "async": True,
+        },
+        "content": b"some_binary_content",
+        "headers": {"content-type": "application/octet-stream"},
+    }
+    _update_asset_by_role_set_mock_response(
+        httpx_mock,
+        gateway_url,
+        quote(str(name)),
+        quote(str(version)),
+        quote(str(assetRole)),
+    )
+    resp = await service.webscripts.update_asset_by_role(
+        name, version, assetRole, **kwargs
+    )
     check_type(resp, Model)
 
 
@@ -1368,7 +1625,7 @@ async def test_update_asset(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for update_asset
-    Update Webscript Asset
+    Update Asset
     """
     # set path params
     name = "name_example"
@@ -1380,6 +1637,7 @@ async def test_update_asset(
     kwargs = {
         # optionally use UpdateAssetQuery to validate and reuse parameters
         "query": UpdateAssetQuery(
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
             scale_to_zero=False,
             deploy=True,
             chown=False,
@@ -1398,13 +1656,7 @@ async def test_update_asset(
         quote(str(wildcard)),
     )
     resp = await service.webscripts.update_asset(name, version, wildcard, **kwargs)
-    check_type(
-        resp,
-        Union[
-            PostWebscriptJobSyncResponseV2,
-            PostWebscriptJobAsyncResponseV2,
-        ],
-    )
+    check_type(resp, PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2)
 
 
 @pytest.mark.asyncio
@@ -1413,7 +1665,7 @@ async def test_update_asset_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for update_asset with models not installed
-    Update Webscript Asset
+    Update Asset
     """
     # set path params
     name = "name_example"
@@ -1424,6 +1676,7 @@ async def test_update_asset_without_types(
 
     kwargs = {
         "query": {
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "scaleToZero": False,
             "deploy": True,
             "chown": False,
@@ -1466,7 +1719,7 @@ async def test_update_assets(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for update_assets
-    Update Webscript Assets
+    Update Assets
     """
     # set path params
     name = "name_example"
@@ -1476,6 +1729,7 @@ async def test_update_assets(
     kwargs = {
         # optionally use UpdateAssetsQuery to validate and reuse parameters
         "query": UpdateAssetsQuery(
+            show_tags=ShowInlineOrEmbeddingStub.create_json(),
             scale_to_zero=False,
             deploy=True,
             chown=False,
@@ -1484,7 +1738,7 @@ async def test_update_assets(
             var_async=True,
         ),
         "content": b"some_binary_content",
-        "headers": {"content-type": "application/octet-stream"},
+        "headers": {"content-type": "application/gzip"},
         "files": {
             "myFile1": b"...first file content...",
             "myFile2": b"...second file content...",
@@ -1494,13 +1748,7 @@ async def test_update_assets(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.update_assets(name, version, **kwargs)
-    check_type(
-        resp,
-        Union[
-            PostWebscriptJobSyncResponseV2,
-            PostWebscriptJobAsyncResponseV2,
-        ],
-    )
+    check_type(resp, PostWebscriptJobSyncResponseV2 | PostWebscriptJobAsyncResponseV2)
 
 
 @pytest.mark.asyncio
@@ -1509,7 +1757,7 @@ async def test_update_assets_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for update_assets with models not installed
-    Update Webscript Assets
+    Update Assets
     """
     # set path params
     name = "name_example"
@@ -1518,6 +1766,7 @@ async def test_update_assets_without_types(
 
     kwargs = {
         "query": {
+            "showTags": ShowInlineOrEmbeddingStub.create_json(),
             "scaleToZero": False,
             "deploy": True,
             "chown": False,
@@ -1530,7 +1779,7 @@ async def test_update_assets_without_types(
             "myFile2": b"...second file content...",
         },
         "content": b"some_binary_content",
-        "headers": {"content-type": "application/octet-stream"},
+        "headers": {"content-type": "application/gzip"},
     }
     _update_assets_set_mock_response(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
@@ -1560,7 +1809,7 @@ async def test_verify(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for verify
-    Verify Health Of Webscript
+    Verify Health
     """
     # set path params
     name = "name_example"
@@ -1579,13 +1828,7 @@ async def test_verify(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.webscripts.verify(name, version, **kwargs)
-    check_type(
-        resp,
-        Union[
-            VerifyWebscriptSyncResponseV2,
-            PostWebscriptJobAsyncResponseV2,
-        ],
-    )
+    check_type(resp, VerifyWebscriptSyncResponseV2 | PostWebscriptJobAsyncResponseV2)
 
 
 @pytest.mark.asyncio
@@ -1594,7 +1837,7 @@ async def test_verify_without_types(
     service: RegistryService, gateway_url: str, httpx_mock: HTTPXMock
 ):
     """Test case for verify with models not installed
-    Verify Health Of Webscript
+    Verify Health
     """
     # set path params
     name = "name_example"

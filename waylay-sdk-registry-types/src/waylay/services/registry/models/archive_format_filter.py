@@ -11,13 +11,9 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    Union,
-)
+from typing import Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.archive_format import ArchiveFormat
 from ..models.archive_format_exclude import ArchiveFormatExclude

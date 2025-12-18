@@ -30,6 +30,9 @@ get_plug_response_v2__links_model_schema = json.loads(
   "title" : "GetPlugResponseV2__links",
   "type" : "object",
   "properties" : {
+    "job" : {
+      "$ref" : "#/components/schemas/JobHALLinks_job"
+    },
     "content" : {
       "$ref" : "#/components/schemas/HALLink"
     },

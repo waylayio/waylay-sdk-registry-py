@@ -56,6 +56,13 @@ function_deploy_overrides_type_model_schema = json.loads(
     },
     "requests" : {
       "$ref" : "#/components/schemas/ResourceLimits"
+    },
+    "secrets" : {
+      "title" : "secrets",
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
     }
   }
 }

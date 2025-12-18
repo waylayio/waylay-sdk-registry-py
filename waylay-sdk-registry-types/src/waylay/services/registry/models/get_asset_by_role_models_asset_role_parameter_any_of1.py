@@ -14,17 +14,10 @@ from __future__ import annotations
 from enum import Enum
 
 
-class StatusInclude(str, Enum):
-    """Inlude a status as a filter.."""
+class GetAssetByRoleModelsAssetRoleParameterAnyOf1(str, Enum):
+    """Main source code that implements the function entrypoint.."""
 
-    REGISTERED = "registered"
-    RUNNING = "running"
-    PENDING = "pending"
-    DEPLOYED = "deployed"
-    UNHEALTHY = "unhealthy"
-    FAILED = "failed"
-    UNDEPLOYING = "undeploying"
-    UNDEPLOYED = "undeployed"
+    MAIN = "main"
 
     def __str__(self) -> str:
         return str(self.value)

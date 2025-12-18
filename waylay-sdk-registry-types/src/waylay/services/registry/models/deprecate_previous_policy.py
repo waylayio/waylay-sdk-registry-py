@@ -11,13 +11,9 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    Union,
-)
+from typing import Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.deprecate_previous_policy_any_of import DeprecatePreviousPolicyAnyOf
 from ..models.deprecate_previous_policy_any_of1 import DeprecatePreviousPolicyAnyOf1

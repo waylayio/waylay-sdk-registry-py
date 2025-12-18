@@ -27,7 +27,7 @@ status_filter_model_schema = json.loads(
     r"""{
   "description" : "Inclusion or exclusion filter on the `status` property.",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/StatusInclude"
+    "$ref" : "#/components/schemas/Status"
   }, {
     "$ref" : "#/components/schemas/StatusExclude"
   }, {

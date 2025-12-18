@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **deployment** | **bool** |  | 
 **assets** | **bool** |  | 
 **registration** | **bool** |  | 
+**image** | **bool** |  | 
 
 ## Example
 

@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **annotations** | **Dict[str, str]** |  | [optional] 
 **limits** | [**ResourceLimits**](ResourceLimits.md) |  | [optional] 
 **requests** | [**ResourceLimits**](ResourceLimits.md) |  | [optional] 
+**secrets** | **List[str]** |  | [optional] 
 
 ## Example
 

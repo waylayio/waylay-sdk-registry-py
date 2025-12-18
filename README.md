@@ -2,7 +2,7 @@
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
 This Python package is automatically generated based on the 
-Waylay Registry OpenAPI specification (API version: 2.17.1)
+Waylay Registry OpenAPI specification (API version: 2.24.1)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/registry.html).
 
 It consists of two sub-packages that are both plugins for the waylay-sdk-core package.
@@ -10,7 +10,7 @@ It consists of two sub-packages that are both plugins for the waylay-sdk-core pa
 - The `waylay-sdk-registry-types` sub-package is an extension that contains the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay-sdk-registry`.
 
 ## Requirements.
-This package requires Python 3.9+.
+This package requires Python 3.10+.
 
 ## Installation
 
@@ -76,25 +76,28 @@ Class | Method | HTTP request | Description
 *ModelTagsApi* | [**remove**](docs/ModelTagsApi.md#remove) | **DELETE** /registry/v2/models/{name}/versions/{version}/tags/{tagName} | Remove Tag
 *ModelTagsApi* | [**replace_all**](docs/ModelTagsApi.md#replace_all) | **PUT** /registry/v2/models/{name}/tags | Replace Tags On Any/All
 *ModelTagsApi* | [**replace**](docs/ModelTagsApi.md#replace) | **PUT** /registry/v2/models/{name}/versions/{version}/tags | Replace Tags
-*ModelsApi* | [**create**](docs/ModelsApi.md#create) | **POST** /registry/v2/models/ | Create Model
-*ModelsApi* | [**delete_asset**](docs/ModelsApi.md#delete_asset) | **DELETE** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Delete Model Asset
-*ModelsApi* | [**get_archive**](docs/ModelsApi.md#get_archive) | **GET** /registry/v2/models/{name}/versions/{version}/content | Get Model Archive
-*ModelsApi* | [**get_asset**](docs/ModelsApi.md#get_asset) | **GET** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Get File From Model Archive
-*ModelsApi* | [**get_latest**](docs/ModelsApi.md#get_latest) | **GET** /registry/v2/models/{name} | Get Latest Model Version
-*ModelsApi* | [**get**](docs/ModelsApi.md#get) | **GET** /registry/v2/models/{name}/versions/{version} | Get Model Version
-*ModelsApi* | [**jobs**](docs/ModelsApi.md#jobs) | **GET** /registry/v2/models/{name}/versions/{version}/jobs | List Model Jobs
-*ModelsApi* | [**list**](docs/ModelsApi.md#list) | **GET** /registry/v2/models/ | List Models
-*ModelsApi* | [**list_versions**](docs/ModelsApi.md#list_versions) | **GET** /registry/v2/models/{name}/versions | List Model Versions
-*ModelsApi* | [**patch_metadata**](docs/ModelsApi.md#patch_metadata) | **PATCH** /registry/v2/models/{name}/versions/{version}/metadata | Patch Model Metadata
-*ModelsApi* | [**protect**](docs/ModelsApi.md#protect) | **POST** /registry/v2/models/{name}/versions/{version}/protect | Protect Model Version
-*ModelsApi* | [**protect_versions**](docs/ModelsApi.md#protect_versions) | **POST** /registry/v2/models/{name}/protect | Protect Model
-*ModelsApi* | [**publish**](docs/ModelsApi.md#publish) | **POST** /registry/v2/models/{name}/versions/{version}/publish | Publish Draft Model
-*ModelsApi* | [**rebuild**](docs/ModelsApi.md#rebuild) | **POST** /registry/v2/models/{name}/versions/{version}/rebuild | Rebuild Model
-*ModelsApi* | [**remove_version**](docs/ModelsApi.md#remove_version) | **DELETE** /registry/v2/models/{name}/versions/{version} | Remove Model Version
-*ModelsApi* | [**remove_versions**](docs/ModelsApi.md#remove_versions) | **DELETE** /registry/v2/models/{name} | Remove Model
-*ModelsApi* | [**update_asset**](docs/ModelsApi.md#update_asset) | **PUT** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Update Model Asset
-*ModelsApi* | [**update_assets**](docs/ModelsApi.md#update_assets) | **PUT** /registry/v2/models/{name}/versions/{version}/content | Update Model Assets
-*ModelsApi* | [**verify**](docs/ModelsApi.md#verify) | **POST** /registry/v2/models/{name}/versions/{version}/verify | Verify Health Of Model
+*ModelsApi* | [**create**](docs/ModelsApi.md#create) | **POST** /registry/v2/models/ | Create Version
+*ModelsApi* | [**delete_asset**](docs/ModelsApi.md#delete_asset) | **DELETE** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Delete Asset
+*ModelsApi* | [**get_archive**](docs/ModelsApi.md#get_archive) | **GET** /registry/v2/models/{name}/versions/{version}/content | Get Archive
+*ModelsApi* | [**get_asset_by_role**](docs/ModelsApi.md#get_asset_by_role) | **GET** /registry/v2/models/{name}/versions/{version}/{assetRole} | Get Asset By Role
+*ModelsApi* | [**get_asset**](docs/ModelsApi.md#get_asset) | **GET** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Get Asset
+*ModelsApi* | [**get_latest**](docs/ModelsApi.md#get_latest) | **GET** /registry/v2/models/{name} | Get Latest
+*ModelsApi* | [**get**](docs/ModelsApi.md#get) | **GET** /registry/v2/models/{name}/versions/{version} | Get Version
+*ModelsApi* | [**jobs**](docs/ModelsApi.md#jobs) | **GET** /registry/v2/models/{name}/versions/{version}/jobs | List Jobs
+*ModelsApi* | [**list**](docs/ModelsApi.md#list) | **GET** /registry/v2/models/ | List
+*ModelsApi* | [**list_versions**](docs/ModelsApi.md#list_versions) | **GET** /registry/v2/models/{name}/versions | List Versions
+*ModelsApi* | [**patch_manifest**](docs/ModelsApi.md#patch_manifest) | **PATCH** /registry/v2/models/{name}/versions/{version}/manifest | Patch Manifest
+*ModelsApi* | [**patch_metadata**](docs/ModelsApi.md#patch_metadata) | **PATCH** /registry/v2/models/{name}/versions/{version}/metadata | Patch Metadata
+*ModelsApi* | [**protect**](docs/ModelsApi.md#protect) | **POST** /registry/v2/models/{name}/versions/{version}/protect | Protect Version
+*ModelsApi* | [**protect_versions**](docs/ModelsApi.md#protect_versions) | **POST** /registry/v2/models/{name}/protect | Protect
+*ModelsApi* | [**publish**](docs/ModelsApi.md#publish) | **POST** /registry/v2/models/{name}/versions/{version}/publish | Publish Draft
+*ModelsApi* | [**rebuild**](docs/ModelsApi.md#rebuild) | **POST** /registry/v2/models/{name}/versions/{version}/rebuild | Rebuild
+*ModelsApi* | [**remove_version**](docs/ModelsApi.md#remove_version) | **DELETE** /registry/v2/models/{name}/versions/{version} | Remove Version
+*ModelsApi* | [**remove_versions**](docs/ModelsApi.md#remove_versions) | **DELETE** /registry/v2/models/{name} | Remove
+*ModelsApi* | [**update_asset_by_role**](docs/ModelsApi.md#update_asset_by_role) | **PUT** /registry/v2/models/{name}/versions/{version}/{assetRole} | Update Asset By Role
+*ModelsApi* | [**update_asset**](docs/ModelsApi.md#update_asset) | **PUT** /registry/v2/models/{name}/versions/{version}/content/{wildcard} | Update Asset
+*ModelsApi* | [**update_assets**](docs/ModelsApi.md#update_assets) | **PUT** /registry/v2/models/{name}/versions/{version}/content | Update Assets
+*ModelsApi* | [**verify**](docs/ModelsApi.md#verify) | **POST** /registry/v2/models/{name}/versions/{version}/verify | Verify Health
 *PlugTagsApi* | [**add_all**](docs/PlugTagsApi.md#add_all) | **PATCH** /registry/v2/plugs/{name}/tags | Add Tags On All
 *PlugTagsApi* | [**add**](docs/PlugTagsApi.md#add) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/tags | Add Tags
 *PlugTagsApi* | [**clear_all**](docs/PlugTagsApi.md#clear_all) | **DELETE** /registry/v2/plugs/{name}/tags | Clear Tags On Any/All
@@ -109,26 +112,29 @@ Class | Method | HTTP request | Description
 *PlugTagsApi* | [**remove**](docs/PlugTagsApi.md#remove) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/tags/{tagName} | Remove Tag
 *PlugTagsApi* | [**replace_all**](docs/PlugTagsApi.md#replace_all) | **PUT** /registry/v2/plugs/{name}/tags | Replace Tags On Any/All
 *PlugTagsApi* | [**replace**](docs/PlugTagsApi.md#replace) | **PUT** /registry/v2/plugs/{name}/versions/{version}/tags | Replace Tags
-*PlugsApi* | [**create**](docs/PlugsApi.md#create) | **POST** /registry/v2/plugs/ | Create Plug
-*PlugsApi* | [**delete_asset**](docs/PlugsApi.md#delete_asset) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Delete Plug Asset
-*PlugsApi* | [**get_archive**](docs/PlugsApi.md#get_archive) | **GET** /registry/v2/plugs/{name}/versions/{version}/content | Get Plug Archive
-*PlugsApi* | [**get_asset**](docs/PlugsApi.md#get_asset) | **GET** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Get File From Plug Archive
-*PlugsApi* | [**get_latest**](docs/PlugsApi.md#get_latest) | **GET** /registry/v2/plugs/{name} | Get Latest Plug Version
-*PlugsApi* | [**get**](docs/PlugsApi.md#get) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Plug Version
-*PlugsApi* | [**jobs**](docs/PlugsApi.md#jobs) | **GET** /registry/v2/plugs/{name}/versions/{version}/jobs | List Plug Jobs
-*PlugsApi* | [**list**](docs/PlugsApi.md#list) | **GET** /registry/v2/plugs/ | List Plugs
-*PlugsApi* | [**list_versions**](docs/PlugsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Plug Versions
-*PlugsApi* | [**patch_interface**](docs/PlugsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Plug Interface
-*PlugsApi* | [**patch_metadata**](docs/PlugsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Plug Metadata
-*PlugsApi* | [**protect**](docs/PlugsApi.md#protect) | **POST** /registry/v2/plugs/{name}/versions/{version}/protect | Protect Plug Version
-*PlugsApi* | [**protect_versions**](docs/PlugsApi.md#protect_versions) | **POST** /registry/v2/plugs/{name}/protect | Protect Plug
-*PlugsApi* | [**publish**](docs/PlugsApi.md#publish) | **POST** /registry/v2/plugs/{name}/versions/{version}/publish | Publish Draft Plug
-*PlugsApi* | [**rebuild**](docs/PlugsApi.md#rebuild) | **POST** /registry/v2/plugs/{name}/versions/{version}/rebuild | Rebuild Plug
-*PlugsApi* | [**remove_version**](docs/PlugsApi.md#remove_version) | **DELETE** /registry/v2/plugs/{name}/versions/{version} | Remove Plug Version
-*PlugsApi* | [**remove_versions**](docs/PlugsApi.md#remove_versions) | **DELETE** /registry/v2/plugs/{name} | Remove Plug
-*PlugsApi* | [**update_asset**](docs/PlugsApi.md#update_asset) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Update Plug Asset
-*PlugsApi* | [**update_assets**](docs/PlugsApi.md#update_assets) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content | Update Plug Assets
-*PlugsApi* | [**verify**](docs/PlugsApi.md#verify) | **POST** /registry/v2/plugs/{name}/versions/{version}/verify | Verify Health Of Plug
+*PlugsApi* | [**create**](docs/PlugsApi.md#create) | **POST** /registry/v2/plugs/ | Create Version
+*PlugsApi* | [**delete_asset**](docs/PlugsApi.md#delete_asset) | **DELETE** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Delete Asset
+*PlugsApi* | [**get_archive**](docs/PlugsApi.md#get_archive) | **GET** /registry/v2/plugs/{name}/versions/{version}/content | Get Archive
+*PlugsApi* | [**get_asset_by_role**](docs/PlugsApi.md#get_asset_by_role) | **GET** /registry/v2/plugs/{name}/versions/{version}/{assetRole} | Get Asset By Role
+*PlugsApi* | [**get_asset**](docs/PlugsApi.md#get_asset) | **GET** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Get Asset
+*PlugsApi* | [**get_latest**](docs/PlugsApi.md#get_latest) | **GET** /registry/v2/plugs/{name} | Get Latest
+*PlugsApi* | [**get**](docs/PlugsApi.md#get) | **GET** /registry/v2/plugs/{name}/versions/{version} | Get Version
+*PlugsApi* | [**jobs**](docs/PlugsApi.md#jobs) | **GET** /registry/v2/plugs/{name}/versions/{version}/jobs | List Jobs
+*PlugsApi* | [**list**](docs/PlugsApi.md#list) | **GET** /registry/v2/plugs/ | List
+*PlugsApi* | [**list_versions**](docs/PlugsApi.md#list_versions) | **GET** /registry/v2/plugs/{name}/versions | List Versions
+*PlugsApi* | [**patch_interface**](docs/PlugsApi.md#patch_interface) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/interface | Patch Interface
+*PlugsApi* | [**patch_manifest**](docs/PlugsApi.md#patch_manifest) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/manifest | Patch Manifest
+*PlugsApi* | [**patch_metadata**](docs/PlugsApi.md#patch_metadata) | **PATCH** /registry/v2/plugs/{name}/versions/{version}/metadata | Patch Metadata
+*PlugsApi* | [**protect**](docs/PlugsApi.md#protect) | **POST** /registry/v2/plugs/{name}/versions/{version}/protect | Protect Version
+*PlugsApi* | [**protect_versions**](docs/PlugsApi.md#protect_versions) | **POST** /registry/v2/plugs/{name}/protect | Protect
+*PlugsApi* | [**publish**](docs/PlugsApi.md#publish) | **POST** /registry/v2/plugs/{name}/versions/{version}/publish | Publish Draft
+*PlugsApi* | [**rebuild**](docs/PlugsApi.md#rebuild) | **POST** /registry/v2/plugs/{name}/versions/{version}/rebuild | Rebuild
+*PlugsApi* | [**remove_version**](docs/PlugsApi.md#remove_version) | **DELETE** /registry/v2/plugs/{name}/versions/{version} | Remove Version
+*PlugsApi* | [**remove_versions**](docs/PlugsApi.md#remove_versions) | **DELETE** /registry/v2/plugs/{name} | Remove
+*PlugsApi* | [**update_asset_by_role**](docs/PlugsApi.md#update_asset_by_role) | **PUT** /registry/v2/plugs/{name}/versions/{version}/{assetRole} | Update Asset By Role
+*PlugsApi* | [**update_asset**](docs/PlugsApi.md#update_asset) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content/{wildcard} | Update Asset
+*PlugsApi* | [**update_assets**](docs/PlugsApi.md#update_assets) | **PUT** /registry/v2/plugs/{name}/versions/{version}/content | Update Assets
+*PlugsApi* | [**verify**](docs/PlugsApi.md#verify) | **POST** /registry/v2/plugs/{name}/versions/{version}/verify | Verify Health
 *RuntimesApi* | [**example_archive**](docs/RuntimesApi.md#example_archive) | **GET** /registry/v2/runtimes/{name}/versions/{version}/example | Get Runtime Example Archive
 *RuntimesApi* | [**get_example_asset**](docs/RuntimesApi.md#get_example_asset) | **GET** /registry/v2/runtimes/{name}/versions/{version}/example/{wildcard} | Get File From Runtime Example Archive
 *RuntimesApi* | [**get_latest**](docs/RuntimesApi.md#get_latest) | **GET** /registry/v2/runtimes/{name} | Get Latest Runtime Version
@@ -156,25 +162,28 @@ Class | Method | HTTP request | Description
 *WebscriptTagsApi* | [**remove**](docs/WebscriptTagsApi.md#remove) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/tags/{tagName} | Remove Tag
 *WebscriptTagsApi* | [**replace_all**](docs/WebscriptTagsApi.md#replace_all) | **PUT** /registry/v2/webscripts/{name}/tags | Replace Tags On Any/All
 *WebscriptTagsApi* | [**replace**](docs/WebscriptTagsApi.md#replace) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/tags | Replace Tags
-*WebscriptsApi* | [**create**](docs/WebscriptsApi.md#create) | **POST** /registry/v2/webscripts/ | Create Webscript Version
-*WebscriptsApi* | [**delete_asset**](docs/WebscriptsApi.md#delete_asset) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Delete Webscript Asset
-*WebscriptsApi* | [**get_archive**](docs/WebscriptsApi.md#get_archive) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content | Get Webscript Archive
-*WebscriptsApi* | [**get_asset**](docs/WebscriptsApi.md#get_asset) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Get File From Webscript Archive
-*WebscriptsApi* | [**get_latest**](docs/WebscriptsApi.md#get_latest) | **GET** /registry/v2/webscripts/{name} | Get Latest Webscript Version
-*WebscriptsApi* | [**get**](docs/WebscriptsApi.md#get) | **GET** /registry/v2/webscripts/{name}/versions/{version} | Get Webscript Version
-*WebscriptsApi* | [**jobs**](docs/WebscriptsApi.md#jobs) | **GET** /registry/v2/webscripts/{name}/versions/{version}/jobs | List Webscript Jobs
-*WebscriptsApi* | [**list_versions**](docs/WebscriptsApi.md#list_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Webscript Versions
-*WebscriptsApi* | [**list**](docs/WebscriptsApi.md#list) | **GET** /registry/v2/webscripts/ | List Webscripts
-*WebscriptsApi* | [**patch_metadata**](docs/WebscriptsApi.md#patch_metadata) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/metadata | Patch Webscript Metadata
-*WebscriptsApi* | [**protect_versions**](docs/WebscriptsApi.md#protect_versions) | **POST** /registry/v2/webscripts/{name}/protect | Protect Webscript
-*WebscriptsApi* | [**protect**](docs/WebscriptsApi.md#protect) | **POST** /registry/v2/webscripts/{name}/versions/{version}/protect | Protect Webscript Version
-*WebscriptsApi* | [**publish**](docs/WebscriptsApi.md#publish) | **POST** /registry/v2/webscripts/{name}/versions/{version}/publish | Publish Draft Webscript
-*WebscriptsApi* | [**rebuild**](docs/WebscriptsApi.md#rebuild) | **POST** /registry/v2/webscripts/{name}/versions/{version}/rebuild | Rebuild Webscript
-*WebscriptsApi* | [**remove_version**](docs/WebscriptsApi.md#remove_version) | **DELETE** /registry/v2/webscripts/{name}/versions/{version} | Remove Webscript Version
-*WebscriptsApi* | [**remove_versions**](docs/WebscriptsApi.md#remove_versions) | **DELETE** /registry/v2/webscripts/{name} | Remove Webscript
-*WebscriptsApi* | [**update_asset**](docs/WebscriptsApi.md#update_asset) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Update Webscript Asset
-*WebscriptsApi* | [**update_assets**](docs/WebscriptsApi.md#update_assets) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content | Update Webscript Assets
-*WebscriptsApi* | [**verify**](docs/WebscriptsApi.md#verify) | **POST** /registry/v2/webscripts/{name}/versions/{version}/verify | Verify Health Of Webscript
+*WebscriptsApi* | [**create**](docs/WebscriptsApi.md#create) | **POST** /registry/v2/webscripts/ | Create Version
+*WebscriptsApi* | [**delete_asset**](docs/WebscriptsApi.md#delete_asset) | **DELETE** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Delete Asset
+*WebscriptsApi* | [**get_archive**](docs/WebscriptsApi.md#get_archive) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content | Get Archive
+*WebscriptsApi* | [**get_asset_by_role**](docs/WebscriptsApi.md#get_asset_by_role) | **GET** /registry/v2/webscripts/{name}/versions/{version}/{assetRole} | Get Asset By Role
+*WebscriptsApi* | [**get_asset**](docs/WebscriptsApi.md#get_asset) | **GET** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Get Asset
+*WebscriptsApi* | [**get_latest**](docs/WebscriptsApi.md#get_latest) | **GET** /registry/v2/webscripts/{name} | Get Latest
+*WebscriptsApi* | [**get**](docs/WebscriptsApi.md#get) | **GET** /registry/v2/webscripts/{name}/versions/{version} | Get Version
+*WebscriptsApi* | [**jobs**](docs/WebscriptsApi.md#jobs) | **GET** /registry/v2/webscripts/{name}/versions/{version}/jobs | List Jobs
+*WebscriptsApi* | [**list_versions**](docs/WebscriptsApi.md#list_versions) | **GET** /registry/v2/webscripts/{name}/versions | List Versions
+*WebscriptsApi* | [**list**](docs/WebscriptsApi.md#list) | **GET** /registry/v2/webscripts/ | List
+*WebscriptsApi* | [**patch_manifest**](docs/WebscriptsApi.md#patch_manifest) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/manifest | Patch Manifest
+*WebscriptsApi* | [**patch_metadata**](docs/WebscriptsApi.md#patch_metadata) | **PATCH** /registry/v2/webscripts/{name}/versions/{version}/metadata | Patch Metadata
+*WebscriptsApi* | [**protect_versions**](docs/WebscriptsApi.md#protect_versions) | **POST** /registry/v2/webscripts/{name}/protect | Protect
+*WebscriptsApi* | [**protect**](docs/WebscriptsApi.md#protect) | **POST** /registry/v2/webscripts/{name}/versions/{version}/protect | Protect Version
+*WebscriptsApi* | [**publish**](docs/WebscriptsApi.md#publish) | **POST** /registry/v2/webscripts/{name}/versions/{version}/publish | Publish Draft
+*WebscriptsApi* | [**rebuild**](docs/WebscriptsApi.md#rebuild) | **POST** /registry/v2/webscripts/{name}/versions/{version}/rebuild | Rebuild
+*WebscriptsApi* | [**remove_version**](docs/WebscriptsApi.md#remove_version) | **DELETE** /registry/v2/webscripts/{name}/versions/{version} | Remove Version
+*WebscriptsApi* | [**remove_versions**](docs/WebscriptsApi.md#remove_versions) | **DELETE** /registry/v2/webscripts/{name} | Remove
+*WebscriptsApi* | [**update_asset_by_role**](docs/WebscriptsApi.md#update_asset_by_role) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/{assetRole} | Update Asset By Role
+*WebscriptsApi* | [**update_asset**](docs/WebscriptsApi.md#update_asset) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content/{wildcard} | Update Asset
+*WebscriptsApi* | [**update_assets**](docs/WebscriptsApi.md#update_assets) | **PUT** /registry/v2/webscripts/{name}/versions/{version}/content | Update Assets
+*WebscriptsApi* | [**verify**](docs/WebscriptsApi.md#verify) | **POST** /registry/v2/webscripts/{name}/versions/{version}/verify | Verify Health
 
 
 ## Documentation For Models
@@ -220,7 +229,7 @@ Class | Method | HTTP request | Description
  - [CompletedEventSSE](docs/CompletedEventSSE.md)
  - [CompletedEventSSEEvent](docs/CompletedEventSSEEvent.md)
  - [ContentValidationListing](docs/ContentValidationListing.md)
- - [CreateWebscriptsCopyParameter](docs/CreateWebscriptsCopyParameter.md)
+ - [CreateModelsCopyParameter](docs/CreateModelsCopyParameter.md)
  - [DelayedEventData](docs/DelayedEventData.md)
  - [DelayedEventSSE](docs/DelayedEventSSE.md)
  - [DelayedEventSSEEvent](docs/DelayedEventSSEEvent.md)
@@ -239,6 +248,7 @@ Class | Method | HTTP request | Description
  - [DeprecatePreviousPolicyAnyOf2](docs/DeprecatePreviousPolicyAnyOf2.md)
  - [DeprecatePreviousPolicyAnyOf3](docs/DeprecatePreviousPolicyAnyOf3.md)
  - [Documentation](docs/Documentation.md)
+ - [DocumentationExample](docs/DocumentationExample.md)
  - [DocumentationProperty](docs/DocumentationProperty.md)
  - [EntityWithLinksIKfservingResponseV2](docs/EntityWithLinksIKfservingResponseV2.md)
  - [EntityWithLinksIPlugResponseV2](docs/EntityWithLinksIPlugResponseV2.md)
@@ -263,6 +273,10 @@ Class | Method | HTTP request | Description
  - [FunctionType](docs/FunctionType.md)
  - [FunctionTypeExclude](docs/FunctionTypeExclude.md)
  - [FunctionTypeFilter](docs/FunctionTypeFilter.md)
+ - [GetAssetByRoleModelsAssetRoleParameter](docs/GetAssetByRoleModelsAssetRoleParameter.md)
+ - [GetAssetByRoleModelsAssetRoleParameterAnyOf](docs/GetAssetByRoleModelsAssetRoleParameterAnyOf.md)
+ - [GetAssetByRoleModelsAssetRoleParameterAnyOf1](docs/GetAssetByRoleModelsAssetRoleParameterAnyOf1.md)
+ - [GetAssetByRoleModelsAssetRoleParameterAnyOf2](docs/GetAssetByRoleModelsAssetRoleParameterAnyOf2.md)
  - [GetModelResponseV2](docs/GetModelResponseV2.md)
  - [GetPlugResponseV2](docs/GetPlugResponseV2.md)
  - [GetPlugResponseV2Embedded](docs/GetPlugResponseV2Embedded.md)
@@ -287,7 +301,9 @@ Class | Method | HTTP request | Description
  - [JobEventSSE](docs/JobEventSSE.md)
  - [JobEventsAndFunctionHALLink](docs/JobEventsAndFunctionHALLink.md)
  - [JobEventsHALLink](docs/JobEventsHALLink.md)
+ - [JobHALLink](docs/JobHALLink.md)
  - [JobHALLinks](docs/JobHALLinks.md)
+ - [JobHALLinksJob](docs/JobHALLinksJob.md)
  - [JobReference](docs/JobReference.md)
  - [JobResponse](docs/JobResponse.md)
  - [JobState](docs/JobState.md)
@@ -322,6 +338,7 @@ Class | Method | HTTP request | Description
  - [JobsForWebscriptResponseV2Links](docs/JobsForWebscriptResponseV2Links.md)
  - [JobsResponse](docs/JobsResponse.md)
  - [KFServingManifest](docs/KFServingManifest.md)
+ - [KFServingManifestPatch](docs/KFServingManifestPatch.md)
  - [KeepAliveEventSSE](docs/KeepAliveEventSSE.md)
  - [KfservingResponseV2](docs/KfservingResponseV2.md)
  - [LanguageRelease](docs/LanguageRelease.md)
@@ -341,6 +358,7 @@ Class | Method | HTTP request | Description
  - [Plug2](docs/Plug2.md)
  - [PlugInterface](docs/PlugInterface.md)
  - [PlugManifest](docs/PlugManifest.md)
+ - [PlugManifestPatch](docs/PlugManifestPatch.md)
  - [PlugMeta](docs/PlugMeta.md)
  - [PlugProperty](docs/PlugProperty.md)
  - [PlugPropertyDataType](docs/PlugPropertyDataType.md)
@@ -396,7 +414,6 @@ Class | Method | HTTP request | Description
  - [StatusAny](docs/StatusAny.md)
  - [StatusExclude](docs/StatusExclude.md)
  - [StatusFilter](docs/StatusFilter.md)
- - [StatusInclude](docs/StatusInclude.md)
  - [StreamClosing](docs/StreamClosing.md)
  - [StreamReady](docs/StreamReady.md)
  - [Tag](docs/Tag.md)
@@ -436,6 +453,7 @@ Class | Method | HTTP request | Description
  - [Webscript1](docs/Webscript1.md)
  - [Webscript2](docs/Webscript2.md)
  - [WebscriptManifest](docs/WebscriptManifest.md)
+ - [WebscriptManifestPatch](docs/WebscriptManifestPatch.md)
  - [WebscriptResponseV2](docs/WebscriptResponseV2.md)
  - [WebscriptResponseWithInvokeLinkV2](docs/WebscriptResponseWithInvokeLinkV2.md)
  - [WebscriptVersionsResponseV2](docs/WebscriptVersionsResponseV2.md)

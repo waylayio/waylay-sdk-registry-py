@@ -26,7 +26,7 @@ except ImportError as exc:
 undeploy_result_model_schema = json.loads(
     r"""{
   "title" : "UndeployResult",
-  "required" : [ "assets", "deployment", "registration" ],
+  "required" : [ "assets", "deployment", "image", "registration" ],
   "type" : "object",
   "properties" : {
     "deployment" : {
@@ -39,6 +39,10 @@ undeploy_result_model_schema = json.loads(
     },
     "registration" : {
       "title" : "registration",
+      "type" : "boolean"
+    },
+    "image" : {
+      "title" : "image",
       "type" : "boolean"
     }
   },

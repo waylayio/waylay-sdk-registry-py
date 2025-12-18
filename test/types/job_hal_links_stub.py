@@ -32,7 +32,7 @@ job_hal_links_model_schema = json.loads(
       "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     }
   },
   "description" : "HAL links to related actions."

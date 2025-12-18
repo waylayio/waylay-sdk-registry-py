@@ -20,7 +20,6 @@ from pydantic import (
     StrictBool,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.alt_embedded_version_i_plug_response_v2 import (
@@ -66,6 +65,10 @@ class EntityWithLinksIPlugResponseV2(WaylayBaseModel):
     )
     draft: StrictBool = Field(
         description="If <code>true</code> this function is a draft function and it's assets are still mutable."
+    )
+    revision: StrictStr | None = Field(
+        default=None,
+        description="The revision of the function. This will be <code>undefined</code> when the plug is not a draft.",
     )
     plug: PlugManifest
 

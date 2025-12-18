@@ -6,6 +6,7 @@ HAL links to related jobs and plugs
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**job** | [**JobHALLinksJob**](JobHALLinksJob.md) |  | [optional] 
 **content** | [**HALLink**](HALLink.md) |  | [optional] 
 **draft** | [**AltVersionHALLinkDraft**](AltVersionHALLinkDraft.md) |  | [optional] 
 **published** | [**AltVersionHALLinkPublished**](AltVersionHALLinkPublished.md) |  | [optional] 

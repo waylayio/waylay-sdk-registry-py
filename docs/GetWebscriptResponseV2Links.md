@@ -6,9 +6,12 @@ HAL links to related actions.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**job** | [**JobHALLinksJob**](JobHALLinksJob.md) |  | [optional] 
 **content** | [**HALLink**](HALLink.md) |  | [optional] 
-**invoke** | [**HALLink**](HALLink.md) |  | [optional] 
+**draft** | [**AltVersionHALLinkDraft**](AltVersionHALLinkDraft.md) |  | [optional] 
+**published** | [**AltVersionHALLinkPublished**](AltVersionHALLinkPublished.md) |  | [optional] 
 **jobs** | [**HALLink**](HALLink.md) |  | [optional] 
+**invoke** | [**HALLink**](HALLink.md) |  | [optional] 
 
 ## Example
 

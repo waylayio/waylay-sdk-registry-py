@@ -1,6 +1,6 @@
-# StatusInclude
+# GetAssetByRoleModelsAssetRoleParameterAnyOf
 
-Inlude a status as a filter.
+Metadata specification of the function for the waylay platform.
 
 ## Properties
 

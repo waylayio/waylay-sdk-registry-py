@@ -14,16 +14,16 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.hal_links import HALLinks
+from ..models.job_hal_links_job import JobHALLinksJob
 
 
 class Webscript2(WaylayBaseModel):
     """Webscript2."""
 
-    job: HALLinks | None = None
+    job: JobHALLinksJob | None = None
     webscript: HALLinks
 
     model_config = ConfigDict(

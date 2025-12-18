@@ -19,7 +19,6 @@ from pydantic import (
     Field,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.request_operation import RequestOperation

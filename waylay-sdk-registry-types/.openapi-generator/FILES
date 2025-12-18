@@ -42,7 +42,7 @@ src/waylay/services/registry/models/completed_event_data.py
 src/waylay/services/registry/models/completed_event_sse.py
 src/waylay/services/registry/models/completed_event_sse_event.py
 src/waylay/services/registry/models/content_validation_listing.py
-src/waylay/services/registry/models/create_webscripts_copy_parameter.py
+src/waylay/services/registry/models/create_models_copy_parameter.py
 src/waylay/services/registry/models/delayed_event_data.py
 src/waylay/services/registry/models/delayed_event_sse.py
 src/waylay/services/registry/models/delayed_event_sse_event.py
@@ -61,6 +61,7 @@ src/waylay/services/registry/models/deprecate_previous_policy_any_of1.py
 src/waylay/services/registry/models/deprecate_previous_policy_any_of2.py
 src/waylay/services/registry/models/deprecate_previous_policy_any_of3.py
 src/waylay/services/registry/models/documentation.py
+src/waylay/services/registry/models/documentation_example.py
 src/waylay/services/registry/models/documentation_property.py
 src/waylay/services/registry/models/entity_with_links_i_kfserving_response_v2.py
 src/waylay/services/registry/models/entity_with_links_i_plug_response_v2.py
@@ -85,6 +86,10 @@ src/waylay/services/registry/models/function_tags_response.py
 src/waylay/services/registry/models/function_type.py
 src/waylay/services/registry/models/function_type_exclude.py
 src/waylay/services/registry/models/function_type_filter.py
+src/waylay/services/registry/models/get_asset_by_role_models_asset_role_parameter.py
+src/waylay/services/registry/models/get_asset_by_role_models_asset_role_parameter_any_of.py
+src/waylay/services/registry/models/get_asset_by_role_models_asset_role_parameter_any_of1.py
+src/waylay/services/registry/models/get_asset_by_role_models_asset_role_parameter_any_of2.py
 src/waylay/services/registry/models/get_model_response_v2.py
 src/waylay/services/registry/models/get_plug_response_v2.py
 src/waylay/services/registry/models/get_plug_response_v2_embedded.py
@@ -109,7 +114,9 @@ src/waylay/services/registry/models/job_event_response_waiting_event_data.py
 src/waylay/services/registry/models/job_event_sse.py
 src/waylay/services/registry/models/job_events_and_function_hal_link.py
 src/waylay/services/registry/models/job_events_hal_link.py
+src/waylay/services/registry/models/job_hal_link.py
 src/waylay/services/registry/models/job_hal_links.py
+src/waylay/services/registry/models/job_hal_links_job.py
 src/waylay/services/registry/models/job_reference.py
 src/waylay/services/registry/models/job_response.py
 src/waylay/services/registry/models/job_state.py
@@ -145,6 +152,7 @@ src/waylay/services/registry/models/jobs_for_webscript_response_v2_links.py
 src/waylay/services/registry/models/jobs_response.py
 src/waylay/services/registry/models/keep_alive_event_sse.py
 src/waylay/services/registry/models/kf_serving_manifest.py
+src/waylay/services/registry/models/kf_serving_manifest_patch.py
 src/waylay/services/registry/models/kfserving_response_v2.py
 src/waylay/services/registry/models/language_release.py
 src/waylay/services/registry/models/latest_models_response_v2.py
@@ -164,6 +172,7 @@ src/waylay/services/registry/models/plug1.py
 src/waylay/services/registry/models/plug2.py
 src/waylay/services/registry/models/plug_interface.py
 src/waylay/services/registry/models/plug_manifest.py
+src/waylay/services/registry/models/plug_manifest_patch.py
 src/waylay/services/registry/models/plug_meta.py
 src/waylay/services/registry/models/plug_property.py
 src/waylay/services/registry/models/plug_property_data_type.py
@@ -220,7 +229,6 @@ src/waylay/services/registry/models/status.py
 src/waylay/services/registry/models/status_any.py
 src/waylay/services/registry/models/status_exclude.py
 src/waylay/services/registry/models/status_filter.py
-src/waylay/services/registry/models/status_include.py
 src/waylay/services/registry/models/stream_closing.py
 src/waylay/services/registry/models/stream_ready.py
 src/waylay/services/registry/models/tag.py
@@ -260,6 +268,7 @@ src/waylay/services/registry/models/webscript.py
 src/waylay/services/registry/models/webscript1.py
 src/waylay/services/registry/models/webscript2.py
 src/waylay/services/registry/models/webscript_manifest.py
+src/waylay/services/registry/models/webscript_manifest_patch.py
 src/waylay/services/registry/models/webscript_response_v2.py
 src/waylay/services/registry/models/webscript_response_with_invoke_link_v2.py
 src/waylay/services/registry/models/webscript_versions_response_v2.py

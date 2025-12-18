@@ -27,6 +27,7 @@ except ImportError as exc:
 
 plug_property_format_type_model_schema = json.loads(
     r"""{
+  "title" : "PlugPropertyFormatType",
   "type" : "string",
   "description" : "Value domain for a plug input or output property.",
   "enum" : [ "enum", "resource", "vault", "duration", "code", "url", "date", "template", "aiPluginDescriptor", "aiTemplateDescriptor" ]

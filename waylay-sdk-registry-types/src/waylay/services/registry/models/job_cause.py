@@ -11,13 +11,14 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
+from typing import Any
+
 from pydantic import (
     ConfigDict,
     Field,
     StrictBool,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
@@ -34,12 +35,12 @@ class JobCause(WaylayBaseModel):
         default=None,
         description="If <code>true</code>, recent failures of the job prevented the re-execution. Use <code>forceVersion</code> or <code>upgrade</code> parameter to force a rebuild.",
     )
-    new_value: StrictStr | None = Field(
+    new_value: Any | None = Field(
         default=None,
         description="The new configuration value that causes the change.",
         alias="newValue",
     )
-    old_value: StrictStr | None = Field(
+    old_value: Any | None = Field(
         default=None,
         description="The old configuration value used by the last succeeded job.",
         alias="oldValue",

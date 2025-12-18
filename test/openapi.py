@@ -533,29 +533,23 @@ MODEL_DEFINITIONS.update({"AssetsConditions": _assets_conditions_model_schema})
 _batch_model_schema = json.loads(
     r"""{
   "title" : "Batch",
-  "required" : [ "_links", "createdAt", "createdBy", "id", "operation", "state", "type" ],
+  "required" : [ "createdAt", "createdBy", "id", "operation", "state", "type" ],
   "type" : "object",
   "properties" : {
-    "type" : {
-      "$ref" : "#/components/schemas/BatchJobStatus_type"
-    },
     "operation" : {
       "title" : "operation",
       "type" : "string",
-      "description" : "The operation name for the background task."
+      "description" : "The type of operation that was executed."
     },
-    "id" : {
-      "title" : "id",
+    "createdBy" : {
+      "title" : "createdBy",
       "type" : "string",
-      "description" : "The id of the background job, or the constant `_unknown_`"
-    },
-    "state" : {
-      "$ref" : "#/components/schemas/JobStateResult"
+      "description" : "The user identity that was used to execute the job."
     },
     "createdAt" : {
       "title" : "createdAt",
       "type" : "string",
-      "description" : "The creation time of this job",
+      "description" : "The timestamp of when the job was created.",
       "format" : "date-time"
     },
     "processedAt" : {
@@ -566,19 +560,23 @@ _batch_model_schema = json.loads(
     },
     "finishedAt" : {
       "title" : "finishedAt",
-      "type" : "string",
-      "description" : "The timestamp of when the job has finished processing.",
-      "format" : "date-time"
+      "description" : "The timestamp of when the job has finished processing."
     },
     "attemptsMade" : {
       "title" : "attemptsMade",
       "type" : "number",
       "description" : "The number of retries that were attempted."
     },
-    "createdBy" : {
-      "title" : "createdBy",
+    "type" : {
+      "$ref" : "#/components/schemas/BatchJobStatus_type"
+    },
+    "id" : {
+      "title" : "id",
       "type" : "string",
-      "description" : "The user that initiated this job"
+      "description" : "The id of the background job, or the constant `_unknown_`"
+    },
+    "state" : {
+      "$ref" : "#/components/schemas/JobStateResult"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -622,6 +620,31 @@ _batch_job_status_model_schema = json.loads(
   "required" : [ "createdAt", "createdBy", "job", "operation", "request", "state", "type" ],
   "type" : "object",
   "properties" : {
+    "operation" : {
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/BatchJobStatus_type"
     },
@@ -633,19 +656,6 @@ _batch_job_status_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/BatchResult"
-    },
-    "createdAt" : {
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -697,6 +707,37 @@ _build_model_schema = json.loads(
     "_links" : {
       "$ref" : "#/components/schemas/JobHALLinks"
     },
+    "operation" : {
+      "title" : "operation",
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "title" : "createdBy",
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "title" : "createdAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Build_type"
     },
@@ -708,22 +749,6 @@ _build_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/BuildResult"
-    },
-    "createdAt" : {
-      "title" : "createdAt",
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "title" : "createdBy",
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "title" : "operation",
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -744,29 +769,23 @@ MODEL_DEFINITIONS.update({"Build": _build_model_schema})
 _build_1_model_schema = json.loads(
     r"""{
   "title" : "Build",
-  "required" : [ "_links", "createdAt", "createdBy", "id", "operation", "state", "type" ],
+  "required" : [ "createdAt", "createdBy", "id", "operation", "state", "type" ],
   "type" : "object",
   "properties" : {
-    "type" : {
-      "$ref" : "#/components/schemas/Build_type"
-    },
     "operation" : {
       "title" : "operation",
       "type" : "string",
-      "description" : "The operation name for the background task."
+      "description" : "The type of operation that was executed."
     },
-    "id" : {
-      "title" : "id",
+    "createdBy" : {
+      "title" : "createdBy",
       "type" : "string",
-      "description" : "The id of the background job, or the constant `_unknown_`"
-    },
-    "state" : {
-      "$ref" : "#/components/schemas/JobStateResult"
+      "description" : "The user identity that was used to execute the job."
     },
     "createdAt" : {
       "title" : "createdAt",
       "type" : "string",
-      "description" : "The creation time of this job",
+      "description" : "The timestamp of when the job was created.",
       "format" : "date-time"
     },
     "processedAt" : {
@@ -777,19 +796,23 @@ _build_1_model_schema = json.loads(
     },
     "finishedAt" : {
       "title" : "finishedAt",
-      "type" : "string",
-      "description" : "The timestamp of when the job has finished processing.",
-      "format" : "date-time"
+      "description" : "The timestamp of when the job has finished processing."
     },
     "attemptsMade" : {
       "title" : "attemptsMade",
       "type" : "number",
       "description" : "The number of retries that were attempted."
     },
-    "createdBy" : {
-      "title" : "createdBy",
+    "type" : {
+      "$ref" : "#/components/schemas/Build_type"
+    },
+    "id" : {
+      "title" : "id",
       "type" : "string",
-      "description" : "The user that initiated this job"
+      "description" : "The id of the background job, or the constant `_unknown_`"
+    },
+    "state" : {
+      "$ref" : "#/components/schemas/JobStateResult"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -810,6 +833,16 @@ _build_args_model_schema = json.loads(
   "required" : [ "args", "imageName", "revision", "runtimeName", "runtimeVersion", "storageLocation" ],
   "type" : "object",
   "properties" : {
+    "storageLocation" : {
+      "title" : "storageLocation",
+      "type" : "string",
+      "description" : "Location of the function assets."
+    },
+    "imageName" : {
+      "title" : "imageName",
+      "type" : "string",
+      "description" : "The container image name for the target function."
+    },
     "runtimeName" : {
       "$ref" : "#/components/schemas/Runtime"
     },
@@ -820,16 +853,6 @@ _build_args_model_schema = json.loads(
       "title" : "revision",
       "type" : "string",
       "description" : "The revision hash of the current (draft) function revision"
-    },
-    "storageLocation" : {
-      "title" : "storageLocation",
-      "type" : "string",
-      "description" : "Location of the function assets."
-    },
-    "imageName" : {
-      "title" : "imageName",
-      "type" : "string",
-      "description" : "Provided (or defaulted) image name to publish the function image."
     },
     "args" : {
       "title" : "args",
@@ -852,6 +875,31 @@ _build_job_status_model_schema = json.loads(
   "required" : [ "createdAt", "createdBy", "job", "operation", "request", "state", "type" ],
   "type" : "object",
   "properties" : {
+    "operation" : {
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Build_type"
     },
@@ -863,19 +911,6 @@ _build_job_status_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/BuildResult"
-    },
-    "createdAt" : {
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -1127,7 +1162,7 @@ MODEL_DEFINITIONS.update({
     "ContentValidationListing": _content_validation_listing_model_schema
 })
 
-_create_webscripts_copy_parameter_model_schema = json.loads(
+_create_models_copy_parameter_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
     "$ref" : "#/components/schemas/NamedVersionRange"
@@ -1139,7 +1174,7 @@ _create_webscripts_copy_parameter_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "create_webscripts_copy_parameter": _create_webscripts_copy_parameter_model_schema
+    "create_models_copy_parameter": _create_models_copy_parameter_model_schema
 })
 
 _delayed_event_data_model_schema = json.loads(
@@ -1201,6 +1236,37 @@ _deploy_model_schema = json.loads(
     "_links" : {
       "$ref" : "#/components/schemas/JobHALLinks"
     },
+    "operation" : {
+      "title" : "operation",
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "title" : "createdBy",
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "title" : "createdAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Deploy_type"
     },
@@ -1212,22 +1278,6 @@ _deploy_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/DeployResult"
-    },
-    "createdAt" : {
-      "title" : "createdAt",
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "title" : "createdBy",
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "title" : "operation",
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -1248,29 +1298,23 @@ MODEL_DEFINITIONS.update({"Deploy": _deploy_model_schema})
 _deploy_1_model_schema = json.loads(
     r"""{
   "title" : "Deploy",
-  "required" : [ "_links", "createdAt", "createdBy", "id", "operation", "state", "type" ],
+  "required" : [ "createdAt", "createdBy", "id", "operation", "state", "type" ],
   "type" : "object",
   "properties" : {
-    "type" : {
-      "$ref" : "#/components/schemas/Deploy_type"
-    },
     "operation" : {
       "title" : "operation",
       "type" : "string",
-      "description" : "The operation name for the background task."
+      "description" : "The type of operation that was executed."
     },
-    "id" : {
-      "title" : "id",
+    "createdBy" : {
+      "title" : "createdBy",
       "type" : "string",
-      "description" : "The id of the background job, or the constant `_unknown_`"
-    },
-    "state" : {
-      "$ref" : "#/components/schemas/JobStateResult"
+      "description" : "The user identity that was used to execute the job."
     },
     "createdAt" : {
       "title" : "createdAt",
       "type" : "string",
-      "description" : "The creation time of this job",
+      "description" : "The timestamp of when the job was created.",
       "format" : "date-time"
     },
     "processedAt" : {
@@ -1281,19 +1325,23 @@ _deploy_1_model_schema = json.loads(
     },
     "finishedAt" : {
       "title" : "finishedAt",
-      "type" : "string",
-      "description" : "The timestamp of when the job has finished processing.",
-      "format" : "date-time"
+      "description" : "The timestamp of when the job has finished processing."
     },
     "attemptsMade" : {
       "title" : "attemptsMade",
       "type" : "number",
       "description" : "The number of retries that were attempted."
     },
-    "createdBy" : {
-      "title" : "createdBy",
+    "type" : {
+      "$ref" : "#/components/schemas/Deploy_type"
+    },
+    "id" : {
+      "title" : "id",
       "type" : "string",
-      "description" : "The user that initiated this job"
+      "description" : "The id of the background job, or the constant `_unknown_`"
+    },
+    "state" : {
+      "$ref" : "#/components/schemas/JobStateResult"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -1436,6 +1484,31 @@ _deploy_job_status_model_schema = json.loads(
   "required" : [ "createdAt", "createdBy", "job", "operation", "request", "state", "type" ],
   "type" : "object",
   "properties" : {
+    "operation" : {
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Deploy_type"
     },
@@ -1447,19 +1520,6 @@ _deploy_job_status_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/DeployResult"
-    },
-    "createdAt" : {
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -1671,12 +1731,15 @@ MODEL_DEFINITIONS.update({
 
 _documentation_model_schema = json.loads(
     r"""{
+  "title" : "Documentation",
   "type" : "object",
   "properties" : {
     "description" : {
+      "title" : "description",
       "type" : "string"
     },
     "states" : {
+      "title" : "states",
       "type" : "array",
       "description" : "Documentation of the plug states.",
       "items" : {
@@ -1684,6 +1747,7 @@ _documentation_model_schema = json.loads(
       }
     },
     "input" : {
+      "title" : "input",
       "type" : "array",
       "description" : "Documentation of the plug input parameters.",
       "items" : {
@@ -1691,10 +1755,19 @@ _documentation_model_schema = json.loads(
       }
     },
     "output" : {
+      "title" : "output",
       "type" : "array",
       "description" : "Documentation of the plug response parameters.",
       "items" : {
         "$ref" : "#/components/schemas/DocumentationProperty"
+      }
+    },
+    "examples" : {
+      "title" : "examples",
+      "type" : "array",
+      "description" : "Example scenarios for testing the plug.",
+      "items" : {
+        "$ref" : "#/components/schemas/DocumentationExample"
       }
     }
   }
@@ -1704,18 +1777,60 @@ _documentation_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"Documentation": _documentation_model_schema})
 
+_documentation_example_model_schema = json.loads(
+    r"""{
+  "title" : "DocumentationExample",
+  "required" : [ "description" ],
+  "type" : "object",
+  "properties" : {
+    "description" : {
+      "title" : "description",
+      "type" : "string",
+      "description" : "Description of the example scenario."
+    },
+    "input" : {
+      "title" : "input",
+      "type" : "object",
+      "description" : "Example input values."
+    },
+    "output" : {
+      "title" : "output",
+      "type" : "object",
+      "description" : "Example output values."
+    },
+    "state" : {
+      "title" : "state",
+      "type" : "string",
+      "description" : "Example state value."
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"DocumentationExample": _documentation_example_model_schema})
+
 _documentation_property_model_schema = json.loads(
     r"""{
+  "title" : "DocumentationProperty",
   "required" : [ "description", "name" ],
   "type" : "object",
   "properties" : {
     "name" : {
+      "title" : "name",
       "type" : "string",
       "description" : "Name of the documented property."
     },
     "description" : {
+      "title" : "description",
       "type" : "string",
       "description" : "Documentation of the property."
+    },
+    "examples" : {
+      "title" : "examples",
+      "type" : "array",
+      "description" : "Example values for the property.",
+      "items" : { }
     }
   }
 }
@@ -1786,6 +1901,11 @@ _entity_with_links_i_kfserving_response_v2__model_schema = json.loads(
       "title" : "draft",
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "revision" : {
+      "title" : "revision",
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
     },
     "model" : {
       "$ref" : "#/components/schemas/KFServingManifest"
@@ -1860,6 +1980,11 @@ _entity_with_links_i_plug_response_v2__model_schema = json.loads(
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
     },
+    "revision" : {
+      "title" : "revision",
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
+    },
     "plug" : {
       "$ref" : "#/components/schemas/PlugManifest"
     }
@@ -1932,6 +2057,11 @@ _entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema = json
       "title" : "draft",
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "revision" : {
+      "title" : "revision",
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
     },
     "webscript" : {
       "$ref" : "#/components/schemas/WebscriptManifest"
@@ -2210,6 +2340,13 @@ _function_deploy_overrides_type_model_schema = json.loads(
     },
     "requests" : {
       "$ref" : "#/components/schemas/ResourceLimits"
+    },
+    "secrets" : {
+      "title" : "secrets",
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
     }
   }
 }
@@ -2351,6 +2488,62 @@ _function_type_filter_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"FunctionTypeFilter": _function_type_filter_model_schema})
 
+_get_asset_by_role_models_asset_role_parameter_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/getAssetByRole_models_assetRole_parameter_anyOf"
+  }, {
+    "$ref" : "#/components/schemas/getAssetByRole_models_assetRole_parameter_anyOf_1"
+  }, {
+    "$ref" : "#/components/schemas/getAssetByRole_models_assetRole_parameter_anyOf_2"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "getAssetByRole_models_assetRole_parameter": _get_asset_by_role_models_asset_role_parameter_model_schema
+})
+
+_get_asset_by_role_models_asset_role_parameter_any_of_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification of the function for the waylay platform.",
+  "enum" : [ "manifest" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "getAssetByRole_models_assetRole_parameter_anyOf": _get_asset_by_role_models_asset_role_parameter_any_of_model_schema
+})
+
+_get_asset_by_role_models_asset_role_parameter_any_of_1_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Main source code that implements the function entrypoint.",
+  "enum" : [ "main" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "getAssetByRole_models_assetRole_parameter_anyOf_1": _get_asset_by_role_models_asset_role_parameter_any_of_1_model_schema
+})
+
+_get_asset_by_role_models_asset_role_parameter_any_of_2_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification for the language runtime. E.g. to specify dependencies.",
+  "enum" : [ "project" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "getAssetByRole_models_assetRole_parameter_anyOf_2": _get_asset_by_role_models_asset_role_parameter_any_of_2_model_schema
+})
+
 _get_model_response_v2_model_schema = json.loads(
     r"""{
   "required" : [ "_links", "entity" ],
@@ -2423,6 +2616,9 @@ _get_plug_response_v2__links_model_schema = json.loads(
   "title" : "GetPlugResponseV2__links",
   "type" : "object",
   "properties" : {
+    "job" : {
+      "$ref" : "#/components/schemas/JobHALLinks_job"
+    },
     "content" : {
       "$ref" : "#/components/schemas/HALLink"
     },
@@ -2474,13 +2670,22 @@ _get_webscript_response_v2__links_model_schema = json.loads(
   "title" : "GetWebscriptResponseV2__links",
   "type" : "object",
   "properties" : {
+    "job" : {
+      "$ref" : "#/components/schemas/JobHALLinks_job"
+    },
     "content" : {
       "$ref" : "#/components/schemas/HALLink"
     },
-    "invoke" : {
-      "$ref" : "#/components/schemas/HALLink"
+    "draft" : {
+      "$ref" : "#/components/schemas/AltVersionHALLink_draft"
+    },
+    "published" : {
+      "$ref" : "#/components/schemas/AltVersionHALLink_published"
     },
     "jobs" : {
+      "$ref" : "#/components/schemas/HALLink"
+    },
+    "invoke" : {
       "$ref" : "#/components/schemas/HALLink"
     }
   },
@@ -2649,12 +2854,10 @@ _job_cause_model_schema = json.loads(
     },
     "newValue" : {
       "title" : "newValue",
-      "type" : "string",
       "description" : "The new configuration value that causes the change."
     },
     "oldValue" : {
       "title" : "oldValue",
-      "type" : "string",
       "description" : "The old configuration value used by the last succeeded job."
     }
   },
@@ -2954,6 +3157,24 @@ _job_events_hal_link_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"JobEventsHALLink": _job_events_hal_link_model_schema})
 
+_job_hal_link_model_schema = json.loads(
+    r"""{
+  "required" : [ "href", "jobType" ],
+  "type" : "object",
+  "properties" : {
+    "href" : {
+      "$ref" : "#/components/schemas/HALLink_href"
+    },
+    "jobType" : {
+      "$ref" : "#/components/schemas/JobType"
+    }
+  }
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"JobHALLink": _job_hal_link_model_schema})
+
 _job_hal_links_model_schema = json.loads(
     r"""{
   "title" : "JobHALLinks",
@@ -2963,7 +3184,7 @@ _job_hal_links_model_schema = json.loads(
       "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     }
   },
   "description" : "HAL links to related actions."
@@ -2972,6 +3193,28 @@ _job_hal_links_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"JobHALLinks": _job_hal_links_model_schema})
+
+_job_hal_links_job_model_schema = json.loads(
+    r"""{
+  "title" : "JobHALLinks_job",
+  "description" : "Link to the job status page for the related entity.",
+  "example" : {
+    "href" : "https://api.waylay.io/registry/v2/jobs/undeploy/6ccc8843-d78d-49e8-84c4-3734a4af9929$IfM2FyNLQ8CEjQGA9w7Ht",
+    "jobType" : "undeploy"
+  },
+  "anyOf" : [ {
+    "type" : "array",
+    "items" : {
+      "$ref" : "#/components/schemas/JobHALLink"
+    }
+  }, {
+    "$ref" : "#/components/schemas/JobHALLink"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"JobHALLinks_job": _job_hal_links_job_model_schema})
 
 _job_reference_model_schema = json.loads(
     r"""{
@@ -3237,7 +3480,7 @@ _job_status_hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     }
   },
   "description" : "HAL links to related actions."
@@ -3589,6 +3832,33 @@ _kf_serving_manifest_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"KFServingManifest": _kf_serving_manifest_model_schema})
 
+_kf_serving_manifest_patch_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "runtimeVersion" : {
+      "$ref" : "#/components/schemas/SemanticVersionRange"
+    },
+    "metadata" : {
+      "$ref" : "#/components/schemas/FunctionMeta"
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/Runtime"
+    },
+    "deploy" : {
+      "$ref" : "#/components/schemas/FunctionDeployOverridesType"
+    }
+  },
+  "additionalProperties" : false,
+  "description" : "Patch attributes to merge into an existing model manifest."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "KFServingManifestPatch": _kf_serving_manifest_patch_model_schema
+})
+
 _keep_alive_event_sse_model_schema = json.loads(
     r"""{
   "required" : [ "event" ],
@@ -3655,6 +3925,10 @@ _kfserving_response_v2_model_schema = json.loads(
     "draft" : {
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "revision" : {
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
     },
     "model" : {
       "$ref" : "#/components/schemas/KFServingManifest"
@@ -3868,7 +4142,7 @@ _model_1_model_schema = json.loads(
       "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "model" : {
       "$ref" : "#/components/schemas/HALLinks"
@@ -3887,7 +4161,7 @@ _model_2_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "model" : {
       "$ref" : "#/components/schemas/HALLinks"
@@ -3999,7 +4273,7 @@ _plug_1_model_schema = json.loads(
       "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "plug" : {
       "$ref" : "#/components/schemas/HALLinks"
@@ -4018,7 +4292,7 @@ _plug_2_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "plug" : {
       "$ref" : "#/components/schemas/HALLinks"
@@ -4118,6 +4392,37 @@ _plug_manifest_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"PlugManifest": _plug_manifest_model_schema})
 
+_plug_manifest_patch_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "type" : {
+      "$ref" : "#/components/schemas/PlugType"
+    },
+    "interface" : {
+      "$ref" : "#/components/schemas/PlugInterface"
+    },
+    "metadata" : {
+      "$ref" : "#/components/schemas/PlugMeta"
+    },
+    "runtimeVersion" : {
+      "$ref" : "#/components/schemas/SemanticVersionRange"
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/Runtime"
+    },
+    "deploy" : {
+      "$ref" : "#/components/schemas/FunctionDeployOverridesType"
+    }
+  },
+  "additionalProperties" : false,
+  "description" : "Patch attributes to merge into an existing plug manifest."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"PlugManifestPatch": _plug_manifest_patch_model_schema})
+
 _plug_meta_model_schema = json.loads(
     r"""{
   "title" : "PlugMeta",
@@ -4213,6 +4518,7 @@ MODEL_DEFINITIONS.update({"PlugProperty": _plug_property_model_schema})
 
 _plug_property_data_type_model_schema = json.loads(
     r"""{
+  "title" : "PlugPropertyDataType",
   "type" : "string",
   "description" : "Datatype supported in plug input or output properties.",
   "enum" : [ "string", "integer", "long", "float", "double", "boolean", "object", "array" ]
@@ -4251,6 +4557,7 @@ MODEL_DEFINITIONS.update({"PlugPropertyFormat": _plug_property_format_model_sche
 
 _plug_property_format_type_model_schema = json.loads(
     r"""{
+  "title" : "PlugPropertyFormatType",
   "type" : "string",
   "description" : "Value domain for a plug input or output property.",
   "enum" : [ "enum", "resource", "vault", "duration", "code", "url", "date", "template", "aiPluginDescriptor", "aiTemplateDescriptor" ]
@@ -4308,6 +4615,10 @@ _plug_response_v2_model_schema = json.loads(
     "draft" : {
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "revision" : {
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
     },
     "plug" : {
       "$ref" : "#/components/schemas/PlugManifest"
@@ -4412,6 +4723,10 @@ _plug_with_invocation_response_v2_model_schema = json.loads(
     "draft" : {
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "revision" : {
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
     },
     "plug" : {
       "$ref" : "#/components/schemas/PlugManifest"
@@ -5188,6 +5503,37 @@ _scale_model_schema = json.loads(
     "_links" : {
       "$ref" : "#/components/schemas/JobHALLinks"
     },
+    "operation" : {
+      "title" : "operation",
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "title" : "createdBy",
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "title" : "createdAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Scale_type"
     },
@@ -5199,22 +5545,6 @@ _scale_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/ScaleResult"
-    },
-    "createdAt" : {
-      "title" : "createdAt",
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "title" : "createdBy",
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "title" : "operation",
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -5235,29 +5565,23 @@ MODEL_DEFINITIONS.update({"Scale": _scale_model_schema})
 _scale_1_model_schema = json.loads(
     r"""{
   "title" : "Scale",
-  "required" : [ "_links", "createdAt", "createdBy", "id", "operation", "state", "type" ],
+  "required" : [ "createdAt", "createdBy", "id", "operation", "state", "type" ],
   "type" : "object",
   "properties" : {
-    "type" : {
-      "$ref" : "#/components/schemas/Scale_type"
-    },
     "operation" : {
       "title" : "operation",
       "type" : "string",
-      "description" : "The operation name for the background task."
+      "description" : "The type of operation that was executed."
     },
-    "id" : {
-      "title" : "id",
+    "createdBy" : {
+      "title" : "createdBy",
       "type" : "string",
-      "description" : "The id of the background job, or the constant `_unknown_`"
-    },
-    "state" : {
-      "$ref" : "#/components/schemas/JobStateResult"
+      "description" : "The user identity that was used to execute the job."
     },
     "createdAt" : {
       "title" : "createdAt",
       "type" : "string",
-      "description" : "The creation time of this job",
+      "description" : "The timestamp of when the job was created.",
       "format" : "date-time"
     },
     "processedAt" : {
@@ -5268,19 +5592,23 @@ _scale_1_model_schema = json.loads(
     },
     "finishedAt" : {
       "title" : "finishedAt",
-      "type" : "string",
-      "description" : "The timestamp of when the job has finished processing.",
-      "format" : "date-time"
+      "description" : "The timestamp of when the job has finished processing."
     },
     "attemptsMade" : {
       "title" : "attemptsMade",
       "type" : "number",
       "description" : "The number of retries that were attempted."
     },
-    "createdBy" : {
-      "title" : "createdBy",
+    "type" : {
+      "$ref" : "#/components/schemas/Scale_type"
+    },
+    "id" : {
+      "title" : "id",
       "type" : "string",
-      "description" : "The user that initiated this job"
+      "description" : "The id of the background job, or the constant `_unknown_`"
+    },
+    "state" : {
+      "$ref" : "#/components/schemas/JobStateResult"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -5340,6 +5668,31 @@ _scale_job_status_model_schema = json.loads(
   "required" : [ "createdAt", "createdBy", "job", "operation", "request", "state", "type" ],
   "type" : "object",
   "properties" : {
+    "operation" : {
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Scale_type"
     },
@@ -5351,19 +5704,6 @@ _scale_job_status_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/ScaleResult"
-    },
-    "createdAt" : {
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -5473,7 +5813,7 @@ _status_model_schema = json.loads(
   "title" : "Status",
   "type" : "string",
   "description" : "Status for a deployed function.",
-  "enum" : [ "registered", "running", "pending", "deployed", "unhealthy", "killed", "failed", "undeploying", "undeployed" ]
+  "enum" : [ "registered", "running", "pending", "deployed", "unhealthy", "failed", "undeploying", "undeployed" ]
 }
 """,
     object_hook=with_example_provider,
@@ -5510,7 +5850,7 @@ _status_filter_model_schema = json.loads(
     r"""{
   "description" : "Inclusion or exclusion filter on the `status` property.",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/StatusInclude"
+    "$ref" : "#/components/schemas/Status"
   }, {
     "$ref" : "#/components/schemas/StatusExclude"
   }, {
@@ -5521,19 +5861,6 @@ _status_filter_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"StatusFilter": _status_filter_model_schema})
-
-_status_include_model_schema = json.loads(
-    r"""{
-  "title" : "StatusInclude",
-  "type" : "string",
-  "description" : "Inlude a status as a filter.",
-  "example" : "running",
-  "enum" : [ "registered", "running", "pending", "deployed", "unhealthy", "failed", "undeploying", "undeployed" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"StatusInclude": _status_include_model_schema})
 
 _stream_closing_model_schema = json.loads(
     r"""{
@@ -5695,6 +6022,37 @@ _undeploy_model_schema = json.loads(
     "_links" : {
       "$ref" : "#/components/schemas/JobHALLinks"
     },
+    "operation" : {
+      "title" : "operation",
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "title" : "createdBy",
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "title" : "createdAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Undeploy_type"
     },
@@ -5706,22 +6064,6 @@ _undeploy_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/UndeployResult"
-    },
-    "createdAt" : {
-      "title" : "createdAt",
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "title" : "createdBy",
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "title" : "operation",
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -5742,29 +6084,23 @@ MODEL_DEFINITIONS.update({"Undeploy": _undeploy_model_schema})
 _undeploy_1_model_schema = json.loads(
     r"""{
   "title" : "Undeploy",
-  "required" : [ "_links", "createdAt", "createdBy", "id", "operation", "state", "type" ],
+  "required" : [ "createdAt", "createdBy", "id", "operation", "state", "type" ],
   "type" : "object",
   "properties" : {
-    "type" : {
-      "$ref" : "#/components/schemas/Undeploy_type"
-    },
     "operation" : {
       "title" : "operation",
       "type" : "string",
-      "description" : "The operation name for the background task."
+      "description" : "The type of operation that was executed."
     },
-    "id" : {
-      "title" : "id",
+    "createdBy" : {
+      "title" : "createdBy",
       "type" : "string",
-      "description" : "The id of the background job, or the constant `_unknown_`"
-    },
-    "state" : {
-      "$ref" : "#/components/schemas/JobStateResult"
+      "description" : "The user identity that was used to execute the job."
     },
     "createdAt" : {
       "title" : "createdAt",
       "type" : "string",
-      "description" : "The creation time of this job",
+      "description" : "The timestamp of when the job was created.",
       "format" : "date-time"
     },
     "processedAt" : {
@@ -5775,19 +6111,23 @@ _undeploy_1_model_schema = json.loads(
     },
     "finishedAt" : {
       "title" : "finishedAt",
-      "type" : "string",
-      "description" : "The timestamp of when the job has finished processing.",
-      "format" : "date-time"
+      "description" : "The timestamp of when the job has finished processing."
     },
     "attemptsMade" : {
       "title" : "attemptsMade",
       "type" : "number",
       "description" : "The number of retries that were attempted."
     },
-    "createdBy" : {
-      "title" : "createdBy",
+    "type" : {
+      "$ref" : "#/components/schemas/Undeploy_type"
+    },
+    "id" : {
+      "title" : "id",
       "type" : "string",
-      "description" : "The user that initiated this job"
+      "description" : "The id of the background job, or the constant `_unknown_`"
+    },
+    "state" : {
+      "$ref" : "#/components/schemas/JobStateResult"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -5805,9 +6145,19 @@ MODEL_DEFINITIONS.update({"Undeploy_1": _undeploy_1_model_schema})
 _undeploy_args_model_schema = json.loads(
     r"""{
   "title" : "UndeployArgs",
-  "required" : [ "deleteEntity", "endpoint", "isNativePlug", "namespace", "resetEntity", "revision", "runtimeName", "runtimeVersion" ],
+  "required" : [ "deleteEntity", "deleteImage", "endpoint", "imageName", "namespace", "resetEntity", "revision", "runtimeName", "runtimeVersion", "storageLocation" ],
   "type" : "object",
   "properties" : {
+    "storageLocation" : {
+      "title" : "storageLocation",
+      "type" : "string",
+      "description" : "Location of the function assets."
+    },
+    "imageName" : {
+      "title" : "imageName",
+      "type" : "string",
+      "description" : "The container image name for the target function."
+    },
     "namespace" : {
       "title" : "namespace",
       "type" : "string",
@@ -5829,17 +6179,16 @@ _undeploy_args_model_schema = json.loads(
       "type" : "string",
       "description" : "The revision hash of the current (draft) function revision"
     },
-    "isNativePlug" : {
-      "title" : "isNativePlug",
-      "type" : "boolean",
-      "description" : "If true, the function is not expected to be deployed on openfaas."
-    },
     "deleteEntity" : {
       "title" : "deleteEntity",
       "type" : "boolean"
     },
     "resetEntity" : {
       "title" : "resetEntity",
+      "type" : "boolean"
+    },
+    "deleteImage" : {
+      "title" : "deleteImage",
       "type" : "boolean"
     }
   },
@@ -5855,6 +6204,31 @@ _undeploy_job_status_model_schema = json.loads(
   "required" : [ "createdAt", "createdBy", "job", "operation", "request", "state", "type" ],
   "type" : "object",
   "properties" : {
+    "operation" : {
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Undeploy_type"
     },
@@ -5866,19 +6240,6 @@ _undeploy_job_status_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/UndeployResult"
-    },
-    "createdAt" : {
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -5896,7 +6257,7 @@ MODEL_DEFINITIONS.update({"UndeployJobStatus": _undeploy_job_status_model_schema
 _undeploy_result_model_schema = json.loads(
     r"""{
   "title" : "UndeployResult",
-  "required" : [ "assets", "deployment", "registration" ],
+  "required" : [ "assets", "deployment", "image", "registration" ],
   "type" : "object",
   "properties" : {
     "deployment" : {
@@ -5909,6 +6270,10 @@ _undeploy_result_model_schema = json.loads(
     },
     "registration" : {
       "title" : "registration",
+      "type" : "boolean"
+    },
+    "image" : {
+      "title" : "image",
       "type" : "boolean"
     }
   },
@@ -6149,6 +6514,37 @@ _verify_model_schema = json.loads(
     "_links" : {
       "$ref" : "#/components/schemas/JobHALLinks"
     },
+    "operation" : {
+      "title" : "operation",
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "title" : "createdBy",
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "title" : "createdAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Verify_type"
     },
@@ -6160,22 +6556,6 @@ _verify_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/VerifyResult"
-    },
-    "createdAt" : {
-      "title" : "createdAt",
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "title" : "createdBy",
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "title" : "operation",
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -6196,29 +6576,23 @@ MODEL_DEFINITIONS.update({"Verify": _verify_model_schema})
 _verify_1_model_schema = json.loads(
     r"""{
   "title" : "Verify",
-  "required" : [ "_links", "createdAt", "createdBy", "id", "operation", "state", "type" ],
+  "required" : [ "createdAt", "createdBy", "id", "operation", "state", "type" ],
   "type" : "object",
   "properties" : {
-    "type" : {
-      "$ref" : "#/components/schemas/Verify_type"
-    },
     "operation" : {
       "title" : "operation",
       "type" : "string",
-      "description" : "The operation name for the background task."
+      "description" : "The type of operation that was executed."
     },
-    "id" : {
-      "title" : "id",
+    "createdBy" : {
+      "title" : "createdBy",
       "type" : "string",
-      "description" : "The id of the background job, or the constant `_unknown_`"
-    },
-    "state" : {
-      "$ref" : "#/components/schemas/JobStateResult"
+      "description" : "The user identity that was used to execute the job."
     },
     "createdAt" : {
       "title" : "createdAt",
       "type" : "string",
-      "description" : "The creation time of this job",
+      "description" : "The timestamp of when the job was created.",
       "format" : "date-time"
     },
     "processedAt" : {
@@ -6229,19 +6603,23 @@ _verify_1_model_schema = json.loads(
     },
     "finishedAt" : {
       "title" : "finishedAt",
-      "type" : "string",
-      "description" : "The timestamp of when the job has finished processing.",
-      "format" : "date-time"
+      "description" : "The timestamp of when the job has finished processing."
     },
     "attemptsMade" : {
       "title" : "attemptsMade",
       "type" : "number",
       "description" : "The number of retries that were attempted."
     },
-    "createdBy" : {
-      "title" : "createdBy",
+    "type" : {
+      "$ref" : "#/components/schemas/Verify_type"
+    },
+    "id" : {
+      "title" : "id",
       "type" : "string",
-      "description" : "The user that initiated this job"
+      "description" : "The id of the background job, or the constant `_unknown_`"
+    },
+    "state" : {
+      "$ref" : "#/components/schemas/JobStateResult"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -6296,6 +6674,31 @@ _verify_job_status_model_schema = json.loads(
   "required" : [ "createdAt", "createdBy", "job", "operation", "request", "state", "type" ],
   "type" : "object",
   "properties" : {
+    "operation" : {
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Verify_type"
     },
@@ -6307,19 +6710,6 @@ _verify_job_status_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/VerifyResult"
-    },
-    "createdAt" : {
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"
@@ -6554,7 +6944,7 @@ _webscript_1_model_schema = json.loads(
       "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "webscript" : {
       "$ref" : "#/components/schemas/HALLinks"
@@ -6573,7 +6963,7 @@ _webscript_2_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "webscript" : {
       "$ref" : "#/components/schemas/HALLinks"
@@ -6641,6 +7031,41 @@ _webscript_manifest_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"WebscriptManifest": _webscript_manifest_model_schema})
 
+_webscript_manifest_patch_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "private" : {
+      "type" : "boolean",
+      "description" : "If <code>true</code> this webscript will require authentication."
+    },
+    "allowHmac" : {
+      "type" : "boolean",
+      "description" : "If <code>true</code> this webscript will support authentication with a <em>HMAC</em> key, available as the <code>secret</code> attribute of the deployed webscript entity."
+    },
+    "runtimeVersion" : {
+      "$ref" : "#/components/schemas/SemanticVersionRange"
+    },
+    "metadata" : {
+      "$ref" : "#/components/schemas/FunctionMeta"
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/Runtime"
+    },
+    "deploy" : {
+      "$ref" : "#/components/schemas/FunctionDeployOverridesType"
+    }
+  },
+  "additionalProperties" : false,
+  "description" : "Patch attributes to merge into an existing webscript manifest."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "WebscriptManifestPatch": _webscript_manifest_patch_model_schema
+})
+
 _webscript_response_v2_model_schema = json.loads(
     r"""{
   "required" : [ "createdAt", "createdBy", "deprecated", "draft", "runtime", "status", "updatedAt", "updatedBy", "webscript" ],
@@ -6687,6 +7112,10 @@ _webscript_response_v2_model_schema = json.loads(
     "draft" : {
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "revision" : {
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
     },
     "webscript" : {
       "$ref" : "#/components/schemas/WebscriptManifest"
@@ -6748,6 +7177,10 @@ _webscript_response_with_invoke_link_v2_model_schema = json.loads(
     "draft" : {
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
+    },
+    "revision" : {
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
     },
     "webscript" : {
       "$ref" : "#/components/schemas/WebscriptManifest"

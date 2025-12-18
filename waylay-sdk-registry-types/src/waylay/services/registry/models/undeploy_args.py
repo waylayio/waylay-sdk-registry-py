@@ -23,13 +23,19 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
 class UndeployArgs(WaylayBaseModel):
     """Input argument to an (openfaas) undeployment job for a function.."""
 
+    storage_location: StrictStr = Field(
+        description="Location of the function assets.", alias="storageLocation"
+    )
+    image_name: StrictStr = Field(
+        description="The container image name for the target function.",
+        alias="imageName",
+    )
     namespace: StrictStr = Field(
         description="The (openfaas) namespace for the target function."
     )
@@ -42,12 +48,9 @@ class UndeployArgs(WaylayBaseModel):
     revision: StrictStr = Field(
         description="The revision hash of the current (draft) function revision"
     )
-    is_native_plug: StrictBool = Field(
-        description="If true, the function is not expected to be deployed on openfaas.",
-        alias="isNativePlug",
-    )
     delete_entity: StrictBool = Field(alias="deleteEntity")
     reset_entity: StrictBool = Field(alias="resetEntity")
+    delete_image: StrictBool = Field(alias="deleteImage")
 
     @field_validator("runtime_version")
     @classmethod

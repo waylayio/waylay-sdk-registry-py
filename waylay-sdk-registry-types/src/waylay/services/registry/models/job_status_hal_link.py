@@ -14,16 +14,15 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.hal_links import HALLinks
+from ..models.job_hal_links_job import JobHALLinksJob
 
 
 class JobStatusHALLink(WaylayBaseModel):
     """HAL links to related actions.."""
 
-    job: HALLinks | None = None
+    job: JobHALLinksJob | None = None
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

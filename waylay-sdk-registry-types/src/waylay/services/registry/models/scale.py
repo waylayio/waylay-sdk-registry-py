@@ -17,9 +17,10 @@ from typing import Any, Dict
 from pydantic import (
     ConfigDict,
     Field,
+    StrictFloat,
+    StrictInt,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.failure_reason import FailureReason
@@ -35,19 +36,35 @@ class Scale(WaylayBaseModel):
     """Scale."""
 
     links: JobHALLinks | None = Field(default=None, alias="_links")
+    operation: StrictStr = Field(description="The type of operation that was executed.")
+    created_by: StrictStr = Field(
+        description="The user identity that was used to execute the job.",
+        alias="createdBy",
+    )
+    created_at: datetime = Field(
+        description="The timestamp of when the job was created.", alias="createdAt"
+    )
+    processed_at: datetime | None = Field(
+        default=None,
+        description="The timestamp of when the job has begun processing.",
+        alias="processedAt",
+    )
+    finished_at: Any | None = Field(
+        default=None,
+        description="The timestamp of when the job has finished processing.",
+        alias="finishedAt",
+    )
+    attempts_made: StrictFloat | StrictInt | None = Field(
+        default=None,
+        description="The number of retries that were attempted.",
+        alias="attemptsMade",
+    )
     type: ScaleType
     state: JobStateResult
     request: ScaleArgs | None = None
     result: Dict[str, Any] | None = Field(
         default=None, description="The result data for a completed scale job."
     )
-    created_at: datetime = Field(
-        description="The timestamp of creation of this job", alias="createdAt"
-    )
-    created_by: StrictStr = Field(
-        description="The user that created this job", alias="createdBy"
-    )
-    operation: StrictStr = Field(description="Request operation")
     function: FunctionRef | None = None
     job: JobStatus | None = None
     failure_reason: FailureReason | None = Field(default=None, alias="failureReason")

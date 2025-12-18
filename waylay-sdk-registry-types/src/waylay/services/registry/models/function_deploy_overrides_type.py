@@ -11,14 +11,13 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, List
 
 from pydantic import (
     ConfigDict,
     Field,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.resource_limits import ResourceLimits
@@ -32,6 +31,7 @@ class FunctionDeployOverridesType(WaylayBaseModel):
     annotations: Dict[str, StrictStr] | None = None
     limits: ResourceLimits | None = None
     requests: ResourceLimits | None = None
+    secrets: List[StrictStr] | None = None
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

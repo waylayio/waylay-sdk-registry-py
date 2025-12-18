@@ -19,7 +19,6 @@ from pydantic import (
     StrictFloat,
     StrictInt,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.get_plug_response_v2_embedded import GetPlugResponseV2Embedded

@@ -29,6 +29,16 @@ build_args_model_schema = json.loads(
   "required" : [ "args", "imageName", "revision", "runtimeName", "runtimeVersion", "storageLocation" ],
   "type" : "object",
   "properties" : {
+    "storageLocation" : {
+      "title" : "storageLocation",
+      "type" : "string",
+      "description" : "Location of the function assets."
+    },
+    "imageName" : {
+      "title" : "imageName",
+      "type" : "string",
+      "description" : "The container image name for the target function."
+    },
     "runtimeName" : {
       "$ref" : "#/components/schemas/Runtime"
     },
@@ -39,16 +49,6 @@ build_args_model_schema = json.loads(
       "title" : "revision",
       "type" : "string",
       "description" : "The revision hash of the current (draft) function revision"
-    },
-    "storageLocation" : {
-      "title" : "storageLocation",
-      "type" : "string",
-      "description" : "Location of the function assets."
-    },
-    "imageName" : {
-      "title" : "imageName",
-      "type" : "string",
-      "description" : "Provided (or defaulted) image name to publish the function image."
     },
     "args" : {
       "title" : "args",

@@ -33,7 +33,7 @@ plug_1_model_schema = json.loads(
       "$ref" : "#/components/schemas/HALLinks"
     },
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "plug" : {
       "$ref" : "#/components/schemas/HALLinks"

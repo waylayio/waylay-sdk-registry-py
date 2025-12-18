@@ -11,14 +11,9 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    List,
-    Union,
-)
+from typing import List, Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 AssetConditionPattern = Union[Annotated[str, ""], Annotated[List[str], ""]]
 """Pattern that selects a file in a function archive."""

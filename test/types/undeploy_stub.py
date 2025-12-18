@@ -32,6 +32,37 @@ undeploy_model_schema = json.loads(
     "_links" : {
       "$ref" : "#/components/schemas/JobHALLinks"
     },
+    "operation" : {
+      "title" : "operation",
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "title" : "createdBy",
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "title" : "createdAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "title" : "processedAt",
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "title" : "finishedAt",
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "title" : "attemptsMade",
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Undeploy_type"
     },
@@ -43,22 +74,6 @@ undeploy_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/UndeployResult"
-    },
-    "createdAt" : {
-      "title" : "createdAt",
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "title" : "createdBy",
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "title" : "operation",
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"

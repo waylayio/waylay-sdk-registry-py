@@ -45,7 +45,7 @@ docs/CompletedEventData.md
 docs/CompletedEventSSE.md
 docs/CompletedEventSSEEvent.md
 docs/ContentValidationListing.md
-docs/CreateWebscriptsCopyParameter.md
+docs/CreateModelsCopyParameter.md
 docs/DelayedEventData.md
 docs/DelayedEventSSE.md
 docs/DelayedEventSSEEvent.md
@@ -64,6 +64,7 @@ docs/DeprecatePreviousPolicyAnyOf1.md
 docs/DeprecatePreviousPolicyAnyOf2.md
 docs/DeprecatePreviousPolicyAnyOf3.md
 docs/Documentation.md
+docs/DocumentationExample.md
 docs/DocumentationProperty.md
 docs/EntityWithLinksIKfservingResponseV2.md
 docs/EntityWithLinksIPlugResponseV2.md
@@ -88,6 +89,10 @@ docs/FunctionTagsResponse.md
 docs/FunctionType.md
 docs/FunctionTypeExclude.md
 docs/FunctionTypeFilter.md
+docs/GetAssetByRoleModelsAssetRoleParameter.md
+docs/GetAssetByRoleModelsAssetRoleParameterAnyOf.md
+docs/GetAssetByRoleModelsAssetRoleParameterAnyOf1.md
+docs/GetAssetByRoleModelsAssetRoleParameterAnyOf2.md
 docs/GetModelResponseV2.md
 docs/GetPlugResponseV2.md
 docs/GetPlugResponseV2Embedded.md
@@ -112,7 +117,9 @@ docs/JobEventResponseWaitingEventData.md
 docs/JobEventSSE.md
 docs/JobEventsAndFunctionHALLink.md
 docs/JobEventsHALLink.md
+docs/JobHALLink.md
 docs/JobHALLinks.md
+docs/JobHALLinksJob.md
 docs/JobReference.md
 docs/JobResponse.md
 docs/JobState.md
@@ -148,6 +155,7 @@ docs/JobsForWebscriptResponseV2.md
 docs/JobsForWebscriptResponseV2Links.md
 docs/JobsResponse.md
 docs/KFServingManifest.md
+docs/KFServingManifestPatch.md
 docs/KeepAliveEventSSE.md
 docs/KfservingResponseV2.md
 docs/LanguageRelease.md
@@ -170,6 +178,7 @@ docs/Plug1.md
 docs/Plug2.md
 docs/PlugInterface.md
 docs/PlugManifest.md
+docs/PlugManifestPatch.md
 docs/PlugMeta.md
 docs/PlugProperty.md
 docs/PlugPropertyDataType.md
@@ -229,7 +238,6 @@ docs/Status.md
 docs/StatusAny.md
 docs/StatusExclude.md
 docs/StatusFilter.md
-docs/StatusInclude.md
 docs/StreamClosing.md
 docs/StreamReady.md
 docs/Tag.md
@@ -270,6 +278,7 @@ docs/Webscript.md
 docs/Webscript1.md
 docs/Webscript2.md
 docs/WebscriptManifest.md
+docs/WebscriptManifestPatch.md
 docs/WebscriptResponseV2.md
 docs/WebscriptResponseWithInvokeLinkV2.md
 docs/WebscriptTagsApi.md
@@ -334,7 +343,7 @@ test/types/completed_event_data_stub.py
 test/types/completed_event_sse_event_stub.py
 test/types/completed_event_sse_stub.py
 test/types/content_validation_listing_stub.py
-test/types/create_webscripts_copy_parameter_stub.py
+test/types/create_models_copy_parameter_stub.py
 test/types/delayed_event_data_stub.py
 test/types/delayed_event_sse_event_stub.py
 test/types/delayed_event_sse_stub.py
@@ -352,6 +361,7 @@ test/types/deprecate_previous_policy_any_of2_stub.py
 test/types/deprecate_previous_policy_any_of3_stub.py
 test/types/deprecate_previous_policy_any_of_stub.py
 test/types/deprecate_previous_policy_stub.py
+test/types/documentation_example_stub.py
 test/types/documentation_property_stub.py
 test/types/documentation_stub.py
 test/types/entity_with_links_i_kfserving_response_v2_stub.py
@@ -377,6 +387,10 @@ test/types/function_tags_response_stub.py
 test/types/function_type_exclude_stub.py
 test/types/function_type_filter_stub.py
 test/types/function_type_stub.py
+test/types/get_asset_by_role_models_asset_role_parameter_any_of1_stub.py
+test/types/get_asset_by_role_models_asset_role_parameter_any_of2_stub.py
+test/types/get_asset_by_role_models_asset_role_parameter_any_of_stub.py
+test/types/get_asset_by_role_models_asset_role_parameter_stub.py
 test/types/get_model_response_v2_stub.py
 test/types/get_plug_response_v2_embedded_stub.py
 test/types/get_plug_response_v2_links_stub.py
@@ -401,6 +415,8 @@ test/types/job_event_response_waiting_event_data_stub.py
 test/types/job_event_sse_stub.py
 test/types/job_events_and_function_hal_link_stub.py
 test/types/job_events_hal_link_stub.py
+test/types/job_hal_link_stub.py
+test/types/job_hal_links_job_stub.py
 test/types/job_hal_links_stub.py
 test/types/job_reference_stub.py
 test/types/job_response_stub.py
@@ -436,6 +452,7 @@ test/types/jobs_for_webscript_response_v2_links_stub.py
 test/types/jobs_for_webscript_response_v2_stub.py
 test/types/jobs_response_stub.py
 test/types/keep_alive_event_sse_stub.py
+test/types/kf_serving_manifest_patch_stub.py
 test/types/kf_serving_manifest_stub.py
 test/types/kfserving_response_v2_stub.py
 test/types/language_release_stub.py
@@ -453,6 +470,7 @@ test/types/parent_keys_stub.py
 test/types/plug1_stub.py
 test/types/plug2_stub.py
 test/types/plug_interface_stub.py
+test/types/plug_manifest_patch_stub.py
 test/types/plug_manifest_stub.py
 test/types/plug_meta_stub.py
 test/types/plug_property_data_type_stub.py
@@ -509,7 +527,6 @@ test/types/show_link_or_embedding_stub.py
 test/types/status_any_stub.py
 test/types/status_exclude_stub.py
 test/types/status_filter_stub.py
-test/types/status_include_stub.py
 test/types/status_stub.py
 test/types/stream_closing_stub.py
 test/types/stream_ready_stub.py
@@ -548,6 +565,7 @@ test/types/waiting_event_sse_event_stub.py
 test/types/waiting_event_sse_stub.py
 test/types/webscript1_stub.py
 test/types/webscript2_stub.py
+test/types/webscript_manifest_patch_stub.py
 test/types/webscript_manifest_stub.py
 test/types/webscript_response_v2_stub.py
 test/types/webscript_response_with_invoke_link_v2_stub.py
