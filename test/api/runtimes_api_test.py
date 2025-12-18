@@ -11,7 +11,6 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import Union
 from urllib.parse import quote
 
 import pytest
@@ -22,6 +21,8 @@ from waylay.sdk.api._models import Model
 from waylay.services.registry.api import RuntimesApi
 from waylay.services.registry.service import RegistryService
 
+from ..types.archive_format_filter_stub import ArchiveFormatFilterStub
+from ..types.function_type_filter_stub import FunctionTypeFilterStub
 from ..types.list_runtimes_tags_parameter_stub import ListRuntimesTagsParameterStub
 from ..types.runtime_summary_response_stub import RuntimeSummaryResponseStub
 from ..types.runtime_tag_response_stub import RuntimeTagResponseStub
@@ -246,13 +247,13 @@ async def test_get_latest(
             version=SemanticVersionRangeStub.create_json(),
             include_deprecated=False,
             tags=ListRuntimesTagsParameterStub.create_json(),
-            function_type=[],
-            archive_format=[],
+            function_type=[FunctionTypeFilterStub.create_json()],
+            archive_format=[ArchiveFormatFilterStub.create_json()],
         ),
     }
     _get_latest_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.runtimes.get_latest(name, **kwargs)
-    check_type(resp, Union[RuntimeVersionResponse,])
+    check_type(resp, RuntimeVersionResponse)
 
 
 @pytest.mark.asyncio
@@ -272,8 +273,8 @@ async def test_get_latest_without_types(
             "version": SemanticVersionRangeStub.create_json(),
             "includeDeprecated": False,
             "tags": ListRuntimesTagsParameterStub.create_json(),
-            "functionType": [],
-            "archiveFormat": [],
+            "functionType": [FunctionTypeFilterStub.create_json()],
+            "archiveFormat": [ArchiveFormatFilterStub.create_json()],
         },
     }
     _get_latest_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
@@ -318,7 +319,7 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.runtimes.get(name, version, **kwargs)
-    check_type(resp, Union[RuntimeVersionResponse,])
+    check_type(resp, RuntimeVersionResponse)
 
 
 @pytest.mark.asyncio
@@ -374,13 +375,13 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
             include_deprecated=False,
             tags=ListRuntimesTagsParameterStub.create_json(),
             name="node*",
-            function_type=[],
-            archive_format=[],
+            function_type=[FunctionTypeFilterStub.create_json()],
+            archive_format=[ArchiveFormatFilterStub.create_json()],
         ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.runtimes.list(**kwargs)
-    check_type(resp, Union[RuntimeSummaryResponse,])
+    check_type(resp, RuntimeSummaryResponse)
 
 
 @pytest.mark.asyncio
@@ -400,8 +401,8 @@ async def test_list_without_types(
             "includeDeprecated": False,
             "tags": ListRuntimesTagsParameterStub.create_json(),
             "name": "node*",
-            "functionType": [],
-            "archiveFormat": [],
+            "functionType": [FunctionTypeFilterStub.create_json()],
+            "archiveFormat": [ArchiveFormatFilterStub.create_json()],
         },
     }
     _list_set_mock_response(httpx_mock, gateway_url)
@@ -442,14 +443,14 @@ async def test_list_versions(
             latest="major",
             include_deprecated=False,
             tags=ListRuntimesTagsParameterStub.create_json(),
-            function_type=[],
-            archive_format=[],
+            function_type=[FunctionTypeFilterStub.create_json()],
+            archive_format=[ArchiveFormatFilterStub.create_json()],
             show_tags="embed",
         ),
     }
     _list_versions_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.runtimes.list_versions(name, **kwargs)
-    check_type(resp, Union[RuntimeSummaryResponse,])
+    check_type(resp, RuntimeSummaryResponse)
 
 
 @pytest.mark.asyncio
@@ -469,8 +470,8 @@ async def test_list_versions_without_types(
             "latest": "major",
             "includeDeprecated": False,
             "tags": ListRuntimesTagsParameterStub.create_json(),
-            "functionType": [],
-            "archiveFormat": [],
+            "functionType": [FunctionTypeFilterStub.create_json()],
+            "archiveFormat": [ArchiveFormatFilterStub.create_json()],
             "showTags": "embed",
         },
     }
@@ -502,7 +503,7 @@ async def test_tag(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
     kwargs = {}
     _tag_set_mock_response(httpx_mock, gateway_url, quote(str(tagName)))
     resp = await service.runtimes.tag(tagName, **kwargs)
-    check_type(resp, Union[RuntimeTagResponse,])
+    check_type(resp, RuntimeTagResponse)
 
 
 @pytest.mark.asyncio
@@ -549,7 +550,7 @@ async def test_tags(service: RegistryService, gateway_url: str, httpx_mock: HTTP
     }
     _tags_set_mock_response(httpx_mock, gateway_url)
     resp = await service.runtimes.tags(**kwargs)
-    check_type(resp, Union[RuntimeTagsResponse,])
+    check_type(resp, RuntimeTagsResponse)
 
 
 @pytest.mark.asyncio

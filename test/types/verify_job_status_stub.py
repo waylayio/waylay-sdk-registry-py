@@ -28,6 +28,31 @@ verify_job_status_model_schema = json.loads(
   "required" : [ "createdAt", "createdBy", "job", "operation", "request", "state", "type" ],
   "type" : "object",
   "properties" : {
+    "operation" : {
+      "type" : "string",
+      "description" : "The type of operation that was executed."
+    },
+    "createdBy" : {
+      "type" : "string",
+      "description" : "The user identity that was used to execute the job."
+    },
+    "createdAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job was created.",
+      "format" : "date-time"
+    },
+    "processedAt" : {
+      "type" : "string",
+      "description" : "The timestamp of when the job has begun processing.",
+      "format" : "date-time"
+    },
+    "finishedAt" : {
+      "description" : "The timestamp of when the job has finished processing."
+    },
+    "attemptsMade" : {
+      "type" : "number",
+      "description" : "The number of retries that were attempted."
+    },
     "type" : {
       "$ref" : "#/components/schemas/Verify_type"
     },
@@ -39,19 +64,6 @@ verify_job_status_model_schema = json.loads(
     },
     "result" : {
       "$ref" : "#/components/schemas/VerifyResult"
-    },
-    "createdAt" : {
-      "type" : "string",
-      "description" : "The timestamp of creation of this job",
-      "format" : "date-time"
-    },
-    "createdBy" : {
-      "type" : "string",
-      "description" : "The user that created this job"
-    },
-    "operation" : {
-      "type" : "string",
-      "description" : "Request operation"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"

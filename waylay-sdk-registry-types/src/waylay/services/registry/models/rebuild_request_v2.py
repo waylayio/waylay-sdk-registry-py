@@ -14,7 +14,6 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.function_deploy_overrides_type import FunctionDeployOverridesType

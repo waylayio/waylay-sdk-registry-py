@@ -11,7 +11,6 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import Union
 from urllib.parse import quote
 
 import pytest
@@ -84,7 +83,7 @@ async def test_add_all(
     }
     _add_all_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plug_tags.add_all(name, **kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio
@@ -139,7 +138,7 @@ async def test_add(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.plug_tags.add(name, version, **kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio
@@ -195,7 +194,7 @@ async def test_clear_all(
     }
     _clear_all_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plug_tags.clear_all(name, **kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio
@@ -250,7 +249,7 @@ async def test_clear(service: RegistryService, gateway_url: str, httpx_mock: HTT
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.plug_tags.clear(name, version, **kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio
@@ -312,7 +311,7 @@ async def test_find_all(
         httpx_mock, gateway_url, quote(str(tagName)), quote(str(name))
     )
     resp = await service.plug_tags.find_all(tagName, name, **kwargs)
-    check_type(resp, Union[FunctionTagResponse,])
+    check_type(resp, FunctionTagResponse)
 
 
 @pytest.mark.asyncio
@@ -377,7 +376,7 @@ async def test_find(service: RegistryService, gateway_url: str, httpx_mock: HTTP
         quote(str(version)),
     )
     resp = await service.plug_tags.find(tagName, name, version, **kwargs)
-    check_type(resp, Union[FunctionTagResponse,])
+    check_type(resp, FunctionTagResponse)
 
 
 @pytest.mark.asyncio
@@ -437,7 +436,7 @@ async def test_list_all(
     }
     _list_all_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plug_tags.list_all(name, **kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio
@@ -492,7 +491,7 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.plug_tags.list(name, version, **kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio
@@ -549,7 +548,7 @@ async def test_put_all(
         httpx_mock, gateway_url, quote(str(tagName)), quote(str(name))
     )
     resp = await service.plug_tags.put_all(tagName, name, **kwargs)
-    check_type(resp, Union[FunctionTagResponse,])
+    check_type(resp, FunctionTagResponse)
 
 
 @pytest.mark.asyncio
@@ -610,7 +609,7 @@ async def test_put(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
         quote(str(version)),
     )
     resp = await service.plug_tags.put(tagName, name, version, **kwargs)
-    check_type(resp, Union[FunctionTagResponse,])
+    check_type(resp, FunctionTagResponse)
 
 
 @pytest.mark.asyncio
@@ -673,7 +672,7 @@ async def test_remove_all(
         httpx_mock, gateway_url, quote(str(tagName)), quote(str(name))
     )
     resp = await service.plug_tags.remove_all(tagName, name, **kwargs)
-    check_type(resp, Union[FunctionTagResponse,])
+    check_type(resp, FunctionTagResponse)
 
 
 @pytest.mark.asyncio
@@ -736,7 +735,7 @@ async def test_remove(
         quote(str(version)),
     )
     resp = await service.plug_tags.remove(tagName, name, version, **kwargs)
-    check_type(resp, Union[FunctionTagResponse,])
+    check_type(resp, FunctionTagResponse)
 
 
 @pytest.mark.asyncio
@@ -797,7 +796,7 @@ async def test_replace_all(
     }
     _replace_all_set_mock_response(httpx_mock, gateway_url, quote(str(name)))
     resp = await service.plug_tags.replace_all(name, **kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio
@@ -857,7 +856,7 @@ async def test_replace(
         httpx_mock, gateway_url, quote(str(name)), quote(str(version))
     )
     resp = await service.plug_tags.replace(name, version, **kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio

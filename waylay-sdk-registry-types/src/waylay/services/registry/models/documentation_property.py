@@ -11,12 +11,13 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
+from typing import Any, List
+
 from pydantic import (
     ConfigDict,
     Field,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
@@ -25,6 +26,9 @@ class DocumentationProperty(WaylayBaseModel):
 
     name: StrictStr = Field(description="Name of the documented property.")
     description: StrictStr = Field(description="Documentation of the property.")
+    examples: List[Any] | None = Field(
+        default=None, description="Example values for the property."
+    )
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

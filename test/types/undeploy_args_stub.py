@@ -26,9 +26,19 @@ except ImportError as exc:
 undeploy_args_model_schema = json.loads(
     r"""{
   "title" : "UndeployArgs",
-  "required" : [ "deleteEntity", "endpoint", "isNativePlug", "namespace", "resetEntity", "revision", "runtimeName", "runtimeVersion" ],
+  "required" : [ "deleteEntity", "deleteImage", "endpoint", "imageName", "namespace", "resetEntity", "revision", "runtimeName", "runtimeVersion", "storageLocation" ],
   "type" : "object",
   "properties" : {
+    "storageLocation" : {
+      "title" : "storageLocation",
+      "type" : "string",
+      "description" : "Location of the function assets."
+    },
+    "imageName" : {
+      "title" : "imageName",
+      "type" : "string",
+      "description" : "The container image name for the target function."
+    },
     "namespace" : {
       "title" : "namespace",
       "type" : "string",
@@ -50,17 +60,16 @@ undeploy_args_model_schema = json.loads(
       "type" : "string",
       "description" : "The revision hash of the current (draft) function revision"
     },
-    "isNativePlug" : {
-      "title" : "isNativePlug",
-      "type" : "boolean",
-      "description" : "If true, the function is not expected to be deployed on openfaas."
-    },
     "deleteEntity" : {
       "title" : "deleteEntity",
       "type" : "boolean"
     },
     "resetEntity" : {
       "title" : "resetEntity",
+      "type" : "boolean"
+    },
+    "deleteImage" : {
+      "title" : "deleteImage",
       "type" : "boolean"
     }
   },

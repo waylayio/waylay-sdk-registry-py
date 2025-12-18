@@ -11,21 +11,17 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    Union,
-)
+from typing import Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.example_reference import ExampleReference
 
-CreateWebscriptsCopyParameter = Union[
+CreateModelsCopyParameter = Union[
     Annotated[
         str,
         "A name reference with optional version range: `<name>[@<versionRange>]`.  References (a version range of) a named and versioned entity like _function_ or _runtime_.",
     ],
     Annotated[ExampleReference, ""],
 ]
-"""CreateWebscriptsCopyParameter."""
+"""CreateModelsCopyParameter."""

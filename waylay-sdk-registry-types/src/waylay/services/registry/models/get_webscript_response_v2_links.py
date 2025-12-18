@@ -14,18 +14,23 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
+from ..models.alt_version_hal_link_draft import AltVersionHALLinkDraft
+from ..models.alt_version_hal_link_published import AltVersionHALLinkPublished
 from ..models.hal_link import HALLink
+from ..models.job_hal_links_job import JobHALLinksJob
 
 
 class GetWebscriptResponseV2Links(WaylayBaseModel):
     """HAL links to related actions.."""
 
+    job: JobHALLinksJob | None = None
     content: HALLink | None = None
-    invoke: HALLink | None = None
+    draft: AltVersionHALLinkDraft | None = None
+    published: AltVersionHALLinkPublished | None = None
     jobs: HALLink | None = None
+    invoke: HALLink | None = None
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

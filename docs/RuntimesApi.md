@@ -85,7 +85,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
+ - **Accept**: application/gzip, application/json, application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar
 
 ### HTTP response details
 
@@ -170,7 +170,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 ### HTTP request headers
 
  - **Content-Type**: Not defined
- - **Accept**: application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar, application/gzip, application/json
+ - **Accept**: application/gzip, application/json, application/octet-stream, application/tar, application/tar+gzip, application/x-gzip, application/x-tar
 
 ### HTTP response details
 
@@ -263,7 +263,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Default Response |  -  |
+**200** | : Runtime Version Found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -344,7 +344,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Default Response |  -  |
+**200** | : Runtime Version Found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -433,7 +433,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Default Response |  -  |
+**200** | Runtimes Found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -523,7 +523,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Default Response |  -  |
+**200** | Runtimes Found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -591,7 +591,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Default Response |  -  |
+**200** | Runtime Tag Found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -665,7 +665,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Default Response |  -  |
+**200** | Runtime Tags Found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

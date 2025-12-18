@@ -12,13 +12,15 @@ Do not edit the class manually.
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 from pydantic import (
     ConfigDict,
     Field,
+    StrictFloat,
+    StrictInt,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.function_ref import FunctionRef
@@ -32,17 +34,33 @@ from ..models.verify_type import VerifyType
 class VerifyJobStatus(WaylayBaseModel):
     """VerifyJobStatus."""
 
+    operation: StrictStr = Field(description="The type of operation that was executed.")
+    created_by: StrictStr = Field(
+        description="The user identity that was used to execute the job.",
+        alias="createdBy",
+    )
+    created_at: datetime = Field(
+        description="The timestamp of when the job was created.", alias="createdAt"
+    )
+    processed_at: datetime | None = Field(
+        default=None,
+        description="The timestamp of when the job has begun processing.",
+        alias="processedAt",
+    )
+    finished_at: Any | None = Field(
+        default=None,
+        description="The timestamp of when the job has finished processing.",
+        alias="finishedAt",
+    )
+    attempts_made: StrictFloat | StrictInt | None = Field(
+        default=None,
+        description="The number of retries that were attempted.",
+        alias="attemptsMade",
+    )
     type: VerifyType
     state: JobStateResult
     request: VerifyArgs
     result: VerifyResult | None = None
-    created_at: datetime = Field(
-        description="The timestamp of creation of this job", alias="createdAt"
-    )
-    created_by: StrictStr = Field(
-        description="The user that created this job", alias="createdBy"
-    )
-    operation: StrictStr = Field(description="Request operation")
     function: FunctionRef | None = None
     job: JobStatus
 

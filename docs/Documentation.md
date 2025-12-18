@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **states** | [**List[DocumentationProperty]**](DocumentationProperty.md) | Documentation of the plug states. | [optional] 
 **input** | [**List[DocumentationProperty]**](DocumentationProperty.md) | Documentation of the plug input parameters. | [optional] 
 **output** | [**List[DocumentationProperty]**](DocumentationProperty.md) | Documentation of the plug response parameters. | [optional] 
+**examples** | [**List[DocumentationExample]**](DocumentationExample.md) | Example scenarios for testing the plug. | [optional] 
 
 ## Example
 

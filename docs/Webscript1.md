@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **event** | [**HALLinks**](HALLinks.md) |  | [optional] 
-**job** | [**HALLinks**](HALLinks.md) |  | [optional] 
+**job** | [**JobHALLinksJob**](JobHALLinksJob.md) |  | [optional] 
 **webscript** | [**HALLinks**](HALLinks.md) |  | 
 
 ## Example

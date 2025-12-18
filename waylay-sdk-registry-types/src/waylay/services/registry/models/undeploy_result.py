@@ -15,7 +15,6 @@ from pydantic import (
     ConfigDict,
     StrictBool,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
@@ -25,6 +24,7 @@ class UndeployResult(WaylayBaseModel):
     deployment: StrictBool
     assets: StrictBool
     registration: StrictBool
+    image: StrictBool
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

@@ -26,29 +26,23 @@ except ImportError as exc:
 scale_1_model_schema = json.loads(
     r"""{
   "title" : "Scale",
-  "required" : [ "_links", "createdAt", "createdBy", "id", "operation", "state", "type" ],
+  "required" : [ "createdAt", "createdBy", "id", "operation", "state", "type" ],
   "type" : "object",
   "properties" : {
-    "type" : {
-      "$ref" : "#/components/schemas/Scale_type"
-    },
     "operation" : {
       "title" : "operation",
       "type" : "string",
-      "description" : "The operation name for the background task."
+      "description" : "The type of operation that was executed."
     },
-    "id" : {
-      "title" : "id",
+    "createdBy" : {
+      "title" : "createdBy",
       "type" : "string",
-      "description" : "The id of the background job, or the constant `_unknown_`"
-    },
-    "state" : {
-      "$ref" : "#/components/schemas/JobStateResult"
+      "description" : "The user identity that was used to execute the job."
     },
     "createdAt" : {
       "title" : "createdAt",
       "type" : "string",
-      "description" : "The creation time of this job",
+      "description" : "The timestamp of when the job was created.",
       "format" : "date-time"
     },
     "processedAt" : {
@@ -59,19 +53,23 @@ scale_1_model_schema = json.loads(
     },
     "finishedAt" : {
       "title" : "finishedAt",
-      "type" : "string",
-      "description" : "The timestamp of when the job has finished processing.",
-      "format" : "date-time"
+      "description" : "The timestamp of when the job has finished processing."
     },
     "attemptsMade" : {
       "title" : "attemptsMade",
       "type" : "number",
       "description" : "The number of retries that were attempted."
     },
-    "createdBy" : {
-      "title" : "createdBy",
+    "type" : {
+      "$ref" : "#/components/schemas/Scale_type"
+    },
+    "id" : {
+      "title" : "id",
       "type" : "string",
-      "description" : "The user that initiated this job"
+      "description" : "The id of the background job, or the constant `_unknown_`"
+    },
+    "state" : {
+      "$ref" : "#/components/schemas/JobStateResult"
     },
     "function" : {
       "$ref" : "#/components/schemas/FunctionRef"

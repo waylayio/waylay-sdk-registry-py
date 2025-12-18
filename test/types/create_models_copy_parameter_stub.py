@@ -16,16 +16,16 @@ from pydantic import TypeAdapter
 from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
-    from waylay.services.registry.models.create_webscripts_copy_parameter import (
-        CreateWebscriptsCopyParameter,
+    from waylay.services.registry.models.create_models_copy_parameter import (
+        CreateModelsCopyParameter,
     )
 
-    CreateWebscriptsCopyParameterAdapter = TypeAdapter(CreateWebscriptsCopyParameter)
+    CreateModelsCopyParameterAdapter = TypeAdapter(CreateModelsCopyParameter)
     MODELS_AVAILABLE = True
 except ImportError as exc:
     MODELS_AVAILABLE = False
 
-create_webscripts_copy_parameter_model_schema = json.loads(
+create_models_copy_parameter_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
     "$ref" : "#/components/schemas/NamedVersionRange"
@@ -36,36 +36,35 @@ create_webscripts_copy_parameter_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-create_webscripts_copy_parameter_model_schema.update({"definitions": MODEL_DEFINITIONS})
+create_models_copy_parameter_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
-create_webscripts_copy_parameter_faker = JSF(
-    create_webscripts_copy_parameter_model_schema, allow_none_optionals=1
+create_models_copy_parameter_faker = JSF(
+    create_models_copy_parameter_model_schema, allow_none_optionals=1
 )
 
 
-class CreateWebscriptsCopyParameterStub:
-    """CreateWebscriptsCopyParameter unit test stubs."""
+class CreateModelsCopyParameterStub:
+    """CreateModelsCopyParameter unit test stubs."""
 
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return create_webscripts_copy_parameter_faker.generate(
+        return create_models_copy_parameter_faker.generate(
             use_defaults=True, use_examples=True
         )
 
     @classmethod
-    def create_instance(cls) -> "CreateWebscriptsCopyParameter":
-        """Create CreateWebscriptsCopyParameter stub instance."""
+    def create_instance(cls) -> "CreateModelsCopyParameter":
+        """Create CreateModelsCopyParameter stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
         if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
-                CreateWebscriptsCopyParameterAdapter.json_schema(),
-                allow_none_optionals=1,
+                CreateModelsCopyParameterAdapter.json_schema(), allow_none_optionals=1
             )
             json = backup_faker.generate(use_defaults=True, use_examples=True)
-        return CreateWebscriptsCopyParameterAdapter.validate_python(
+        return CreateModelsCopyParameterAdapter.validate_python(
             json, context={"skip_validation": True}
         )

@@ -16,49 +16,52 @@ from pydantic import TypeAdapter
 from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
-    from waylay.services.registry.models.status_include import StatusInclude
+    from waylay.services.registry.models.job_hal_link import JobHALLink
 
-    StatusIncludeAdapter = TypeAdapter(StatusInclude)
+    JobHALLinkAdapter = TypeAdapter(JobHALLink)
     MODELS_AVAILABLE = True
 except ImportError as exc:
     MODELS_AVAILABLE = False
 
-status_include_model_schema = json.loads(
+job_hal_link_model_schema = json.loads(
     r"""{
-  "title" : "StatusInclude",
-  "type" : "string",
-  "description" : "Inlude a status as a filter.",
-  "example" : "running",
-  "enum" : [ "registered", "running", "pending", "deployed", "unhealthy", "failed", "undeploying", "undeployed" ]
+  "required" : [ "href", "jobType" ],
+  "type" : "object",
+  "properties" : {
+    "href" : {
+      "$ref" : "#/components/schemas/HALLink_href"
+    },
+    "jobType" : {
+      "$ref" : "#/components/schemas/JobType"
+    }
+  }
 }
 """,
     object_hook=with_example_provider,
 )
-status_include_model_schema.update({"definitions": MODEL_DEFINITIONS})
+job_hal_link_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
-status_include_faker = JSF(status_include_model_schema, allow_none_optionals=1)
+job_hal_link_faker = JSF(job_hal_link_model_schema, allow_none_optionals=1)
 
 
-class StatusIncludeStub:
-    """StatusInclude unit test stubs."""
+class JobHALLinkStub:
+    """JobHALLink unit test stubs."""
 
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return status_include_faker.generate(use_defaults=True, use_examples=True)
+        return job_hal_link_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
-    def create_instance(cls) -> "StatusInclude":
-        """Create StatusInclude stub instance."""
+    def create_instance(cls) -> "JobHALLink":
+        """Create JobHALLink stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
         if json is None:
             # use backup example based on the pydantic model schema
-            backup_faker = JSF(
-                StatusIncludeAdapter.json_schema(), allow_none_optionals=1
-            )
+            backup_faker = JSF(JobHALLinkAdapter.json_schema(), allow_none_optionals=1)
             json = backup_faker.generate(use_defaults=True, use_examples=True)
-        return StatusIncludeAdapter.validate_python(
+        return JobHALLinkAdapter.validate_python(
             json, context={"skip_validation": True}
         )

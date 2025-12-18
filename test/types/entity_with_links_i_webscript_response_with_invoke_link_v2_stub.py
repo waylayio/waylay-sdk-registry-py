@@ -88,6 +88,11 @@ entity_with_links_i_webscript_response_with_invoke_link_v2__model_schema = json.
       "type" : "boolean",
       "description" : "If <code>true</code> this function is a draft function and it's assets are still mutable."
     },
+    "revision" : {
+      "title" : "revision",
+      "type" : "string",
+      "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
+    },
     "webscript" : {
       "$ref" : "#/components/schemas/WebscriptManifest"
     },

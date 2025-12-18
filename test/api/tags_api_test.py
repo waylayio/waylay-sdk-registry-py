@@ -11,7 +11,6 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import Union
 from urllib.parse import quote
 
 import pytest
@@ -74,7 +73,7 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
     kwargs = {}
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(tagName)))
     resp = await service.tags.get(tagName, **kwargs)
-    check_type(resp, Union[FunctionTagResponse,])
+    check_type(resp, FunctionTagResponse)
 
 
 @pytest.mark.asyncio
@@ -121,7 +120,7 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.tags.list(**kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio
@@ -167,7 +166,7 @@ async def test_remove(
     kwargs = {}
     _remove_set_mock_response(httpx_mock, gateway_url)
     resp = await service.tags.remove(**kwargs)
-    check_type(resp, Union[FunctionTagsResponse,])
+    check_type(resp, FunctionTagsResponse)
 
 
 @pytest.mark.asyncio

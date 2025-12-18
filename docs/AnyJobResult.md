@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **deployment** | **bool** |  | 
 **assets** | **bool** |  | 
 **registration** | **bool** |  | 
+**image** | **bool** |  | 
 **job_count** | **float** |  | [optional] 
 **scheduled_job** | [**JobReference**](JobReference.md) |  | [optional] 
 **operation** | [**RequestOperation**](RequestOperation.md) |  | 

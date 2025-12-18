@@ -22,7 +22,6 @@ class Status(str, Enum):
     PENDING = "pending"
     DEPLOYED = "deployed"
     UNHEALTHY = "unhealthy"
-    KILLED = "killed"
     FAILED = "failed"
     UNDEPLOYING = "undeploying"
     UNDEPLOYED = "undeployed"

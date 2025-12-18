@@ -23,13 +23,19 @@ from pydantic import (
 from typing_extensions import (
     Annotated,  # >=3.11
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
 class BuildArgs(WaylayBaseModel):
     """Input arguments to a job that builds a function.."""
 
+    storage_location: StrictStr = Field(
+        description="Location of the function assets.", alias="storageLocation"
+    )
+    image_name: StrictStr = Field(
+        description="The container image name for the target function.",
+        alias="imageName",
+    )
     runtime_name: StrictStr = Field(alias="runtimeName")
     runtime_version: Annotated[str, Field(strict=True)] = Field(
         description="A semantic version with _exactly_ a `major`, `minor` and `patch` specifier. No `pre-release` or `build` identifiers are allowed. See https://semver.org",
@@ -37,13 +43,6 @@ class BuildArgs(WaylayBaseModel):
     )
     revision: StrictStr = Field(
         description="The revision hash of the current (draft) function revision"
-    )
-    storage_location: StrictStr = Field(
-        description="Location of the function assets.", alias="storageLocation"
-    )
-    image_name: StrictStr = Field(
-        description="Provided (or defaulted) image name to publish the function image.",
-        alias="imageName",
     )
     args: Dict[str, StrictStr] = Field(
         description="Parameters to the runtime configuration."

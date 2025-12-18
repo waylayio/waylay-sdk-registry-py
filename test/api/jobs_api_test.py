@@ -11,7 +11,7 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import AsyncIterator, Union, get_args
+from typing import AsyncIterator, get_args
 from urllib.parse import quote
 
 import pytest
@@ -24,6 +24,8 @@ from waylay.services.registry.service import RegistryService
 
 from ..types.event_with_close_sse_stub import EventWithCloseSSEStub
 from ..types.job_response_stub import JobResponseStub
+from ..types.job_state_result_stub import JobStateResultStub
+from ..types.job_type_schema_stub import JobTypeSchemaStub
 from ..types.jobs_response_stub import JobsResponseStub
 from ..types.timestamp_spec_stub import TimestampSpecStub
 
@@ -85,9 +87,9 @@ async def test_events(
     }
     _events_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.events(**kwargs)
-    check_type(resp, Union[AsyncIterator[EventWithCloseSSE],])
+    check_type(resp, AsyncIterator[EventWithCloseSSE])
     async for item in resp:
-        check_type(item, get_args(Union[AsyncIterator[EventWithCloseSSE],])[0])
+        check_type(item, get_args(AsyncIterator[EventWithCloseSSE])[0])
         break  # Test only the first value
 
 
@@ -140,7 +142,7 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
     kwargs = {}
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(type)), quote(str(id)))
     resp = await service.jobs.get(type, id, **kwargs)
-    check_type(resp, Union[JobResponse,])
+    check_type(resp, JobResponse)
 
 
 @pytest.mark.asyncio
@@ -184,16 +186,16 @@ async def test_list(service: RegistryService, gateway_url: str, httpx_mock: HTTP
         # optionally use ListQuery to validate and reuse parameters
         "query": ListQuery(
             limit=3.4,
-            type=[],
-            state=[],
-            function_type=[],
+            type=[JobTypeSchemaStub.create_json()],
+            state=[JobStateResultStub.create_json()],
+            function_type=["plugs"],
             created_before=TimestampSpecStub.create_json(),
             created_after=TimestampSpecStub.create_json(),
         ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.jobs.list(**kwargs)
-    check_type(resp, Union[JobsResponse,])
+    check_type(resp, JobsResponse)
 
 
 @pytest.mark.asyncio
@@ -208,9 +210,9 @@ async def test_list_without_types(
     kwargs = {
         "query": {
             "limit": 3.4,
-            "type": [],
-            "state": [],
-            "functionType": [],
+            "type": [JobTypeSchemaStub.create_json()],
+            "state": [JobStateResultStub.create_json()],
+            "functionType": ["plugs"],
             "createdBefore": TimestampSpecStub.create_json(),
             "createdAfter": TimestampSpecStub.create_json(),
         },

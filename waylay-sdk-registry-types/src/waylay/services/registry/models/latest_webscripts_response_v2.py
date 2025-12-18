@@ -19,7 +19,6 @@ from pydantic import (
     StrictFloat,
     StrictInt,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.entity_with_links_i_webscript_response_with_invoke_link_v2 import (

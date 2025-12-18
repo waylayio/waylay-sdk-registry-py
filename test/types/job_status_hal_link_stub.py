@@ -28,7 +28,7 @@ job_status_hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     }
   },
   "description" : "HAL links to related actions."

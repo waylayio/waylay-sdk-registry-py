@@ -27,6 +27,7 @@ except ImportError as exc:
 
 plug_property_data_type_model_schema = json.loads(
     r"""{
+  "title" : "PlugPropertyDataType",
   "type" : "string",
   "description" : "Datatype supported in plug input or output properties.",
   "enum" : [ "string", "integer", "long", "float", "double", "boolean", "object", "array" ]

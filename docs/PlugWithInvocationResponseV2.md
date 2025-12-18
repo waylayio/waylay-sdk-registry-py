@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **runtime** | [**RuntimeAttributes**](RuntimeAttributes.md) |  | 
 **deprecated** | **bool** | If &lt;code&gt;true&lt;/code&gt; this plug is removed from regular listings, as a result of a &lt;code&gt;DELETE&lt;/code&gt; with &lt;code&gt;force&#x3D;false&lt;/code&gt;. | 
 **draft** | **bool** | If &lt;code&gt;true&lt;/code&gt; this function is a draft function and it&#39;s assets are still mutable. | 
+**revision** | **str** | The revision of the function. This will be &lt;code&gt;undefined&lt;/code&gt; when the plug is not a draft. | [optional] 
 **plug** | [**PlugManifest**](PlugManifest.md) |  | 
 **invocation** | [**InvocationAttributes**](InvocationAttributes.md) |  | 
 

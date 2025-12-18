@@ -30,7 +30,7 @@ model_2_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "job" : {
-      "$ref" : "#/components/schemas/HALLinks"
+      "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "model" : {
       "$ref" : "#/components/schemas/HALLinks"

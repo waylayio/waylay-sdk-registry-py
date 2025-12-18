@@ -12,6 +12,7 @@ Do not edit the class manually.
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 from pydantic import (
     ConfigDict,
@@ -20,7 +21,6 @@ from pydantic import (
     StrictInt,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.batch_job_status_type import BatchJobStatusType
@@ -32,23 +32,20 @@ from ..models.job_state_result import JobStateResult
 class Batch(WaylayBaseModel):
     """Batch."""
 
-    type: BatchJobStatusType
-    operation: StrictStr = Field(
-        description="The operation name for the background task."
+    operation: StrictStr = Field(description="The type of operation that was executed.")
+    created_by: StrictStr = Field(
+        description="The user identity that was used to execute the job.",
+        alias="createdBy",
     )
-    id: StrictStr = Field(
-        description="The id of the background job, or the constant `_unknown_`"
-    )
-    state: JobStateResult
     created_at: datetime = Field(
-        description="The creation time of this job", alias="createdAt"
+        description="The timestamp of when the job was created.", alias="createdAt"
     )
     processed_at: datetime | None = Field(
         default=None,
         description="The timestamp of when the job has begun processing.",
         alias="processedAt",
     )
-    finished_at: datetime | None = Field(
+    finished_at: Any | None = Field(
         default=None,
         description="The timestamp of when the job has finished processing.",
         alias="finishedAt",
@@ -58,11 +55,13 @@ class Batch(WaylayBaseModel):
         description="The number of retries that were attempted.",
         alias="attemptsMade",
     )
-    created_by: StrictStr = Field(
-        description="The user that initiated this job", alias="createdBy"
+    type: BatchJobStatusType
+    id: StrictStr = Field(
+        description="The id of the background job, or the constant `_unknown_`"
     )
+    state: JobStateResult
     function: FunctionRef | None = None
-    links: JobHALLinks = Field(alias="_links")
+    links: JobHALLinks | None = Field(default=None, alias="_links")
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="ignore"

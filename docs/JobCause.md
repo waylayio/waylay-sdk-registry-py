@@ -9,8 +9,8 @@ Name | Type | Description | Notes
 **changed** | **bool** | If &lt;code&gt;true&lt;/code&gt;, the argument configuration for this job has changed in comparison to the previous job execution. A &lt;code&gt;false&lt;/code&gt; will prevent the job to be run. Use &lt;code&gt;forceVersion&lt;/code&gt; or &lt;code&gt;upgrade&lt;/code&gt; parameter to force a rebuild. | 
 **reason** | **str** | Human readable message describing the cause. | 
 **backoff** | **bool** | If &lt;code&gt;true&lt;/code&gt;, recent failures of the job prevented the re-execution. Use &lt;code&gt;forceVersion&lt;/code&gt; or &lt;code&gt;upgrade&lt;/code&gt; parameter to force a rebuild. | [optional] 
-**new_value** | **str** | The new configuration value that causes the change. | [optional] 
-**old_value** | **str** | The old configuration value used by the last succeeded job. | [optional] 
+**new_value** | **object** | The new configuration value that causes the change. | [optional] 
+**old_value** | **object** | The old configuration value used by the last succeeded job. | [optional] 
 
 ## Example
 

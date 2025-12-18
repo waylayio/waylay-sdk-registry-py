@@ -46,12 +46,10 @@ job_cause_model_schema = json.loads(
     },
     "newValue" : {
       "title" : "newValue",
-      "type" : "string",
       "description" : "The new configuration value that causes the change."
     },
     "oldValue" : {
       "title" : "oldValue",
-      "type" : "string",
       "description" : "The old configuration value used by the last succeeded job."
     }
   },

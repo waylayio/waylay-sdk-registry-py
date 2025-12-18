@@ -6,13 +6,16 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **links** | [**JobHALLinks**](JobHALLinks.md) |  | [optional] 
+**operation** | **str** | The type of operation that was executed. | 
+**created_by** | **str** | The user identity that was used to execute the job. | 
+**created_at** | **datetime** | The timestamp of when the job was created. | 
+**processed_at** | **datetime** | The timestamp of when the job has begun processing. | [optional] 
+**finished_at** | **object** | The timestamp of when the job has finished processing. | [optional] 
+**attempts_made** | **float** | The number of retries that were attempted. | [optional] 
 **type** | [**VerifyType**](VerifyType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**VerifyArgs**](VerifyArgs.md) |  | [optional] 
 **result** | [**VerifyResult**](VerifyResult.md) |  | [optional] 
-**created_at** | **datetime** | The timestamp of creation of this job | 
-**created_by** | **str** | The user that created this job | 
-**operation** | **str** | Request operation | 
 **function** | [**FunctionRef**](FunctionRef.md) |  | [optional] 
 **job** | [**JobStatus**](JobStatus.md) |  | [optional] 
 **failure_reason** | [**FailureReason**](FailureReason.md) |  | [optional] 

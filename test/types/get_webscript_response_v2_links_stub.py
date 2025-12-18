@@ -30,13 +30,22 @@ get_webscript_response_v2__links_model_schema = json.loads(
   "title" : "GetWebscriptResponseV2__links",
   "type" : "object",
   "properties" : {
+    "job" : {
+      "$ref" : "#/components/schemas/JobHALLinks_job"
+    },
     "content" : {
       "$ref" : "#/components/schemas/HALLink"
     },
-    "invoke" : {
-      "$ref" : "#/components/schemas/HALLink"
+    "draft" : {
+      "$ref" : "#/components/schemas/AltVersionHALLink_draft"
+    },
+    "published" : {
+      "$ref" : "#/components/schemas/AltVersionHALLink_published"
     },
     "jobs" : {
+      "$ref" : "#/components/schemas/HALLink"
+    },
+    "invoke" : {
       "$ref" : "#/components/schemas/HALLink"
     }
   },

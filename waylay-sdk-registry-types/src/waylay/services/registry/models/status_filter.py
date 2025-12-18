@@ -11,19 +11,15 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    Union,
-)
+from typing import Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
+from ..models.status import Status
 from ..models.status_any import StatusAny
 from ..models.status_exclude import StatusExclude
-from ..models.status_include import StatusInclude
 
 StatusFilter = Union[
-    Annotated[StatusInclude, ""], Annotated[StatusExclude, ""], Annotated[StatusAny, ""]
+    Annotated[Status, ""], Annotated[StatusExclude, ""], Annotated[StatusAny, ""]
 ]
 """Inclusion or exclusion filter on the `status` property.."""

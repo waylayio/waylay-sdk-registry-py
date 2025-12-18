@@ -11,7 +11,7 @@ Do not edit the class manually.
 import json
 import re
 from importlib.util import find_spec
-from typing import Dict, Union
+from typing import Dict
 from urllib.parse import quote
 
 import pytest
@@ -77,7 +77,7 @@ async def test_get_by_role(
         httpx_mock, gateway_url, quote(str(functionType)), quote(str(role))
     )
     resp = await service.schemas.get_by_role(functionType, role, **kwargs)
-    check_type(resp, Union[Dict[str, object],])
+    check_type(resp, Dict[str, object])
 
 
 @pytest.mark.asyncio
@@ -124,7 +124,7 @@ async def test_get(service: RegistryService, gateway_url: str, httpx_mock: HTTPX
     kwargs = {}
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(schemaId)))
     resp = await service.schemas.get(schemaId, **kwargs)
-    check_type(resp, Union[Dict[str, object],])
+    check_type(resp, Dict[str, object])
 
 
 @pytest.mark.asyncio

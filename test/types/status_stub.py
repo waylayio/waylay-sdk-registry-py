@@ -28,7 +28,7 @@ status_model_schema = json.loads(
   "title" : "Status",
   "type" : "string",
   "description" : "Status for a deployed function.",
-  "enum" : [ "registered", "running", "pending", "deployed", "unhealthy", "killed", "failed", "undeploying", "undeployed" ]
+  "enum" : [ "registered", "running", "pending", "deployed", "unhealthy", "failed", "undeploying", "undeployed" ]
 }
 """,
     object_hook=with_example_provider,
