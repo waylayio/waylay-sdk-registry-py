@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Waylay Function Registry
-  version: 2.24.1
+  version: 2.25.0
   x-visibility:
     status: stable
   description: >-
@@ -881,9 +881,7 @@ paths:
             function, unless a _manifest_ was specified in the request body.
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/NamedVersionRange'
-              - $ref: '#/components/schemas/ExampleReference'
+            $ref: '#/components/schemas/CreateModelsCopy'
           x-showExample: false
       requestBody:
         description: |
@@ -2988,7 +2986,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/KFServingManifestPatch'
+              $ref: '#/components/schemas/IKFServingManifestPatch'
       responses:
         '201':
           description: Model Deployment Initiated
@@ -3923,23 +3921,7 @@ paths:
             runtime are supported.
           required: true
           schema:
-            anyOf:
-              - type: string
-                description: >-
-                  Metadata specification of the function for the waylay
-                  platform.
-                enum:
-                  - manifest
-              - type: string
-                description: Main source code that implements the function entrypoint.
-                enum:
-                  - main
-              - type: string
-                description: >-
-                  Metadata specification for the language runtime. E.g. to
-                  specify dependencies.
-                enum:
-                  - project
+            $ref: '#/components/schemas/GetAssetByRoleModelsAssetRole'
           x-showExample: false
       responses:
         '200':
@@ -4122,23 +4104,7 @@ paths:
             runtime are supported.
           required: true
           schema:
-            anyOf:
-              - type: string
-                description: >-
-                  Metadata specification of the function for the waylay
-                  platform.
-                enum:
-                  - manifest
-              - type: string
-                description: Main source code that implements the function entrypoint.
-                enum:
-                  - main
-              - type: string
-                description: >-
-                  Metadata specification for the language runtime. E.g. to
-                  specify dependencies.
-                enum:
-                  - project
+            $ref: '#/components/schemas/UpdateAssetByRoleModelsAssetRole'
           x-showExample: false
       requestBody:
         description: A single asset file.
@@ -4874,9 +4840,7 @@ paths:
             function, unless a _manifest_ was specified in the request body.
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/NamedVersionRange'
-              - $ref: '#/components/schemas/ExampleReference'
+            $ref: '#/components/schemas/CreatePlugsCopy'
           x-showExample: false
       requestBody:
         description: |
@@ -8023,23 +7987,7 @@ paths:
             runtime are supported.
           required: true
           schema:
-            anyOf:
-              - type: string
-                description: >-
-                  Metadata specification of the function for the waylay
-                  platform.
-                enum:
-                  - manifest
-              - type: string
-                description: Main source code that implements the function entrypoint.
-                enum:
-                  - main
-              - type: string
-                description: >-
-                  Metadata specification for the language runtime. E.g. to
-                  specify dependencies.
-                enum:
-                  - project
+            $ref: '#/components/schemas/GetAssetByRolePlugsAssetRole'
           x-showExample: false
       responses:
         '200':
@@ -8222,23 +8170,7 @@ paths:
             runtime are supported.
           required: true
           schema:
-            anyOf:
-              - type: string
-                description: >-
-                  Metadata specification of the function for the waylay
-                  platform.
-                enum:
-                  - manifest
-              - type: string
-                description: Main source code that implements the function entrypoint.
-                enum:
-                  - main
-              - type: string
-                description: >-
-                  Metadata specification for the language runtime. E.g. to
-                  specify dependencies.
-                enum:
-                  - project
+            $ref: '#/components/schemas/UpdateAssetByRolePlugsAssetRole'
           x-showExample: false
       requestBody:
         description: A single asset file.
@@ -8426,11 +8358,7 @@ paths:
             Filter values with a `-` postfix exclude the tag.
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/RuntimeTagFilter'
-              - type: array
-                items:
-                  $ref: '#/components/schemas/RuntimeTagFilter'
+            $ref: '#/components/schemas/ListRuntimesTags'
           x-showExample: false
         - name: name
           in: query
@@ -8528,11 +8456,7 @@ paths:
             Filter values with a `-` postfix exclude the tag.
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/RuntimeTagFilter'
-              - type: array
-                items:
-                  $ref: '#/components/schemas/RuntimeTagFilter'
+            $ref: '#/components/schemas/GetLatestRuntimesTags'
           x-showExample: false
         - name: functionType
           in: query
@@ -8642,11 +8566,7 @@ paths:
             Filter values with a `-` postfix exclude the tag.
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/RuntimeTagFilter'
-              - type: array
-                items:
-                  $ref: '#/components/schemas/RuntimeTagFilter'
+            $ref: '#/components/schemas/ListVersionsRuntimesTags'
           x-showExample: false
         - name: functionType
           in: query
@@ -9831,9 +9751,7 @@ paths:
             function, unless a _manifest_ was specified in the request body.
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/NamedVersionRange'
-              - $ref: '#/components/schemas/ExampleReference'
+            $ref: '#/components/schemas/CreateWebscriptsCopy'
           x-showExample: false
       requestBody:
         description: |
@@ -12875,23 +12793,7 @@ paths:
             runtime are supported.
           required: true
           schema:
-            anyOf:
-              - type: string
-                description: >-
-                  Metadata specification of the function for the waylay
-                  platform.
-                enum:
-                  - manifest
-              - type: string
-                description: Main source code that implements the function entrypoint.
-                enum:
-                  - main
-              - type: string
-                description: >-
-                  Metadata specification for the language runtime. E.g. to
-                  specify dependencies.
-                enum:
-                  - project
+            $ref: '#/components/schemas/GetAssetByRoleWebscriptsAssetRole'
           x-showExample: false
       responses:
         '200':
@@ -13074,23 +12976,7 @@ paths:
             runtime are supported.
           required: true
           schema:
-            anyOf:
-              - type: string
-                description: >-
-                  Metadata specification of the function for the waylay
-                  platform.
-                enum:
-                  - manifest
-              - type: string
-                description: Main source code that implements the function entrypoint.
-                enum:
-                  - main
-              - type: string
-                description: >-
-                  Metadata specification for the language runtime. E.g. to
-                  specify dependencies.
-                enum:
-                  - project
+            $ref: '#/components/schemas/UpdateAssetByRoleWebscriptsAssetRole'
           x-showExample: false
       requestBody:
         description: A single asset file.
@@ -13268,9 +13154,9 @@ components:
     TimestampAge:
       description: A timestamp expressed as a age relative to now
       anyOf:
-        - $ref: '#/components/schemas/SO8601Period'
+        - $ref: '#/components/schemas/ISO8601Period'
         - $ref: '#/components/schemas/DurationSpec'
-    SO8601Period:
+    ISO8601Period:
       description: An ISO8601 period expression
       type: string
       format: duration
@@ -13284,14 +13170,14 @@ components:
     TimestampAbsolute:
       description: An absolute timestamp as an ISO8601 string
       anyOf:
-        - $ref: '#/components/schemas/SO8601DateTime'
-        - $ref: '#/components/schemas/SO8601Date'
-    SO8601DateTime:
+        - $ref: '#/components/schemas/ISO8601DateTime'
+        - $ref: '#/components/schemas/ISO8601Date'
+    ISO8601DateTime:
       description: An ISO8601 date-time expression.
       type: string
       format: date-time
       pattern: \d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2})?(Z|([+-]\d\d:\d\d))?
-    SO8601Date:
+    ISO8601Date:
       description: An ISO8601 date expression.
       type: string
       format: date
@@ -13305,9 +13191,7 @@ components:
     ShowInlineOrEmbedding:
       anyOf:
         - $ref: '#/components/schemas/ShowEmbedding'
-        - type: string
-          enum:
-            - inline
+        - $ref: '#/components/schemas/ShowInlineOrEmbeddingInline'
     NamedVersion:
       description: A function version reference represented as `<name>@<version>`.
       type: string
@@ -13315,9 +13199,7 @@ components:
     ShowLinkOrEmbedding:
       anyOf:
         - $ref: '#/components/schemas/ShowEmbedding'
-        - type: string
-          enum:
-            - link
+        - $ref: '#/components/schemas/ShowLinkOrEmbeddingLink'
     PlugType:
       type: string
       enum:
@@ -13789,7 +13671,7 @@ components:
           description: Deployment overrides of the function.
           $ref: '#/components/schemas/FunctionDeployOverridesType'
       additionalProperties: false
-    KFServingManifestPatch:
+    IKFServingManifestPatch:
       description: Patch attributes to merge into an existing model manifest.
       type: object
       properties:
@@ -13820,18 +13702,10 @@ components:
       additionalProperties: false
     DeprecatePreviousPolicy:
       anyOf:
-        - type: string
-          enum:
-            - none
-        - type: string
-          enum:
-            - all
-        - type: string
-          enum:
-            - patch
-        - type: string
-          enum:
-            - minor
+        - $ref: '#/components/schemas/DeprecatePreviousPolicyNone'
+        - $ref: '#/components/schemas/DeprecatePreviousPolicyAll'
+        - $ref: '#/components/schemas/DeprecatePreviousPolicyPatch'
+        - $ref: '#/components/schemas/DeprecatePreviousPolicyMinor'
     NamedVersionRange:
       description: >-
         A name reference with optional version range: `<name>[@<versionRange>]`.
@@ -13859,7 +13733,7 @@ components:
         - lib
         - script
         - other
-    HALLink:
+    IHALLink:
       type: object
       properties:
         href:
@@ -13942,10 +13816,10 @@ components:
     HALLinks:
       description: One or more links of the same HAL collection.
       anyOf:
-        - $ref: '#/components/schemas/HALLink'
+        - $ref: '#/components/schemas/IHALLink'
         - type: array
           items:
-            $ref: '#/components/schemas/HALLink'
+            $ref: '#/components/schemas/IHALLink'
     TaggingScopeOption:
       type: string
       enum:
@@ -14793,7 +14667,7 @@ components:
           description: >-
             The model specification as provided by the <code>model.json</code>
             asset.
-          $ref: '#/components/schemas/KFServingManifest'
+          $ref: '#/components/schemas/IKFServingManifest'
       required:
         - createdAt
         - createdBy
@@ -14804,7 +14678,7 @@ components:
         - status
         - updatedAt
         - updatedBy
-    KFServingManifest:
+    IKFServingManifest:
       type: object
       properties:
         deploy:
@@ -15061,7 +14935,7 @@ components:
           description: HAL link to the endpoint where the webscript is exposed.
           example:
             href: https://api-aws-dev.waylay.io/functions/v1/<TENANT>/myWebscript
-          $ref: '#/components/schemas/HALLink'
+          $ref: '#/components/schemas/IHALLink'
     UndeploySubmittedResponseV2:
       description: Undeployment Initiated
       type: object
@@ -15222,7 +15096,7 @@ components:
                     $ref: '#/components/schemas/JobHALLink'
                 - $ref: '#/components/schemas/JobHALLink'
             content:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/IHALLink'
               description: >-
                 HAL link to the endpoint where the function's content is
                 exposed.
@@ -15284,7 +15158,7 @@ components:
                 - version
             jobs:
               description: HAL link to jobs report for this function (if any)
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/IHALLink'
       required:
         - _links
         - entity
@@ -15632,10 +15506,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - build
+              $ref: '#/components/schemas/AnyJobForFunctionBuild'
             state:
               description: The current processing state of the job
               $ref: '#/components/schemas/JobStateResult'
@@ -15688,10 +15559,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - deploy
+              $ref: '#/components/schemas/AnyJobForFunctionDeploy'
             state:
               description: The current processing state of the job
               $ref: '#/components/schemas/JobStateResult'
@@ -15744,10 +15612,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - verify
+              $ref: '#/components/schemas/AnyJobForFunctionVerify'
             state:
               description: The current processing state of the job
               $ref: '#/components/schemas/JobStateResult'
@@ -15800,10 +15665,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - undeploy
+              $ref: '#/components/schemas/AnyJobForFunctionUndeploy'
             state:
               description: The current processing state of the job
               $ref: '#/components/schemas/JobStateResult'
@@ -15856,10 +15718,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - scale
+              $ref: '#/components/schemas/AnyJobForFunctionScale'
             state:
               description: The current processing state of the job
               $ref: '#/components/schemas/JobStateResult'
@@ -16244,7 +16103,7 @@ components:
                     $ref: '#/components/schemas/JobHALLink'
                 - $ref: '#/components/schemas/JobHALLink'
             content:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/IHALLink'
               description: >-
                 HAL link to the endpoint where the function's content is
                 exposed.
@@ -16306,7 +16165,7 @@ components:
                 - version
             jobs:
               description: HAL link to jobs report for this function (if any)
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/IHALLink'
       required:
         - _links
         - entity
@@ -16401,7 +16260,7 @@ components:
           description: >-
             The model specification as provided by the <code>model.json</code>
             asset.
-          $ref: '#/components/schemas/KFServingManifest'
+          $ref: '#/components/schemas/IKFServingManifest'
       required:
         - createdAt
         - createdBy
@@ -16598,7 +16457,7 @@ components:
                     $ref: '#/components/schemas/JobHALLink'
                 - $ref: '#/components/schemas/JobHALLink'
             content:
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/IHALLink'
               description: >-
                 HAL link to the endpoint where the function's content is
                 exposed.
@@ -16660,13 +16519,13 @@ components:
                 - version
             jobs:
               description: HAL link to jobs report for this function (if any)
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/IHALLink'
             invoke:
               description: HAL link to the endpoint where the webscript is exposed.
               example:
                 href: >-
                   https://api-aws-dev.waylay.io/functions/v1/<TENANT>/myWebscript
-              $ref: '#/components/schemas/HALLink'
+              $ref: '#/components/schemas/IHALLink'
       required:
         - _links
         - entity
@@ -17381,10 +17240,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - build
+              $ref: '#/components/schemas/AnyJobStatusSummaryBuild'
             id:
               description: The id of the background job, or the constant `_unknown_`
               type: string
@@ -17431,10 +17287,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - deploy
+              $ref: '#/components/schemas/AnyJobStatusSummaryDeploy'
             id:
               description: The id of the background job, or the constant `_unknown_`
               type: string
@@ -17481,10 +17334,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - verify
+              $ref: '#/components/schemas/AnyJobStatusSummaryVerify'
             id:
               description: The id of the background job, or the constant `_unknown_`
               type: string
@@ -17531,10 +17381,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - undeploy
+              $ref: '#/components/schemas/AnyJobStatusSummaryUndeploy'
             id:
               description: The id of the background job, or the constant `_unknown_`
               type: string
@@ -17581,10 +17428,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - scale
+              $ref: '#/components/schemas/AnyJobStatusSummaryScale'
             id:
               description: The id of the background job, or the constant `_unknown_`
               type: string
@@ -17631,10 +17475,7 @@ components:
               description: The number of retries that were attempted.
               type: number
             type:
-              description: The type of the background task.
-              type: string
-              enum:
-                - batch
+              $ref: '#/components/schemas/AnyJobStatusSummaryBatch'
             id:
               description: The id of the background job, or the constant `_unknown_`
               type: string
@@ -18283,6 +18124,247 @@ components:
       required:
         - error
         - statusCode
+    CreateModelsCopy:
+      anyOf:
+        - $ref: '#/components/schemas/NamedVersionRange'
+        - $ref: '#/components/schemas/ExampleReference'
+    GetAssetByRoleModelsAssetRoleManifest:
+      type: string
+      description: Metadata specification of the function for the waylay platform.
+      enum:
+        - manifest
+    GetAssetByRoleModelsAssetRoleMain:
+      type: string
+      description: Main source code that implements the function entrypoint.
+      enum:
+        - main
+    GetAssetByRoleModelsAssetRoleProject:
+      type: string
+      description: >-
+        Metadata specification for the language runtime. E.g. to specify
+        dependencies.
+      enum:
+        - project
+    GetAssetByRoleModelsAssetRole:
+      anyOf:
+        - $ref: '#/components/schemas/GetAssetByRoleModelsAssetRoleManifest'
+        - $ref: '#/components/schemas/GetAssetByRoleModelsAssetRoleMain'
+        - $ref: '#/components/schemas/GetAssetByRoleModelsAssetRoleProject'
+    UpdateAssetByRoleModelsAssetRoleManifest:
+      type: string
+      description: Metadata specification of the function for the waylay platform.
+      enum:
+        - manifest
+    UpdateAssetByRoleModelsAssetRoleMain:
+      type: string
+      description: Main source code that implements the function entrypoint.
+      enum:
+        - main
+    UpdateAssetByRoleModelsAssetRoleProject:
+      type: string
+      description: >-
+        Metadata specification for the language runtime. E.g. to specify
+        dependencies.
+      enum:
+        - project
+    UpdateAssetByRoleModelsAssetRole:
+      anyOf:
+        - $ref: '#/components/schemas/UpdateAssetByRoleModelsAssetRoleManifest'
+        - $ref: '#/components/schemas/UpdateAssetByRoleModelsAssetRoleMain'
+        - $ref: '#/components/schemas/UpdateAssetByRoleModelsAssetRoleProject'
+    CreatePlugsCopy:
+      anyOf:
+        - $ref: '#/components/schemas/NamedVersionRange'
+        - $ref: '#/components/schemas/ExampleReference'
+    GetAssetByRolePlugsAssetRoleManifest:
+      type: string
+      description: Metadata specification of the function for the waylay platform.
+      enum:
+        - manifest
+    GetAssetByRolePlugsAssetRoleMain:
+      type: string
+      description: Main source code that implements the function entrypoint.
+      enum:
+        - main
+    GetAssetByRolePlugsAssetRoleProject:
+      type: string
+      description: >-
+        Metadata specification for the language runtime. E.g. to specify
+        dependencies.
+      enum:
+        - project
+    GetAssetByRolePlugsAssetRole:
+      anyOf:
+        - $ref: '#/components/schemas/GetAssetByRolePlugsAssetRoleManifest'
+        - $ref: '#/components/schemas/GetAssetByRolePlugsAssetRoleMain'
+        - $ref: '#/components/schemas/GetAssetByRolePlugsAssetRoleProject'
+    UpdateAssetByRolePlugsAssetRoleManifest:
+      type: string
+      description: Metadata specification of the function for the waylay platform.
+      enum:
+        - manifest
+    UpdateAssetByRolePlugsAssetRoleMain:
+      type: string
+      description: Main source code that implements the function entrypoint.
+      enum:
+        - main
+    UpdateAssetByRolePlugsAssetRoleProject:
+      type: string
+      description: >-
+        Metadata specification for the language runtime. E.g. to specify
+        dependencies.
+      enum:
+        - project
+    UpdateAssetByRolePlugsAssetRole:
+      anyOf:
+        - $ref: '#/components/schemas/UpdateAssetByRolePlugsAssetRoleManifest'
+        - $ref: '#/components/schemas/UpdateAssetByRolePlugsAssetRoleMain'
+        - $ref: '#/components/schemas/UpdateAssetByRolePlugsAssetRoleProject'
+    ListRuntimesTags:
+      anyOf:
+        - $ref: '#/components/schemas/RuntimeTagFilter'
+        - type: array
+          items:
+            $ref: '#/components/schemas/RuntimeTagFilter'
+    GetLatestRuntimesTags:
+      anyOf:
+        - $ref: '#/components/schemas/RuntimeTagFilter'
+        - type: array
+          items:
+            $ref: '#/components/schemas/RuntimeTagFilter'
+    ListVersionsRuntimesTags:
+      anyOf:
+        - $ref: '#/components/schemas/RuntimeTagFilter'
+        - type: array
+          items:
+            $ref: '#/components/schemas/RuntimeTagFilter'
+    CreateWebscriptsCopy:
+      anyOf:
+        - $ref: '#/components/schemas/NamedVersionRange'
+        - $ref: '#/components/schemas/ExampleReference'
+    GetAssetByRoleWebscriptsAssetRoleManifest:
+      type: string
+      description: Metadata specification of the function for the waylay platform.
+      enum:
+        - manifest
+    GetAssetByRoleWebscriptsAssetRoleMain:
+      type: string
+      description: Main source code that implements the function entrypoint.
+      enum:
+        - main
+    GetAssetByRoleWebscriptsAssetRoleProject:
+      type: string
+      description: >-
+        Metadata specification for the language runtime. E.g. to specify
+        dependencies.
+      enum:
+        - project
+    GetAssetByRoleWebscriptsAssetRole:
+      anyOf:
+        - $ref: '#/components/schemas/GetAssetByRoleWebscriptsAssetRoleManifest'
+        - $ref: '#/components/schemas/GetAssetByRoleWebscriptsAssetRoleMain'
+        - $ref: '#/components/schemas/GetAssetByRoleWebscriptsAssetRoleProject'
+    UpdateAssetByRoleWebscriptsAssetRoleManifest:
+      type: string
+      description: Metadata specification of the function for the waylay platform.
+      enum:
+        - manifest
+    UpdateAssetByRoleWebscriptsAssetRoleMain:
+      type: string
+      description: Main source code that implements the function entrypoint.
+      enum:
+        - main
+    UpdateAssetByRoleWebscriptsAssetRoleProject:
+      type: string
+      description: >-
+        Metadata specification for the language runtime. E.g. to specify
+        dependencies.
+      enum:
+        - project
+    UpdateAssetByRoleWebscriptsAssetRole:
+      anyOf:
+        - $ref: '#/components/schemas/UpdateAssetByRoleWebscriptsAssetRoleManifest'
+        - $ref: '#/components/schemas/UpdateAssetByRoleWebscriptsAssetRoleMain'
+        - $ref: '#/components/schemas/UpdateAssetByRoleWebscriptsAssetRoleProject'
+    ShowInlineOrEmbeddingInline:
+      type: string
+      enum:
+        - inline
+    ShowLinkOrEmbeddingLink:
+      type: string
+      enum:
+        - link
+    DeprecatePreviousPolicyNone:
+      type: string
+      enum:
+        - none
+    DeprecatePreviousPolicyAll:
+      type: string
+      enum:
+        - all
+    DeprecatePreviousPolicyPatch:
+      type: string
+      enum:
+        - patch
+    DeprecatePreviousPolicyMinor:
+      type: string
+      enum:
+        - minor
+    AnyJobForFunctionBuild:
+      description: The type of the background task.
+      type: string
+      enum:
+        - build
+    AnyJobForFunctionDeploy:
+      description: The type of the background task.
+      type: string
+      enum:
+        - deploy
+    AnyJobForFunctionVerify:
+      description: The type of the background task.
+      type: string
+      enum:
+        - verify
+    AnyJobForFunctionUndeploy:
+      description: The type of the background task.
+      type: string
+      enum:
+        - undeploy
+    AnyJobForFunctionScale:
+      description: The type of the background task.
+      type: string
+      enum:
+        - scale
+    AnyJobStatusSummaryBuild:
+      description: The type of the background task.
+      type: string
+      enum:
+        - build
+    AnyJobStatusSummaryDeploy:
+      description: The type of the background task.
+      type: string
+      enum:
+        - deploy
+    AnyJobStatusSummaryVerify:
+      description: The type of the background task.
+      type: string
+      enum:
+        - verify
+    AnyJobStatusSummaryUndeploy:
+      description: The type of the background task.
+      type: string
+      enum:
+        - undeploy
+    AnyJobStatusSummaryScale:
+      description: The type of the background task.
+      type: string
+      enum:
+        - scale
+    AnyJobStatusSummaryBatch:
+      description: The type of the background task.
+      type: string
+      enum:
+        - batch
   responses:
     '400':
       description: Bad Request

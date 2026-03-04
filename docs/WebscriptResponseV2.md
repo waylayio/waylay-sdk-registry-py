@@ -1,6 +1,11 @@
 # WebscriptResponseV2
 
 
+**Source:** `waylay.services.registry.models.webscript_response_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -19,23 +24,39 @@ Name | Type | Description | Notes
 **webscript** | [**WebscriptManifest**](WebscriptManifest.md) |  | 
 **secret** | **str** | The secret for this webscript deployment. This is &lt;code&gt;null&lt;/code&gt; when &lt;code&gt;allowHmac&#x3D;false&lt;/code&gt; in the webscript specificaton. | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.webscript_response_v2 import WebscriptResponseV2
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of WebscriptResponseV2 from a JSON string
-webscript_response_v2_instance = WebscriptResponseV2.from_json(json)
-# print the JSON string representation of the object
-print WebscriptResponseV2.to_json()
+webscript_response_v2 = WebscriptResponseV2(
+    created_by=...,
+    created_at=...,
+    updated_by=...,
+    updated_at=...,
+    updates=...,
+    status=...,
+    failure_reason=...,
+    runtime=...,
+    deprecated=...,
+    draft=...,
+    revision=...,
+    webscript=...,
+    secret=...,
+)
 
-# convert the object into a dict
-webscript_response_v2_dict = webscript_response_v2_instance.to_dict()
-# create an instance of WebscriptResponseV2 from a dict
-webscript_response_v2_form_dict = webscript_response_v2.from_dict(webscript_response_v2_dict)
+# Create from JSON
+webscript_response_v2 = WebscriptResponseV2.from_json(
+    '{ "createdBy": ..., "createdAt": ..., "updatedBy": ..., "updatedAt": ..., "updates": ..., "status": ..., "failureReason": ..., "runtime": ..., "deprecated": ..., "draft": ..., "revision": ..., "webscript": ..., "secret": ... }'
+)
+
+# Export to dictionary
+webscript_response_v2_dict = webscript_response_v2.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

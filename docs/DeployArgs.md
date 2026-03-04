@@ -2,6 +2,11 @@
 
 Input argument to an (openfaas) deployment job for a function.
 
+**Source:** `waylay.services.registry.models.deploy_args`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -14,23 +19,33 @@ Name | Type | Description | Notes
 **revision** | **str** | The revision hash of the current (draft) function revision | 
 **deploy_spec_overrides** | [**DeployArgsDeploySpecOverrides**](DeployArgsDeploySpecOverrides.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.deploy_args import DeployArgs
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of DeployArgs from a JSON string
-deploy_args_instance = DeployArgs.from_json(json)
-# print the JSON string representation of the object
-print DeployArgs.to_json()
+deploy_args = DeployArgs(
+    namespace=...,
+    endpoint=...,
+    image_name=...,
+    runtime_name=...,
+    runtime_version=...,
+    revision=...,
+    deploy_spec_overrides=...,
+)
 
-# convert the object into a dict
-deploy_args_dict = deploy_args_instance.to_dict()
-# create an instance of DeployArgs from a dict
-deploy_args_form_dict = deploy_args.from_dict(deploy_args_dict)
+# Create from JSON
+deploy_args = DeployArgs.from_json(
+    '{ "namespace": ..., "endpoint": ..., "imageName": ..., "runtimeName": ..., "runtimeVersion": ..., "revision": ..., "deploySpecOverrides": ... }'
+)
+
+# Export to dictionary
+deploy_args_dict = deploy_args.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

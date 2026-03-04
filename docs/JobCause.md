@@ -2,6 +2,11 @@
 
 The motivation for including or excluding a job (<em>build</em>, <em>deploy</em>, <em>verify</em>, ...) in response to a <em>rebuild</em> request.
 
+**Source:** `waylay.services.registry.models.job_cause`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,23 +17,25 @@ Name | Type | Description | Notes
 **new_value** | **object** | The new configuration value that causes the change. | [optional] 
 **old_value** | **object** | The old configuration value used by the last succeeded job. | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.job_cause import JobCause
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of JobCause from a JSON string
-job_cause_instance = JobCause.from_json(json)
-# print the JSON string representation of the object
-print JobCause.to_json()
+job_cause = JobCause(changed=..., reason=..., backoff=..., new_value=..., old_value=...)
 
-# convert the object into a dict
-job_cause_dict = job_cause_instance.to_dict()
-# create an instance of JobCause from a dict
-job_cause_form_dict = job_cause.from_dict(job_cause_dict)
+# Create from JSON
+job_cause = JobCause.from_json(
+    '{ "changed": ..., "reason": ..., "backoff": ..., "newValue": ..., "oldValue": ... }'
+)
+
+# Export to dictionary
+job_cause_dict = job_cause.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

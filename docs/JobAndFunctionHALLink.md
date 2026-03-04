@@ -2,33 +2,33 @@
 
 HAL links to related actions.
 
-## Properties
+**Source:** `waylay.services.registry.models.job_and_function_hal_link`
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**event** | [**HALLinks**](HALLinks.md) |  | [optional] 
-**job** | [**JobHALLinksJob**](JobHALLinksJob.md) |  | [optional] 
-**plug** | [**HALLinks**](HALLinks.md) |  | 
-**webscript** | [**HALLinks**](HALLinks.md) |  | 
-**model** | [**HALLinks**](HALLinks.md) |  | 
+
+
+## Union Type (Any Of)
+
+This type allows any of the following:
+
+Type | Description
+------------ | -------------
+[**Plug1**](Plug1.md) | -
+[**Webscript1**](Webscript1.md) | -
+[**Model1**](Model1.md) | -
+[**JobHALLinks**](JobHALLinks.md) | -
 
 ## Example
 
 ```python
-from waylay.services.registry.models.job_and_function_hal_link import JobAndFunctionHALLink
+from waylay.services.registry.models.job_and_function_hal_link import (
+    JobAndFunctionHALLink,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of JobAndFunctionHALLink from a JSON string
-job_and_function_hal_link_instance = JobAndFunctionHALLink.from_json(json)
-# print the JSON string representation of the object
-print JobAndFunctionHALLink.to_json()
-
-# convert the object into a dict
-job_and_function_hal_link_dict = job_and_function_hal_link_instance.to_dict()
-# create an instance of JobAndFunctionHALLink from a dict
-job_and_function_hal_link_form_dict = job_and_function_hal_link.from_dict(job_and_function_hal_link_dict)
+# Use any of the accepted types (see table above)
+my_job_and_function_hal_link: JobAndFunctionHALLink = ...
 ```
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

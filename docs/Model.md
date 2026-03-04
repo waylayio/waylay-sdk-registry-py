@@ -1,6 +1,11 @@
 # Model
 
 
+**Source:** `waylay.services.registry.models.model`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -8,23 +13,23 @@ Name | Type | Description | Notes
 **event** | [**HALLinks**](HALLinks.md) |  | [optional] 
 **model** | [**HALLinks**](HALLinks.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.model import Model
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Model from a JSON string
-model_instance = Model.from_json(json)
-# print the JSON string representation of the object
-print Model.to_json()
+model = Model(event=..., model=...)
 
-# convert the object into a dict
-model_dict = model_instance.to_dict()
-# create an instance of Model from a dict
-model_form_dict = model.from_dict(model_dict)
+# Create from JSON
+model = Model.from_json('{ "event": ..., "model": ... }')
+
+# Export to dictionary
+model_dict = model.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

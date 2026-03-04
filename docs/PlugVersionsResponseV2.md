@@ -2,6 +2,11 @@
 
 Plugs Versions Found
 
+**Source:** `waylay.services.registry.models.plug_versions_response_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,23 +17,29 @@ Name | Type | Description | Notes
 **page** | **float** | The page number of a paged query result. | [optional] 
 **entities** | [**List[PlugResponseV2]**](PlugResponseV2.md) | The specification and deployment status of the queried functions | 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.plug_versions_response_v2 import PlugVersionsResponseV2
+from waylay.services.registry.models.plug_versions_response_v2 import (
+    PlugVersionsResponseV2,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of PlugVersionsResponseV2 from a JSON string
-plug_versions_response_v2_instance = PlugVersionsResponseV2.from_json(json)
-# print the JSON string representation of the object
-print PlugVersionsResponseV2.to_json()
+plug_versions_response_v2 = PlugVersionsResponseV2(
+    embedded=..., limit=..., count=..., page=..., entities=...
+)
 
-# convert the object into a dict
-plug_versions_response_v2_dict = plug_versions_response_v2_instance.to_dict()
-# create an instance of PlugVersionsResponseV2 from a dict
-plug_versions_response_v2_form_dict = plug_versions_response_v2.from_dict(plug_versions_response_v2_dict)
+# Create from JSON
+plug_versions_response_v2 = PlugVersionsResponseV2.from_json(
+    '{ "_embedded": ..., "limit": ..., "count": ..., "page": ..., "entities": ... }'
+)
+
+# Export to dictionary
+plug_versions_response_v2_dict = plug_versions_response_v2.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -2,6 +2,11 @@
 
 HAL links to related actions.
 
+**Source:** `waylay.services.registry.models.job_hal_links`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -9,23 +14,23 @@ Name | Type | Description | Notes
 **event** | [**HALLinks**](HALLinks.md) |  | [optional] 
 **job** | [**JobHALLinksJob**](JobHALLinksJob.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.job_hal_links import JobHALLinks
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of JobHALLinks from a JSON string
-job_hal_links_instance = JobHALLinks.from_json(json)
-# print the JSON string representation of the object
-print JobHALLinks.to_json()
+job_hal_links = JobHALLinks(event=..., job=...)
 
-# convert the object into a dict
-job_hal_links_dict = job_hal_links_instance.to_dict()
-# create an instance of JobHALLinks from a dict
-job_hal_links_form_dict = job_hal_links.from_dict(job_hal_links_dict)
+# Create from JSON
+job_hal_links = JobHALLinks.from_json('{ "event": ..., "job": ... }')
+
+# Export to dictionary
+job_hal_links_dict = job_hal_links.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

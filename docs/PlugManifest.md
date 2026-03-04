@@ -1,6 +1,11 @@
 # PlugManifest
 
 
+**Source:** `waylay.services.registry.models.plug_manifest`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -16,23 +21,36 @@ Name | Type | Description | Notes
 **type** | [**PlugType**](PlugType.md) |  | 
 **interface** | [**PlugInterface**](PlugInterface.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.plug_manifest import PlugManifest
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of PlugManifest from a JSON string
-plug_manifest_instance = PlugManifest.from_json(json)
-# print the JSON string representation of the object
-print PlugManifest.to_json()
+plug_manifest = PlugManifest(
+    deploy=...,
+    name=...,
+    version=...,
+    runtime=...,
+    runtime_version=...,
+    metadata=...,
+    protected=...,
+    tags=...,
+    type=...,
+    interface=...,
+)
 
-# convert the object into a dict
-plug_manifest_dict = plug_manifest_instance.to_dict()
-# create an instance of PlugManifest from a dict
-plug_manifest_form_dict = plug_manifest.from_dict(plug_manifest_dict)
+# Create from JSON
+plug_manifest = PlugManifest.from_json(
+    '{ "deploy": ..., "name": ..., "version": ..., "runtime": ..., "runtimeVersion": ..., "metadata": ..., "protected": ..., "tags": ..., "type": ..., "interface": ... }'
+)
+
+# Export to dictionary
+plug_manifest_dict = plug_manifest.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

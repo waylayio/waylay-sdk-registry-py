@@ -2,6 +2,11 @@
 
 Webscript Versions Found
 
+**Source:** `waylay.services.registry.models.webscript_versions_response_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,23 +17,29 @@ Name | Type | Description | Notes
 **page** | **float** | The page number of a paged query result. | [optional] 
 **entities** | [**List[WebscriptResponseWithInvokeLinkV2]**](WebscriptResponseWithInvokeLinkV2.md) | The specification and deployment status of the queried functions | 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.webscript_versions_response_v2 import WebscriptVersionsResponseV2
+from waylay.services.registry.models.webscript_versions_response_v2 import (
+    WebscriptVersionsResponseV2,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of WebscriptVersionsResponseV2 from a JSON string
-webscript_versions_response_v2_instance = WebscriptVersionsResponseV2.from_json(json)
-# print the JSON string representation of the object
-print WebscriptVersionsResponseV2.to_json()
+webscript_versions_response_v2 = WebscriptVersionsResponseV2(
+    embedded=..., limit=..., count=..., page=..., entities=...
+)
 
-# convert the object into a dict
-webscript_versions_response_v2_dict = webscript_versions_response_v2_instance.to_dict()
-# create an instance of WebscriptVersionsResponseV2 from a dict
-webscript_versions_response_v2_form_dict = webscript_versions_response_v2.from_dict(webscript_versions_response_v2_dict)
+# Create from JSON
+webscript_versions_response_v2 = WebscriptVersionsResponseV2.from_json(
+    '{ "_embedded": ..., "limit": ..., "count": ..., "page": ..., "entities": ... }'
+)
+
+# Export to dictionary
+webscript_versions_response_v2_dict = webscript_versions_response_v2.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

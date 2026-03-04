@@ -1,6 +1,11 @@
 # PlugWithInvocationResponseV2
 
 
+**Source:** `waylay.services.registry.models.plug_with_invocation_response_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -19,23 +24,41 @@ Name | Type | Description | Notes
 **plug** | [**PlugManifest**](PlugManifest.md) |  | 
 **invocation** | [**InvocationAttributes**](InvocationAttributes.md) |  | 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.plug_with_invocation_response_v2 import PlugWithInvocationResponseV2
+from waylay.services.registry.models.plug_with_invocation_response_v2 import (
+    PlugWithInvocationResponseV2,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of PlugWithInvocationResponseV2 from a JSON string
-plug_with_invocation_response_v2_instance = PlugWithInvocationResponseV2.from_json(json)
-# print the JSON string representation of the object
-print PlugWithInvocationResponseV2.to_json()
+plug_with_invocation_response_v2 = PlugWithInvocationResponseV2(
+    created_by=...,
+    created_at=...,
+    updated_by=...,
+    updated_at=...,
+    updates=...,
+    status=...,
+    failure_reason=...,
+    runtime=...,
+    deprecated=...,
+    draft=...,
+    revision=...,
+    plug=...,
+    invocation=...,
+)
 
-# convert the object into a dict
-plug_with_invocation_response_v2_dict = plug_with_invocation_response_v2_instance.to_dict()
-# create an instance of PlugWithInvocationResponseV2 from a dict
-plug_with_invocation_response_v2_form_dict = plug_with_invocation_response_v2.from_dict(plug_with_invocation_response_v2_dict)
+# Create from JSON
+plug_with_invocation_response_v2 = PlugWithInvocationResponseV2.from_json(
+    '{ "createdBy": ..., "createdAt": ..., "updatedBy": ..., "updatedAt": ..., "updates": ..., "status": ..., "failureReason": ..., "runtime": ..., "deprecated": ..., "draft": ..., "revision": ..., "plug": ..., "invocation": ... }'
+)
+
+# Export to dictionary
+plug_with_invocation_response_v2_dict = plug_with_invocation_response_v2.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

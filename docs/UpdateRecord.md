@@ -2,6 +2,11 @@
 
 An update report corresponding to a modifying operation initiated by a user/administrator on the entity.
 
+**Source:** `waylay.services.registry.models.update_record`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,23 +17,25 @@ Name | Type | Description | Notes
 **at** | **datetime** |  | 
 **by** | **str** | The user that initiated this operation. | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.update_record import UpdateRecord
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of UpdateRecord from a JSON string
-update_record_instance = UpdateRecord.from_json(json)
-# print the JSON string representation of the object
-print UpdateRecord.to_json()
+update_record = UpdateRecord(comment=..., operation=..., jobs=..., at=..., by=...)
 
-# convert the object into a dict
-update_record_dict = update_record_instance.to_dict()
-# create an instance of UpdateRecord from a dict
-update_record_form_dict = update_record.from_dict(update_record_dict)
+# Create from JSON
+update_record = UpdateRecord.from_json(
+    '{ "comment": ..., "operation": ..., "jobs": ..., "at": ..., "by": ... }'
+)
+
+# Export to dictionary
+update_record_dict = update_record.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

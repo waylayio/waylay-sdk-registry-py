@@ -2,30 +2,29 @@
 
 A reference to a tag, or tag object.
 
-## Properties
+**Source:** `waylay.services.registry.models.tag_or_tag_reference`
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**name** | **str** | A string that references a tag | 
-**color** | **str** | Color associated with the tag in an UI. | 
+
+
+## Union Type (Any Of)
+
+This type allows any of the following:
+
+Type | Description
+------------ | -------------
+**str** | A string that references a tag
+[**Tag**](Tag.md) | -
 
 ## Example
 
 ```python
 from waylay.services.registry.models.tag_or_tag_reference import TagOrTagReference
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TagOrTagReference from a JSON string
-tag_or_tag_reference_instance = TagOrTagReference.from_json(json)
-# print the JSON string representation of the object
-print TagOrTagReference.to_json()
-
-# convert the object into a dict
-tag_or_tag_reference_dict = tag_or_tag_reference_instance.to_dict()
-# create an instance of TagOrTagReference from a dict
-tag_or_tag_reference_form_dict = tag_or_tag_reference.from_dict(tag_or_tag_reference_dict)
+# Use any of the accepted types (see table above)
+my_tag_or_tag_reference: TagOrTagReference = ...
 ```
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

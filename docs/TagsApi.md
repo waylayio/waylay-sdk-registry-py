@@ -21,8 +21,6 @@ Get the metadata of a function Tag by name.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -32,14 +30,14 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tag_response import FunctionTagResponse
+
 try:
     # Get
     # calls `GET /registry/v2/tags/{tagName}`
     api_response = await waylay_client.registry.tags.get(
-        'tag_name_example', # tag_name | path param "tagName"
+        "tag_name_example",  # tag_name | path param "tagName"
     )
-    print("The response of registry.tags.get:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.tags.get: %s\n" % e)
 ```
@@ -89,8 +87,6 @@ List tags used on any plug, webscript or model.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -100,18 +96,18 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
+
 try:
     # List
     # calls `GET /registry/v2/tags/`
     api_response = await waylay_client.registry.tags.list(
         # query parameters:
-        query = {
-            'name': '*-demo-??'
-            'color': '#4153ea'
+        query={
+            "name": "*-demo-??",
+            "color": "#4153ea",
         },
     )
-    print("The response of registry.tags.list:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.tags.list: %s\n" % e)
 ```
@@ -162,8 +158,6 @@ Remove tags that are not referenced by any plug, webscript or model. This is nor
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -173,13 +167,12 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
+
 try:
     # Remove Unused
     # calls `DELETE /registry/v2/tags/`
-    api_response = await waylay_client.registry.tags.remove(
-    )
-    print("The response of registry.tags.remove:\n")
-    pprint(api_response)
+    api_response = await waylay_client.registry.tags.remove()
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.tags.remove: %s\n" % e)
 ```

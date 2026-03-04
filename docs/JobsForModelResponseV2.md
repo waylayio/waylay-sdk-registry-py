@@ -2,6 +2,11 @@
 
 Model Jobs Found
 
+**Source:** `waylay.services.registry.models.jobs_for_model_response_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -10,23 +15,27 @@ Name | Type | Description | Notes
 **function** | [**FunctionRef**](FunctionRef.md) |  | 
 **links** | [**JobsForModelResponseV2Links**](JobsForModelResponseV2Links.md) |  | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.jobs_for_model_response_v2 import JobsForModelResponseV2
+from waylay.services.registry.models.jobs_for_model_response_v2 import (
+    JobsForModelResponseV2,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of JobsForModelResponseV2 from a JSON string
-jobs_for_model_response_v2_instance = JobsForModelResponseV2.from_json(json)
-# print the JSON string representation of the object
-print JobsForModelResponseV2.to_json()
+jobs_for_model_response_v2 = JobsForModelResponseV2(jobs=..., function=..., links=...)
 
-# convert the object into a dict
-jobs_for_model_response_v2_dict = jobs_for_model_response_v2_instance.to_dict()
-# create an instance of JobsForModelResponseV2 from a dict
-jobs_for_model_response_v2_form_dict = jobs_for_model_response_v2.from_dict(jobs_for_model_response_v2_dict)
+# Create from JSON
+jobs_for_model_response_v2 = JobsForModelResponseV2.from_json(
+    '{ "jobs": ..., "function": ..., "_links": ... }'
+)
+
+# Export to dictionary
+jobs_for_model_response_v2_dict = jobs_for_model_response_v2.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

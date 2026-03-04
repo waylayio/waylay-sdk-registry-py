@@ -1,6 +1,11 @@
 # Undeploy
 
 
+**Source:** `waylay.services.registry.models.undeploy`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,7 +17,7 @@ Name | Type | Description | Notes
 **processed_at** | **datetime** | The timestamp of when the job has begun processing. | [optional] 
 **finished_at** | **object** | The timestamp of when the job has finished processing. | [optional] 
 **attempts_made** | **float** | The number of retries that were attempted. | [optional] 
-**type** | [**UndeployType**](UndeployType.md) |  | 
+**type** | [**AnyJobForFunctionUndeploy**](AnyJobForFunctionUndeploy.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**UndeployArgs**](UndeployArgs.md) |  | [optional] 
 **result** | [**UndeployResult**](UndeployResult.md) |  | [optional] 
@@ -20,23 +25,40 @@ Name | Type | Description | Notes
 **job** | [**JobStatus**](JobStatus.md) |  | [optional] 
 **failure_reason** | [**FailureReason**](FailureReason.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.undeploy import Undeploy
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Undeploy from a JSON string
-undeploy_instance = Undeploy.from_json(json)
-# print the JSON string representation of the object
-print Undeploy.to_json()
+undeploy = Undeploy(
+    links=...,
+    operation=...,
+    created_by=...,
+    created_at=...,
+    processed_at=...,
+    finished_at=...,
+    attempts_made=...,
+    type=...,
+    state=...,
+    request=...,
+    result=...,
+    function=...,
+    job=...,
+    failure_reason=...,
+)
 
-# convert the object into a dict
-undeploy_dict = undeploy_instance.to_dict()
-# create an instance of Undeploy from a dict
-undeploy_form_dict = undeploy.from_dict(undeploy_dict)
+# Create from JSON
+undeploy = Undeploy.from_json(
+    '{ "_links": ..., "operation": ..., "createdBy": ..., "createdAt": ..., "processedAt": ..., "finishedAt": ..., "attemptsMade": ..., "type": ..., "state": ..., "request": ..., "result": ..., "function": ..., "job": ..., "failureReason": ... }'
+)
+
+# Export to dictionary
+undeploy_dict = undeploy.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

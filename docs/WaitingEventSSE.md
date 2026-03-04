@@ -2,6 +2,11 @@
 
 A message that notifies a state change in a background job.
 
+**Source:** `waylay.services.registry.models.waiting_event_sse`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -9,23 +14,23 @@ Name | Type | Description | Notes
 **event** | [**WaitingEventSSEEvent**](WaitingEventSSEEvent.md) |  | 
 **data** | [**JobEventResponseWaitingEventData**](JobEventResponseWaitingEventData.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.waiting_event_sse import WaitingEventSSE
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of WaitingEventSSE from a JSON string
-waiting_event_sse_instance = WaitingEventSSE.from_json(json)
-# print the JSON string representation of the object
-print WaitingEventSSE.to_json()
+waiting_event_sse = WaitingEventSSE(event=..., data=...)
 
-# convert the object into a dict
-waiting_event_sse_dict = waiting_event_sse_instance.to_dict()
-# create an instance of WaitingEventSSE from a dict
-waiting_event_sse_form_dict = waiting_event_sse.from_dict(waiting_event_sse_dict)
+# Create from JSON
+waiting_event_sse = WaitingEventSSE.from_json('{ "event": ..., "data": ... }')
+
+# Export to dictionary
+waiting_event_sse_dict = waiting_event_sse.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -2,32 +2,33 @@
 
 HAL links to related actions.
 
-## Properties
+**Source:** `waylay.services.registry.models.job_status_and_entity_hal_links`
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
-**job** | [**JobHALLinksJob**](JobHALLinksJob.md) |  | [optional] 
-**plug** | [**HALLinks**](HALLinks.md) |  | 
-**webscript** | [**HALLinks**](HALLinks.md) |  | 
-**model** | [**HALLinks**](HALLinks.md) |  | 
+
+
+## Union Type (Any Of)
+
+This type allows any of the following:
+
+Type | Description
+------------ | -------------
+[**Plug2**](Plug2.md) | -
+[**Webscript2**](Webscript2.md) | -
+[**Model2**](Model2.md) | -
+[**JobStatusHALLink**](JobStatusHALLink.md) | -
 
 ## Example
 
 ```python
-from waylay.services.registry.models.job_status_and_entity_hal_links import JobStatusAndEntityHALLinks
+from waylay.services.registry.models.job_status_and_entity_hal_links import (
+    JobStatusAndEntityHALLinks,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of JobStatusAndEntityHALLinks from a JSON string
-job_status_and_entity_hal_links_instance = JobStatusAndEntityHALLinks.from_json(json)
-# print the JSON string representation of the object
-print JobStatusAndEntityHALLinks.to_json()
-
-# convert the object into a dict
-job_status_and_entity_hal_links_dict = job_status_and_entity_hal_links_instance.to_dict()
-# create an instance of JobStatusAndEntityHALLinks from a dict
-job_status_and_entity_hal_links_form_dict = job_status_and_entity_hal_links.from_dict(job_status_and_entity_hal_links_dict)
+# Use any of the accepted types (see table above)
+my_job_status_and_entity_hal_links: JobStatusAndEntityHALLinks = ...
 ```
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

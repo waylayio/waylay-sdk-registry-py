@@ -2,34 +2,45 @@
 
 HAL links to related actions.
 
+**Source:** `waylay.services.registry.models.get_webscript_response_v2_links`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **job** | [**JobHALLinksJob**](JobHALLinksJob.md) |  | [optional] 
-**content** | [**HALLink**](HALLink.md) |  | [optional] 
+**content** | [**IHALLink**](IHALLink.md) |  | [optional] 
 **draft** | [**AltVersionHALLinkDraft**](AltVersionHALLinkDraft.md) |  | [optional] 
 **published** | [**AltVersionHALLinkPublished**](AltVersionHALLinkPublished.md) |  | [optional] 
-**jobs** | [**HALLink**](HALLink.md) |  | [optional] 
-**invoke** | [**HALLink**](HALLink.md) |  | [optional] 
+**jobs** | [**IHALLink**](IHALLink.md) |  | [optional] 
+**invoke** | [**IHALLink**](IHALLink.md) |  | [optional] 
+
 
 ## Example
 
 ```python
-from waylay.services.registry.models.get_webscript_response_v2_links import GetWebscriptResponseV2Links
+from waylay.services.registry.models.get_webscript_response_v2_links import (
+    GetWebscriptResponseV2Links,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of GetWebscriptResponseV2Links from a JSON string
-get_webscript_response_v2_links_instance = GetWebscriptResponseV2Links.from_json(json)
-# print the JSON string representation of the object
-print GetWebscriptResponseV2Links.to_json()
+get_webscript_response_v2_links = GetWebscriptResponseV2Links(
+    job=..., content=..., draft=..., published=..., jobs=..., invoke=...
+)
 
-# convert the object into a dict
-get_webscript_response_v2_links_dict = get_webscript_response_v2_links_instance.to_dict()
-# create an instance of GetWebscriptResponseV2Links from a dict
-get_webscript_response_v2_links_form_dict = get_webscript_response_v2_links.from_dict(get_webscript_response_v2_links_dict)
+# Create from JSON
+get_webscript_response_v2_links = GetWebscriptResponseV2Links.from_json(
+    '{ "job": ..., "content": ..., "draft": ..., "published": ..., "jobs": ..., "invoke": ... }'
+)
+
+# Export to dictionary
+get_webscript_response_v2_links_dict = get_webscript_response_v2_links.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

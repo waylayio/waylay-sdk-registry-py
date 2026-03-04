@@ -1,6 +1,11 @@
 # EntityWithLinksIPlugResponseV2
 
 
+**Source:** `waylay.services.registry.models.entity_with_links_i_plug_response_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -20,23 +25,44 @@ Name | Type | Description | Notes
 **revision** | **str** | The revision of the function. This will be &lt;code&gt;undefined&lt;/code&gt; when the plug is not a draft. | [optional] 
 **plug** | [**PlugManifest**](PlugManifest.md) |  | 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.entity_with_links_i_plug_response_v2 import EntityWithLinksIPlugResponseV2
+from waylay.services.registry.models.entity_with_links_i_plug_response_v2 import (
+    EntityWithLinksIPlugResponseV2,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of EntityWithLinksIPlugResponseV2 from a JSON string
-entity_with_links_i_plug_response_v2_instance = EntityWithLinksIPlugResponseV2.from_json(json)
-# print the JSON string representation of the object
-print EntityWithLinksIPlugResponseV2.to_json()
+entity_with_links_i_plug_response_v2 = EntityWithLinksIPlugResponseV2(
+    embedded=...,
+    links=...,
+    created_by=...,
+    created_at=...,
+    updated_by=...,
+    updated_at=...,
+    updates=...,
+    status=...,
+    failure_reason=...,
+    runtime=...,
+    deprecated=...,
+    draft=...,
+    revision=...,
+    plug=...,
+)
 
-# convert the object into a dict
-entity_with_links_i_plug_response_v2_dict = entity_with_links_i_plug_response_v2_instance.to_dict()
-# create an instance of EntityWithLinksIPlugResponseV2 from a dict
-entity_with_links_i_plug_response_v2_form_dict = entity_with_links_i_plug_response_v2.from_dict(entity_with_links_i_plug_response_v2_dict)
+# Create from JSON
+entity_with_links_i_plug_response_v2 = EntityWithLinksIPlugResponseV2.from_json(
+    '{ "_embedded": ..., "_links": ..., "createdBy": ..., "createdAt": ..., "updatedBy": ..., "updatedAt": ..., "updates": ..., "status": ..., "failureReason": ..., "runtime": ..., "deprecated": ..., "draft": ..., "revision": ..., "plug": ... }'
+)
+
+# Export to dictionary
+entity_with_links_i_plug_response_v2_dict = (
+    entity_with_links_i_plug_response_v2.to_dict()
+)
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

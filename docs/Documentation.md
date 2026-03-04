@@ -1,6 +1,11 @@
 # Documentation
 
 
+**Source:** `waylay.services.registry.models.documentation`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,27 @@ Name | Type | Description | Notes
 **output** | [**List[DocumentationProperty]**](DocumentationProperty.md) | Documentation of the plug response parameters. | [optional] 
 **examples** | [**List[DocumentationExample]**](DocumentationExample.md) | Example scenarios for testing the plug. | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.documentation import Documentation
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Documentation from a JSON string
-documentation_instance = Documentation.from_json(json)
-# print the JSON string representation of the object
-print Documentation.to_json()
+documentation = Documentation(
+    description=..., states=..., input=..., output=..., examples=...
+)
 
-# convert the object into a dict
-documentation_dict = documentation_instance.to_dict()
-# create an instance of Documentation from a dict
-documentation_form_dict = documentation.from_dict(documentation_dict)
+# Create from JSON
+documentation = Documentation.from_json(
+    '{ "description": ..., "states": ..., "input": ..., "output": ..., "examples": ... }'
+)
+
+# Export to dictionary
+documentation_dict = documentation.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -18,8 +18,6 @@ Get the status and version of the function registry service.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -29,13 +27,12 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.root_page_response import RootPageResponse
+
 try:
     # Get Service Status
     # calls `GET /registry/v2/`
-    api_response = await waylay_client.registry.about.get(
-    )
-    print("The response of registry.about.get:\n")
-    pprint(api_response)
+    api_response = await waylay_client.registry.about.get()
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.about.get: %s\n" % e)
 ```

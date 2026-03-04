@@ -2,7 +2,7 @@
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 
 This Python package is automatically generated based on the 
-Waylay Registry OpenAPI specification (API version: 2.24.1)
+Waylay Registry OpenAPI specification (API version: 2.25.0)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/registry.html).
 
 It consists of a plugin for the waylay-sdk-core package, and contains the Registry api methods.
@@ -26,8 +26,6 @@ Alternatively, you can install support for this _registry_ service only, install
 ## Usage
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -42,11 +40,10 @@ try:
     # calls `GET /registry/v2/`
     api_response = await waylay_client.registry.about.get(
     )
-    print("The response of registry.about.get:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.about.get: %s\n" % e)
 ```
 
 
-For more information, please visit the [Waylay API documentation](https://docs.waylay.io/#/api/?id=software-development-kits).
+For more information, please visit the [Waylay API documentation](https://docs.waylay.io/#/api/sdk/waylay-sdk/).

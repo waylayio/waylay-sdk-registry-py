@@ -2,6 +2,11 @@
 
 If specified, it overrides the properties in `default`. Non-specified properties are taken from `default`
 
+**Source:** `waylay.services.registry.models.deploy_spec_openfaas_spec`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -20,23 +25,41 @@ Name | Type | Description | Notes
 **requests** | [**ResourceLimits**](ResourceLimits.md) |  | [optional] 
 **read_only_root_filesystem** | **bool** |  | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.deploy_spec_openfaas_spec import DeploySpecOpenfaasSpec
+from waylay.services.registry.models.deploy_spec_openfaas_spec import (
+    DeploySpecOpenfaasSpec,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of DeploySpecOpenfaasSpec from a JSON string
-deploy_spec_openfaas_spec_instance = DeploySpecOpenfaasSpec.from_json(json)
-# print the JSON string representation of the object
-print DeploySpecOpenfaasSpec.to_json()
+deploy_spec_openfaas_spec = DeploySpecOpenfaasSpec(
+    service=...,
+    image=...,
+    namespace=...,
+    network=...,
+    env_vars=...,
+    constraints=...,
+    labels=...,
+    annotations=...,
+    secrets=...,
+    registry_auth=...,
+    limits=...,
+    requests=...,
+    read_only_root_filesystem=...,
+)
 
-# convert the object into a dict
-deploy_spec_openfaas_spec_dict = deploy_spec_openfaas_spec_instance.to_dict()
-# create an instance of DeploySpecOpenfaasSpec from a dict
-deploy_spec_openfaas_spec_form_dict = deploy_spec_openfaas_spec.from_dict(deploy_spec_openfaas_spec_dict)
+# Create from JSON
+deploy_spec_openfaas_spec = DeploySpecOpenfaasSpec.from_json(
+    '{ "service": ..., "image": ..., "namespace": ..., "network": ..., "envVars": ..., "constraints": ..., "labels": ..., "annotations": ..., "secrets": ..., "registryAuth": ..., "limits": ..., "requests": ..., "readOnlyRootFilesystem": ... }'
+)
+
+# Export to dictionary
+deploy_spec_openfaas_spec_dict = deploy_spec_openfaas_spec.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -1,6 +1,11 @@
 # WebscriptManifest
 
 
+**Source:** `waylay.services.registry.models.webscript_manifest`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -16,23 +21,36 @@ Name | Type | Description | Notes
 **private** | **bool** | If &lt;code&gt;true&lt;/code&gt; this webscript will require authentication. | 
 **allow_hmac** | **bool** | If &lt;code&gt;true&lt;/code&gt; this webscript will support authentication with a &lt;em&gt;HMAC&lt;/em&gt; key, available as the &lt;code&gt;secret&lt;/code&gt; attribute of the deployed webscript entity. | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.webscript_manifest import WebscriptManifest
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of WebscriptManifest from a JSON string
-webscript_manifest_instance = WebscriptManifest.from_json(json)
-# print the JSON string representation of the object
-print WebscriptManifest.to_json()
+webscript_manifest = WebscriptManifest(
+    deploy=...,
+    name=...,
+    version=...,
+    runtime=...,
+    runtime_version=...,
+    metadata=...,
+    protected=...,
+    tags=...,
+    private=...,
+    allow_hmac=...,
+)
 
-# convert the object into a dict
-webscript_manifest_dict = webscript_manifest_instance.to_dict()
-# create an instance of WebscriptManifest from a dict
-webscript_manifest_form_dict = webscript_manifest.from_dict(webscript_manifest_dict)
+# Create from JSON
+webscript_manifest = WebscriptManifest.from_json(
+    '{ "deploy": ..., "name": ..., "version": ..., "runtime": ..., "runtimeVersion": ..., "metadata": ..., "protected": ..., "tags": ..., "private": ..., "allowHmac": ... }'
+)
+
+# Export to dictionary
+webscript_manifest_dict = webscript_manifest.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

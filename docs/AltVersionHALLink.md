@@ -1,6 +1,11 @@
 # AltVersionHALLink
 
 
+**Source:** `waylay.services.registry.models.alt_version_hal_link`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -8,23 +13,23 @@ Name | Type | Description | Notes
 **draft** | [**AltVersionHALLinkDraft**](AltVersionHALLinkDraft.md) |  | [optional] 
 **published** | [**AltVersionHALLinkPublished**](AltVersionHALLinkPublished.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.alt_version_hal_link import AltVersionHALLink
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of AltVersionHALLink from a JSON string
-alt_version_hal_link_instance = AltVersionHALLink.from_json(json)
-# print the JSON string representation of the object
-print AltVersionHALLink.to_json()
+alt_version_hal_link = AltVersionHALLink(draft=..., published=...)
 
-# convert the object into a dict
-alt_version_hal_link_dict = alt_version_hal_link_instance.to_dict()
-# create an instance of AltVersionHALLink from a dict
-alt_version_hal_link_form_dict = alt_version_hal_link.from_dict(alt_version_hal_link_dict)
+# Create from JSON
+alt_version_hal_link = AltVersionHALLink.from_json('{ "draft": ..., "published": ... }')
+
+# Export to dictionary
+alt_version_hal_link_dict = alt_version_hal_link.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

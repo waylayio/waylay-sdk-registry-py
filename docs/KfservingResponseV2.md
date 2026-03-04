@@ -1,6 +1,11 @@
 # KfservingResponseV2
 
 
+**Source:** `waylay.services.registry.models.kfserving_response_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -16,25 +21,40 @@ Name | Type | Description | Notes
 **deprecated** | **bool** | If &lt;code&gt;true&lt;/code&gt; this function is deprecated and removed from regular listings. | 
 **draft** | **bool** | If &lt;code&gt;true&lt;/code&gt; this function is a draft function and it&#39;s assets are still mutable. | 
 **revision** | **str** | The revision of the function. This will be &lt;code&gt;undefined&lt;/code&gt; when the plug is not a draft. | [optional] 
-**model** | [**KFServingManifest**](KFServingManifest.md) |  | 
+**model** | [**IKFServingManifest**](IKFServingManifest.md) |  | 
+
 
 ## Example
 
 ```python
 from waylay.services.registry.models.kfserving_response_v2 import KfservingResponseV2
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of KfservingResponseV2 from a JSON string
-kfserving_response_v2_instance = KfservingResponseV2.from_json(json)
-# print the JSON string representation of the object
-print KfservingResponseV2.to_json()
+kfserving_response_v2 = KfservingResponseV2(
+    created_by=...,
+    created_at=...,
+    updated_by=...,
+    updated_at=...,
+    updates=...,
+    status=...,
+    failure_reason=...,
+    runtime=...,
+    deprecated=...,
+    draft=...,
+    revision=...,
+    model=...,
+)
 
-# convert the object into a dict
-kfserving_response_v2_dict = kfserving_response_v2_instance.to_dict()
-# create an instance of KfservingResponseV2 from a dict
-kfserving_response_v2_form_dict = kfserving_response_v2.from_dict(kfserving_response_v2_dict)
+# Create from JSON
+kfserving_response_v2 = KfservingResponseV2.from_json(
+    '{ "createdBy": ..., "createdAt": ..., "updatedBy": ..., "updatedAt": ..., "updates": ..., "status": ..., "failureReason": ..., "runtime": ..., "deprecated": ..., "draft": ..., "revision": ..., "model": ... }'
+)
+
+# Export to dictionary
+kfserving_response_v2_dict = kfserving_response_v2.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

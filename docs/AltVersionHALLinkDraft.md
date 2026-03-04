@@ -2,32 +2,43 @@
 
 Link to the lastest draft version.
 
+**Source:** `waylay.services.registry.models.alt_version_hal_link_draft`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **draft** | **bool** |  | 
-**href** | [**HALLinkHref**](HALLinkHref.md) |  | 
+**href** | [**IHALLinkHref**](IHALLinkHref.md) |  | 
 **version** | **str** |  | 
 **deprecated** | **bool** |  | 
+
 
 ## Example
 
 ```python
-from waylay.services.registry.models.alt_version_hal_link_draft import AltVersionHALLinkDraft
+from waylay.services.registry.models.alt_version_hal_link_draft import (
+    AltVersionHALLinkDraft,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of AltVersionHALLinkDraft from a JSON string
-alt_version_hal_link_draft_instance = AltVersionHALLinkDraft.from_json(json)
-# print the JSON string representation of the object
-print AltVersionHALLinkDraft.to_json()
+alt_version_hal_link_draft = AltVersionHALLinkDraft(
+    draft=..., href=..., version=..., deprecated=...
+)
 
-# convert the object into a dict
-alt_version_hal_link_draft_dict = alt_version_hal_link_draft_instance.to_dict()
-# create an instance of AltVersionHALLinkDraft from a dict
-alt_version_hal_link_draft_form_dict = alt_version_hal_link_draft.from_dict(alt_version_hal_link_draft_dict)
+# Create from JSON
+alt_version_hal_link_draft = AltVersionHALLinkDraft.from_json(
+    '{ "draft": ..., "href": ..., "version": ..., "deprecated": ... }'
+)
+
+# Export to dictionary
+alt_version_hal_link_draft_dict = alt_version_hal_link_draft.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

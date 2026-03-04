@@ -2,6 +2,11 @@
 
 Overrides on the deployment specification.
 
+**Source:** `waylay.services.registry.models.deploy_args_deploy_spec_overrides`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -20,23 +25,41 @@ Name | Type | Description | Notes
 **requests** | [**ResourceLimits**](ResourceLimits.md) |  | [optional] 
 **read_only_root_filesystem** | **bool** |  | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.deploy_args_deploy_spec_overrides import DeployArgsDeploySpecOverrides
+from waylay.services.registry.models.deploy_args_deploy_spec_overrides import (
+    DeployArgsDeploySpecOverrides,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of DeployArgsDeploySpecOverrides from a JSON string
-deploy_args_deploy_spec_overrides_instance = DeployArgsDeploySpecOverrides.from_json(json)
-# print the JSON string representation of the object
-print DeployArgsDeploySpecOverrides.to_json()
+deploy_args_deploy_spec_overrides = DeployArgsDeploySpecOverrides(
+    service=...,
+    image=...,
+    namespace=...,
+    network=...,
+    env_vars=...,
+    constraints=...,
+    labels=...,
+    annotations=...,
+    secrets=...,
+    registry_auth=...,
+    limits=...,
+    requests=...,
+    read_only_root_filesystem=...,
+)
 
-# convert the object into a dict
-deploy_args_deploy_spec_overrides_dict = deploy_args_deploy_spec_overrides_instance.to_dict()
-# create an instance of DeployArgsDeploySpecOverrides from a dict
-deploy_args_deploy_spec_overrides_form_dict = deploy_args_deploy_spec_overrides.from_dict(deploy_args_deploy_spec_overrides_dict)
+# Create from JSON
+deploy_args_deploy_spec_overrides = DeployArgsDeploySpecOverrides.from_json(
+    '{ "service": ..., "image": ..., "namespace": ..., "network": ..., "envVars": ..., "constraints": ..., "labels": ..., "annotations": ..., "secrets": ..., "registryAuth": ..., "limits": ..., "requests": ..., "readOnlyRootFilesystem": ... }'
+)
+
+# Export to dictionary
+deploy_args_deploy_spec_overrides_dict = deploy_args_deploy_spec_overrides.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

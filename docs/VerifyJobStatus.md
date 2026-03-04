@@ -1,6 +1,11 @@
 # VerifyJobStatus
 
 
+**Source:** `waylay.services.registry.models.verify_job_status`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,30 +16,45 @@ Name | Type | Description | Notes
 **processed_at** | **datetime** | The timestamp of when the job has begun processing. | [optional] 
 **finished_at** | **object** | The timestamp of when the job has finished processing. | [optional] 
 **attempts_made** | **float** | The number of retries that were attempted. | [optional] 
-**type** | [**VerifyType**](VerifyType.md) |  | 
+**type** | [**VerifyJobStatusType**](VerifyJobStatusType.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**VerifyArgs**](VerifyArgs.md) |  | 
 **result** | [**VerifyResult**](VerifyResult.md) |  | [optional] 
 **function** | [**FunctionRef**](FunctionRef.md) |  | [optional] 
 **job** | [**JobStatus**](JobStatus.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.verify_job_status import VerifyJobStatus
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of VerifyJobStatus from a JSON string
-verify_job_status_instance = VerifyJobStatus.from_json(json)
-# print the JSON string representation of the object
-print VerifyJobStatus.to_json()
+verify_job_status = VerifyJobStatus(
+    operation=...,
+    created_by=...,
+    created_at=...,
+    processed_at=...,
+    finished_at=...,
+    attempts_made=...,
+    type=...,
+    state=...,
+    request=...,
+    result=...,
+    function=...,
+    job=...,
+)
 
-# convert the object into a dict
-verify_job_status_dict = verify_job_status_instance.to_dict()
-# create an instance of VerifyJobStatus from a dict
-verify_job_status_form_dict = verify_job_status.from_dict(verify_job_status_dict)
+# Create from JSON
+verify_job_status = VerifyJobStatus.from_json(
+    '{ "operation": ..., "createdBy": ..., "createdAt": ..., "processedAt": ..., "finishedAt": ..., "attemptsMade": ..., "type": ..., "state": ..., "request": ..., "result": ..., "function": ..., "job": ... }'
+)
+
+# Export to dictionary
+verify_job_status_dict = verify_job_status.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

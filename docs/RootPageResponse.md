@@ -2,6 +2,11 @@
 
 Status Page
 
+**Source:** `waylay.services.registry.models.root_page_response`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,25 @@ Name | Type | Description | Notes
 **enabled** | **object** | Description of the features enabled on this service deployment. | 
 **revision** | **str** | Revision of the service source code. | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.root_page_response import RootPageResponse
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of RootPageResponse from a JSON string
-root_page_response_instance = RootPageResponse.from_json(json)
-# print the JSON string representation of the object
-print RootPageResponse.to_json()
+root_page_response = RootPageResponse(name=..., version=..., enabled=..., revision=...)
 
-# convert the object into a dict
-root_page_response_dict = root_page_response_instance.to_dict()
-# create an instance of RootPageResponse from a dict
-root_page_response_form_dict = root_page_response.from_dict(root_page_response_dict)
+# Create from JSON
+root_page_response = RootPageResponse.from_json(
+    '{ "name": ..., "version": ..., "enabled": ..., "revision": ... }'
+)
+
+# Export to dictionary
+root_page_response_dict = root_page_response.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -24,7 +24,7 @@ def with_example_provider(dct):
     return dct
 
 
-with open("openapi/registry.transformed.openapi.yaml", "r") as file:
+with open("openapi/registry.transformed.openapi.yaml") as file:
     OPENAPI_SPEC = yaml.safe_load(file)
 
 MODEL_DEFINITIONS = OPENAPI_SPEC["components"]["schemas"]
@@ -167,7 +167,7 @@ _alt_version_hal_link_draft_model_schema = json.loads(
       "type" : "boolean"
     },
     "href" : {
-      "$ref" : "#/components/schemas/HALLink_href"
+      "$ref" : "#/components/schemas/IHALLink_href"
     },
     "version" : {
       "type" : "string"
@@ -201,7 +201,7 @@ _alt_version_hal_link_published_model_schema = json.loads(
       "type" : "boolean"
     },
     "href" : {
-      "$ref" : "#/components/schemas/HALLink_href"
+      "$ref" : "#/components/schemas/IHALLink_href"
     },
     "version" : {
       "type" : "string"
@@ -244,6 +244,76 @@ _any_job_for_function_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"AnyJobForFunction": _any_job_for_function_model_schema})
+
+_any_job_for_function_build_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobForFunctionBuild",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "build" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobForFunctionBuild": _any_job_for_function_build_model_schema
+})
+
+_any_job_for_function_deploy_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobForFunctionDeploy",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "deploy" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobForFunctionDeploy": _any_job_for_function_deploy_model_schema
+})
+
+_any_job_for_function_scale_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobForFunctionScale",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "scale" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobForFunctionScale": _any_job_for_function_scale_model_schema
+})
+
+_any_job_for_function_undeploy_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobForFunctionUndeploy",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "undeploy" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobForFunctionUndeploy": _any_job_for_function_undeploy_model_schema
+})
+
+_any_job_for_function_verify_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobForFunctionVerify",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "verify" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobForFunctionVerify": _any_job_for_function_verify_model_schema
+})
 
 _any_job_result_model_schema = json.loads(
     r"""{
@@ -312,6 +382,90 @@ _any_job_status_summary_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"AnyJobStatusSummary": _any_job_status_summary_model_schema})
+
+_any_job_status_summary_batch_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobStatusSummaryBatch",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "batch" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobStatusSummaryBatch": _any_job_status_summary_batch_model_schema
+})
+
+_any_job_status_summary_build_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobStatusSummaryBuild",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "build" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobStatusSummaryBuild": _any_job_status_summary_build_model_schema
+})
+
+_any_job_status_summary_deploy_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobStatusSummaryDeploy",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "deploy" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobStatusSummaryDeploy": _any_job_status_summary_deploy_model_schema
+})
+
+_any_job_status_summary_scale_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobStatusSummaryScale",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "scale" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobStatusSummaryScale": _any_job_status_summary_scale_model_schema
+})
+
+_any_job_status_summary_undeploy_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobStatusSummaryUndeploy",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "undeploy" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobStatusSummaryUndeploy": _any_job_status_summary_undeploy_model_schema
+})
+
+_any_job_status_summary_verify_model_schema = json.loads(
+    r"""{
+  "title" : "AnyJobStatusSummaryVerify",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "verify" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "AnyJobStatusSummaryVerify": _any_job_status_summary_verify_model_schema
+})
 
 _archive_format_model_schema = json.loads(
     r"""{
@@ -568,7 +722,7 @@ _batch_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/BatchJobStatus_type"
+      "$ref" : "#/components/schemas/AnyJobStatusSummaryBatch"
     },
     "id" : {
       "title" : "id",
@@ -739,7 +893,7 @@ _build_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Build_type"
+      "$ref" : "#/components/schemas/AnyJobForFunctionBuild"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -804,7 +958,7 @@ _build_1_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Build_type"
+      "$ref" : "#/components/schemas/AnyJobStatusSummaryBuild"
     },
     "id" : {
       "title" : "id",
@@ -901,7 +1055,7 @@ _build_job_status_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Build_type"
+      "$ref" : "#/components/schemas/BuildJobStatus_type"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -924,6 +1078,18 @@ _build_job_status_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"BuildJobStatus": _build_job_status_model_schema})
+
+_build_job_status_type_model_schema = json.loads(
+    r"""{
+  "title" : "BuildJobStatus_type",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "build" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"BuildJobStatus_type": _build_job_status_type_model_schema})
 
 _build_result_model_schema = json.loads(
     r"""{
@@ -983,18 +1149,6 @@ _build_spec_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"BuildSpec": _build_spec_model_schema})
-
-_build_type_model_schema = json.loads(
-    r"""{
-  "title" : "Build_type",
-  "type" : "string",
-  "description" : "The type of the background task.",
-  "enum" : [ "build" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"Build_type": _build_type_model_schema})
 
 _cleanup_result_model_schema = json.loads(
     r"""{
@@ -1162,7 +1316,7 @@ MODEL_DEFINITIONS.update({
     "ContentValidationListing": _content_validation_listing_model_schema
 })
 
-_create_models_copy_parameter_model_schema = json.loads(
+_create_models_copy_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
     "$ref" : "#/components/schemas/NamedVersionRange"
@@ -1173,9 +1327,33 @@ _create_models_copy_parameter_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "create_models_copy_parameter": _create_models_copy_parameter_model_schema
-})
+MODEL_DEFINITIONS.update({"CreateModelsCopy": _create_models_copy_model_schema})
+
+_create_plugs_copy_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/NamedVersionRange"
+  }, {
+    "$ref" : "#/components/schemas/ExampleReference"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"CreatePlugsCopy": _create_plugs_copy_model_schema})
+
+_create_webscripts_copy_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/NamedVersionRange"
+  }, {
+    "$ref" : "#/components/schemas/ExampleReference"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"CreateWebscriptsCopy": _create_webscripts_copy_model_schema})
 
 _delayed_event_data_model_schema = json.loads(
     r"""{
@@ -1268,7 +1446,7 @@ _deploy_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Deploy_type"
+      "$ref" : "#/components/schemas/AnyJobForFunctionDeploy"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -1333,7 +1511,7 @@ _deploy_1_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Deploy_type"
+      "$ref" : "#/components/schemas/AnyJobStatusSummaryDeploy"
     },
     "id" : {
       "title" : "id",
@@ -1510,7 +1688,7 @@ _deploy_job_status_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Deploy_type"
+      "$ref" : "#/components/schemas/DeployJobStatus_type"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -1533,6 +1711,18 @@ _deploy_job_status_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"DeployJobStatus": _deploy_job_status_model_schema})
+
+_deploy_job_status_type_model_schema = json.loads(
+    r"""{
+  "title" : "DeployJobStatus_type",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "deploy" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"DeployJobStatus_type": _deploy_job_status_type_model_schema})
 
 _deploy_result_model_schema = json.loads(
     r"""{
@@ -1646,28 +1836,16 @@ MODEL_DEFINITIONS.update({
     "DeploySpec_openfaasSpec": _deploy_spec_openfaas_spec_model_schema
 })
 
-_deploy_type_model_schema = json.loads(
-    r"""{
-  "title" : "Deploy_type",
-  "type" : "string",
-  "description" : "The type of the background task.",
-  "enum" : [ "deploy" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"Deploy_type": _deploy_type_model_schema})
-
 _deprecate_previous_policy_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf"
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicyNone"
   }, {
-    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf_1"
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicyAll"
   }, {
-    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf_2"
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicyPatch"
   }, {
-    "$ref" : "#/components/schemas/DeprecatePreviousPolicy_anyOf_3"
+    "$ref" : "#/components/schemas/DeprecatePreviousPolicyMinor"
   } ]
 }
 """,
@@ -1677,22 +1855,9 @@ MODEL_DEFINITIONS.update({
     "DeprecatePreviousPolicy": _deprecate_previous_policy_model_schema
 })
 
-_deprecate_previous_policy_any_of_model_schema = json.loads(
+_deprecate_previous_policy_all_model_schema = json.loads(
     r"""{
-  "title" : "DeprecatePreviousPolicy_anyOf",
-  "type" : "string",
-  "enum" : [ "none" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "DeprecatePreviousPolicy_anyOf": _deprecate_previous_policy_any_of_model_schema
-})
-
-_deprecate_previous_policy_any_of_1_model_schema = json.loads(
-    r"""{
-  "title" : "DeprecatePreviousPolicy_anyOf_1",
+  "title" : "DeprecatePreviousPolicyAll",
   "type" : "string",
   "enum" : [ "all" ]
 }
@@ -1700,25 +1865,12 @@ _deprecate_previous_policy_any_of_1_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "DeprecatePreviousPolicy_anyOf_1": _deprecate_previous_policy_any_of_1_model_schema
+    "DeprecatePreviousPolicyAll": _deprecate_previous_policy_all_model_schema
 })
 
-_deprecate_previous_policy_any_of_2_model_schema = json.loads(
+_deprecate_previous_policy_minor_model_schema = json.loads(
     r"""{
-  "title" : "DeprecatePreviousPolicy_anyOf_2",
-  "type" : "string",
-  "enum" : [ "patch" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "DeprecatePreviousPolicy_anyOf_2": _deprecate_previous_policy_any_of_2_model_schema
-})
-
-_deprecate_previous_policy_any_of_3_model_schema = json.loads(
-    r"""{
-  "title" : "DeprecatePreviousPolicy_anyOf_3",
+  "title" : "DeprecatePreviousPolicyMinor",
   "type" : "string",
   "enum" : [ "minor" ]
 }
@@ -1726,7 +1878,33 @@ _deprecate_previous_policy_any_of_3_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "DeprecatePreviousPolicy_anyOf_3": _deprecate_previous_policy_any_of_3_model_schema
+    "DeprecatePreviousPolicyMinor": _deprecate_previous_policy_minor_model_schema
+})
+
+_deprecate_previous_policy_none_model_schema = json.loads(
+    r"""{
+  "title" : "DeprecatePreviousPolicyNone",
+  "type" : "string",
+  "enum" : [ "none" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "DeprecatePreviousPolicyNone": _deprecate_previous_policy_none_model_schema
+})
+
+_deprecate_previous_policy_patch_model_schema = json.loads(
+    r"""{
+  "title" : "DeprecatePreviousPolicyPatch",
+  "type" : "string",
+  "enum" : [ "patch" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "DeprecatePreviousPolicyPatch": _deprecate_previous_policy_patch_model_schema
 })
 
 _documentation_model_schema = json.loads(
@@ -1908,7 +2086,7 @@ _entity_with_links_i_kfserving_response_v2__model_schema = json.loads(
       "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
     },
     "model" : {
-      "$ref" : "#/components/schemas/KFServingManifest"
+      "$ref" : "#/components/schemas/IKFServingManifest"
     }
   }
 }
@@ -2488,37 +2666,24 @@ _function_type_filter_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"FunctionTypeFilter": _function_type_filter_model_schema})
 
-_get_asset_by_role_models_asset_role_parameter_model_schema = json.loads(
+_get_asset_by_role_models_asset_role_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/getAssetByRole_models_assetRole_parameter_anyOf"
+    "$ref" : "#/components/schemas/GetAssetByRoleModelsAssetRoleManifest"
   }, {
-    "$ref" : "#/components/schemas/getAssetByRole_models_assetRole_parameter_anyOf_1"
+    "$ref" : "#/components/schemas/GetAssetByRoleModelsAssetRoleMain"
   }, {
-    "$ref" : "#/components/schemas/getAssetByRole_models_assetRole_parameter_anyOf_2"
+    "$ref" : "#/components/schemas/GetAssetByRoleModelsAssetRoleProject"
   } ]
 }
 """,
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "getAssetByRole_models_assetRole_parameter": _get_asset_by_role_models_asset_role_parameter_model_schema
+    "GetAssetByRoleModelsAssetRole": _get_asset_by_role_models_asset_role_model_schema
 })
 
-_get_asset_by_role_models_asset_role_parameter_any_of_model_schema = json.loads(
-    r"""{
-  "type" : "string",
-  "description" : "Metadata specification of the function for the waylay platform.",
-  "enum" : [ "manifest" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "getAssetByRole_models_assetRole_parameter_anyOf": _get_asset_by_role_models_asset_role_parameter_any_of_model_schema
-})
-
-_get_asset_by_role_models_asset_role_parameter_any_of_1_model_schema = json.loads(
+_get_asset_by_role_models_asset_role_main_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Main source code that implements the function entrypoint.",
@@ -2528,10 +2693,23 @@ _get_asset_by_role_models_asset_role_parameter_any_of_1_model_schema = json.load
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "getAssetByRole_models_assetRole_parameter_anyOf_1": _get_asset_by_role_models_asset_role_parameter_any_of_1_model_schema
+    "GetAssetByRoleModelsAssetRoleMain": _get_asset_by_role_models_asset_role_main_model_schema
 })
 
-_get_asset_by_role_models_asset_role_parameter_any_of_2_model_schema = json.loads(
+_get_asset_by_role_models_asset_role_manifest_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification of the function for the waylay platform.",
+  "enum" : [ "manifest" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetAssetByRoleModelsAssetRoleManifest": _get_asset_by_role_models_asset_role_manifest_model_schema
+})
+
+_get_asset_by_role_models_asset_role_project_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Metadata specification for the language runtime. E.g. to specify dependencies.",
@@ -2541,7 +2719,137 @@ _get_asset_by_role_models_asset_role_parameter_any_of_2_model_schema = json.load
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "getAssetByRole_models_assetRole_parameter_anyOf_2": _get_asset_by_role_models_asset_role_parameter_any_of_2_model_schema
+    "GetAssetByRoleModelsAssetRoleProject": _get_asset_by_role_models_asset_role_project_model_schema
+})
+
+_get_asset_by_role_plugs_asset_role_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/GetAssetByRolePlugsAssetRoleManifest"
+  }, {
+    "$ref" : "#/components/schemas/GetAssetByRolePlugsAssetRoleMain"
+  }, {
+    "$ref" : "#/components/schemas/GetAssetByRolePlugsAssetRoleProject"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetAssetByRolePlugsAssetRole": _get_asset_by_role_plugs_asset_role_model_schema
+})
+
+_get_asset_by_role_plugs_asset_role_main_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Main source code that implements the function entrypoint.",
+  "enum" : [ "main" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetAssetByRolePlugsAssetRoleMain": _get_asset_by_role_plugs_asset_role_main_model_schema
+})
+
+_get_asset_by_role_plugs_asset_role_manifest_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification of the function for the waylay platform.",
+  "enum" : [ "manifest" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetAssetByRolePlugsAssetRoleManifest": _get_asset_by_role_plugs_asset_role_manifest_model_schema
+})
+
+_get_asset_by_role_plugs_asset_role_project_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification for the language runtime. E.g. to specify dependencies.",
+  "enum" : [ "project" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetAssetByRolePlugsAssetRoleProject": _get_asset_by_role_plugs_asset_role_project_model_schema
+})
+
+_get_asset_by_role_webscripts_asset_role_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/GetAssetByRoleWebscriptsAssetRoleManifest"
+  }, {
+    "$ref" : "#/components/schemas/GetAssetByRoleWebscriptsAssetRoleMain"
+  }, {
+    "$ref" : "#/components/schemas/GetAssetByRoleWebscriptsAssetRoleProject"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetAssetByRoleWebscriptsAssetRole": _get_asset_by_role_webscripts_asset_role_model_schema
+})
+
+_get_asset_by_role_webscripts_asset_role_main_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Main source code that implements the function entrypoint.",
+  "enum" : [ "main" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetAssetByRoleWebscriptsAssetRoleMain": _get_asset_by_role_webscripts_asset_role_main_model_schema
+})
+
+_get_asset_by_role_webscripts_asset_role_manifest_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification of the function for the waylay platform.",
+  "enum" : [ "manifest" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetAssetByRoleWebscriptsAssetRoleManifest": _get_asset_by_role_webscripts_asset_role_manifest_model_schema
+})
+
+_get_asset_by_role_webscripts_asset_role_project_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification for the language runtime. E.g. to specify dependencies.",
+  "enum" : [ "project" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetAssetByRoleWebscriptsAssetRoleProject": _get_asset_by_role_webscripts_asset_role_project_model_schema
+})
+
+_get_latest_runtimes_tags_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/RuntimeTagFilter"
+  }, {
+    "type" : "array",
+    "items" : {
+      "$ref" : "#/components/schemas/RuntimeTagFilter"
+    }
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "GetLatestRuntimesTags": _get_latest_runtimes_tags_model_schema
 })
 
 _get_model_response_v2_model_schema = json.loads(
@@ -2620,7 +2928,7 @@ _get_plug_response_v2__links_model_schema = json.loads(
       "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "content" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/IHALLink"
     },
     "draft" : {
       "$ref" : "#/components/schemas/AltVersionHALLink_draft"
@@ -2629,7 +2937,7 @@ _get_plug_response_v2__links_model_schema = json.loads(
       "$ref" : "#/components/schemas/AltVersionHALLink_published"
     },
     "jobs" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/IHALLink"
     }
   },
   "description" : "HAL links to related jobs and plugs"
@@ -2674,7 +2982,7 @@ _get_webscript_response_v2__links_model_schema = json.loads(
       "$ref" : "#/components/schemas/JobHALLinks_job"
     },
     "content" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/IHALLink"
     },
     "draft" : {
       "$ref" : "#/components/schemas/AltVersionHALLink_draft"
@@ -2683,10 +2991,10 @@ _get_webscript_response_v2__links_model_schema = json.loads(
       "$ref" : "#/components/schemas/AltVersionHALLink_published"
     },
     "jobs" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/IHALLink"
     },
     "invoke" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/IHALLink"
     }
   },
   "description" : "HAL links to related actions."
@@ -2698,24 +3006,41 @@ MODEL_DEFINITIONS.update({
     "GetWebscriptResponseV2__links": _get_webscript_response_v2__links_model_schema
 })
 
-_hal_link_model_schema = json.loads(
+_hal_links_model_schema = json.loads(
+    r"""{
+  "description" : "One or more links of the same HAL collection.",
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/IHALLink"
+  }, {
+    "type" : "array",
+    "items" : {
+      "$ref" : "#/components/schemas/IHALLink"
+    }
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"HALLinks": _hal_links_model_schema})
+
+_ihal_link_model_schema = json.loads(
     r"""{
   "required" : [ "href" ],
   "type" : "object",
   "properties" : {
     "href" : {
-      "$ref" : "#/components/schemas/HALLink_href"
+      "$ref" : "#/components/schemas/IHALLink_href"
     }
   }
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"HALLink": _hal_link_model_schema})
+MODEL_DEFINITIONS.update({"IHALLink": _ihal_link_model_schema})
 
-_hal_link_href_model_schema = json.loads(
+_ihal_link_href_model_schema = json.loads(
     r"""{
-  "title" : "HALLink_href",
+  "title" : "IHALLink_href",
   "anyOf" : [ {
     "type" : "string",
     "format" : "uri"
@@ -2726,24 +3051,80 @@ _hal_link_href_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"HALLink_href": _hal_link_href_model_schema})
+MODEL_DEFINITIONS.update({"IHALLink_href": _ihal_link_href_model_schema})
 
-_hal_links_model_schema = json.loads(
+_ikf_serving_manifest_model_schema = json.loads(
     r"""{
-  "description" : "One or more links of the same HAL collection.",
-  "anyOf" : [ {
-    "$ref" : "#/components/schemas/HALLink"
-  }, {
-    "type" : "array",
-    "items" : {
-      "$ref" : "#/components/schemas/HALLink"
+  "title" : "IKFServingManifest",
+  "required" : [ "metadata", "name", "runtime", "version" ],
+  "type" : "object",
+  "properties" : {
+    "deploy" : {
+      "$ref" : "#/components/schemas/FunctionDeployOverridesType"
+    },
+    "name" : {
+      "title" : "name",
+      "type" : "string",
+      "description" : "The logical name for the function."
+    },
+    "version" : {
+      "$ref" : "#/components/schemas/SemanticVersion"
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/Runtime"
+    },
+    "runtimeVersion" : {
+      "$ref" : "#/components/schemas/SemanticVersionRange"
+    },
+    "metadata" : {
+      "$ref" : "#/components/schemas/FunctionMeta"
+    },
+    "protected" : {
+      "title" : "protected",
+      "type" : "boolean",
+      "description" : "Indicates whether the function's script and other assets should be protected."
+    },
+    "tags" : {
+      "title" : "tags",
+      "type" : "array",
+      "description" : "Tags associated with this entity.",
+      "items" : {
+        "$ref" : "#/components/schemas/TagOrTagReference"
+      }
     }
-  } ]
+  }
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"HALLinks": _hal_links_model_schema})
+MODEL_DEFINITIONS.update({"IKFServingManifest": _ikf_serving_manifest_model_schema})
+
+_ikf_serving_manifest_patch_model_schema = json.loads(
+    r"""{
+  "type" : "object",
+  "properties" : {
+    "runtimeVersion" : {
+      "$ref" : "#/components/schemas/SemanticVersionRange"
+    },
+    "metadata" : {
+      "$ref" : "#/components/schemas/FunctionMeta"
+    },
+    "runtime" : {
+      "$ref" : "#/components/schemas/Runtime"
+    },
+    "deploy" : {
+      "$ref" : "#/components/schemas/FunctionDeployOverridesType"
+    }
+  },
+  "additionalProperties" : false,
+  "description" : "Patch attributes to merge into an existing model manifest."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "IKFServingManifestPatch": _ikf_serving_manifest_patch_model_schema
+})
 
 _invocation_attributes_model_schema = json.loads(
     r"""{
@@ -2801,7 +3182,7 @@ _invoke_hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "invoke" : {
-      "$ref" : "#/components/schemas/HALLink"
+      "$ref" : "#/components/schemas/IHALLink"
     }
   }
 }
@@ -3163,7 +3544,7 @@ _job_hal_link_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "href" : {
-      "$ref" : "#/components/schemas/HALLink_href"
+      "$ref" : "#/components/schemas/IHALLink_href"
     },
     "jobType" : {
       "$ref" : "#/components/schemas/JobType"
@@ -3786,79 +4167,6 @@ _jobs_response_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"JobsResponse": _jobs_response_model_schema})
 
-_kf_serving_manifest_model_schema = json.loads(
-    r"""{
-  "title" : "KFServingManifest",
-  "required" : [ "metadata", "name", "runtime", "version" ],
-  "type" : "object",
-  "properties" : {
-    "deploy" : {
-      "$ref" : "#/components/schemas/FunctionDeployOverridesType"
-    },
-    "name" : {
-      "title" : "name",
-      "type" : "string",
-      "description" : "The logical name for the function."
-    },
-    "version" : {
-      "$ref" : "#/components/schemas/SemanticVersion"
-    },
-    "runtime" : {
-      "$ref" : "#/components/schemas/Runtime"
-    },
-    "runtimeVersion" : {
-      "$ref" : "#/components/schemas/SemanticVersionRange"
-    },
-    "metadata" : {
-      "$ref" : "#/components/schemas/FunctionMeta"
-    },
-    "protected" : {
-      "title" : "protected",
-      "type" : "boolean",
-      "description" : "Indicates whether the function's script and other assets should be protected."
-    },
-    "tags" : {
-      "title" : "tags",
-      "type" : "array",
-      "description" : "Tags associated with this entity.",
-      "items" : {
-        "$ref" : "#/components/schemas/TagOrTagReference"
-      }
-    }
-  }
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"KFServingManifest": _kf_serving_manifest_model_schema})
-
-_kf_serving_manifest_patch_model_schema = json.loads(
-    r"""{
-  "type" : "object",
-  "properties" : {
-    "runtimeVersion" : {
-      "$ref" : "#/components/schemas/SemanticVersionRange"
-    },
-    "metadata" : {
-      "$ref" : "#/components/schemas/FunctionMeta"
-    },
-    "runtime" : {
-      "$ref" : "#/components/schemas/Runtime"
-    },
-    "deploy" : {
-      "$ref" : "#/components/schemas/FunctionDeployOverridesType"
-    }
-  },
-  "additionalProperties" : false,
-  "description" : "Patch attributes to merge into an existing model manifest."
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "KFServingManifestPatch": _kf_serving_manifest_patch_model_schema
-})
-
 _keep_alive_event_sse_model_schema = json.loads(
     r"""{
   "required" : [ "event" ],
@@ -3931,7 +4239,7 @@ _kfserving_response_v2_model_schema = json.loads(
       "description" : "The revision of the function. This will be <code>undefined</code> when the plug is not a draft."
     },
     "model" : {
-      "$ref" : "#/components/schemas/KFServingManifest"
+      "$ref" : "#/components/schemas/IKFServingManifest"
     }
   }
 }
@@ -4095,7 +4403,23 @@ MODEL_DEFINITIONS.update({
     "LatestWebscriptsResponseV2": _latest_webscripts_response_v2_model_schema
 })
 
-_list_runtimes_tags_parameter_model_schema = json.loads(
+_list_runtimes_tags_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/RuntimeTagFilter"
+  }, {
+    "type" : "array",
+    "items" : {
+      "$ref" : "#/components/schemas/RuntimeTagFilter"
+    }
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"ListRuntimesTags": _list_runtimes_tags_model_schema})
+
+_list_versions_runtimes_tags_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
     "$ref" : "#/components/schemas/RuntimeTagFilter"
@@ -4110,7 +4434,7 @@ _list_runtimes_tags_parameter_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "list_runtimes_tags_parameter": _list_runtimes_tags_parameter_model_schema
+    "ListVersionsRuntimesTags": _list_versions_runtimes_tags_model_schema
 })
 
 _model_model_schema = json.loads(
@@ -5535,7 +5859,7 @@ _scale_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Scale_type"
+      "$ref" : "#/components/schemas/AnyJobForFunctionScale"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -5600,7 +5924,7 @@ _scale_1_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Scale_type"
+      "$ref" : "#/components/schemas/AnyJobStatusSummaryScale"
     },
     "id" : {
       "title" : "id",
@@ -5694,7 +6018,7 @@ _scale_job_status_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Scale_type"
+      "$ref" : "#/components/schemas/ScaleJobStatus_type"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -5718,9 +6042,9 @@ _scale_job_status_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"ScaleJobStatus": _scale_job_status_model_schema})
 
-_scale_type_model_schema = json.loads(
+_scale_job_status_type_model_schema = json.loads(
     r"""{
-  "title" : "Scale_type",
+  "title" : "ScaleJobStatus_type",
   "type" : "string",
   "description" : "The type of the background task.",
   "enum" : [ "scale" ]
@@ -5728,7 +6052,7 @@ _scale_type_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"Scale_type": _scale_type_model_schema})
+MODEL_DEFINITIONS.update({"ScaleJobStatus_type": _scale_job_status_type_model_schema})
 
 _semantic_version_range_model_schema = json.loads(
     r"""{
@@ -5759,7 +6083,7 @@ _show_inline_or_embedding_model_schema = json.loads(
   "anyOf" : [ {
     "$ref" : "#/components/schemas/ShowEmbedding"
   }, {
-    "$ref" : "#/components/schemas/ShowInlineOrEmbedding_anyOf"
+    "$ref" : "#/components/schemas/ShowInlineOrEmbeddingInline"
   } ]
 }
 """,
@@ -5769,9 +6093,9 @@ MODEL_DEFINITIONS.update({
     "ShowInlineOrEmbedding": _show_inline_or_embedding_model_schema
 })
 
-_show_inline_or_embedding_any_of_model_schema = json.loads(
+_show_inline_or_embedding_inline_model_schema = json.loads(
     r"""{
-  "title" : "ShowInlineOrEmbedding_anyOf",
+  "title" : "ShowInlineOrEmbeddingInline",
   "type" : "string",
   "enum" : [ "inline" ]
 }
@@ -5779,7 +6103,7 @@ _show_inline_or_embedding_any_of_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ShowInlineOrEmbedding_anyOf": _show_inline_or_embedding_any_of_model_schema
+    "ShowInlineOrEmbeddingInline": _show_inline_or_embedding_inline_model_schema
 })
 
 _show_link_or_embedding_model_schema = json.loads(
@@ -5787,7 +6111,7 @@ _show_link_or_embedding_model_schema = json.loads(
   "anyOf" : [ {
     "$ref" : "#/components/schemas/ShowEmbedding"
   }, {
-    "$ref" : "#/components/schemas/ShowLinkOrEmbedding_anyOf"
+    "$ref" : "#/components/schemas/ShowLinkOrEmbeddingLink"
   } ]
 }
 """,
@@ -5795,9 +6119,9 @@ _show_link_or_embedding_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"ShowLinkOrEmbedding": _show_link_or_embedding_model_schema})
 
-_show_link_or_embedding_any_of_model_schema = json.loads(
+_show_link_or_embedding_link_model_schema = json.loads(
     r"""{
-  "title" : "ShowLinkOrEmbedding_anyOf",
+  "title" : "ShowLinkOrEmbeddingLink",
   "type" : "string",
   "enum" : [ "link" ]
 }
@@ -5805,7 +6129,7 @@ _show_link_or_embedding_any_of_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ShowLinkOrEmbedding_anyOf": _show_link_or_embedding_any_of_model_schema
+    "ShowLinkOrEmbeddingLink": _show_link_or_embedding_link_model_schema
 })
 
 _status_model_schema = json.loads(
@@ -5974,9 +6298,9 @@ _timestamp_absolute_model_schema = json.loads(
   "title" : "TimestampAbsolute",
   "description" : "An absolute timestamp as an ISO8601 string",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/SO8601DateTime"
+    "$ref" : "#/components/schemas/ISO8601DateTime"
   }, {
-    "$ref" : "#/components/schemas/SO8601Date"
+    "$ref" : "#/components/schemas/ISO8601Date"
   } ]
 }
 """,
@@ -5989,7 +6313,7 @@ _timestamp_age_model_schema = json.loads(
   "title" : "TimestampAge",
   "description" : "A timestamp expressed as a age relative to now",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/SO8601Period"
+    "$ref" : "#/components/schemas/ISO8601Period"
   }, {
     "$ref" : "#/components/schemas/DurationSpec"
   } ]
@@ -6054,7 +6378,7 @@ _undeploy_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Undeploy_type"
+      "$ref" : "#/components/schemas/AnyJobForFunctionUndeploy"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -6119,7 +6443,7 @@ _undeploy_1_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Undeploy_type"
+      "$ref" : "#/components/schemas/AnyJobStatusSummaryUndeploy"
     },
     "id" : {
       "title" : "id",
@@ -6230,7 +6554,7 @@ _undeploy_job_status_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Undeploy_type"
+      "$ref" : "#/components/schemas/UndeployJobStatus_type"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -6253,6 +6577,20 @@ _undeploy_job_status_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"UndeployJobStatus": _undeploy_job_status_model_schema})
+
+_undeploy_job_status_type_model_schema = json.loads(
+    r"""{
+  "title" : "UndeployJobStatus_type",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "undeploy" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UndeployJobStatus_type": _undeploy_job_status_type_model_schema
+})
 
 _undeploy_result_model_schema = json.loads(
     r"""{
@@ -6312,18 +6650,6 @@ MODEL_DEFINITIONS.update({
     "UndeploySubmittedResponseV2": _undeploy_submitted_response_v2_model_schema
 })
 
-_undeploy_type_model_schema = json.loads(
-    r"""{
-  "title" : "Undeploy_type",
-  "type" : "string",
-  "description" : "The type of the background task.",
-  "enum" : [ "undeploy" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"Undeploy_type": _undeploy_type_model_schema})
-
 _undeployed_response_v2_model_schema = json.loads(
     r"""{
   "required" : [ "message", "versions" ],
@@ -6346,6 +6672,174 @@ _undeployed_response_v2_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"UndeployedResponseV2": _undeployed_response_v2_model_schema})
+
+_update_asset_by_role_models_asset_role_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/UpdateAssetByRoleModelsAssetRoleManifest"
+  }, {
+    "$ref" : "#/components/schemas/UpdateAssetByRoleModelsAssetRoleMain"
+  }, {
+    "$ref" : "#/components/schemas/UpdateAssetByRoleModelsAssetRoleProject"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRoleModelsAssetRole": _update_asset_by_role_models_asset_role_model_schema
+})
+
+_update_asset_by_role_models_asset_role_main_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Main source code that implements the function entrypoint.",
+  "enum" : [ "main" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRoleModelsAssetRoleMain": _update_asset_by_role_models_asset_role_main_model_schema
+})
+
+_update_asset_by_role_models_asset_role_manifest_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification of the function for the waylay platform.",
+  "enum" : [ "manifest" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRoleModelsAssetRoleManifest": _update_asset_by_role_models_asset_role_manifest_model_schema
+})
+
+_update_asset_by_role_models_asset_role_project_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification for the language runtime. E.g. to specify dependencies.",
+  "enum" : [ "project" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRoleModelsAssetRoleProject": _update_asset_by_role_models_asset_role_project_model_schema
+})
+
+_update_asset_by_role_plugs_asset_role_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/UpdateAssetByRolePlugsAssetRoleManifest"
+  }, {
+    "$ref" : "#/components/schemas/UpdateAssetByRolePlugsAssetRoleMain"
+  }, {
+    "$ref" : "#/components/schemas/UpdateAssetByRolePlugsAssetRoleProject"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRolePlugsAssetRole": _update_asset_by_role_plugs_asset_role_model_schema
+})
+
+_update_asset_by_role_plugs_asset_role_main_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Main source code that implements the function entrypoint.",
+  "enum" : [ "main" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRolePlugsAssetRoleMain": _update_asset_by_role_plugs_asset_role_main_model_schema
+})
+
+_update_asset_by_role_plugs_asset_role_manifest_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification of the function for the waylay platform.",
+  "enum" : [ "manifest" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRolePlugsAssetRoleManifest": _update_asset_by_role_plugs_asset_role_manifest_model_schema
+})
+
+_update_asset_by_role_plugs_asset_role_project_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification for the language runtime. E.g. to specify dependencies.",
+  "enum" : [ "project" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRolePlugsAssetRoleProject": _update_asset_by_role_plugs_asset_role_project_model_schema
+})
+
+_update_asset_by_role_webscripts_asset_role_model_schema = json.loads(
+    r"""{
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/UpdateAssetByRoleWebscriptsAssetRoleManifest"
+  }, {
+    "$ref" : "#/components/schemas/UpdateAssetByRoleWebscriptsAssetRoleMain"
+  }, {
+    "$ref" : "#/components/schemas/UpdateAssetByRoleWebscriptsAssetRoleProject"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRoleWebscriptsAssetRole": _update_asset_by_role_webscripts_asset_role_model_schema
+})
+
+_update_asset_by_role_webscripts_asset_role_main_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Main source code that implements the function entrypoint.",
+  "enum" : [ "main" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRoleWebscriptsAssetRoleMain": _update_asset_by_role_webscripts_asset_role_main_model_schema
+})
+
+_update_asset_by_role_webscripts_asset_role_manifest_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification of the function for the waylay platform.",
+  "enum" : [ "manifest" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRoleWebscriptsAssetRoleManifest": _update_asset_by_role_webscripts_asset_role_manifest_model_schema
+})
+
+_update_asset_by_role_webscripts_asset_role_project_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Metadata specification for the language runtime. E.g. to specify dependencies.",
+  "enum" : [ "project" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "UpdateAssetByRoleWebscriptsAssetRoleProject": _update_asset_by_role_webscripts_asset_role_project_model_schema
+})
 
 _update_metadata_request_v2_model_schema = json.loads(
     r"""{
@@ -6546,7 +7040,7 @@ _verify_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Verify_type"
+      "$ref" : "#/components/schemas/AnyJobForFunctionVerify"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -6611,7 +7105,7 @@ _verify_1_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Verify_type"
+      "$ref" : "#/components/schemas/AnyJobStatusSummaryVerify"
     },
     "id" : {
       "title" : "id",
@@ -6700,7 +7194,7 @@ _verify_job_status_model_schema = json.loads(
       "description" : "The number of retries that were attempted."
     },
     "type" : {
-      "$ref" : "#/components/schemas/Verify_type"
+      "$ref" : "#/components/schemas/VerifyJobStatus_type"
     },
     "state" : {
       "$ref" : "#/components/schemas/JobStateResult"
@@ -6723,6 +7217,18 @@ _verify_job_status_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"VerifyJobStatus": _verify_job_status_model_schema})
+
+_verify_job_status_type_model_schema = json.loads(
+    r"""{
+  "title" : "VerifyJobStatus_type",
+  "type" : "string",
+  "description" : "The type of the background task.",
+  "enum" : [ "verify" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"VerifyJobStatus_type": _verify_job_status_type_model_schema})
 
 _verify_model_sync_response_v2_model_schema = json.loads(
     r"""{
@@ -6795,18 +7301,6 @@ _verify_result_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"VerifyResult": _verify_result_model_schema})
-
-_verify_type_model_schema = json.loads(
-    r"""{
-  "title" : "Verify_type",
-  "type" : "string",
-  "description" : "The type of the background task.",
-  "enum" : [ "verify" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"Verify_type": _verify_type_model_schema})
 
 _verify_webscript_sync_response_v2_model_schema = json.loads(
     r"""{
