@@ -1,6 +1,11 @@
 # EntityWithLinksIWebscriptResponseWithInvokeLinkV2
 
 
+**Source:** `waylay.services.registry.models.entity_with_links_i_webscript_response_with_invoke_link_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -21,23 +26,47 @@ Name | Type | Description | Notes
 **webscript** | [**WebscriptManifest**](WebscriptManifest.md) |  | 
 **secret** | **str** | The secret for this webscript deployment. This is &lt;code&gt;null&lt;/code&gt; when &lt;code&gt;allowHmac&#x3D;false&lt;/code&gt; in the webscript specificaton. | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.entity_with_links_i_webscript_response_with_invoke_link_v2 import EntityWithLinksIWebscriptResponseWithInvokeLinkV2
+from waylay.services.registry.models.entity_with_links_i_webscript_response_with_invoke_link_v2 import (
+    EntityWithLinksIWebscriptResponseWithInvokeLinkV2,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of EntityWithLinksIWebscriptResponseWithInvokeLinkV2 from a JSON string
-entity_with_links_i_webscript_response_with_invoke_link_v2_instance = EntityWithLinksIWebscriptResponseWithInvokeLinkV2.from_json(json)
-# print the JSON string representation of the object
-print EntityWithLinksIWebscriptResponseWithInvokeLinkV2.to_json()
+entity_with_links_i_webscript_response_with_invoke_link_v2 = (
+    EntityWithLinksIWebscriptResponseWithInvokeLinkV2(
+        embedded=...,
+        links=...,
+        created_by=...,
+        created_at=...,
+        updated_by=...,
+        updated_at=...,
+        updates=...,
+        status=...,
+        failure_reason=...,
+        runtime=...,
+        deprecated=...,
+        draft=...,
+        revision=...,
+        webscript=...,
+        secret=...,
+    )
+)
 
-# convert the object into a dict
-entity_with_links_i_webscript_response_with_invoke_link_v2_dict = entity_with_links_i_webscript_response_with_invoke_link_v2_instance.to_dict()
-# create an instance of EntityWithLinksIWebscriptResponseWithInvokeLinkV2 from a dict
-entity_with_links_i_webscript_response_with_invoke_link_v2_form_dict = entity_with_links_i_webscript_response_with_invoke_link_v2.from_dict(entity_with_links_i_webscript_response_with_invoke_link_v2_dict)
+# Create from JSON
+entity_with_links_i_webscript_response_with_invoke_link_v2 = EntityWithLinksIWebscriptResponseWithInvokeLinkV2.from_json(
+    '{ "_embedded": ..., "_links": ..., "createdBy": ..., "createdAt": ..., "updatedBy": ..., "updatedAt": ..., "updates": ..., "status": ..., "failureReason": ..., "runtime": ..., "deprecated": ..., "draft": ..., "revision": ..., "webscript": ..., "secret": ... }'
+)
+
+# Export to dictionary
+entity_with_links_i_webscript_response_with_invoke_link_v2_dict = (
+    entity_with_links_i_webscript_response_with_invoke_link_v2.to_dict()
+)
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

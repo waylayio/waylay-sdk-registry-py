@@ -1,6 +1,11 @@
 # InvocationAttributes
 
 
+**Source:** `waylay.services.registry.models.invocation_attributes`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,27 @@ Name | Type | Description | Notes
 **raw_data_context** | **bool** | Indicates that the rawdata context attributes should be provided in &#x60;options.rawData&#x60;. | 
 **callback** | **bool** | Indicates that the plug implementer intends to use the callback mechanism. | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.invocation_attributes import InvocationAttributes
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of InvocationAttributes from a JSON string
-invocation_attributes_instance = InvocationAttributes.from_json(json)
-# print the JSON string representation of the object
-print InvocationAttributes.to_json()
+invocation_attributes = InvocationAttributes(
+    auth=..., task_context=..., node_context=..., raw_data_context=..., callback=...
+)
 
-# convert the object into a dict
-invocation_attributes_dict = invocation_attributes_instance.to_dict()
-# create an instance of InvocationAttributes from a dict
-invocation_attributes_form_dict = invocation_attributes.from_dict(invocation_attributes_dict)
+# Create from JSON
+invocation_attributes = InvocationAttributes.from_json(
+    '{ "auth": ..., "taskContext": ..., "nodeContext": ..., "rawDataContext": ..., "callback": ... }'
+)
+
+# Export to dictionary
+invocation_attributes_dict = invocation_attributes.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

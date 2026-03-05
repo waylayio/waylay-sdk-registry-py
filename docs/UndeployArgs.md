@@ -2,6 +2,11 @@
 
 Input argument to an (openfaas) undeployment job for a function.
 
+**Source:** `waylay.services.registry.models.undeploy_args`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -17,23 +22,36 @@ Name | Type | Description | Notes
 **reset_entity** | **bool** |  | 
 **delete_image** | **bool** |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.undeploy_args import UndeployArgs
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of UndeployArgs from a JSON string
-undeploy_args_instance = UndeployArgs.from_json(json)
-# print the JSON string representation of the object
-print UndeployArgs.to_json()
+undeploy_args = UndeployArgs(
+    storage_location=...,
+    image_name=...,
+    namespace=...,
+    endpoint=...,
+    runtime_name=...,
+    runtime_version=...,
+    revision=...,
+    delete_entity=...,
+    reset_entity=...,
+    delete_image=...,
+)
 
-# convert the object into a dict
-undeploy_args_dict = undeploy_args_instance.to_dict()
-# create an instance of UndeployArgs from a dict
-undeploy_args_form_dict = undeploy_args.from_dict(undeploy_args_dict)
+# Create from JSON
+undeploy_args = UndeployArgs.from_json(
+    '{ "storageLocation": ..., "imageName": ..., "namespace": ..., "endpoint": ..., "runtimeName": ..., "runtimeVersion": ..., "revision": ..., "deleteEntity": ..., "resetEntity": ..., "deleteImage": ... }'
+)
+
+# Export to dictionary
+undeploy_args_dict = undeploy_args.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

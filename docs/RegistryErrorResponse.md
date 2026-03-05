@@ -1,6 +1,11 @@
 # RegistryErrorResponse
 
 
+**Source:** `waylay.services.registry.models.registry_error_response`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -10,23 +15,29 @@ Name | Type | Description | Notes
 **status_code** | **float** |  | 
 **data** | **Dict[str, str]** |  | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.registry_error_response import RegistryErrorResponse
+from waylay.services.registry.models.registry_error_response import (
+    RegistryErrorResponse,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of RegistryErrorResponse from a JSON string
-registry_error_response_instance = RegistryErrorResponse.from_json(json)
-# print the JSON string representation of the object
-print RegistryErrorResponse.to_json()
+registry_error_response = RegistryErrorResponse(
+    error=..., code=..., status_code=..., data=...
+)
 
-# convert the object into a dict
-registry_error_response_dict = registry_error_response_instance.to_dict()
-# create an instance of RegistryErrorResponse from a dict
-registry_error_response_form_dict = registry_error_response.from_dict(registry_error_response_dict)
+# Create from JSON
+registry_error_response = RegistryErrorResponse.from_json(
+    '{ "error": ..., "code": ..., "statusCode": ..., "data": ... }'
+)
+
+# Export to dictionary
+registry_error_response_dict = registry_error_response.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

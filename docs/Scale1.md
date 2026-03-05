@@ -1,6 +1,11 @@
 # Scale1
 
 
+**Source:** `waylay.services.registry.models.scale1`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,29 +16,43 @@ Name | Type | Description | Notes
 **processed_at** | **datetime** | The timestamp of when the job has begun processing. | [optional] 
 **finished_at** | **object** | The timestamp of when the job has finished processing. | [optional] 
 **attempts_made** | **float** | The number of retries that were attempted. | [optional] 
-**type** | [**ScaleType**](ScaleType.md) |  | 
+**type** | [**AnyJobStatusSummaryScale**](AnyJobStatusSummaryScale.md) |  | 
 **id** | **str** | The id of the background job, or the constant &#x60;_unknown_&#x60; | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **function** | [**FunctionRef**](FunctionRef.md) |  | [optional] 
 **links** | [**JobAndFunctionHALLink**](JobAndFunctionHALLink.md) |  | [optional] 
+
 
 ## Example
 
 ```python
 from waylay.services.registry.models.scale1 import Scale1
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Scale1 from a JSON string
-scale1_instance = Scale1.from_json(json)
-# print the JSON string representation of the object
-print Scale1.to_json()
+scale1 = Scale1(
+    operation=...,
+    created_by=...,
+    created_at=...,
+    processed_at=...,
+    finished_at=...,
+    attempts_made=...,
+    type=...,
+    id=...,
+    state=...,
+    function=...,
+    links=...,
+)
 
-# convert the object into a dict
-scale1_dict = scale1_instance.to_dict()
-# create an instance of Scale1 from a dict
-scale1_form_dict = scale1.from_dict(scale1_dict)
+# Create from JSON
+scale1 = Scale1.from_json(
+    '{ "operation": ..., "createdBy": ..., "createdAt": ..., "processedAt": ..., "finishedAt": ..., "attemptsMade": ..., "type": ..., "id": ..., "state": ..., "function": ..., "_links": ... }'
+)
+
+# Export to dictionary
+scale1_dict = scale1.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

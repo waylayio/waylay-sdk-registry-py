@@ -2,6 +2,11 @@
 
 One or more tags can be assigned to a function entity to facilitate grouping and searching.
 
+**Source:** `waylay.services.registry.models.tag`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -9,23 +14,23 @@ Name | Type | Description | Notes
 **name** | **str** | A string that references a tag | 
 **color** | **str** | Color associated with the tag in an UI. | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.tag import Tag
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Tag from a JSON string
-tag_instance = Tag.from_json(json)
-# print the JSON string representation of the object
-print Tag.to_json()
+tag = Tag(name=..., color=...)
 
-# convert the object into a dict
-tag_dict = tag_instance.to_dict()
-# create an instance of Tag from a dict
-tag_form_dict = tag.from_dict(tag_dict)
+# Create from JSON
+tag = Tag.from_json('{ "name": ..., "color": ... }')
+
+# Export to dictionary
+tag_dict = tag.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

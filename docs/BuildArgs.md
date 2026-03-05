@@ -2,6 +2,11 @@
 
 Input arguments to a job that builds a function.
 
+**Source:** `waylay.services.registry.models.build_args`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -13,23 +18,32 @@ Name | Type | Description | Notes
 **revision** | **str** | The revision hash of the current (draft) function revision | 
 **args** | **Dict[str, str]** | Parameters to the runtime configuration. | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.build_args import BuildArgs
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of BuildArgs from a JSON string
-build_args_instance = BuildArgs.from_json(json)
-# print the JSON string representation of the object
-print BuildArgs.to_json()
+build_args = BuildArgs(
+    storage_location=...,
+    image_name=...,
+    runtime_name=...,
+    runtime_version=...,
+    revision=...,
+    args=...,
+)
 
-# convert the object into a dict
-build_args_dict = build_args_instance.to_dict()
-# create an instance of BuildArgs from a dict
-build_args_form_dict = build_args.from_dict(build_args_dict)
+# Create from JSON
+build_args = BuildArgs.from_json(
+    '{ "storageLocation": ..., "imageName": ..., "runtimeName": ..., "runtimeVersion": ..., "revision": ..., "args": ... }'
+)
+
+# Export to dictionary
+build_args_dict = build_args.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -1,6 +1,11 @@
 # Deploy
 
 
+**Source:** `waylay.services.registry.models.deploy`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,7 +17,7 @@ Name | Type | Description | Notes
 **processed_at** | **datetime** | The timestamp of when the job has begun processing. | [optional] 
 **finished_at** | **object** | The timestamp of when the job has finished processing. | [optional] 
 **attempts_made** | **float** | The number of retries that were attempted. | [optional] 
-**type** | [**DeployType**](DeployType.md) |  | 
+**type** | [**AnyJobForFunctionDeploy**](AnyJobForFunctionDeploy.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**DeployArgs**](DeployArgs.md) |  | [optional] 
 **result** | [**DeployResult**](DeployResult.md) |  | [optional] 
@@ -20,23 +25,40 @@ Name | Type | Description | Notes
 **job** | [**JobStatus**](JobStatus.md) |  | [optional] 
 **failure_reason** | [**FailureReason**](FailureReason.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.deploy import Deploy
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Deploy from a JSON string
-deploy_instance = Deploy.from_json(json)
-# print the JSON string representation of the object
-print Deploy.to_json()
+deploy = Deploy(
+    links=...,
+    operation=...,
+    created_by=...,
+    created_at=...,
+    processed_at=...,
+    finished_at=...,
+    attempts_made=...,
+    type=...,
+    state=...,
+    request=...,
+    result=...,
+    function=...,
+    job=...,
+    failure_reason=...,
+)
 
-# convert the object into a dict
-deploy_dict = deploy_instance.to_dict()
-# create an instance of Deploy from a dict
-deploy_form_dict = deploy.from_dict(deploy_dict)
+# Create from JSON
+deploy = Deploy.from_json(
+    '{ "_links": ..., "operation": ..., "createdBy": ..., "createdAt": ..., "processedAt": ..., "finishedAt": ..., "attemptsMade": ..., "type": ..., "state": ..., "request": ..., "result": ..., "function": ..., "job": ..., "failureReason": ... }'
+)
+
+# Export to dictionary
+deploy_dict = deploy.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

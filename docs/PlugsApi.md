@@ -42,8 +42,6 @@ Creates a new <em>plug</em> function by uploading its assets.      The assets fo
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -52,33 +50,33 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostPlugJobSyncResponseV2
+from waylay.services.registry.models.post_plug_job_sync_response_v2 import (
+    PostPlugJobSyncResponseV2,
+)
+
 try:
     # Create Version
     # calls `POST /registry/v2/plugs/`
     api_response = await waylay_client.registry.plugs.create(
         # query parameters:
-        query = {
-            'showTags': 'embed'
-            'deploy': True
-            'scaleToZero': False
-            'deprecatePrevious': waylay.services.registry.DeprecatePreviousPolicy()
-            'dryRun': True
-            'async': True
-            'draft': False
+        query={
+            "showTags": "embed",
+            "deploy": True,
+            "scaleToZero": False,
+            "deprecatePrevious": waylay.services.registry.DeprecatePreviousPolicy(),
+            "dryRun": True,
+            "async": True,
+            "draft": False,
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = None # object | The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.  (optional)
+        json=None,  # object | The assets for a <em>plug</em> function can be provided as   <ul>     <li>A single <em>tar</em> archive (optionally compressed), with one of the content types      <code>application/octet-stream</code>, <code>application/tar</code>, <code>application/tar+gzip</code>, <code>application/x-gzip</code>, <code>application/x-tar</code>, <code>application/gzip</code></li>     <li>Separate files in a <code>multipart/form-data</code> request</li>     <li>A reference to the assets of another <em>plug</em> in the <code>copy</code> argument</li>   </ul>    The required <code>plug.json</code> json file contains the function metadata,   and must have a <code>runtime</code> attribute that is one of the supported <em>runtime</em>s    (see <code>GET /registry/v2/runtimes?functionType=plugs</code>).    For each <em>runtime</em> other files will be required or supported.  (optional)
         # non-json binary data: use a byte array or a generator of bytearray chuncks
-        content=b'my-binary-data',
+        content=b"my-binary-data",
         # this operation supports multiple request content types: use `headers` to specify the one used
-        # alternatives: 'application/gzip', 'application/json', 'application/octet-stream', 'application/tar', 'application/tar+gzip', 'application/x-gzip', 'application/x-tar', 'multipart/form-data', 
-        headers = {
-            'content-type': '*/*+json'
-        },
+        # alternatives: 'application/gzip', 'application/json', 'application/octet-stream', 'application/tar', 'application/tar+gzip', 'application/x-gzip', 'application/x-tar', 'multipart/form-data',
+        headers={"content-type": "*/*+json"},
     )
-    print("The response of registry.plugs.create:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.create: %s\n" % e)
 ```
@@ -95,19 +93,19 @@ Name     | Type  | API binding   | Description   | Notes
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;plug&lt;/em&gt; function can be provided as   &lt;ul&gt;     &lt;li&gt;A single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;Separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;     &lt;li&gt;A reference to the assets of another &lt;em&gt;plug&lt;/em&gt; in the &lt;code&gt;copy&lt;/code&gt; argument&lt;/li&gt;   &lt;/ul&gt;    The required &lt;code&gt;plug.json&lt;/code&gt; json file contains the function metadata,   and must have a &lt;code&gt;runtime&lt;/code&gt; attribute that is one of the supported &lt;em&gt;runtime&lt;/em&gt;s    (see &lt;code&gt;GET /registry/v2/runtimes?functionType&#x3D;plugs&lt;/code&gt;).    For each &lt;em&gt;runtime&lt;/em&gt; other files will be required or supported.  | [optional] 
 **files** | **[FileTypes](Operation.md#req_arg_files)** | request body files |   |
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['deploy']** (dict) <br> **query.deploy** (Query) | **bool** | query parameter `"deploy"` | Indicates that a function should be _deployed_ when its assets are valid.  * If &#x60;true&#x60; (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If &#x60;false&#x60;, the uploaded assets are stored and the function is created/updated in &#x60;registered&#x60; state. Asset validation errors are only returned as warning, and stored as &#x60;failureReason&#x60; on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage. | [optional] [default True]
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately. | [optional] [default False]
-**query['deprecatePrevious']** (dict) <br> **query.deprecate_previous** (Query) | [**DeprecatePreviousPolicy**](.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions when creating a new non-draft version or publishing a draft version. | [optional] 
+**query['deprecatePrevious']** (dict) <br> **query.deprecate_previous** (Query) | [**DeprecatePreviousPolicy**](DeprecatePreviousPolicy.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions when creating a new non-draft version or publishing a draft version. | [optional] 
 **query['dryRun']** (dict) <br> **query.dry_run** (Query) | **bool** | query parameter `"dryRun"` | If set to &lt;code&gt;true&lt;/code&gt;, validates the deployment conditions, but does not change anything. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['version']** (dict) <br> **query.version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"version"` | If set, the function version will be an increment of the latest existing version that satisfies the &#x60;version&#x60; range. Note that this increment always takes precedence over an explicit &#x60;version&#x60; in the function manifest. | [optional] 
+**query['version']** (dict) <br> **query.version** (Query) | [**SemanticVersionRange**](SemanticVersionRange.md) | query parameter `"version"` | If set, the function version will be an increment of the latest existing version that satisfies the &#x60;version&#x60; range. Note that this increment always takes precedence over an explicit &#x60;version&#x60; in the function manifest. | [optional] 
 **query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` | If set, the value will be used as the function name instead of the one specified in the manifest. | [optional] 
 **query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | If set, the created function will be a draft function and its assets are still mutable. A build and deploy is initiated only in the case when all necessary assets are present and valid. | [optional] [default False]
 **query['runtime']** (dict) <br> **query.runtime** (Query) | **str** | query parameter `"runtime"` | If set, the created function will use the indicated runtime (latest version within specified range).  This takes precedence over the runtime specified in a function manifest (copied or from request body). | [optional] 
-**query['copy']** (dict) <br> **query.copy_from** (Query) | [**CreateModelsCopyParameter**](.md) | query parameter `"copy"` | Indicates the _source_ of initial assets for a _new function_.  When using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.  #### Selection of _assets_ source  * If set as &#x60;&lt;sourceName&gt;[@&lt;sourceVersionRange&gt;]&#x60;, the _new function_ will be created with copied assets of the selected _source function_. * If set as &#x60;!example&#x60;, a &#x60;runtime&#x60; query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.  #### Selection of the _source function_  When &#x60;&lt;sourceVersionRange&gt;&#x60; is a range (or is not given), the latest _published_ version (in that range) is used.  If no _published_ version exists, the latest _draft_ is selected.  If no versions in the range exist, a &#x60;404&#x60; _Not Found_ error is returned.  #### The &#x60;name&#x60; of the _new function_  If a &#x60;name&#x60; is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the &#x60;name&#x60; of the _new function_ will be that of the _source function_.  #### The &#x60;version&#x60; of the _new function_  When the _target_ and _source_ name are equal, the &#x60;version&#x60; query parameters is defaulted to &#x60;&lt;sourceVersionRange&gt;&#x60; (&#x60;~&lt;sourceVersionRange&gt;&#x60; when it&#39;s an exact version)  The version of the _new function_ will be: * If a &#x60;version&#x60; is NOT specified (either as query parameter, in an optional manifest asset, or as &#x60;&lt;sourceVersionRange&gt;&#x60; _default_)    * a **patch increment** (&#x60;&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;+1&#x60;) of the latest **existing version** with the target &#x60;name&#x60;    * **&#x60;1.0.0&#x60;** otherwise  * If a &#x60;version&#x60; is specified:    * the **lowest version** in that range **if no existing version** is in that range.    * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.    * otherwise, if all allowed versions already exist, a **&#x60;409&#x60; _Duplicate_ error** is raised.  #### Deployment overrides  The new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body. | [optional] 
+**query['copy']** (dict) <br> **query.copy_from** (Query) | [**CreatePlugsCopy**](CreatePlugsCopy.md) | query parameter `"copy"` | Indicates the _source_ of initial assets for a _new function_.  When using this query parameter, the request body does not need to contain assets, but any assets in the request body will overwrite the copied assets.  #### Selection of _assets_ source  * If set as &#x60;&lt;sourceName&gt;[@&lt;sourceVersionRange&gt;]&#x60;, the _new function_ will be created with copied assets of the selected _source function_. * If set as &#x60;!example&#x60;, a &#x60;runtime&#x60; query parameter is required, and the _new function_ will be initialized with assets of the _runtime example_.  #### Selection of the _source function_  When &#x60;&lt;sourceVersionRange&gt;&#x60; is a range (or is not given), the latest _published_ version (in that range) is used.  If no _published_ version exists, the latest _draft_ is selected.  If no versions in the range exist, a &#x60;404&#x60; _Not Found_ error is returned.  #### The &#x60;name&#x60; of the _new function_  If a &#x60;name&#x60; is NOT specified (either as query parameter, or in an optional manifest asset in the request body), the &#x60;name&#x60; of the _new function_ will be that of the _source function_.  #### The &#x60;version&#x60; of the _new function_  When the _target_ and _source_ name are equal, the &#x60;version&#x60; query parameters is defaulted to &#x60;&lt;sourceVersionRange&gt;&#x60; (&#x60;~&lt;sourceVersionRange&gt;&#x60; when it&#39;s an exact version)  The version of the _new function_ will be: * If a &#x60;version&#x60; is NOT specified (either as query parameter, in an optional manifest asset, or as &#x60;&lt;sourceVersionRange&gt;&#x60; _default_)    * a **patch increment** (&#x60;&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;+1&#x60;) of the latest **existing version** with the target &#x60;name&#x60;    * **&#x60;1.0.0&#x60;** otherwise  * If a &#x60;version&#x60; is specified:    * the **lowest version** in that range **if no existing version** is in that range.    * an **increment** of the latest existing version, **at the highest level** (_major_,_minor_,_patch_) allowed by that range.    * otherwise, if all allowed versions already exist, a **&#x60;409&#x60; _Duplicate_ error** is raised.  #### Deployment overrides  The new function will use the deployment overrides of the copied function, unless a _manifest_ was specified in the request body. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['content-type']** | **str** | content type | request header `"content-type"` | should match mediaType `*/*+json`, `application/gzip`, `application/json`, `application/octet-stream`, `application/tar`, `application/tar+gzip`, `application/x-gzip`, `application/x-tar`, `multipart/form-data`
 
@@ -149,8 +147,6 @@ Delete an asset from the plug's collection of existing assets.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -159,25 +155,27 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostPlugJobSyncResponseV2
+from waylay.services.registry.models.post_plug_job_sync_response_v2 import (
+    PostPlugJobSyncResponseV2,
+)
+
 try:
     # Delete Asset
     # calls `DELETE /registry/v2/plugs/{name}/versions/{version}/content/{wildcard}`
     api_response = await waylay_client.registry.plugs.delete_asset(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
-        'wildcard_example', # wildcard | path param "wildcard"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
+        "wildcard_example",  # wildcard | path param "wildcard"
         # query parameters:
-        query = {
-            'showTags': 'embed'
-            'scaleToZero': False
-            'deploy': True
-            'chown': False
-            'async': True
+        query={
+            "showTags": "embed",
+            "scaleToZero": False,
+            "deploy": True,
+            "chown": False,
+            "async": True,
         },
     )
-    print("The response of registry.plugs.delete_asset:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.delete_asset: %s\n" % e)
 ```
@@ -194,7 +192,7 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately. | [optional] [default False]
 **query['deploy']** (dict) <br> **query.deploy** (Query) | **bool** | query parameter `"deploy"` | Indicates that a function should be _deployed_ when its assets are valid.  * If &#x60;true&#x60; (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If &#x60;false&#x60;, the uploaded assets are stored and the function is created/updated in &#x60;registered&#x60; state. Asset validation errors are only returned as warning, and stored as &#x60;failureReason&#x60; on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage. | [optional] [default True]
 **query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
@@ -241,8 +239,6 @@ Get the specification archive of a plug.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -255,15 +251,14 @@ try:
     # Get Archive
     # calls `GET /registry/v2/plugs/{name}/versions/{version}/content`
     api_response = await waylay_client.registry.plugs.get_archive(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'ls': False
+        query={
+            "ls": False,
         },
     )
-    print("The response of registry.plugs.get_archive:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.get_archive: %s\n" % e)
 ```
@@ -307,7 +302,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > get_asset_by_role(
 > name: str,
 > version: str,
-> asset_role: GetAssetByRoleModelsAssetRoleParameter,
+> asset_role: GetAssetByRolePlugsAssetRole,
 > query: GetAssetByRoleQuery,
 > headers
 > ) -> bytearray
@@ -319,8 +314,6 @@ Get asset content or metadata from the archive of a plug by asset role.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -333,16 +326,15 @@ try:
     # Get Asset By Role
     # calls `GET /registry/v2/plugs/{name}/versions/{version}/{assetRole}`
     api_response = await waylay_client.registry.plugs.get_asset_by_role(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
-        waylay.services.registry.GetAssetByRoleModelsAssetRoleParameter(), # asset_role | path param "assetRole"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
+        waylay.services.registry.GetAssetByRolePlugsAssetRole(),  # asset_role | path param "assetRole"
         # query parameters:
-        query = {
-            'ls': False
+        query={
+            "ls": False,
         },
     )
-    print("The response of registry.plugs.get_asset_by_role:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.get_asset_by_role: %s\n" % e)
 ```
@@ -357,7 +349,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
-**asset_role** | [**GetAssetByRoleModelsAssetRoleParameter**](.md) | path parameter `"assetRole"` | Role name of the asset. The mapping to a concrete asset path depends on the runtime. Only asset roles with a fixed asset path for the runtime are supported. | 
+**asset_role** | [**GetAssetByRolePlugsAssetRole**](GetAssetByRolePlugsAssetRole.md) | path parameter `"assetRole"` | Role name of the asset. The mapping to a concrete asset path depends on the runtime. Only asset roles with a fixed asset path for the runtime are supported. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['ls']** (dict) <br> **query.ls** (Query) | **bool** | query parameter `"ls"` | If set to &#x60;true&#x60;, the result will be a listing of the files in the asset, annotated with metadata and validation report from the asset conditions of the functions runtime. | [optional] [default False]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
@@ -399,8 +391,6 @@ Get asset content or metadata from the archive of a plug by name.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -413,16 +403,15 @@ try:
     # Get Asset
     # calls `GET /registry/v2/plugs/{name}/versions/{version}/content/{wildcard}`
     api_response = await waylay_client.registry.plugs.get_asset(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
-        'wildcard_example', # wildcard | path param "wildcard"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
+        "wildcard_example",  # wildcard | path param "wildcard"
         # query parameters:
-        query = {
-            'ls': False
+        query={
+            "ls": False,
         },
     )
-    print("The response of registry.plugs.get_asset:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.get_asset: %s\n" % e)
 ```
@@ -477,8 +466,6 @@ Fetch the latest version of a <em>plug</em>.    By default, the result shows the
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -489,22 +476,22 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.get_plug_response_v2 import GetPlugResponseV2
 from waylay.services.registry.models.plug_type import PlugType
+
 try:
     # Get Latest
     # calls `GET /registry/v2/plugs/{name}`
     api_response = await waylay_client.registry.plugs.get_latest(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-            'type': 'sensor'
-            'showTags': 'embed'
-            'includeDraft': True
-            'includeDeprecated': True
-            'includeUndeployed': True
+        query={
+            "type": "sensor",
+            "showTags": "embed",
+            "includeDraft": True,
+            "includeDeprecated": True,
+            "includeUndeployed": True,
         },
     )
-    print("The response of registry.plugs.get_latest:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.get_latest: %s\n" % e)
 ```
@@ -519,8 +506,8 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['type']** (dict) <br> **query.type** (Query) | [**PlugType**](.md) | query parameter `"type"` | If set, filters on the type of plug. | [optional] 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['type']** (dict) <br> **query.type** (Query) | [**PlugType**](PlugType.md) | query parameter `"type"` | If set, filters on the type of plug. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['includeDraft']** (dict) <br> **query.include_draft** (Query) | **bool** | query parameter `"includeDraft"` | Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to &#x60;true&#x60;, draft versions can be selected as latest version. If set to &#x60;false&#x60;, draft versions are **excluded**. (similar to a &#x60;draft&#x3D;false&#x60; filter) | [optional] 
 **query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions can be selected as latest version. If set to &#x60;false&#x60;, deprecated versions are **excluded**. (similar to a &#x60;deprecated&#x3D;false&#x60; filter) | [optional] 
 **query['includeUndeployed']** (dict) <br> **query.include_undeployed** (Query) | **bool** | query parameter `"includeUndeployed"` | Configures the inclusion of _undeployed_ versions when selecting latest versions per name. By default, undeployed versions are only considered when no other versions are available. If set to &#x60;true&#x60;, undeployed versions can be selected as latest version. If set to &#x60;false&#x60;, undeployed versions are **excluded** (similar to a &#x60;status&#x3D;-undeployed&#x60; filter) | [optional] 
@@ -562,8 +549,6 @@ Get a specific version of a plug.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -573,19 +558,19 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.get_plug_response_v2 import GetPlugResponseV2
+
 try:
     # Get Version
     # calls `GET /registry/v2/plugs/{name}/versions/{version}`
     api_response = await waylay_client.registry.plugs.get(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'showTags': 'embed'
+        query={
+            "showTags": "embed",
         },
     )
-    print("The response of registry.plugs.get:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.get: %s\n" % e)
 ```
@@ -601,7 +586,7 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -640,8 +625,6 @@ List the ongoing and completed operations on a specific plug.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -653,19 +636,20 @@ waylay_client = WaylayClient.from_profile()
 from waylay.services.registry.models.function_type import FunctionType
 from waylay.services.registry.models.job_state_result import JobStateResult
 from waylay.services.registry.models.job_type_schema import JobTypeSchema
-from waylay.services.registry.models.jobs_for_plug_response_v2 import JobsForPlugResponseV2
+from waylay.services.registry.models.jobs_for_plug_response_v2 import (
+    JobsForPlugResponseV2,
+)
+
 try:
     # List Jobs
     # calls `GET /registry/v2/plugs/{name}/versions/{version}/jobs`
     api_response = await waylay_client.registry.plugs.jobs(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-        },
+        query={},
     )
-    print("The response of registry.plugs.jobs:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.jobs: %s\n" % e)
 ```
@@ -685,8 +669,8 @@ Name     | Type  | API binding   | Description   | Notes
 **query['type']** (dict) <br> **query.type** (Query) | [**List[JobTypeSchema]**](JobTypeSchema.md) | query parameter `"type"` | Filter on job type | [optional] 
 **query['state']** (dict) <br> **query.state** (Query) | [**List[JobStateResult]**](JobStateResult.md) | query parameter `"state"` | Filter on job state | [optional] 
 **query['functionType']** (dict) <br> **query.function_type** (Query) | [**List[FunctionType]**](FunctionType.md) | query parameter `"functionType"` | Filter on function type | [optional] 
-**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on jobs that created before the given timestamp or age | [optional] 
-**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on jobs that created after the given timestamp or age | [optional] 
+**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"createdBefore"` | Filter on jobs that created before the given timestamp or age | [optional] 
+**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"createdAfter"` | Filter on jobs that created after the given timestamp or age | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -723,8 +707,6 @@ List the (latest) versions of available <em>plugs</em>.  ### List Latest Plug Ve
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -734,29 +716,31 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.archive_format_filter import ArchiveFormatFilter
-from waylay.services.registry.models.latest_plugs_response_v2 import LatestPlugsResponseV2
+from waylay.services.registry.models.latest_plugs_response_v2 import (
+    LatestPlugsResponseV2,
+)
 from waylay.services.registry.models.plug_type import PlugType
 from waylay.services.registry.models.status_filter import StatusFilter
+
 try:
     # List
     # calls `GET /registry/v2/plugs/`
     api_response = await waylay_client.registry.plugs.list(
         # query parameters:
-        query = {
-            'type': 'sensor'
-            'includeDraft': True
-            'includeDeprecated': True
-            'includeUndeployed': True
-            'deprecated': True
-            'draft': True
-            'showTags': 'embed'
-            'createdBy': '@me'
-            'updatedBy': '@me'
-            'latest': True
+        query={
+            "type": "sensor",
+            "includeDraft": True,
+            "includeDeprecated": True,
+            "includeUndeployed": True,
+            "deprecated": True,
+            "draft": True,
+            "showTags": "embed",
+            "createdBy": "@me",
+            "updatedBy": "@me",
+            "latest": True,
         },
     )
-    print("The response of registry.plugs.list:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.list: %s\n" % e)
 ```
@@ -770,31 +754,31 @@ GET /registry/v2/plugs/
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['type']** (dict) <br> **query.type** (Query) | [**PlugType**](.md) | query parameter `"type"` | If set, filters on the type of plug. | [optional] 
+**query['type']** (dict) <br> **query.type** (Query) | [**PlugType**](PlugType.md) | query parameter `"type"` | If set, filters on the type of plug. | [optional] 
 **query['limit']** (dict) <br> **query.limit** (Query) | **float** | query parameter `"limit"` | The maximum number of items to be return from this query. Has a deployment-defined default and maximum value. | [optional] 
 **query['page']** (dict) <br> **query.page** (Query) | **float** | query parameter `"page"` | The number of pages to skip when returning result to this query. | [optional] 
-**query['showRelated']** (dict) <br> **query.show_related** (Query) | [**ShowLinkOrEmbedding**](.md) | query parameter `"showRelated"` | Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. Ignored (forced to &#x60;none&#x60;) when any of the _version filter_ query params are used. - &#x60;embed&#x60;: as full summary representation (in &#x60;_embedded&#x60;). - &#x60;link&#x60;: as HAL link in (in &#x60;_links&#x60;). - &#x60;none&#x60;: omitted.  Defaults to &#x60;link&#x60; unless &#x60;latest&#x3D;false&#x60;, in which case related versions are omitted. | [optional] 
+**query['showRelated']** (dict) <br> **query.show_related** (Query) | [**ShowLinkOrEmbedding**](ShowLinkOrEmbedding.md) | query parameter `"showRelated"` | Sets the representation of related function versions (like the _latest_ draft and/or published) in the response. Ignored (forced to &#x60;none&#x60;) when any of the _version filter_ query params are used. - &#x60;embed&#x60;: as full summary representation (in &#x60;_embedded&#x60;). - &#x60;link&#x60;: as HAL link in (in &#x60;_links&#x60;). - &#x60;none&#x60;: omitted.  Defaults to &#x60;link&#x60; unless &#x60;latest&#x3D;false&#x60;, in which case related versions are omitted. | [optional] 
 **query['includeDraft']** (dict) <br> **query.include_draft** (Query) | **bool** | query parameter `"includeDraft"` | Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to &#x60;true&#x60;, draft versions can be selected as latest version. If set to &#x60;false&#x60;, draft versions are **excluded**. (similar to a &#x60;draft&#x3D;false&#x60; filter) | [optional] 
 **query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions can be selected as latest version. If set to &#x60;false&#x60;, deprecated versions are **excluded**. (similar to a &#x60;deprecated&#x3D;false&#x60; filter) | [optional] 
 **query['includeUndeployed']** (dict) <br> **query.include_undeployed** (Query) | **bool** | query parameter `"includeUndeployed"` | Configures the inclusion of _undeployed_ versions when selecting latest versions per name. By default, undeployed versions are only considered when no other versions are available. If set to &#x60;true&#x60;, undeployed versions can be selected as latest version. If set to &#x60;false&#x60;, undeployed versions are **excluded** (similar to a &#x60;status&#x3D;-undeployed&#x60; filter) | [optional] 
 **query['deprecated']** (dict) <br> **query.deprecated** (Query) | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
 **query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
 **query['status']** (dict) <br> **query.status** (Query) | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
-**query['nameVersion']** (dict) <br> **query.name_version** (Query) | [**List[str]**](str.md) | query parameter `"nameVersion"` | Filter on exact &#x60;{name}@{version}&#x60; functions. Using this filter implies a &#x60;latest&#x3D;false&#x60; default, returning multiple versions of the same named versions if they are filtered. | [optional] 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
-**query['tags']** (dict) <br> **query.tags** (Query) | [**TagsFilter**](.md) | query parameter `"tags"` | Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected. | [optional] 
+**query['nameVersion']** (dict) <br> **query.name_version** (Query) | **List[str]** | query parameter `"nameVersion"` | Filter on exact &#x60;{name}@{version}&#x60; functions. Using this filter implies a &#x60;latest&#x3D;false&#x60; default, returning multiple versions of the same named versions if they are filtered. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['tags']** (dict) <br> **query.tags** (Query) | [**TagsFilter**](TagsFilter.md) | query parameter `"tags"` | Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected. | [optional] 
 **query['wql']** (dict) <br> **query.wql** (Query) | **str** | query parameter `"wql"` | Query filter using the &#39;wql&#39; query language.  This is a unstable preview feature, currently supporting the following _match terms_: * &#x60;tag:&lt;name&gt;&#x60; entity has a tag that fully matches &#x60;&lt;name&gt;&#x60; (case insensitive). * &#x60;tag:&lt;name1&gt;,&lt;name2&gt;&#x60; entity has a tag that fully matches any of &#x60;&lt;name1&gt;&#x60;, &#x60;&lt;name2&gt;&#x60; (case insensitive). * &#x60;tag:inIgnoreCase(&lt;name1&gt;,&lt;name2&gt;)&#x60; is the fully specified format for the previous statements.   &#x60;inIgnoreCase&#x60; is the _default match predicate_. * &#x60;tag:in(&lt;name1&gt;,&lt;name2&gt;)&#x60; entity has a tag matches one of &#x60;&lt;name1&gt;&#x60;,&#x60;&lt;name2&gt;&#x60; (case sensitive) * &#x60;tag:equals(&lt;name&gt;)&#x60; entity has a tag matches &#x60;&lt;name&gt;&#x60; (case sensitive) * &#x60;tag:like(&lt;pattern&gt;)&#x60; entity has a tag that matches &#x60;&lt;pattern&gt;&#x60; (case insensitive),    where &#x60;&lt;pattern&gt;&#x60; can contain &#x60;*&#x60; (multiple characters) and &#x60;?&#x60; (single character) wildcards.  Each _argument_ of a _match term_ (like &#x60;&lt;name&gt;&#x60; above) can either be a * a _quoted match argument_, quoted using &#x60;\&quot;&#x60;, can contain any character except &#x60;\&quot;&#x60;: &#x60;tag:\&quot;Status:In Review\&quot;&#x60;. * a _safe match argument_ can only contain alpha-numeric characters or &#x60;_&#x60;: &#x60;tag:Status_In_Review&#x60;.  Multiple _match term_s can be combined in a boolean predicate using the &#x60;AND&#x60;, &#x60;OR&#x60; and &#x60;NOT&#x60; operators: * &#x60;tag:abc AND tag:\&quot;My Demo\&quot; AND tag:like(\&quot;prj:*\&quot;)&#x60;: entity has a tag matching &#x60;abc&#x60; **AND** a tag matching &#x60;\&quot;My Demo\&quot;&#x60; **AND**    a tag that has the &#x60;prj:&#x60; prefix * &#x60;tag:abc tag:\&quot;My Demo\&quot; tag:like(\&quot;prj:*\&quot;)&#x60;: same as the previous statement: a (space-deliminated) list of terms is     implicitly combined with &#x60;AND&#x60;. * &#x60;tag:abc OR tag:\&quot;My Demo\&quot;&#x60;: entity has a tag matching &#x60;abc&#x60; **OR** a tag matching &#x60;\&quot;My Demo\&quot;&#x60; * &#x60;NOT tag:abc&#x60;: entity **does not have** a tag matching &#x60;abc&#x60;  Round brackets can be used to combine predicates with different operators: * &#x60;(tag:abc OR tag:\&quot;My Demo\&quot;) AND tag:like(\&quot;prj:*\&quot;)&#x60;: entity has a tag &#x60;abc&#x60; or a tag &#x60;My Demo&#x60;, and a tag with prefix &#x60;prj:*&#x60;  For a _multi-valued attribute_ like &#x60;tag&#x60;, each _match term_ tests the existence of a matching tag assigned to the entity. When _multiple match predicates on the **same** tag_ need to be specified, the boolean operators &#x60;not&#x60;, &#x60;all&#x60;, &#x60;any&#x60; can be used _within_ the match term:  * &#x60;tag:all(like(\&quot;prj:*\&quot;),not(like(\&quot;*:Done\&quot;)))&#x60;: entity has a tag that starts with &#x60;prj:&#x60; and does NOT end with &#x60;:Done&#x60;. * &#x60;tag:not(Done)&#x60;: entity has a tag that does not match &#x60;Done&#x60; (this excludes entities without tags, and with a single &#x60;Done&#x60; tag!). * &#x60;NOT tag:not(in(abc,def))&#x60;: each tag of the entity is in &#x60;abc&#x60; or &#x60;def&#x60; (matches entities without tags!) * &#x60;tag:any(like(\&quot;prj:*\&quot;),not(done)))&#x60;: entity has a tag that either starts with &#x60;prj:&#x60; or does not match &#x60;done&#x60;. | [optional] 
 **query['version']** (dict) <br> **query.version** (Query) | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
-**query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
+**query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](SemanticVersionRange.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
 **query['createdBy']** (dict) <br> **query.created_by** (Query) | **str** | query parameter `"createdBy"` | Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
 **query['updatedBy']** (dict) <br> **query.updated_by** (Query) | **str** | query parameter `"updatedBy"` | Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
-**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
-**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
-**query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
-**query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
+**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
+**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
+**query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
+**query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
 **query['name']** (dict) <br> **query.name** (Query) | **str** | query parameter `"name"` | Filter on the name of the function. This is case-insensitive and supports wild-cards &#x60;?&#x60; (any one character) and &#x60;*&#x60; (any sequence of characters). | [optional] 
 **query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormatFilter]**](ArchiveFormatFilter.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
-**query['runtime']** (dict) <br> **query.runtime** (Query) | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
+**query['runtime']** (dict) <br> **query.runtime** (Query) | **List[str]** | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
 **query['latest']** (dict) <br> **query.latest** (Query) | **bool** | query parameter `"latest"` | When &#x60;true&#x60;, only the latest version per function name is returned. If set to &#x60;false&#x60;, multiple versions per named function can be returned. Defaults to &#x60;true&#x60;. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -833,8 +817,6 @@ List all versions of a plug, including deprecated versions or not.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -844,27 +826,29 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.archive_format_filter import ArchiveFormatFilter
-from waylay.services.registry.models.plug_versions_response_v2 import PlugVersionsResponseV2
+from waylay.services.registry.models.plug_versions_response_v2 import (
+    PlugVersionsResponseV2,
+)
 from waylay.services.registry.models.status_filter import StatusFilter
+
 try:
     # List Versions
     # calls `GET /registry/v2/plugs/{name}/versions`
     api_response = await waylay_client.registry.plugs.list_versions(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-            'deprecated': True
-            'draft': True
-            'showTags': 'embed'
-            'includeDraft': True
-            'includeDeprecated': True
-            'includeUndeployed': True
-            'createdBy': '@me'
-            'updatedBy': '@me'
+        query={
+            "deprecated": True,
+            "draft": True,
+            "showTags": "embed",
+            "includeDraft": True,
+            "includeDeprecated": True,
+            "includeUndeployed": True,
+            "createdBy": "@me",
+            "updatedBy": "@me",
         },
     )
-    print("The response of registry.plugs.list_versions:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.list_versions: %s\n" % e)
 ```
@@ -884,21 +868,21 @@ Name     | Type  | API binding   | Description   | Notes
 **query['deprecated']** (dict) <br> **query.deprecated** (Query) | **bool** | query parameter `"deprecated"` | Filter on the deprecation status of the function. | [optional] 
 **query['draft']** (dict) <br> **query.draft** (Query) | **bool** | query parameter `"draft"` | Filter on the draft status of the function. | [optional] 
 **query['status']** (dict) <br> **query.status** (Query) | [**List[StatusFilter]**](StatusFilter.md) | query parameter `"status"` | Filter on the status of the plug. Filter values with a &#x60;-&#x60; postfix exclude the status. Use the &#x60;any&#x60; filter value to include all states. When not specified, a default &#x60;undeployed-&#x60; filter excludes _undeployed_ functions. | [optional] 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
-**query['tags']** (dict) <br> **query.tags** (Query) | [**TagsFilter**](.md) | query parameter `"tags"` | Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['tags']** (dict) <br> **query.tags** (Query) | [**TagsFilter**](TagsFilter.md) | query parameter `"tags"` | Filter on the tags of the item. Can be a single tag, or a list of tags. When multiple tags are specified, an item must have all of the tags to be selected. | [optional] 
 **query['includeDraft']** (dict) <br> **query.include_draft** (Query) | **bool** | query parameter `"includeDraft"` | Configures the inclusion of _draft_ versions when selecting latest versions per name. By default, draft versions are only considered when no other versions are available. If set to &#x60;true&#x60;, draft versions can be selected as latest version. If set to &#x60;false&#x60;, draft versions are **excluded**. (similar to a &#x60;draft&#x3D;false&#x60; filter) | [optional] 
 **query['includeDeprecated']** (dict) <br> **query.include_deprecated** (Query) | **bool** | query parameter `"includeDeprecated"` | Configures the inclusion of _deprecated_ versions when selecting latest versions per name. By default, deprecated versions are only considered when no other versions are available. If set to &#x60;true&#x60;, deprecated versions can be selected as latest version. If set to &#x60;false&#x60;, deprecated versions are **excluded**. (similar to a &#x60;deprecated&#x3D;false&#x60; filter) | [optional] 
 **query['includeUndeployed']** (dict) <br> **query.include_undeployed** (Query) | **bool** | query parameter `"includeUndeployed"` | Configures the inclusion of _undeployed_ versions when selecting latest versions per name. By default, undeployed versions are only considered when no other versions are available. If set to &#x60;true&#x60;, undeployed versions can be selected as latest version. If set to &#x60;false&#x60;, undeployed versions are **excluded** (similar to a &#x60;status&#x3D;-undeployed&#x60; filter) | [optional] 
 **query['version']** (dict) <br> **query.version** (Query) | **str** | query parameter `"version"` | Filter on the version of the function (case-sensitive, supports wildcards). | [optional] 
-**query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
+**query['runtimeVersion']** (dict) <br> **query.runtime_version** (Query) | [**SemanticVersionRange**](SemanticVersionRange.md) | query parameter `"runtimeVersion"` | Filter on the runtime version. | [optional] 
 **query['createdBy']** (dict) <br> **query.created_by** (Query) | **str** | query parameter `"createdBy"` | Filter on the user that create the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
 **query['updatedBy']** (dict) <br> **query.updated_by** (Query) | **str** | query parameter `"updatedBy"` | Filter on the user that last updated the plug. You can use the &#x60;@me&#x60; token to indicate your own plugs. | [optional] 
-**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
-**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
-**query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
-**query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
+**query['createdBefore']** (dict) <br> **query.created_before** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"createdBefore"` | Filter on funtions that were created before the given timestamp or age. | [optional] 
+**query['createdAfter']** (dict) <br> **query.created_after** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"createdAfter"` | Filter on funtions that were created after the given timestamp or age. | [optional] 
+**query['updatedBefore']** (dict) <br> **query.updated_before** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"updatedBefore"` | Filter on funtions that were updated before the given timestamp or age. | [optional] 
+**query['updatedAfter']** (dict) <br> **query.updated_after** (Query) | [**TimestampSpec**](TimestampSpec.md) | query parameter `"updatedAfter"` | Filter on funtions that were updated after the given timestamp or age. | [optional] 
 **query['archiveFormat']** (dict) <br> **query.archive_format** (Query) | [**List[ArchiveFormatFilter]**](ArchiveFormatFilter.md) | query parameter `"archiveFormat"` | Filter on the archive format of the function. | [optional] 
-**query['runtime']** (dict) <br> **query.runtime** (Query) | [**List[str]**](str.md) | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
+**query['runtime']** (dict) <br> **query.runtime** (Query) | **List[str]** | query parameter `"runtime"` | Filter on the runtime of the function. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -937,8 +921,6 @@ Patch the interface documentation of a plug version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -949,21 +931,21 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.documentation import Documentation
 from waylay.services.registry.models.get_plug_response_v2 import GetPlugResponseV2
+
 try:
     # Patch Interface
     # calls `PATCH /registry/v2/plugs/{name}/versions/{version}/interface`
     api_response = await waylay_client.registry.plugs.patch_interface(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'showTags': 'embed'
+        query={
+            "showTags": "embed",
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.registry.Documentation() # Documentation |  (optional)
+        json=waylay.services.registry.Documentation(),  # Documentation |  (optional)
     )
-    print("The response of registry.plugs.patch_interface:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.patch_interface: %s\n" % e)
 ```
@@ -981,7 +963,7 @@ Name     | Type  | API binding   | Description   | Notes
 **json** | [**Documentation**](Documentation.md) | json request body |  | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -1020,8 +1002,6 @@ The provided json content will be merged with the existing as <code>plug.json</c
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1031,26 +1011,28 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.plug_manifest_patch import PlugManifestPatch
-from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostPlugJobSyncResponseV2
+from waylay.services.registry.models.post_plug_job_sync_response_v2 import (
+    PostPlugJobSyncResponseV2,
+)
+
 try:
     # Patch Manifest
     # calls `PATCH /registry/v2/plugs/{name}/versions/{version}/manifest`
     api_response = await waylay_client.registry.plugs.patch_manifest(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'showTags': 'embed'
-            'scaleToZero': False
-            'deploy': True
-            'chown': False
-            'async': True
+        query={
+            "showTags": "embed",
+            "scaleToZero": False,
+            "deploy": True,
+            "chown": False,
+            "async": True,
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.registry.PlugManifestPatch() # PlugManifestPatch |  (optional)
+        json=waylay.services.registry.PlugManifestPatch(),  # PlugManifestPatch |  (optional)
     )
-    print("The response of registry.plugs.patch_manifest:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.patch_manifest: %s\n" % e)
 ```
@@ -1067,7 +1049,7 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **json** | [**PlugManifestPatch**](PlugManifestPatch.md) | json request body |  | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately. | [optional] [default False]
 **query['deploy']** (dict) <br> **query.deploy** (Query) | **bool** | query parameter `"deploy"` | Indicates that a function should be _deployed_ when its assets are valid.  * If &#x60;true&#x60; (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If &#x60;false&#x60;, the uploaded assets are stored and the function is created/updated in &#x60;registered&#x60; state. Asset validation errors are only returned as warning, and stored as &#x60;failureReason&#x60; on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage. | [optional] [default True]
 **query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
@@ -1114,8 +1096,6 @@ Patch the metadata of a plug version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1125,22 +1105,24 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.get_plug_response_v2 import GetPlugResponseV2
-from waylay.services.registry.models.update_plug_metadata_request_v2 import UpdatePlugMetadataRequestV2
+from waylay.services.registry.models.update_plug_metadata_request_v2 import (
+    UpdatePlugMetadataRequestV2,
+)
+
 try:
     # Patch Metadata
     # calls `PATCH /registry/v2/plugs/{name}/versions/{version}/metadata`
     api_response = await waylay_client.registry.plugs.patch_metadata(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'showTags': 'embed'
+        query={
+            "showTags": "embed",
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.registry.UpdatePlugMetadataRequestV2() # UpdatePlugMetadataRequestV2 |  (optional)
+        json=waylay.services.registry.UpdatePlugMetadataRequestV2(),  # UpdatePlugMetadataRequestV2 |  (optional)
     )
-    print("The response of registry.plugs.patch_metadata:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.patch_metadata: %s\n" % e)
 ```
@@ -1158,7 +1140,7 @@ Name     | Type  | API binding   | Description   | Notes
 **json** | [**UpdatePlugMetadataRequestV2**](UpdatePlugMetadataRequestV2.md) | json request body |  | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -1197,8 +1179,6 @@ Enable/disable protection for a <em>plug</em> version. Enabling protection requi
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1208,21 +1188,21 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.get_plug_response_v2 import GetPlugResponseV2
+
 try:
     # Protect Version
     # calls `POST /registry/v2/plugs/{name}/versions/{version}/protect`
     api_response = await waylay_client.registry.plugs.protect(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'chown': False
-            'showTags': 'embed'
-            'enable': True
+        query={
+            "chown": False,
+            "showTags": "embed",
+            "enable": True,
         },
     )
-    print("The response of registry.plugs.protect:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.protect: %s\n" % e)
 ```
@@ -1241,7 +1221,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['enable']** (dict) <br> **query.enable** (Query) | **bool** | query parameter `"enable"` | If set to &#x60;true&#x60;, the function assets (including its code) will be protected by requiring additional permissions. If set to &#x60;false&#x60;, the function assets will no longer be protected. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -1280,8 +1260,6 @@ Enable/disable protection for all <em>plug</em> versions. Enabling protection re
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1290,21 +1268,23 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.protect_by_name_response_v2 import ProtectByNameResponseV2
+from waylay.services.registry.models.protect_by_name_response_v2 import (
+    ProtectByNameResponseV2,
+)
+
 try:
     # Protect
     # calls `POST /registry/v2/plugs/{name}/protect`
     api_response = await waylay_client.registry.plugs.protect_versions(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-            'chown': False
-            'showTags': 'embed'
-            'enable': True
+        query={
+            "chown": False,
+            "showTags": "embed",
+            "enable": True,
         },
     )
-    print("The response of registry.plugs.protect_versions:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.protect_versions: %s\n" % e)
 ```
@@ -1322,7 +1302,7 @@ Name     | Type  | API binding   | Description   | Notes
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
 **query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['enable']** (dict) <br> **query.enable** (Query) | **bool** | query parameter `"enable"` | If set to &#x60;true&#x60;, the function assets (including its code) will be protected by requiring additional permissions. If set to &#x60;false&#x60;, the function assets will no longer be protected. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -1362,8 +1342,6 @@ Mark the <em>plug</em> to be ready and stable, taking it out of draft mode.,    
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1372,23 +1350,25 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostPlugJobSyncResponseV2
+from waylay.services.registry.models.post_plug_job_sync_response_v2 import (
+    PostPlugJobSyncResponseV2,
+)
+
 try:
     # Publish Draft
     # calls `POST /registry/v2/plugs/{name}/versions/{version}/publish`
     api_response = await waylay_client.registry.plugs.publish(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'showTags': 'embed'
-            'chown': False
-            'deprecatePrevious': waylay.services.registry.DeprecatePreviousPolicy()
-            'async': True
+        query={
+            "showTags": "embed",
+            "chown": False,
+            "deprecatePrevious": waylay.services.registry.DeprecatePreviousPolicy(),
+            "async": True,
         },
     )
-    print("The response of registry.plugs.publish:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.publish: %s\n" % e)
 ```
@@ -1404,11 +1384,11 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['author']** (dict) <br> **query.author** (Query) | **str** | query parameter `"author"` | Optionally changes the author metadata when updating a function. | [optional] 
-**query['deprecatePrevious']** (dict) <br> **query.deprecate_previous** (Query) | [**DeprecatePreviousPolicy**](.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions when creating a new non-draft version or publishing a draft version. | [optional] 
+**query['deprecatePrevious']** (dict) <br> **query.deprecate_previous** (Query) | [**DeprecatePreviousPolicy**](DeprecatePreviousPolicy.md) | query parameter `"deprecatePrevious"` | Set the cleanup policy used to automatically deprecate/delete previous versions when creating a new non-draft version or publishing a draft version. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
@@ -1449,8 +1429,6 @@ Rebuild and deploy a plug with the original or updated base image.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1459,32 +1437,34 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.rebuild_plug_sync_response_v2 import RebuildPlugSyncResponseV2
+from waylay.services.registry.models.rebuild_plug_sync_response_v2 import (
+    RebuildPlugSyncResponseV2,
+)
 from waylay.services.registry.models.rebuild_policy import RebuildPolicy
 from waylay.services.registry.models.rebuild_request_v2 import RebuildRequestV2
+
 try:
     # Rebuild
     # calls `POST /registry/v2/plugs/{name}/versions/{version}/rebuild`
     api_response = await waylay_client.registry.plugs.rebuild(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'scaleToZero': True
-            'dryRun': True
-            'async': True
-            'showTags': 'embed'
-            'upgrade': 'patch'
-            'forceDeploy': True
-            'ignoreChecks': True
-            'skipRebuild': True
-            'skipVerify': False
+        query={
+            "scaleToZero": True,
+            "dryRun": True,
+            "async": True,
+            "showTags": "embed",
+            "upgrade": "patch",
+            "forceDeploy": True,
+            "ignoreChecks": True,
+            "skipRebuild": True,
+            "skipVerify": False,
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.registry.RebuildRequestV2() # RebuildRequestV2 |  (optional)
+        json=waylay.services.registry.RebuildRequestV2(),  # RebuildRequestV2 |  (optional)
     )
-    print("The response of registry.plugs.rebuild:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.rebuild: %s\n" % e)
 ```
@@ -1505,8 +1485,8 @@ Name     | Type  | API binding   | Description   | Notes
 **query['comment']** (dict) <br> **query.comment** (Query) | **str** | query parameter `"comment"` | An optional user-specified comment corresponding to the operation. | [optional] 
 **query['dryRun']** (dict) <br> **query.dry_run** (Query) | **bool** | query parameter `"dryRun"` | If set to &lt;code&gt;true&lt;/code&gt;, checks whether rebuild jobs are needed, but do not start any jobs. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
-**query['upgrade']** (dict) <br> **query.upgrade** (Query) | [**RebuildPolicy**](.md) | query parameter `"upgrade"` | If set, force a rebuild with the given &lt;em&gt;runtime&lt;/em&gt; version selection policy. &lt;ul&gt;  &lt;li&gt;&lt;code&gt;same&lt;/code&gt; &lt;b&gt;patch&lt;/b&gt; version.   This should only include backward compatible upgrades.  &lt;/li&gt;  &lt;li&gt;&lt;code&gt;minor&lt;/code&gt; &lt;b&gt;major&lt;/b&gt; version.   This might include an upgrade of e.g. the language runtime and/or provided   dependencies that could break compatiblity with the function. .&lt;/li&gt; &lt;/ul&gt; | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['upgrade']** (dict) <br> **query.upgrade** (Query) | [**RebuildPolicy**](RebuildPolicy.md) | query parameter `"upgrade"` | If set, force a rebuild with the given &lt;em&gt;runtime&lt;/em&gt; version selection policy. &lt;ul&gt;  &lt;li&gt;&lt;code&gt;same&lt;/code&gt; &lt;b&gt;patch&lt;/b&gt; version.   This should only include backward compatible upgrades.  &lt;/li&gt;  &lt;li&gt;&lt;code&gt;minor&lt;/code&gt; &lt;b&gt;major&lt;/b&gt; version.   This might include an upgrade of e.g. the language runtime and/or provided   dependencies that could break compatiblity with the function. .&lt;/li&gt; &lt;/ul&gt; | [optional] 
 **query['forceVersion']** (dict) <br> **query.force_version** (Query) | **str** | query parameter `"forceVersion"` | If set, force a rebuild with the given runtime version (including downgrades). This parameter is mutually exclusive to the &#x60;upgrade&#x60; parameter. | [optional] 
 **query['forceDeploy']** (dict) <br> **query.force_deploy** (Query) | **bool** | query parameter `"forceDeploy"` | By default, a redeploy is skipped if there are no build/deploy argument changes. If this flag is set, a redeployment is forced in that case (with the unchanged build and deploy arguments). | [optional] 
 **query['ignoreChecks']** (dict) <br> **query.ignore_checks** (Query) | **bool** | query parameter `"ignoreChecks"` | If set to true, checks that normally prevent a rebuild are overriden. These checks include: * function state in &#x60;pending&#x60;, &#x60;running&#x60;, &#x60;failed&#x60; or &#x60;undeployed&#x60; * backoff period due to recent failures * usage of deprecated dependencies * running jobs on entity * the &#x60;dryRun&#x60; option | [optional] 
@@ -1551,8 +1531,6 @@ Deprecate, undeploy and/or remove a <em>plug</em> version.  By default, a `DELET
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1562,22 +1540,22 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.undeployed_response_v2 import UndeployedResponseV2
+
 try:
     # Remove Version
     # calls `DELETE /registry/v2/plugs/{name}/versions/{version}`
     api_response = await waylay_client.registry.plugs.remove_version(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'async': True
-            'force': True
-            'undeploy': True
-            'reset': True
+        query={
+            "async": True,
+            "force": True,
+            "undeploy": True,
+            "reset": True,
         },
     )
-    print("The response of registry.plugs.remove_version:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.remove_version: %s\n" % e)
 ```
@@ -1636,8 +1614,6 @@ Deprecate, undeploy and/or remove all versions of this named <em>plug</em>.  By 
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1647,21 +1623,21 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.undeployed_response_v2 import UndeployedResponseV2
+
 try:
     # Remove
     # calls `DELETE /registry/v2/plugs/{name}`
     api_response = await waylay_client.registry.plugs.remove_versions(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-            'async': True
-            'force': True
-            'undeploy': True
-            'reset': True
+        query={
+            "async": True,
+            "force": True,
+            "undeploy": True,
+            "reset": True,
         },
     )
-    print("The response of registry.plugs.remove_versions:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.remove_versions: %s\n" % e)
 ```
@@ -1709,7 +1685,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 > update_asset_by_role(
 > name: str,
 > version: str,
-> asset_role: GetAssetByRoleModelsAssetRoleParameter,
+> asset_role: UpdateAssetByRolePlugsAssetRole,
 > query: UpdateAssetByRoleQuery,
 > headers
 > ) -> PostPlugJobSyncResponseV2 \| PostPlugJobAsyncResponseV2
@@ -1721,8 +1697,6 @@ The provided asset will be added to the <em>plug</em> function's collection of e
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1732,32 +1706,32 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.file_upload import FileUpload
-from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostPlugJobSyncResponseV2
+from waylay.services.registry.models.post_plug_job_sync_response_v2 import (
+    PostPlugJobSyncResponseV2,
+)
+
 try:
     # Update Asset By Role
     # calls `PUT /registry/v2/plugs/{name}/versions/{version}/{assetRole}`
     api_response = await waylay_client.registry.plugs.update_asset_by_role(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
-        waylay.services.registry.GetAssetByRoleModelsAssetRoleParameter(), # asset_role | path param "assetRole"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
+        waylay.services.registry.UpdateAssetByRolePlugsAssetRole(),  # asset_role | path param "assetRole"
         # query parameters:
-        query = {
-            'showTags': 'embed'
-            'scaleToZero': False
-            'deploy': True
-            'chown': False
-            'async': True
+        query={
+            "showTags": "embed",
+            "scaleToZero": False,
+            "deploy": True,
+            "chown": False,
+            "async": True,
         },
         # non-json binary data: use a byte array or a generator of bytearray chuncks
-        content=b'my-binary-data',
+        content=b"my-binary-data",
         # this operation supports multiple request content types: use `headers` to specify the one used
-        # alternatives: 
-        headers = {
-            'content-type': 'application/octet-stream'
-        },
+        # alternatives:
+        headers={"content-type": "application/octet-stream"},
     )
-    print("The response of registry.plugs.update_asset_by_role:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.update_asset_by_role: %s\n" % e)
 ```
@@ -1772,10 +1746,10 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **version** | **str** | path parameter `"version"` | The version of the function. | 
-**asset_role** | [**GetAssetByRoleModelsAssetRoleParameter**](.md) | path parameter `"assetRole"` | Role name of the asset. The mapping to a concrete asset path depends on the runtime. Only asset roles with a fixed asset path for the runtime are supported. | 
+**asset_role** | [**UpdateAssetByRolePlugsAssetRole**](UpdateAssetByRolePlugsAssetRole.md) | path parameter `"assetRole"` | Role name of the asset. The mapping to a concrete asset path depends on the runtime. Only asset roles with a fixed asset path for the runtime are supported. | 
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | A single asset file. | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately. | [optional] [default False]
 **query['deploy']** (dict) <br> **query.deploy** (Query) | **bool** | query parameter `"deploy"` | Indicates that a function should be _deployed_ when its assets are valid.  * If &#x60;true&#x60; (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If &#x60;false&#x60;, the uploaded assets are stored and the function is created/updated in &#x60;registered&#x60; state. Asset validation errors are only returned as warning, and stored as &#x60;failureReason&#x60; on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage. | [optional] [default True]
 **query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
@@ -1824,8 +1798,6 @@ The provided asset will be added to the <em>plug</em> function's collection of e
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1835,32 +1807,32 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.file_upload import FileUpload
-from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostPlugJobSyncResponseV2
+from waylay.services.registry.models.post_plug_job_sync_response_v2 import (
+    PostPlugJobSyncResponseV2,
+)
+
 try:
     # Update Asset
     # calls `PUT /registry/v2/plugs/{name}/versions/{version}/content/{wildcard}`
     api_response = await waylay_client.registry.plugs.update_asset(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
-        'wildcard_example', # wildcard | path param "wildcard"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
+        "wildcard_example",  # wildcard | path param "wildcard"
         # query parameters:
-        query = {
-            'showTags': 'embed'
-            'scaleToZero': False
-            'deploy': True
-            'chown': False
-            'async': True
+        query={
+            "showTags": "embed",
+            "scaleToZero": False,
+            "deploy": True,
+            "chown": False,
+            "async": True,
         },
         # non-json binary data: use a byte array or a generator of bytearray chuncks
-        content=b'my-binary-data',
+        content=b"my-binary-data",
         # this operation supports multiple request content types: use `headers` to specify the one used
-        # alternatives: 
-        headers = {
-            'content-type': 'application/octet-stream'
-        },
+        # alternatives:
+        headers={"content-type": "application/octet-stream"},
     )
-    print("The response of registry.plugs.update_asset:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.update_asset: %s\n" % e)
 ```
@@ -1878,7 +1850,7 @@ Name     | Type  | API binding   | Description   | Notes
 **wildcard** | **str** | path parameter `"wildcard"` | Full path or path prefix of the asset within the archive | 
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | A single asset file. | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately. | [optional] [default False]
 **query['deploy']** (dict) <br> **query.deploy** (Query) | **bool** | query parameter `"deploy"` | Indicates that a function should be _deployed_ when its assets are valid.  * If &#x60;true&#x60; (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If &#x60;false&#x60;, the uploaded assets are stored and the function is created/updated in &#x60;registered&#x60; state. Asset validation errors are only returned as warning, and stored as &#x60;failureReason&#x60; on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage. | [optional] [default True]
 **query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
@@ -1927,8 +1899,6 @@ Update a draft <em>plug</em> function by updating its assets.      The assets fo
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1937,31 +1907,31 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.post_plug_job_sync_response_v2 import PostPlugJobSyncResponseV2
+from waylay.services.registry.models.post_plug_job_sync_response_v2 import (
+    PostPlugJobSyncResponseV2,
+)
+
 try:
     # Update Assets
     # calls `PUT /registry/v2/plugs/{name}/versions/{version}/content`
     api_response = await waylay_client.registry.plugs.update_assets(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'showTags': 'embed'
-            'scaleToZero': False
-            'deploy': True
-            'chown': False
-            'async': True
+        query={
+            "showTags": "embed",
+            "scaleToZero": False,
+            "deploy": True,
+            "chown": False,
+            "async": True,
         },
         # non-json binary data: use a byte array or a generator of bytearray chuncks
-        content=b'my-binary-data',
+        content=b"my-binary-data",
         # this operation supports multiple request content types: use `headers` to specify the one used
-        # alternatives: 'application/octet-stream', 'application/tar', 'application/tar+gzip', 'application/x-gzip', 'application/x-tar', 'multipart/form-data', 
-        headers = {
-            'content-type': 'application/gzip'
-        },
+        # alternatives: 'application/octet-stream', 'application/tar', 'application/tar+gzip', 'application/x-gzip', 'application/x-tar', 'multipart/form-data',
+        headers={"content-type": "application/gzip"},
     )
-    print("The response of registry.plugs.update_assets:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.update_assets: %s\n" % e)
 ```
@@ -1979,7 +1949,7 @@ Name     | Type  | API binding   | Description   | Notes
 **content** | **[ContentRequest](Operation.md#req_arg_content)** | binary request body | The assets for a &lt;em&gt;plug&lt;/em&gt; function can be provided as either   &lt;ul&gt;     &lt;li&gt;a single &lt;em&gt;tar&lt;/em&gt; archive (optionally compressed), with one of the content types      &lt;code&gt;application/octet-stream&lt;/code&gt;, &lt;code&gt;application/tar&lt;/code&gt;, &lt;code&gt;application/tar+gzip&lt;/code&gt;, &lt;code&gt;application/x-gzip&lt;/code&gt;, &lt;code&gt;application/x-tar&lt;/code&gt;, &lt;code&gt;application/gzip&lt;/code&gt;&lt;/li&gt;     &lt;li&gt;separate files in a &lt;code&gt;multipart/form-data&lt;/code&gt; request&lt;/li&gt;   &lt;/ul&gt;    The provided assets will be added to the &lt;em&gt;plug&lt;/em&gt; function&#39;s collection of existing assets,   replacing any existing assets with the same name.    Please note that it is not allowed to update the plug.json&lt;/code&gt; json file with a changed value for any of the    &lt;code&gt;name&lt;/code&gt;, &lt;code&gt;version&lt;/code&gt; and/or &lt;code&gt;runtime&lt;/code&gt; attributes.    For each &lt;em&gt;runtime&lt;/em&gt; other files are supported.  | [optional] 
 **files** | **[FileTypes](Operation.md#req_arg_files)** | request body files |   |
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | If set to &lt;code&gt;true&lt;/code&gt;, after successful deployment, the deployed function will be scaled to zero. This saves computing resources when the function is not to be used immediately. | [optional] [default False]
 **query['deploy']** (dict) <br> **query.deploy** (Query) | **bool** | query parameter `"deploy"` | Indicates that a function should be _deployed_ when its assets are valid.  * If &#x60;true&#x60; (default), jobs to build and deploy the function will be initiated after it is checked that the assets are valid. Invalid assets lead to a validation error, and the function and its assets are not created or updated. * If &#x60;false&#x60;, the uploaded assets are stored and the function is created/updated in &#x60;registered&#x60; state. Asset validation errors are only returned as warning, and stored as &#x60;failureReason&#x60; on the function entity. Use an _asset update_ or _rebuild_ to initiate a build and deploy at a later stage. | [optional] [default True]
 **query['chown']** (dict) <br> **query.chown** (Query) | **bool** | query parameter `"chown"` | If set, ownership of a draft function is transferred to the current user. | [optional] [default False]
@@ -2027,8 +1997,6 @@ Verify health of plug deployed on openfaas.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -2037,22 +2005,24 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
-from waylay.services.registry.models.verify_plug_sync_response_v2 import VerifyPlugSyncResponseV2
+from waylay.services.registry.models.verify_plug_sync_response_v2 import (
+    VerifyPlugSyncResponseV2,
+)
+
 try:
     # Verify Health
     # calls `POST /registry/v2/plugs/{name}/versions/{version}/verify`
     api_response = await waylay_client.registry.plugs.verify(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # query parameters:
-        query = {
-            'scaleToZero': True
-            'showTags': 'embed'
-            'async': True
+        query={
+            "scaleToZero": True,
+            "showTags": "embed",
+            "async": True,
         },
     )
-    print("The response of registry.plugs.verify:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.plugs.verify: %s\n" % e)
 ```
@@ -2069,7 +2039,7 @@ Name     | Type  | API binding   | Description   | Notes
 **version** | **str** | path parameter `"version"` | The version of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['scaleToZero']** (dict) <br> **query.scale_to_zero** (Query) | **bool** | query parameter `"scaleToZero"` | Indicates whether the function needs to be scaled down after successful verification. If not set, the function is scaled to zero only if it was not active before this command. | [optional] 
-**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
+**query['showTags']** (dict) <br> **query.show_tags** (Query) | [**ShowInlineOrEmbedding**](ShowInlineOrEmbedding.md) | query parameter `"showTags"` | Instructs how tag (objects) should be rendered in responses. The tags are show at the &#x60;tags&#x60; property of the manifest (legacy: the &#x60;metadata.tags&#x60; property) - &#x60;inline&#x60;: Show full tag objects in the manifest. - &#x60;embed&#x60;: Show tag references in the manifest.          Referenced full tag objects are included in a separate &#x60;_embedded&#x60; HAL section. - &#x60;none&#x60;: Show tag references in the manifest. Do not render tag objects.  The default behaviour depends on deployment settings. | [optional] 
 **query['async']** (dict) <br> **query.var_async** (Query) | **bool** | query parameter `"async"` | Unless this is set to &lt;code&gt;false&lt;/code&gt;, the server will start the required job actions asynchronously and return a &lt;code&gt;202&lt;/code&gt; &lt;em&gt;Accepted&lt;/em&gt; response. If &lt;code&gt;false&lt;/code&gt; the request will block until the job actions are completed, or a timeout occurs. | [optional] [default True]
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 

@@ -2,6 +2,11 @@
 
 A summary representation of the runtime, and (selected) versions of it.
 
+**Source:** `waylay.services.registry.models.runtime_summary`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -14,23 +19,33 @@ Name | Type | Description | Notes
 **tags** | **List[str]** |  | [optional] 
 **versions** | [**List[RuntimeVersionInfo]**](RuntimeVersionInfo.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.runtime_summary import RuntimeSummary
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of RuntimeSummary from a JSON string
-runtime_summary_instance = RuntimeSummary.from_json(json)
-# print the JSON string representation of the object
-print RuntimeSummary.to_json()
+runtime_summary = RuntimeSummary(
+    name=...,
+    title=...,
+    description=...,
+    function_type=...,
+    archive_format=...,
+    tags=...,
+    versions=...,
+)
 
-# convert the object into a dict
-runtime_summary_dict = runtime_summary_instance.to_dict()
-# create an instance of RuntimeSummary from a dict
-runtime_summary_form_dict = runtime_summary.from_dict(runtime_summary_dict)
+# Create from JSON
+runtime_summary = RuntimeSummary.from_json(
+    '{ "name": ..., "title": ..., "description": ..., "functionType": ..., "archiveFormat": ..., "tags": ..., "versions": ... }'
+)
+
+# Export to dictionary
+runtime_summary_dict = runtime_summary.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

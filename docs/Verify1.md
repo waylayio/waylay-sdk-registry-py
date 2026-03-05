@@ -1,6 +1,11 @@
 # Verify1
 
 
+**Source:** `waylay.services.registry.models.verify1`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,29 +16,43 @@ Name | Type | Description | Notes
 **processed_at** | **datetime** | The timestamp of when the job has begun processing. | [optional] 
 **finished_at** | **object** | The timestamp of when the job has finished processing. | [optional] 
 **attempts_made** | **float** | The number of retries that were attempted. | [optional] 
-**type** | [**VerifyType**](VerifyType.md) |  | 
+**type** | [**AnyJobStatusSummaryVerify**](AnyJobStatusSummaryVerify.md) |  | 
 **id** | **str** | The id of the background job, or the constant &#x60;_unknown_&#x60; | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **function** | [**FunctionRef**](FunctionRef.md) |  | [optional] 
 **links** | [**JobAndFunctionHALLink**](JobAndFunctionHALLink.md) |  | [optional] 
+
 
 ## Example
 
 ```python
 from waylay.services.registry.models.verify1 import Verify1
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Verify1 from a JSON string
-verify1_instance = Verify1.from_json(json)
-# print the JSON string representation of the object
-print Verify1.to_json()
+verify1 = Verify1(
+    operation=...,
+    created_by=...,
+    created_at=...,
+    processed_at=...,
+    finished_at=...,
+    attempts_made=...,
+    type=...,
+    id=...,
+    state=...,
+    function=...,
+    links=...,
+)
 
-# convert the object into a dict
-verify1_dict = verify1_instance.to_dict()
-# create an instance of Verify1 from a dict
-verify1_form_dict = verify1.from_dict(verify1_dict)
+# Create from JSON
+verify1 = Verify1.from_json(
+    '{ "operation": ..., "createdBy": ..., "createdAt": ..., "processedAt": ..., "finishedAt": ..., "attemptsMade": ..., "type": ..., "id": ..., "state": ..., "function": ..., "_links": ... }'
+)
+
+# Export to dictionary
+verify1_dict = verify1.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

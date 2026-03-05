@@ -1,6 +1,11 @@
 # PlugResponseV2
 
 
+**Source:** `waylay.services.registry.models.plug_response_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -18,23 +23,38 @@ Name | Type | Description | Notes
 **revision** | **str** | The revision of the function. This will be &lt;code&gt;undefined&lt;/code&gt; when the plug is not a draft. | [optional] 
 **plug** | [**PlugManifest**](PlugManifest.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.plug_response_v2 import PlugResponseV2
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of PlugResponseV2 from a JSON string
-plug_response_v2_instance = PlugResponseV2.from_json(json)
-# print the JSON string representation of the object
-print PlugResponseV2.to_json()
+plug_response_v2 = PlugResponseV2(
+    created_by=...,
+    created_at=...,
+    updated_by=...,
+    updated_at=...,
+    updates=...,
+    status=...,
+    failure_reason=...,
+    runtime=...,
+    deprecated=...,
+    draft=...,
+    revision=...,
+    plug=...,
+)
 
-# convert the object into a dict
-plug_response_v2_dict = plug_response_v2_instance.to_dict()
-# create an instance of PlugResponseV2 from a dict
-plug_response_v2_form_dict = plug_response_v2.from_dict(plug_response_v2_dict)
+# Create from JSON
+plug_response_v2 = PlugResponseV2.from_json(
+    '{ "createdBy": ..., "createdAt": ..., "updatedBy": ..., "updatedAt": ..., "updates": ..., "status": ..., "failureReason": ..., "runtime": ..., "deprecated": ..., "draft": ..., "revision": ..., "plug": ... }'
+)
+
+# Export to dictionary
+plug_response_v2_dict = plug_response_v2.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

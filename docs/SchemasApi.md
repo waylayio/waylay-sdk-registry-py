@@ -21,8 +21,6 @@ Get the JSON schema that is used to validate the asset.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -33,15 +31,15 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.asset_role import AssetRole
 from waylay.services.registry.models.function_type import FunctionType
+
 try:
     # Get Asset Schema
     # calls `GET /registry/v2/schemas/{functionType}/{role}/schema`
     api_response = await waylay_client.registry.schemas.get_by_role(
-        'plugs', # function_type | path param "functionType"
-        'manifest', # role | path param "role"
+        "plugs",  # function_type | path param "functionType"
+        "manifest",  # role | path param "role"
     )
-    print("The response of registry.schemas.get_by_role:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.schemas.get_by_role: %s\n" % e)
 ```
@@ -54,8 +52,8 @@ GET /registry/v2/schemas/{functionType}/{role}/schema
 
 Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
-**function_type** | [**FunctionType**](.md) | path parameter `"functionType"` | Function type | 
-**role** | [**AssetRole**](.md) | path parameter `"role"` | Asset role | 
+**function_type** | [**FunctionType**](FunctionType.md) | path parameter `"functionType"` | Function type | 
+**role** | [**AssetRole**](AssetRole.md) | path parameter `"role"` | Asset role | 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -92,8 +90,6 @@ Get the JSON schema that is used to validate an asset.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -106,10 +102,9 @@ try:
     # Get Asset Schema
     # calls `GET /registry/v2/schemas/{schemaId}`
     api_response = await waylay_client.registry.schemas.get(
-        'schema_id_example', # schema_id | path param "schemaId"
+        "schema_id_example",  # schema_id | path param "schemaId"
     )
-    print("The response of registry.schemas.get:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.schemas.get: %s\n" % e)
 ```

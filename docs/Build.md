@@ -1,6 +1,11 @@
 # Build
 
 
+**Source:** `waylay.services.registry.models.build`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,7 +17,7 @@ Name | Type | Description | Notes
 **processed_at** | **datetime** | The timestamp of when the job has begun processing. | [optional] 
 **finished_at** | **object** | The timestamp of when the job has finished processing. | [optional] 
 **attempts_made** | **float** | The number of retries that were attempted. | [optional] 
-**type** | [**BuildType**](BuildType.md) |  | 
+**type** | [**AnyJobForFunctionBuild**](AnyJobForFunctionBuild.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**BuildArgs**](BuildArgs.md) |  | [optional] 
 **result** | [**BuildResult**](BuildResult.md) |  | [optional] 
@@ -20,23 +25,40 @@ Name | Type | Description | Notes
 **job** | [**JobStatus**](JobStatus.md) |  | [optional] 
 **failure_reason** | [**FailureReason**](FailureReason.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.build import Build
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Build from a JSON string
-build_instance = Build.from_json(json)
-# print the JSON string representation of the object
-print Build.to_json()
+build = Build(
+    links=...,
+    operation=...,
+    created_by=...,
+    created_at=...,
+    processed_at=...,
+    finished_at=...,
+    attempts_made=...,
+    type=...,
+    state=...,
+    request=...,
+    result=...,
+    function=...,
+    job=...,
+    failure_reason=...,
+)
 
-# convert the object into a dict
-build_dict = build_instance.to_dict()
-# create an instance of Build from a dict
-build_form_dict = build.from_dict(build_dict)
+# Create from JSON
+build = Build.from_json(
+    '{ "_links": ..., "operation": ..., "createdBy": ..., "createdAt": ..., "processedAt": ..., "finishedAt": ..., "attemptsMade": ..., "type": ..., "state": ..., "request": ..., "result": ..., "function": ..., "job": ..., "failureReason": ... }'
+)
+
+# Export to dictionary
+build_dict = build.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -2,6 +2,11 @@
 
 A summary of a selected version for a runtime
 
+**Source:** `waylay.services.registry.models.runtime_version_info`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -13,23 +18,27 @@ Name | Type | Description | Notes
 **description** | **str** |  | [optional] 
 **tags** | **List[str]** |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.runtime_version_info import RuntimeVersionInfo
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of RuntimeVersionInfo from a JSON string
-runtime_version_info_instance = RuntimeVersionInfo.from_json(json)
-# print the JSON string representation of the object
-print RuntimeVersionInfo.to_json()
+runtime_version_info = RuntimeVersionInfo(
+    deprecated=..., upgradable=..., version=..., title=..., description=..., tags=...
+)
 
-# convert the object into a dict
-runtime_version_info_dict = runtime_version_info_instance.to_dict()
-# create an instance of RuntimeVersionInfo from a dict
-runtime_version_info_form_dict = runtime_version_info.from_dict(runtime_version_info_dict)
+# Create from JSON
+runtime_version_info = RuntimeVersionInfo.from_json(
+    '{ "deprecated": ..., "upgradable": ..., "version": ..., "title": ..., "description": ..., "tags": ... }'
+)
+
+# Export to dictionary
+runtime_version_info_dict = runtime_version_info.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

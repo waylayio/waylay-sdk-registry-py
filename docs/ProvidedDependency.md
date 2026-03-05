@@ -2,6 +2,11 @@
 
 Library dependency that is provided by this runtime.
 
+**Source:** `waylay.services.registry.models.provided_dependency`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -15,23 +20,34 @@ Name | Type | Description | Notes
 **globals** | **List[str]** | Global variables that expose this library to the user code. As the usage of these globals is deprecated, any usage of such global will pose issues in an next runtime version. | [optional] 
 **native** | **bool** | If true, the library is provided natively by the runtime: e.g. node for javascript. | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.provided_dependency import ProvidedDependency
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of ProvidedDependency from a JSON string
-provided_dependency_instance = ProvidedDependency.from_json(json)
-# print the JSON string representation of the object
-print ProvidedDependency.to_json()
+provided_dependency = ProvidedDependency(
+    name=...,
+    title=...,
+    description=...,
+    version=...,
+    deprecated=...,
+    removed=...,
+    globals=...,
+    native=...,
+)
 
-# convert the object into a dict
-provided_dependency_dict = provided_dependency_instance.to_dict()
-# create an instance of ProvidedDependency from a dict
-provided_dependency_form_dict = provided_dependency.from_dict(provided_dependency_dict)
+# Create from JSON
+provided_dependency = ProvidedDependency.from_json(
+    '{ "name": ..., "title": ..., "description": ..., "version": ..., "deprecated": ..., "removed": ..., "globals": ..., "native": ... }'
+)
+
+# Export to dictionary
+provided_dependency_dict = provided_dependency.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

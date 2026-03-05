@@ -1,6 +1,11 @@
 # WebscriptResponseWithInvokeLinkV2
 
 
+**Source:** `waylay.services.registry.models.webscript_response_with_invoke_link_v2`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -20,23 +25,44 @@ Name | Type | Description | Notes
 **secret** | **str** | The secret for this webscript deployment. This is &lt;code&gt;null&lt;/code&gt; when &lt;code&gt;allowHmac&#x3D;false&lt;/code&gt; in the webscript specificaton. | [optional] 
 **links** | [**InvokeHALLink**](InvokeHALLink.md) |  | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.webscript_response_with_invoke_link_v2 import WebscriptResponseWithInvokeLinkV2
+from waylay.services.registry.models.webscript_response_with_invoke_link_v2 import (
+    WebscriptResponseWithInvokeLinkV2,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of WebscriptResponseWithInvokeLinkV2 from a JSON string
-webscript_response_with_invoke_link_v2_instance = WebscriptResponseWithInvokeLinkV2.from_json(json)
-# print the JSON string representation of the object
-print WebscriptResponseWithInvokeLinkV2.to_json()
+webscript_response_with_invoke_link_v2 = WebscriptResponseWithInvokeLinkV2(
+    created_by=...,
+    created_at=...,
+    updated_by=...,
+    updated_at=...,
+    updates=...,
+    status=...,
+    failure_reason=...,
+    runtime=...,
+    deprecated=...,
+    draft=...,
+    revision=...,
+    webscript=...,
+    secret=...,
+    links=...,
+)
 
-# convert the object into a dict
-webscript_response_with_invoke_link_v2_dict = webscript_response_with_invoke_link_v2_instance.to_dict()
-# create an instance of WebscriptResponseWithInvokeLinkV2 from a dict
-webscript_response_with_invoke_link_v2_form_dict = webscript_response_with_invoke_link_v2.from_dict(webscript_response_with_invoke_link_v2_dict)
+# Create from JSON
+webscript_response_with_invoke_link_v2 = WebscriptResponseWithInvokeLinkV2.from_json(
+    '{ "createdBy": ..., "createdAt": ..., "updatedBy": ..., "updatedAt": ..., "updates": ..., "status": ..., "failureReason": ..., "runtime": ..., "deprecated": ..., "draft": ..., "revision": ..., "webscript": ..., "secret": ..., "_links": ... }'
+)
+
+# Export to dictionary
+webscript_response_with_invoke_link_v2_dict = (
+    webscript_response_with_invoke_link_v2.to_dict()
+)
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

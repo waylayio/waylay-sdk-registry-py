@@ -1,6 +1,11 @@
 # FunctionDeployOverridesType
 
 
+**Source:** `waylay.services.registry.models.function_deploy_overrides_type`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,23 +17,29 @@ Name | Type | Description | Notes
 **requests** | [**ResourceLimits**](ResourceLimits.md) |  | [optional] 
 **secrets** | **List[str]** |  | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.function_deploy_overrides_type import FunctionDeployOverridesType
+from waylay.services.registry.models.function_deploy_overrides_type import (
+    FunctionDeployOverridesType,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of FunctionDeployOverridesType from a JSON string
-function_deploy_overrides_type_instance = FunctionDeployOverridesType.from_json(json)
-# print the JSON string representation of the object
-print FunctionDeployOverridesType.to_json()
+function_deploy_overrides_type = FunctionDeployOverridesType(
+    env_vars=..., labels=..., annotations=..., limits=..., requests=..., secrets=...
+)
 
-# convert the object into a dict
-function_deploy_overrides_type_dict = function_deploy_overrides_type_instance.to_dict()
-# create an instance of FunctionDeployOverridesType from a dict
-function_deploy_overrides_type_form_dict = function_deploy_overrides_type.from_dict(function_deploy_overrides_type_dict)
+# Create from JSON
+function_deploy_overrides_type = FunctionDeployOverridesType.from_json(
+    '{ "envVars": ..., "labels": ..., "annotations": ..., "limits": ..., "requests": ..., "secrets": ... }'
+)
+
+# Export to dictionary
+function_deploy_overrides_type_dict = function_deploy_overrides_type.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

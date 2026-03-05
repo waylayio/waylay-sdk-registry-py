@@ -1,9 +1,8 @@
-# coding: utf-8
 """Waylay Function Registry: Query Parameters.
 
 This code was generated from the OpenAPI documentation of 'Waylay Function Registry'
 
-version: 2.24.1
+version: 2.25.0
 
 V2 API to build and deploy Waylay functions (plugs, webscripts, BYOML models).
 

@@ -2,6 +2,11 @@
 
 Describes conditions on the set of files that match a file pattern.
 
+**Source:** `waylay.services.registry.models.asset_condition`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -16,23 +21,35 @@ Name | Type | Description | Notes
 **max_size** | **str** | The maximum size for each file matching this pattern (in bytes, unless unit is provided) | [optional] 
 **var_schema** | **object** | The json schema validator that applies (in case of &#x60;application/json&#x60; entries). | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.asset_condition import AssetCondition
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of AssetCondition from a JSON string
-asset_condition_instance = AssetCondition.from_json(json)
-# print the JSON string representation of the object
-print AssetCondition.to_json()
+asset_condition = AssetCondition(
+    title=...,
+    description=...,
+    role=...,
+    pattern=...,
+    content_type=...,
+    min=...,
+    max=...,
+    max_size=...,
+    var_schema=...,
+)
 
-# convert the object into a dict
-asset_condition_dict = asset_condition_instance.to_dict()
-# create an instance of AssetCondition from a dict
-asset_condition_form_dict = asset_condition.from_dict(asset_condition_dict)
+# Create from JSON
+asset_condition = AssetCondition.from_json(
+    '{ "title": ..., "description": ..., "role": ..., "pattern": ..., "contentType": ..., "min": ..., "max": ..., "maxSize": ..., "schema": ... }'
+)
+
+# Export to dictionary
+asset_condition_dict = asset_condition.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -2,6 +2,11 @@
 
 Input argument to an (openfaas) scale job for a function.
 
+**Source:** `waylay.services.registry.models.scale_args`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -13,23 +18,32 @@ Name | Type | Description | Notes
 **revision** | **str** | The revision hash of the current (draft) function revision | 
 **replicas** | **float** | Number of target replicas | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.scale_args import ScaleArgs
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of ScaleArgs from a JSON string
-scale_args_instance = ScaleArgs.from_json(json)
-# print the JSON string representation of the object
-print ScaleArgs.to_json()
+scale_args = ScaleArgs(
+    namespace=...,
+    endpoint=...,
+    runtime_name=...,
+    runtime_version=...,
+    revision=...,
+    replicas=...,
+)
 
-# convert the object into a dict
-scale_args_dict = scale_args_instance.to_dict()
-# create an instance of ScaleArgs from a dict
-scale_args_form_dict = scale_args.from_dict(scale_args_dict)
+# Create from JSON
+scale_args = ScaleArgs.from_json(
+    '{ "namespace": ..., "endpoint": ..., "runtimeName": ..., "runtimeVersion": ..., "revision": ..., "replicas": ... }'
+)
+
+# Export to dictionary
+scale_args_dict = scale_args.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -2,6 +2,11 @@
 
 Patch attributes to merge into an existing webscript manifest.
 
+**Source:** `waylay.services.registry.models.webscript_manifest_patch`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -13,23 +18,34 @@ Name | Type | Description | Notes
 **runtime** | **str** |  | [optional] 
 **deploy** | [**FunctionDeployOverridesType**](FunctionDeployOverridesType.md) |  | [optional] 
 
+
 ## Example
 
 ```python
-from waylay.services.registry.models.webscript_manifest_patch import WebscriptManifestPatch
+from waylay.services.registry.models.webscript_manifest_patch import (
+    WebscriptManifestPatch,
+)
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of WebscriptManifestPatch from a JSON string
-webscript_manifest_patch_instance = WebscriptManifestPatch.from_json(json)
-# print the JSON string representation of the object
-print WebscriptManifestPatch.to_json()
+webscript_manifest_patch = WebscriptManifestPatch(
+    private=...,
+    allow_hmac=...,
+    runtime_version=...,
+    metadata=...,
+    runtime=...,
+    deploy=...,
+)
 
-# convert the object into a dict
-webscript_manifest_patch_dict = webscript_manifest_patch_instance.to_dict()
-# create an instance of WebscriptManifestPatch from a dict
-webscript_manifest_patch_form_dict = webscript_manifest_patch.from_dict(webscript_manifest_patch_dict)
+# Create from JSON
+webscript_manifest_patch = WebscriptManifestPatch.from_json(
+    '{ "private": ..., "allowHmac": ..., "runtimeVersion": ..., "metadata": ..., "runtime": ..., "deploy": ... }'
+)
+
+# Export to dictionary
+webscript_manifest_patch_dict = webscript_manifest_patch.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -32,8 +32,6 @@ Add tags to all versions of a named model version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -44,16 +42,16 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
 from waylay.services.registry.models.update_tags_request_v2 import UpdateTagsRequestV2
+
 try:
     # Add Tags On All
     # calls `PATCH /registry/v2/models/{name}/tags`
     api_response = await waylay_client.registry.model_tags.add_all(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.registry.UpdateTagsRequestV2() # UpdateTagsRequestV2 |  (optional)
+        json=waylay.services.registry.UpdateTagsRequestV2(),  # UpdateTagsRequestV2 |  (optional)
     )
-    print("The response of registry.model_tags.add_all:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.add_all: %s\n" % e)
 ```
@@ -105,8 +103,6 @@ Add tags used on a model version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -117,17 +113,17 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
 from waylay.services.registry.models.update_tags_request_v2 import UpdateTagsRequestV2
+
 try:
     # Add Tags
     # calls `PATCH /registry/v2/models/{name}/versions/{version}/tags`
     api_response = await waylay_client.registry.model_tags.add(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.registry.UpdateTagsRequestV2() # UpdateTagsRequestV2 |  (optional)
+        json=waylay.services.registry.UpdateTagsRequestV2(),  # UpdateTagsRequestV2 |  (optional)
     )
-    print("The response of registry.model_tags.add:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.add: %s\n" % e)
 ```
@@ -180,8 +176,6 @@ Remove all tags used on any or all versions of a named model.         With 'from
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -192,18 +186,18 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
 from waylay.services.registry.models.tagging_scope_option import TaggingScopeOption
+
 try:
     # Clear Tags On Any/All
     # calls `DELETE /registry/v2/models/{name}/tags`
     api_response = await waylay_client.registry.model_tags.clear_all(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-            'scope': 'any'
+        query={
+            "scope": "any",
         },
     )
-    print("The response of registry.model_tags.clear_all:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.clear_all: %s\n" % e)
 ```
@@ -218,7 +212,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['scope']** (dict) <br> **query.scope** (Query) | [**TaggingScopeOption**](.md) | query parameter `"scope"` | Tagging operations on a _named_ function can either operate on - &#x60;any&#x60; versions: operate on tags that are are associated on _any_ version (union) - &#x60;all&#x60; versions: operate on tags that are are associated with _all_ versions (intersection) | [optional] 
+**query['scope']** (dict) <br> **query.scope** (Query) | [**TaggingScopeOption**](TaggingScopeOption.md) | query parameter `"scope"` | Tagging operations on a _named_ function can either operate on - &#x60;any&#x60; versions: operate on tags that are are associated on _any_ version (union) - &#x60;all&#x60; versions: operate on tags that are are associated with _all_ versions (intersection) | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -256,8 +250,6 @@ Remove all tags used on a model version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -267,15 +259,15 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
+
 try:
     # Clear Tags
     # calls `DELETE /registry/v2/models/{name}/versions/{version}/tags`
     api_response = await waylay_client.registry.model_tags.clear(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
     )
-    print("The response of registry.model_tags.clear:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.clear: %s\n" % e)
 ```
@@ -328,8 +320,6 @@ Check the existence of a tag on any or all versions of a named model.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -340,19 +330,19 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tag_response import FunctionTagResponse
 from waylay.services.registry.models.tagging_scope_option import TaggingScopeOption
+
 try:
     # Find Tags On Any/All
     # calls `GET /registry/v2/models/{name}/tags/{tagName}`
     api_response = await waylay_client.registry.model_tags.find_all(
-        'tag_name_example', # tag_name | path param "tagName"
-        'name_example', # name | path param "name"
+        "tag_name_example",  # tag_name | path param "tagName"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-            'scope': 'any'
+        query={
+            "scope": "any",
         },
     )
-    print("The response of registry.model_tags.find_all:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.find_all: %s\n" % e)
 ```
@@ -368,7 +358,7 @@ Name     | Type  | API binding   | Description   | Notes
 **tag_name** | **str** | path parameter `"tagName"` | The name of the tag that might be applied to a function. | 
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['scope']** (dict) <br> **query.scope** (Query) | [**TaggingScopeOption**](.md) | query parameter `"scope"` | Tagging operations on a _named_ function can either operate on - &#x60;any&#x60; versions: operate on tags that are are associated on _any_ version (union) - &#x60;all&#x60; versions: operate on tags that are are associated with _all_ versions (intersection) | [optional] 
+**query['scope']** (dict) <br> **query.scope** (Query) | [**TaggingScopeOption**](TaggingScopeOption.md) | query parameter `"scope"` | Tagging operations on a _named_ function can either operate on - &#x60;any&#x60; versions: operate on tags that are are associated on _any_ version (union) - &#x60;all&#x60; versions: operate on tags that are are associated with _all_ versions (intersection) | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -408,8 +398,6 @@ Check the existence of a tag on a model version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -419,16 +407,16 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tag_response import FunctionTagResponse
+
 try:
     # Find Tag
     # calls `GET /registry/v2/models/{name}/versions/{version}/tags/{tagName}`
     api_response = await waylay_client.registry.model_tags.find(
-        'tag_name_example', # tag_name | path param "tagName"
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "tag_name_example",  # tag_name | path param "tagName"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
     )
-    print("The response of registry.model_tags.find:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.find: %s\n" % e)
 ```
@@ -482,8 +470,6 @@ List tags used on any or all versions of a named model.         With 'from=all',
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -494,18 +480,18 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
 from waylay.services.registry.models.tagging_scope_option import TaggingScopeOption
+
 try:
     # List Tags On Any/All
     # calls `GET /registry/v2/models/{name}/tags`
     api_response = await waylay_client.registry.model_tags.list_all(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-            'scope': 'any'
+        query={
+            "scope": "any",
         },
     )
-    print("The response of registry.model_tags.list_all:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.list_all: %s\n" % e)
 ```
@@ -520,7 +506,7 @@ Name     | Type  | API binding   | Description   | Notes
 -------- | ----- | ------------- | ------------- | -------------
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['scope']** (dict) <br> **query.scope** (Query) | [**TaggingScopeOption**](.md) | query parameter `"scope"` | Tagging operations on a _named_ function can either operate on - &#x60;any&#x60; versions: operate on tags that are are associated on _any_ version (union) - &#x60;all&#x60; versions: operate on tags that are are associated with _all_ versions (intersection) | [optional] 
+**query['scope']** (dict) <br> **query.scope** (Query) | [**TaggingScopeOption**](TaggingScopeOption.md) | query parameter `"scope"` | Tagging operations on a _named_ function can either operate on - &#x60;any&#x60; versions: operate on tags that are are associated on _any_ version (union) - &#x60;all&#x60; versions: operate on tags that are are associated with _all_ versions (intersection) | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -558,8 +544,6 @@ List tags used on a model version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -569,15 +553,15 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
+
 try:
     # List Tags
     # calls `GET /registry/v2/models/{name}/versions/{version}/tags`
     api_response = await waylay_client.registry.model_tags.list(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
     )
-    print("The response of registry.model_tags.list:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.list: %s\n" % e)
 ```
@@ -629,8 +613,6 @@ Add a tag on on all versions of a model version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -640,15 +622,15 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tag_response import FunctionTagResponse
+
 try:
     # Put Tag On All
     # calls `PUT /registry/v2/models/{name}/tags/{tagName}`
     api_response = await waylay_client.registry.model_tags.put_all(
-        'tag_name_example', # tag_name | path param "tagName"
-        'name_example', # name | path param "name"
+        "tag_name_example",  # tag_name | path param "tagName"
+        "name_example",  # name | path param "name"
     )
-    print("The response of registry.model_tags.put_all:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.put_all: %s\n" % e)
 ```
@@ -701,8 +683,6 @@ Put a tag on a model version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -712,16 +692,16 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tag_response import FunctionTagResponse
+
 try:
     # Put Tag
     # calls `PUT /registry/v2/models/{name}/versions/{version}/tags/{tagName}`
     api_response = await waylay_client.registry.model_tags.put(
-        'tag_name_example', # tag_name | path param "tagName"
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "tag_name_example",  # tag_name | path param "tagName"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
     )
-    print("The response of registry.model_tags.put:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.put: %s\n" % e)
 ```
@@ -774,8 +754,6 @@ Remove a tag on any or all version from a model version.         With 'from=all'
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -785,15 +763,15 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tag_response import FunctionTagResponse
+
 try:
     # Remove Tag On Any/All
     # calls `DELETE /registry/v2/models/{name}/tags/{tagName}`
     api_response = await waylay_client.registry.model_tags.remove_all(
-        'tag_name_example', # tag_name | path param "tagName"
-        'name_example', # name | path param "name"
+        "tag_name_example",  # tag_name | path param "tagName"
+        "name_example",  # name | path param "name"
     )
-    print("The response of registry.model_tags.remove_all:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.remove_all: %s\n" % e)
 ```
@@ -847,8 +825,6 @@ Remove a tag from a model version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -858,16 +834,16 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tag_response import FunctionTagResponse
+
 try:
     # Remove Tag
     # calls `DELETE /registry/v2/models/{name}/versions/{version}/tags/{tagName}`
     api_response = await waylay_client.registry.model_tags.remove(
-        'tag_name_example', # tag_name | path param "tagName"
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "tag_name_example",  # tag_name | path param "tagName"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
     )
-    print("The response of registry.model_tags.remove:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.remove: %s\n" % e)
 ```
@@ -921,8 +897,6 @@ Replace tags used on any or all versions of a named model.         With 'from=al
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -934,20 +908,20 @@ waylay_client = WaylayClient.from_profile()
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
 from waylay.services.registry.models.tagging_scope_option import TaggingScopeOption
 from waylay.services.registry.models.update_tags_request_v2 import UpdateTagsRequestV2
+
 try:
     # Replace Tags On Any/All
     # calls `PUT /registry/v2/models/{name}/tags`
     api_response = await waylay_client.registry.model_tags.replace_all(
-        'name_example', # name | path param "name"
+        "name_example",  # name | path param "name"
         # query parameters:
-        query = {
-            'scope': 'any'
+        query={
+            "scope": "any",
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.registry.UpdateTagsRequestV2() # UpdateTagsRequestV2 |  (optional)
+        json=waylay.services.registry.UpdateTagsRequestV2(),  # UpdateTagsRequestV2 |  (optional)
     )
-    print("The response of registry.model_tags.replace_all:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.replace_all: %s\n" % e)
 ```
@@ -963,7 +937,7 @@ Name     | Type  | API binding   | Description   | Notes
 **name** | **str** | path parameter `"name"` | The name of the function. | 
 **json** | [**UpdateTagsRequestV2**](UpdateTagsRequestV2.md) | json request body |  | [optional] 
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
-**query['scope']** (dict) <br> **query.scope** (Query) | [**TaggingScopeOption**](.md) | query parameter `"scope"` | Tagging operations on a _named_ function can either operate on - &#x60;any&#x60; versions: operate on tags that are are associated on _any_ version (union) - &#x60;all&#x60; versions: operate on tags that are are associated with _all_ versions (intersection) | [optional] 
+**query['scope']** (dict) <br> **query.scope** (Query) | [**TaggingScopeOption**](TaggingScopeOption.md) | query parameter `"scope"` | Tagging operations on a _named_ function can either operate on - &#x60;any&#x60; versions: operate on tags that are are associated on _any_ version (union) - &#x60;all&#x60; versions: operate on tags that are are associated with _all_ versions (intersection) | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 
 ### Return type
@@ -1001,8 +975,6 @@ Replace tags used on a model version.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -1013,17 +985,17 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-registry-types` is installed
 from waylay.services.registry.models.function_tags_response import FunctionTagsResponse
 from waylay.services.registry.models.update_tags_request_v2 import UpdateTagsRequestV2
+
 try:
     # Replace Tags
     # calls `PUT /registry/v2/models/{name}/versions/{version}/tags`
     api_response = await waylay_client.registry.model_tags.replace(
-        'name_example', # name | path param "name"
-        'version_example', # version | path param "version"
+        "name_example",  # name | path param "name"
+        "version_example",  # version | path param "version"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.registry.UpdateTagsRequestV2() # UpdateTagsRequestV2 |  (optional)
+        json=waylay.services.registry.UpdateTagsRequestV2(),  # UpdateTagsRequestV2 |  (optional)
     )
-    print("The response of registry.model_tags.replace:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling registry.model_tags.replace: %s\n" % e)
 ```

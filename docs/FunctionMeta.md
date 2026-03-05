@@ -1,6 +1,11 @@
 # FunctionMeta
 
 
+**Source:** `waylay.services.registry.models.function_meta`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -10,23 +15,25 @@ Name | Type | Description | Notes
 **icon_url** | **str** | An url to an icon that represents this function. | [optional] 
 **category** | **str** | A category for this function (Deprecated: use tags to categorise your functions) | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.function_meta import FunctionMeta
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of FunctionMeta from a JSON string
-function_meta_instance = FunctionMeta.from_json(json)
-# print the JSON string representation of the object
-print FunctionMeta.to_json()
+function_meta = FunctionMeta(author=..., description=..., icon_url=..., category=...)
 
-# convert the object into a dict
-function_meta_dict = function_meta_instance.to_dict()
-# create an instance of FunctionMeta from a dict
-function_meta_form_dict = function_meta.from_dict(function_meta_dict)
+# Create from JSON
+function_meta = FunctionMeta.from_json(
+    '{ "author": ..., "description": ..., "iconURL": ..., "category": ... }'
+)
+
+# Export to dictionary
+function_meta_dict = function_meta.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -1,6 +1,11 @@
 # Verify
 
 
+**Source:** `waylay.services.registry.models.verify`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,7 +17,7 @@ Name | Type | Description | Notes
 **processed_at** | **datetime** | The timestamp of when the job has begun processing. | [optional] 
 **finished_at** | **object** | The timestamp of when the job has finished processing. | [optional] 
 **attempts_made** | **float** | The number of retries that were attempted. | [optional] 
-**type** | [**VerifyType**](VerifyType.md) |  | 
+**type** | [**AnyJobForFunctionVerify**](AnyJobForFunctionVerify.md) |  | 
 **state** | [**JobStateResult**](JobStateResult.md) |  | 
 **request** | [**VerifyArgs**](VerifyArgs.md) |  | [optional] 
 **result** | [**VerifyResult**](VerifyResult.md) |  | [optional] 
@@ -20,23 +25,40 @@ Name | Type | Description | Notes
 **job** | [**JobStatus**](JobStatus.md) |  | [optional] 
 **failure_reason** | [**FailureReason**](FailureReason.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.verify import Verify
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Verify from a JSON string
-verify_instance = Verify.from_json(json)
-# print the JSON string representation of the object
-print Verify.to_json()
+verify = Verify(
+    links=...,
+    operation=...,
+    created_by=...,
+    created_at=...,
+    processed_at=...,
+    finished_at=...,
+    attempts_made=...,
+    type=...,
+    state=...,
+    request=...,
+    result=...,
+    function=...,
+    job=...,
+    failure_reason=...,
+)
 
-# convert the object into a dict
-verify_dict = verify_instance.to_dict()
-# create an instance of Verify from a dict
-verify_form_dict = verify.from_dict(verify_dict)
+# Create from JSON
+verify = Verify.from_json(
+    '{ "_links": ..., "operation": ..., "createdBy": ..., "createdAt": ..., "processedAt": ..., "finishedAt": ..., "attemptsMade": ..., "type": ..., "state": ..., "request": ..., "result": ..., "function": ..., "job": ..., "failureReason": ... }'
+)
+
+# Export to dictionary
+verify_dict = verify.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -2,29 +2,34 @@
 
 Function Tag Found
 
+**Source:** `waylay.services.registry.models.function_tag_response`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **tag** | [**Tag**](Tag.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.registry.models.function_tag_response import FunctionTagResponse
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of FunctionTagResponse from a JSON string
-function_tag_response_instance = FunctionTagResponse.from_json(json)
-# print the JSON string representation of the object
-print FunctionTagResponse.to_json()
+function_tag_response = FunctionTagResponse(tag=...)
 
-# convert the object into a dict
-function_tag_response_dict = function_tag_response_instance.to_dict()
-# create an instance of FunctionTagResponse from a dict
-function_tag_response_form_dict = function_tag_response.from_dict(function_tag_response_dict)
+# Create from JSON
+function_tag_response = FunctionTagResponse.from_json('{ "tag": ... }')
+
+# Export to dictionary
+function_tag_response_dict = function_tag_response.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 
