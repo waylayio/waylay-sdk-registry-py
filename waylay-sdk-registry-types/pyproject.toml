@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waylay-sdk-registry-types"
-version = "2.25.0rc20260304"
+version = "2.25.0.20260305"
 description = "Waylay Function Registry Types "
 authors = [
     { name = "Waylay", email = "info@waylay.io"}
@@ -13,7 +13,7 @@ keywords = ["Waylay Function Registry" , "Types"]
 requires-python = ">= 3.10"
 dependencies = [
     "waylay-sdk-core ~= 1.0",
-    "waylay-sdk-registry == 2.25.0rc20260304",
+    "waylay-sdk-registry == 2.25.0.20260305",
 ]
 readme = "README.md"
 license={file = "LICENSE.txt"}
